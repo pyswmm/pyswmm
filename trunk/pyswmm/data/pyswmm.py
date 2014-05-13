@@ -3,7 +3,9 @@ Python extensions for the SWMM5 Programmers toolkit
 
 Open Water Analytics (http://wateranalytics.org/)
 
-Developers: B. McDonnell
+Developer: B. McDonnell
+
+Last Update 5-12-14 
 
 '''
 
@@ -223,20 +225,7 @@ class pyswmm():
         self._error()
         
         return runoffErr.value, flowErr.value, qualErr.value
-'''
 
-//  swmm_run
-//  swmm_open
-//  swmm_start
-//  swmm_step
-//  swmm_end
-//  swmm_report
-//  swmm_close
-//  swmm_getMassBalErr
-//  swmm_getVersion
-
-
-'''
 
 
 

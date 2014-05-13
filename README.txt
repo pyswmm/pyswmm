@@ -8,3 +8,4 @@ This module is the start of the Python Storm Water Management Model (PYSWMM) wra
 
 where, as of today, the compiled libswmm.dylib can be found in the 'Darwin' folder. 
 
+a testing script (test.py) has been created which creates a pyswmm object giving the user two avenues of testing: swmmExec or swmm_step.

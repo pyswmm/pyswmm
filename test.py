@@ -1,23 +1,14 @@
-#import sys
-import os
-    
 
+import os
 import sys
-sys.path.append('/Users/bryant/PROJECTCODE/OWA/pyswmm/trunk/pyswmm/data/')
+
+#point to location of the pyswmm file
+sys.path.append(os.getcwd()+'/data/')
 
 from pyswmm import pyswmm
 
-##from ctypes import cdll 
-##libswmm = '/Users/bryant/PROJECTCODE/OWA/pyswmm/dll/libswmm.dylib'
-##
-##swmmobject = cdll.LoadLibrary(libswmm)
-##swmmobject.swmm_run('/Users/bryant/PROJECTCODE/OWA/pyswmm/example/abridgedModel.inp',\
-##                    '/Users/bryant/PROJECTCODE/OWA/pyswmm/example/abridgedModel.rpt',\
-##                    '/Users/bryant/PROJECTCODE/OWA/pyswmm/example/abridgedModel.out')              
-##swmmobject.swmm_start()
-##swmmobject.swmm_end()
-##swmmobject.swmm_report()
-##swmmobject.swmm_close()
+
+# this checks the swmmExec process train...
 
 swmmobject = pyswmm('/Users/bryant/PROJECTCODE/OWA/pyswmm/example/parkinglot.inp',\
                     '/Users/bryant/PROJECTCODE/OWA/pyswmm/example/parkinglot.rpt',\
@@ -28,6 +19,7 @@ print swmmobject.swmm_getVersion()
 print swmmobject.swmm_getMassBalErr()
 
 
+#this checks the swmm_step features
 
 ##time = 0.0
 ##tend = 0.5
