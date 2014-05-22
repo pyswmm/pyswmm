@@ -229,9 +229,3 @@ class pyswmm():
         self._error()
         
         return runoffErr.value, flowErr.value, qualErr.value
-
-
-
-
-
-                                                  
