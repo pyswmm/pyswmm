@@ -3,20 +3,20 @@ import os
 import sys
 
 #point to location of the pyswmm file
-sys.path.append(os.getcwd()+'/data/')
+sys.path.append(os.getcwd()+'\\pyswmm\\')
 
-from pyswmm import pyswmm
+from swmm5 import pyswmm
 
 
 # this checks the swmmExec process train...
 
-swmmobject = pyswmm('/Users/bryant/PROJECTCODE/OWA/pyswmm/example/parkinglot.inp',\
-                    '/Users/bryant/PROJECTCODE/OWA/pyswmm/example/parkinglot.rpt',\
-                    '/Users/bryant/PROJECTCODE/OWA/pyswmm/example/parkinglot.out')
+swmmobject = pyswmm('./example/parkinglot.inp',\
+                    './example/parkinglot.rpt',\
+                    './example/parkinglot.out')
 
 swmmobject.swmmExec()
-print swmmobject.swmm_getVersion()
-print swmmobject.swmm_getMassBalErr()
+print(swmmobject.swmm_getVersion())
+print(swmmobject.swmm_getMassBalErr())
 
 
 #this checks the swmm_step features

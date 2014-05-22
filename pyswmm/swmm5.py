@@ -10,8 +10,8 @@ Last Update 5-12-14
 '''
 
 
-import ctypes, os, sys
-from ctypes import byref, cdll, c_double, c_int, c_float
+import os, sys
+from ctypes import byref, cdll, windll, c_double, c_int, c_float
 #from pkg_resources import resource_filename
 #import platform
 
@@ -63,8 +63,9 @@ class pyswmm():
 ##                    #libswmm = resource_filename('pyswmm','data/Darwin/lin%s.dylib' % lib)
 
         # point to shared library, here
-        libswmm = '/Users/bryant/PROJECTCODE/OWA/pyswmm/trunk/pyswmm/data/Darwin/libswmm.dylib'
-        self.SWMMlibobj = cdll.LoadLibrary(libswmm)
+        libpath = 'C:\\Users\\mtryby\\Workspace\\GitRepo\\michaeltryby\\pyswmm'
+        libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86'
+        self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
 ##                
 ##            except Exception as E1:
 ##                if lib == libnames[-1]:
@@ -100,17 +101,20 @@ class pyswmm():
         if rptfile is None: rptfile = self.rptfile
         if binfile is None: binfile = self.binfile
         sys.stdout.write("\n... SWMM Version 5.1")
+
         try:
             self.swmm_run()
             sys.stdout.write("\n... Run Complete")
         except:
             pass
+
         try:
             self.swmm_close()
             sys.stdout.write("\n... Closed")
         except:
-            print 'close fail'
+            print('close fail')
             pass
+
         if self.Errflag: 
             sys.stdout.write("\n\n... SWMM completed. There are errors.\n")
         elif self.Warnflag:
@@ -225,9 +229,3 @@ class pyswmm():
         self._error()
         
         return runoffErr.value, flowErr.value, qualErr.value
-
-
-
-
-
-                                                  
