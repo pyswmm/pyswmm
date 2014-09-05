@@ -52,9 +52,8 @@ class pyswmm():
         self.binfile = binfile
         
         '''
-        as of 5-12-14 the shared library search feature is disabled. Reference pyepanet
-        to see what the future will hold for this. resource_filename, I believe,
-        is only a feature that works if this module is packaged for distribution - BEM
+        5-12-14 the shared library search feature is disabled. - BEM
+        9/5/2014 this will be the next automated feature for the object- BEM
         '''
 ##        libnames = ['swmm']
 ##        for lib in libnames:
@@ -62,10 +61,26 @@ class pyswmm():
 ##                if sys.platform in ['darwin']:
 ##                    #libswmm = resource_filename('pyswmm','data/Darwin/lin%s.dylib' % lib)
 
-        # point to shared library, here
-        libpath = 'C:\\Users\\mtryby\\Workspace\\GitRepo\\michaeltryby\\pyswmm'
-        libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86'
-        self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
+
+        
+        # The following should be un commented if using on mac
+        #### darwin
+        libpath = os.getcwd()
+        libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
+        self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
+        #### darwin
+
+
+
+        # The following should be un commented if using windows    
+##        #### windows
+##        libpath = os.getcwd()
+##        libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86'
+##        self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
+##        #### windows
+
+
+        
 ##                
 ##            except Exception as E1:
 ##                if lib == libnames[-1]:
