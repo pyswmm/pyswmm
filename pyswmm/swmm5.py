@@ -11,7 +11,7 @@ Last Update 5-12-14
 
 
 import os, sys
-from ctypes import byref, cdll, windll, c_double, c_int, c_float
+from ctypes import byref, c_double, c_int, c_float
 #from pkg_resources import resource_filename
 #import platform
 
@@ -65,18 +65,22 @@ class pyswmm():
         
         # The following should be un commented if using on mac
         #### darwin
-        libpath = os.getcwd()
-        libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
-        self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
+        if 'darwin' in sys.platform:
+            from ctypes import cdll
+            libpath = os.getcwd()
+            libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
+            self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
         #### darwin
 
 
 
         # The following should be un commented if using windows    
 ##        #### windows
-##        libpath = os.getcwd()
-##        libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86'
-##        self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
+        if 'win32' in sys.platform:
+            from ctypes import windll
+            libpath = os.getcwd()
+            libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
+            self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
 ##        #### windows
 
 
