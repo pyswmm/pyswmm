@@ -15,7 +15,7 @@ class InputManipulator(object):
         # Modifications have to specified as a dictionary lets raise an exception here
         if not isinstance(modifications, dict):
             raise TypeError('Modifications need to be specified as a dict of {subcatchment_name: percent}')
-        line_ending = cls.determine_line_ending(cls, input_file)
+        line_ending = cls.determine_line_ending(InputManipulator(), input_file)
         if not line_ending:
             raise Exception('Could not determine line ending')
 
@@ -23,7 +23,7 @@ class InputManipulator(object):
 
         subcatchment_block_header = '[SUBCATCHMENTS]'
 
-        subcatchment_block, block_start, block_end = cls.find_block(cls, input_file, subcatchment_block_header)
+        subcatchment_block, block_start, block_end = cls.find_block(InputManipulator(), input_file, subcatchment_block_header)
         # Parse the lines in this block
         subcatchment_block_lines = [
                 {
@@ -40,7 +40,7 @@ class InputManipulator(object):
             # If this line is a subcatchment and it is one we want to modify
             if this_raw_line['subcatchment_name'] and this_raw_line['subcatchment_name'] in modifications:
                 # The do it!
-                this_raw_line['line'] = cls.modify_impervious_percentage(cls, modifications[this_raw_line['subcatchment_name']], this_raw_line['line'])
+                this_raw_line['line'] = cls.modify_impervious_percentage(InputManipulator(), modifications[this_raw_line['subcatchment_name']], this_raw_line['line'])
         # Rebuild the string using the correct line ending
         subcatchment_block = line_ending.join([this_raw_line['line'] for this_raw_line in subcatchment_block_lines])
 
@@ -48,18 +48,80 @@ class InputManipulator(object):
         return input_file.replace(input_file[block_start:block_end], subcatchment_block)
 
     @classmethod
-    def get_LID_controls(cls, input_file):
+    def get_LID_controls(cls, input_file, return_json = True):
 
         LID_controls_block_header = '[LID_CONTROLS]'
-        LID_block, block_start, block_end = cls.find_block(cls, input_file, LID_controls_block_header)
+        LID_block, block_start, block_end = cls.find_block(InputManipulator(), input_file, LID_controls_block_header)
         LID_block = LID_block.splitlines()
         LID_structures = set()
         for this_line in LID_block:
-            if ';' not in this_line:
+            if ';' not in this_line and this_line.split():
                 LID_structures.add(this_line.split()[0])
-        import json
-        output = json.dumps(list(LID_structures))
-        return output
+        if return_json:
+            import json
+            output = json.dumps(list(LID_structures))
+            return output
+        else:
+            return LID_structures
+
+    @classmethod
+    def get_LID_usage(cls, input_file, return_json = True):
+
+        LID_usage_block_header = '[LID_USAGE]'
+        LID_block, block_start, block_end = cls.find_block(InputManipulator(), input_file,
+                                                           LID_usage_block_header)
+        LID_block = LID_block.splitlines()
+        LID_structures = []
+        LID_HEADER = ['Subcatchment', 'LID Process', 'Number', 'Area', 'Width', 'InitSatur', 'FromImprv', 'ToPerv']
+        for this_line in LID_block:
+            if ';' not in this_line and this_line.split():
+                LID_structures.append(dict(zip(LID_HEADER,this_line.split())))
+        if return_json:
+            import json
+            output = json.dumps(list(LID_structures))
+            return output
+        else:
+            return LID_structures
+
+    @classmethod
+    def set_LID_usage(cls, input_file, LID_usage):
+        """ This method takes the LID_usage array specified and replaces the existing block with it.
+        :param input_file: input file string
+        :param LID_usage: list of dictionaries defining LID usages
+        :return: full input file with the block replaced
+        """
+
+        line_ending = cls.determine_line_ending(InputManipulator(), input_file)
+        if not line_ending:
+            raise Exception('Could not determine line ending')
+
+        LID_usage_block_header = '[LID_USAGE]'
+        LID_block, block_start, block_end = cls.find_block(InputManipulator(), input_file,
+                                                           LID_usage_block_header)
+        LID_block = LID_block.splitlines()
+        LID_HEADER = ['Subcatchment', 'LID Process', 'Number', 'Area', 'Width', 'InitSatur', 'FromImprv', 'ToPerv']
+        avail_lid_controls = InputManipulator().get_LID_controls(input_file, return_json=False)
+        output_lid_block = []
+
+        # Grab the first two lines
+        for this_line in LID_block:
+            if ';' in this_line or not this_line.split():
+                output_lid_block.append(this_line)
+            else:
+                break
+        for this_LID_usage in LID_usage:
+            if this_LID_usage['LID Process'] in avail_lid_controls:
+                output_lid_block.append('\t'.join([this_LID_usage[this_key] for this_key in LID_HEADER]))
+            else:
+                error_message = 'The LID Process specified {0} is not defined in this inp. Defined list {1}'
+                raise ValueError(error_message.format(this_LID_usage['LID Process'], avail_lid_controls))
+
+        lid_usage_block = line_ending.join(output_lid_block)
+
+        return input_file.replace(input_file[block_start:block_end], lid_usage_block)
+
+
+    # TODO Consider making a set of NEW LID, Modify LID, Delete LID methods
 
     def find_block(self, input_file, block_header):
         """
@@ -187,9 +249,17 @@ class RPTOutputReader(object):
         return json.dumps(output_data)
 
 # For convenience the class methods are defined into static functions
-modify_impervious_cover = InputManipulator.modify_impervious_cover
 
-get_LID_controls = InputManipulator.get_LID_controls
+# Input file manipulation
 
-extract_subcatchment_summary_data = RPTOutputReader.extract_subcatchment_summary_data
+# Modify the impervious cover for any subcatchment
+modify_impervious_cover = InputManipulator().modify_impervious_cover
+
+# Collect of tools for getting and setting LID features
+get_LID_controls = InputManipulator().get_LID_controls
+get_LID_usage = InputManipulator().get_LID_usage
+set_LID_usage = InputManipulator().set_LID_usage
+
+# Output file manipulation
+extract_subcatchment_summary_data = RPTOutputReader().extract_subcatchment_summary_data
 
