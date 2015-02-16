@@ -153,7 +153,7 @@ class InputManipulator(object):
                 break
         # If we didn't find the subcatchment block time to die
         if not block_start and not block_end:
-            raise Exception('No SUBCATCHMENTS block found')
+            raise Exception('No {} block found'.format(block_header))
 
         # To make the parsing easier lets focus on just this section of the string
         this_block = input_file[block_start:block_end]
