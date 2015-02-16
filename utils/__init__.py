@@ -15,29 +15,73 @@ class InputManipulator(object):
         # Modifications have to specified as a dictionary lets raise an exception here
         if not isinstance(modifications, dict):
             raise TypeError('Modifications need to be specified as a dict of {subcatchment_name: percent}')
-        line_ending = cls.determine_line_ending(input_file)
+        line_ending = cls.determine_line_ending(cls, input_file)
         if not line_ending:
             raise Exception('Could not determine line ending')
 
         # Setup some pieces we will need
 
+        subcatchment_block_header = '[SUBCATCHMENTS]'
+
+        subcatchment_block, block_start, block_end = cls.find_block(cls, input_file, subcatchment_block_header)
+        # Parse the lines in this block
+        subcatchment_block_lines = [
+                {
+                    # The raw line as read from the file
+                    'line': this_line,
+                    # Parse the subcatchment name
+                    'subcatchment_name': this_line.split()[0] if this_line and ';' not in this_line else None
+                }
+            for this_line in subcatchment_block.splitlines()
+        ]
+
+        # Make all the requested modifications
+        for this_raw_line in subcatchment_block_lines:
+            # If this line is a subcatchment and it is one we want to modify
+            if this_raw_line['subcatchment_name'] and this_raw_line['subcatchment_name'] in modifications:
+                # The do it!
+                this_raw_line['line'] = cls.modify_impervious_percentage(cls, modifications[this_raw_line['subcatchment_name']], this_raw_line['line'])
+        # Rebuild the string using the correct line ending
+        subcatchment_block = line_ending.join([this_raw_line['line'] for this_raw_line in subcatchment_block_lines])
+
+        # Return the full input file string
+        return input_file.replace(input_file[block_start:block_end], subcatchment_block)
+
+    @classmethod
+    def get_LID_controls(cls, input_file):
+
+        LID_controls_block_header = '[LID_CONTROLS]'
+        LID_block, block_start, block_end = cls.find_block(cls, input_file, LID_controls_block_header)
+        LID_block = LID_block.splitlines()
+        LID_structures = set()
+        for this_line in LID_block:
+            if ';' not in this_line:
+                LID_structures.add(this_line.split()[0])
+        import json
+        output = json.dumps(list(LID_structures))
+        return output
+
+    def find_block(self, input_file, block_header):
+        """
+        Generic method for finding blocks within a SWMM input file.
+        :param input_file: str of the input file
+        :param block_header: the block header to find
+        :return: the_block(str), block_start(int), block_end(int)
+        """
         # RE search for all block headers ie [HEADER]
         block_headers = re.finditer('(\[.*\])', input_file)
         # The start of the block we want to replace
         block_start = None
         # The end of the block we want to replace
         block_end = None
-        # The header we want to search for in this method
-        subcatchment_block_header = '[SUBCATCHMENTS]'
-
         if not block_headers:
             raise Exception('Block Headers not found file might be malformed')
 
-        # Loop through the blocks and find the beginning and end of the subcatchments block
+        # Loop through the blocks and find the beginning and end of the block
         for this_match in block_headers:
             this_line = this_match.group()
             # Look for the subcatchment block
-            if subcatchment_block_header in this_line:
+            if block_header in this_line:
                 block_start = this_match.end()
                 continue
             # If we have already found the start then
@@ -50,32 +94,11 @@ class InputManipulator(object):
             raise Exception('No SUBCATCHMENTS block found')
 
         # To make the parsing easier lets focus on just this section of the string
-        subcatchment_block = input_file[block_start:block_end]
-        # Parse the lines in this block
-        subcatchment_block_lines = [
-                {
-                    # The raw line as read from the file
-                    'line': this_line,
-                    # Parse the subcatchment name
-                    'subcatchment_name': this_line.split()[0] if this_line and ';;' not in this_line else None
-                }
-            for this_line in subcatchment_block.splitlines()
-        ]
+        this_block = input_file[block_start:block_end]
 
-        # Make all the requested modifications
-        for this_raw_line in subcatchment_block_lines:
-            # If this line is a subcatchment and it is one we want to modify
-            if this_raw_line['subcatchment_name'] and this_raw_line['subcatchment_name'] in modifications:
-                # The do it!
-                this_raw_line['line'] = cls.modify_percentage(modifications[this_raw_line['subcatchment_name']], this_raw_line['line'])
-        # Rebuild the string using the correct line ending
-        subcatchment_block = line_ending.join([this_raw_line['line'] for this_raw_line in subcatchment_block_lines])
+        return this_block, block_start, block_end
 
-        # Return the full input file string
-        return input_file.replace(input_file[block_start:block_end], subcatchment_block)
-
-    @classmethod
-    def modify_percentage(self, percent, line):
+    def modify_impervious_percentage(self, percent, line):
         """ Modify the subcatchments line with the new percentage
         :param percent: Percentage to replace with
         :param line: Raw line read from file
@@ -88,7 +111,6 @@ class InputManipulator(object):
         # Formatting is hard so just tab separate for now....
         return '\t'.join(temp_line)
 
-    @classmethod
     def determine_line_ending(self, input_file):
         """ Potentially different line endings can be used depending on system
         :param input_file: input file string
@@ -110,7 +132,7 @@ class RPTOutputReader(object):
     @classmethod
     def extract_subcatchment_summary_data(cls, output_file):
         """
-        :param output_file: String out RTP output file
+        :param output_file: String of RTP output file
         :return: JSON string of parsed Subcatchment Summary area
         """
         # Break the file up by lines and turn it into an iterator
@@ -163,3 +185,11 @@ class RPTOutputReader(object):
         # When we are finished json dumps the result
         import json
         return json.dumps(output_data)
+
+# For convenience the class methods are defined into static functions
+modify_impervious_cover = InputManipulator.modify_impervious_cover
+
+get_LID_controls = InputManipulator.get_LID_controls
+
+extract_subcatchment_summary_data = RPTOutputReader.extract_subcatchment_summary_data
+
