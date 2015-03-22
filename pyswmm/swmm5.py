@@ -11,9 +11,8 @@ Last Update 5-12-14
 
 
 import os, sys
-from ctypes import byref, cdll, windll, c_double, c_int, c_float
+from ctypes import byref, c_double, c_int, c_float
 #from pkg_resources import resource_filename
-#import platform
 
 class SWMMException(Exception):
     pass
@@ -51,26 +50,22 @@ class pyswmm():
         self.rptfile = rptfile
         self.binfile = binfile
         
-        '''
-        as of 5-12-14 the shared library search feature is disabled. Reference pyepanet
-        to see what the future will hold for this. resource_filename, I believe,
-        is only a feature that works if this module is packaged for distribution - BEM
-        '''
-##        libnames = ['swmm']
-##        for lib in libnames:
-##            try:
-##                if sys.platform in ['darwin']:
-##                    #libswmm = resource_filename('pyswmm','data/Darwin/lin%s.dylib' % lib)
+        
+        # The following should be un commented if using on mac
+        #### darwin
+        if 'darwin' in sys.platform:
+            from ctypes import cdll
+            libpath = os.getcwd()
+            libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
+            self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
 
-        # point to shared library, here
-        libpath = 'C:\\Users\\mtryby\\Workspace\\GitRepo\\michaeltryby\\pyswmm'
-        libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86'
-        self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
-##                
-##            except Exception as E1:
-##                if lib == libnames[-1]:
-##                    raise E1
-##                pass
+        # The following should be un commented if using windows    
+        #### windows
+        if 'win32' in sys.platform:
+            from ctypes import windll
+            libpath = os.getcwd()
+            libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
+            self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
 
     def isOpen(self):
         return self.fileLoaded
