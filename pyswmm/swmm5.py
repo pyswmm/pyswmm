@@ -10,14 +10,14 @@ Last Update 5-12-14
 '''
 
 
-import os, sys
-from ctypes import byref, c_double, c_int, c_float
-#from pkg_resources import resource_filename
+import os
+import sys
+from ctypes import byref, c_double, c_float
 
 class SWMMException(Exception):
     pass
 
-class pyswmm():
+class pyswmm(object):
     '''
     Wrapper class to lead SWMM DLL object, then perform operations on
     the SWMM object that is created when the file is being loaded.
@@ -50,7 +50,6 @@ class pyswmm():
         self.rptfile = rptfile
         self.binfile = binfile
         
-        
         # The following should be un commented if using on mac
         #### darwin
         if 'darwin' in sys.platform:
@@ -58,26 +57,25 @@ class pyswmm():
             libpath = os.getcwd()
             libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
             self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
+        #### darwin
 
-        # The following should be un commented if using windows    
-        #### windows
+
+
+       #### windows
         if 'win32' in sys.platform:
             from ctypes import windll
             libpath = os.getcwd()
             libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
             self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
-
-    def isOpen(self):
-        return self.fileLoaded
                 
     def _error(self):
         """Print the error text the corresponds to the error code returned"""
-        if not self.errcode: return
+        if not self.errcode:
+            return
         errtxt = self.SWMMlibobj.swmmgeterror(self.errcode)
-        sys.stdout.write(errtxt+"\n")
         if self.errcode >= 100:
             self.Errflag = True
-            raise(SWMMException('Fatal error occured'))
+            raise(SWMMException('Fatal error occured {}'.format(errtxt)))
         else:
             self.Warnflag = True
         return
@@ -92,9 +90,12 @@ class pyswmm():
          * binfile = optional binary file to create
         
         """
-        if inpfile is None: inpfile = self.inpfile
-        if rptfile is None: rptfile = self.rptfile
-        if binfile is None: binfile = self.binfile
+        if inpfile is None:
+            inpfile = self.inpfile
+        if rptfile is None:
+            rptfile = self.rptfile
+        if binfile is None:
+            binfile = self.binfile
         sys.stdout.write("\n... SWMM Version 5.1")
 
         try:
@@ -133,12 +134,16 @@ class pyswmm():
          * binfile = Binary output file to create (default to constructor value)
         
         """
-        if self.fileLoaded: self.swmm_close()
+        if self.fileLoaded:
+            self.swmm_close()
         if self.fileLoaded: 
             raise(SWMMException('Fatal error closing previously opened file'))
-        if inpfile is None: inpfile = self.inpfile
-        if rptfile is None: rptfile = self.rptfile
-        if binfile is None: binfile = self.binfile
+        if inpfile is None:
+            inpfile = self.inpfile
+        if rptfile is None:
+            rptfile = self.rptfile
+        if binfile is None:
+            binfile = self.binfile
         self.errcode = self.SWMMlibobj.swmm_open(inpfile, rptfile, binfile)
         
         self._error()
@@ -172,7 +177,9 @@ class pyswmm():
     def swmm_report(self):
         """frees all memory & files used by SWMM"""
         self.errcode = self.SWMMlibobj.swmm_report()
-        
+        self.check_error()
+
+    def check_error(self):
         self._error()
         if self.errcode < 100:
             self.fileLoaded = False   
@@ -180,11 +187,8 @@ class pyswmm():
     def swmm_close(self):
         """frees all memory & files used by SWMM"""
         self.errcode = self.SWMMlibobj.swmm_close()
-        
-        self._error()
-        if self.errcode < 100:
-            self.fileLoaded = False
-    
+        self.check_error()
+
     def swmmgeterror(self, iErrcode):
         """
         retrieves text of error/warning message
