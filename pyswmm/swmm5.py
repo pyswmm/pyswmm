@@ -12,7 +12,7 @@ Last Update 5-12-14
 
 import os
 import sys
-from ctypes import byref, c_double, c_float
+from ctypes import byref, c_double, c_float, c_int, c_char_p
 
 class SWMMException(Exception):
     pass
@@ -122,7 +122,8 @@ class pyswmm(object):
         if inpfile is None: inpfile = self.inpfile
         if rptfile is None: rptfile = self.rptfile
         if binfile is None: binfile = self.binfile
-        self.SWMMlibobj.swmm_run(inpfile, rptfile, binfile)
+
+        self.SWMMlibobj.swmm_run(c_char_p(inpfile), c_char_p(rptfile), c_char_p(binfile))
         
     def swmm_open(self, inpfile=None, rptfile=None, binfile=None):
         """
@@ -144,7 +145,9 @@ class pyswmm(object):
             rptfile = self.rptfile
         if binfile is None:
             binfile = self.binfile
-        self.errcode = self.SWMMlibobj.swmm_open(inpfile, rptfile, binfile)
+        self.errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
+                                                 c_char_p(rptfile),\
+                                                 c_char_p(binfile))
         
         self._error()
         if self.errcode < 100:
@@ -152,7 +155,8 @@ class pyswmm(object):
         
     def swmm_start(self):
         """frees all memory & files used by SWMM"""
-        self.errcode = self.SWMMlibobj.swmm_start()
+        Save2Out = 1
+        self.errcode = self.SWMMlibobj.swmm_start(c_int(Save2Out))
         
         self._error()
         if self.errcode < 100:
@@ -167,7 +171,9 @@ class pyswmm(object):
             self.fileLoaded = False
         
     def swmm_step(self):
-        
+        """ 
+
+        """
         elapsed_time = c_double()
         self.SWMMlibobj.swmm_step(byref(elapsed_time))
 

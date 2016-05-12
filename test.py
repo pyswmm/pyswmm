@@ -16,25 +16,28 @@ swmmobject = pyswmm('./example/parkinglot.inp',\
 
 swmmobject.swmmExec()
 print(swmmobject.swmm_getVersion())
-print(swmmobject.swmm_getMassBalErr())
+print(swmmobject.swmm_getMassBalErr())   
+
+print("swmmExec() Check Passed")
 
 
 #this checks the swmm_step features
+swmmobject = pyswmm('./example/parkinglot.inp',\
+                    './example/parkinglot.rpt',\
+                    './example/parkinglot.out')
+swmmobject.swmm_open()
+swmmobject.swmm_start()
 
-##time = 0.0
-##tend = 0.5
-##swmmobject.swmm_open()
-##swmmobject.swmm_start()
-##
-##while(True):
-##    
-##    time = swmmobject.swmm_step()
-##    print time
-##    if (time <= 0.0):
-##        break
-##    
-##swmmobject.swmm_end()
-##swmmobject.swmm_report()
-##swmmobject.swmm_close()
+while(True):
     
+    time = swmmobject.swmm_step()
+##    print time
+    if (time <= 0.0):
+        break
+    
+swmmobject.swmm_end()
+swmmobject.swmm_report()
+swmmobject.swmm_close()
 
+ 
+print("swmm_step() Check Passed")
