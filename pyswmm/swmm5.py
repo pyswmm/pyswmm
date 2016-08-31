@@ -12,7 +12,9 @@ Last Update 5-12-14
 
 import os
 import sys
-from ctypes import byref, c_double, c_float, c_int, c_char_p
+from toolkitapi import *
+
+from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer
 
 class SWMMException(Exception):
     pass
@@ -63,11 +65,16 @@ class pyswmm(object):
 
        #### windows
         if 'win32' in sys.platform:
-            from ctypes import windll
-            libpath = os.getcwd()
-            libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
-            self.SWMMlibobj = windll.LoadLibrary(libpath+libswmm)
-                
+            from ctypes import CDLL
+            #from ctypes import windll
+##            libpath = os.getcwd()
+##            libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
+##            libswmm = "C:\\PROJECTCODE\\pyswmm\\pyswmm\\swmm5.dll"
+##            self.SWMMlibobj = CDLL(libswmm)
+            libswmm = '.\\data\\Windows\\swmm5.dll'
+
+##            self.SWMMlibobj = windll.LoadLibrary(libswmm)
+            self.SWMMlibobj = CDLL(libswmm)
     def _error(self):
         """Print the error text the corresponds to the error code returned"""
         if not self.errcode:
@@ -93,9 +100,11 @@ class pyswmm(object):
         if inpfile is None:
             inpfile = self.inpfile
         if rptfile is None:
-            rptfile = self.rptfile
+            if self.rptfile != '': rptfile = self.rptfile
+            else self.rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
-            binfile = self.binfile
+            if self.binfile != '': binfile = self.binfile
+            else self.binfile = self.inpfile.replace('.inp','.rpt') 
         sys.stdout.write("\n... SWMM Version 5.1")
 
         try:
@@ -120,8 +129,12 @@ class pyswmm(object):
             
     def swmm_run(self,inpfile=None, rptfile=None,binfile = None):
         if inpfile is None: inpfile = self.inpfile
-        if rptfile is None: rptfile = self.rptfile
-        if binfile is None: binfile = self.binfile
+        if rptfile is None:
+            if self.rptfile != '': rptfile = self.rptfile
+            else self.rptfile = self.inpfile.replace('.inp','.rpt')
+        if binfile is None:
+            if self.binfile != '': binfile = self.binfile
+            else self.binfile = self.inpfile.replace('.inp','.rpt') 
 
         self.SWMMlibobj.swmm_run(c_char_p(inpfile), c_char_p(rptfile), c_char_p(binfile))
         
@@ -142,16 +155,19 @@ class pyswmm(object):
         if inpfile is None:
             inpfile = self.inpfile
         if rptfile is None:
-            rptfile = self.rptfile
+            if self.rptfile != '': rptfile = self.rptfile
+            else self.rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
-            binfile = self.binfile
+            if self.binfile != '': binfile = self.binfile
+            else self.binfile = self.inpfile.replace('.inp','.rpt')            
+
         self.errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
                                                  c_char_p(rptfile),\
                                                  c_char_p(binfile))
-        
-        self._error()
-        if self.errcode < 100:
-            self.fileLoaded = True
+        print self.errcode
+        #self._error()
+        #if self.errcode < 100:
+            #self.fileLoaded = True
         
     def swmm_start(self):
         """frees all memory & files used by SWMM"""
@@ -195,21 +211,21 @@ class pyswmm(object):
         self.errcode = self.SWMMlibobj.swmm_close()
         self.check_error()
 
-    def swmmgeterror(self, iErrcode):
-        """
-        retrieves text of error/warning message
-        
-        Arguments:
-         * errcode = error/warning code number
-        
-        Returns: string
-         * text of error/warning message
-        
-        """
-        sErrmsg = ctypes.create_string_buffer(256)
-        self.errcode = self.SWMMlibobj.swmmgeterror(iErrcode, byref(sErrmsg), 256)
-        self._error()
-        return sErrmsg.value
+##    def swmmgeterror(self, iErrcode):
+##        """
+##        retrieves text of error/warning message
+##        
+##        Arguments:
+##         * errcode = error/warning code number
+##        
+##        Returns: string
+##         * text of error/warning message
+##        
+##        """
+##        sErrmsg = ctypes.create_string_buffer(256)
+##        self.errcode = self.SWMMlibobj.swmmgeterror(iErrcode, byref(sErrmsg), 256)
+##        self._error()
+##        return sErrmsg.value
 
     def swmm_getVersion(self):
         """
@@ -234,3 +250,47 @@ class pyswmm(object):
         self._error()
         
         return runoffErr.value, flowErr.value, qualErr.value
+
+    #### NETWORK API FUNCTIONS
+    def swmm_getProjectSize(self, ObjectType):
+        count = c_int()
+        self.errcode = self.SWMMlibobj.swmm_countObjects(ObjectType, byref(count))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return count.value
+    
+    def swmm_getObjectId(self, ObjectType, index):
+        ID = create_string_buffer(61)
+        self.errcode = self.SWMMlibobj.swmm_getObjectId(ObjectType,index, byref(ID))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return ID.value
+
+    def swmm_getNodeParam(self, index, Parameter):
+        param = c_float()
+        self.errcode = self.SWMMlibobj.swmm_getNodeParam(index,Parameter, byref(param))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return param.value
+        
+    
+if __name__ == '__main__':
+    test = pyswmm(inpfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\modelweirTravel.inp',\
+                   rptfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\modelweirTravel.rpt',\
+                   binfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\modelweirTravel.out')
+    test.swmm_open()
+    print test.swmm_getProjectSize(ObjectType.NODE)
+    
+    print "Node ID"
+    IDS = {test.swmm_getObjectId(ObjectType.NODE,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.NODE))}
+    print 'ID,Invert,Type'
+    for idd in IDS.keys():
+        print idd, test.swmm_getNodeParam( IDS[idd], NodeParams.invertElev ),\
+              test.swmm_getNodeParam( IDS[idd], NodeParams.Type )
+
+    print "Link ID"
+    IDS = {test.swmm_getObjectId(ObjectType.LINK,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.LINK))}
+    for idd in IDS.keys():
+        print idd
+
+    print "SUBCATCH ID"
+    IDS = {test.swmm_getObjectId(ObjectType.SUBCATCH,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.SUBCATCH))}
+    for idd in IDS.keys():
+        print idd
