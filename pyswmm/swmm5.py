@@ -101,10 +101,10 @@ class pyswmm(object):
             inpfile = self.inpfile
         if rptfile is None:
             if self.rptfile != '': rptfile = self.rptfile
-            else self.rptfile = self.inpfile.replace('.inp','.rpt')
+            else: self.rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
             if self.binfile != '': binfile = self.binfile
-            else self.binfile = self.inpfile.replace('.inp','.rpt') 
+            else: self.binfile = self.inpfile.replace('.inp','.rpt') 
         sys.stdout.write("\n... SWMM Version 5.1")
 
         try:
@@ -131,10 +131,10 @@ class pyswmm(object):
         if inpfile is None: inpfile = self.inpfile
         if rptfile is None:
             if self.rptfile != '': rptfile = self.rptfile
-            else self.rptfile = self.inpfile.replace('.inp','.rpt')
+            else: self.rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
             if self.binfile != '': binfile = self.binfile
-            else self.binfile = self.inpfile.replace('.inp','.rpt') 
+            else: self.binfile = self.inpfile.replace('.inp','.rpt') 
 
         self.SWMMlibobj.swmm_run(c_char_p(inpfile), c_char_p(rptfile), c_char_p(binfile))
         
@@ -156,10 +156,10 @@ class pyswmm(object):
             inpfile = self.inpfile
         if rptfile is None:
             if self.rptfile != '': rptfile = self.rptfile
-            else self.rptfile = self.inpfile.replace('.inp','.rpt')
+            else: self.rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
             if self.binfile != '': binfile = self.binfile
-            else self.binfile = self.inpfile.replace('.inp','.rpt')            
+            else: self.binfile = self.inpfile.replace('.inp','.rpt')            
 
         self.errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
                                                  c_char_p(rptfile),\
@@ -283,7 +283,8 @@ if __name__ == '__main__':
     print 'ID,Invert,Type'
     for idd in IDS.keys():
         print idd, test.swmm_getNodeParam( IDS[idd], NodeParams.invertElev ),\
-              test.swmm_getNodeParam( IDS[idd], NodeParams.Type )
+              test.swmm_getNodeParam( IDS[idd], NodeParams.Type ),\
+              test.swmm_getNodeParam( IDS[idd], NodeParams.fullDepth )
 
     print "Link ID"
     IDS = {test.swmm_getObjectId(ObjectType.LINK,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.LINK))}
