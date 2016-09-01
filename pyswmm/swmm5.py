@@ -252,46 +252,98 @@ class pyswmm(object):
         return runoffErr.value, flowErr.value, qualErr.value
 
     #### NETWORK API FUNCTIONS
-    def swmm_getProjectSize(self, ObjectType):
+    def swmm_getProjectSize(self, objecttype):
         count = c_int()
-        self.errcode = self.SWMMlibobj.swmm_countObjects(ObjectType, byref(count))
+        self.errcode = self.SWMMlibobj.swmm_countObjects(objecttype, byref(count))
         if self.errcode != 0: raise Exception(self.errcode)
         return count.value
     
-    def swmm_getObjectId(self, ObjectType, index):
+    def swmm_getObjectId(self, objecttype, index):
         ID = create_string_buffer(61)
-        self.errcode = self.SWMMlibobj.swmm_getObjectId(ObjectType,index, byref(ID))
+        self.errcode = self.SWMMlibobj.swmm_getObjectId(objecttype,index, byref(ID))
         if self.errcode != 0: raise Exception(self.errcode)
         return ID.value
 
+    def swmm_getNodeType(self, index):
+        Ntype = c_int()
+        self.errcode = self.SWMMlibobj.swmm_getNodeType(index, byref(Ntype))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return Ntype.value
+
+    def swmm_getLinkType(self, index):
+        Ltype = c_int()
+        self.errcode = self.SWMMlibobj.swmm_getLinkType(index, byref(Ltype))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return Ltype.value
+
+    def swmm_getLinkConnections(self, index):
+        USNodeIND = c_int()
+        DSNodeIND = c_int()
+
+        self.errcode = self.SWMMlibobj.swmm_getLinkConnections(index, byref(USNodeIND), byref(DSNodeIND))
+        if self.errcode != 0: raise Exception(self.errcode)
+        
+        USNodeID = self.swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
+        DSNodeID = self.swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
+        return (USNodeID, DSNodeID) # Return Tuple of Upstream and Downstream Node IDS
+
     def swmm_getNodeParam(self, index, Parameter):
-        param = c_float()
+        param = c_double()
         self.errcode = self.SWMMlibobj.swmm_getNodeParam(index,Parameter, byref(param))
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
-        
-    
+
+    def swmm_getLinkParam(self, index, Parameter):
+        param = c_double()
+        self.errcode = self.SWMMlibobj.swmm_getLinkParam(index,Parameter, byref(param))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return param.value
+
+    def swmm_getSubcatchParam(self, index, Parameter):
+        param = c_double()
+        self.errcode = self.SWMMlibobj.swmm_getSubcatchParam(index,Parameter, byref(param))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return param.value
+
+    def swmm_getSubcatchOutConnection(self, index):
+        TYPELoadSurface = c_int()
+        outindex = c_int()
+        self.errcode = self.SWMMlibobj.swmm_getSubcatchOutConnection(index, byref(TYPELoadSurface), byref(outindex))
+        if self.errcode != 0: raise Exception(self.errcode)
+
+        if TYPELoadSurface.value == ObjectType.NODE:
+            LoadID = self.swmm_getObjectId(ObjectType.NODE, outindex.value)
+        if TYPELoadSurface.value == ObjectType.SUBCATCH:
+            LoadID = self.swmm_getObjectId(ObjectType.SUBCATCH, outindex.value)
+        return(TYPELoadSurface.value, LoadID)
+                                      
 if __name__ == '__main__':
-    test = pyswmm(inpfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\modelweirTravel.inp',\
-                   rptfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\modelweirTravel.rpt',\
-                   binfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\modelweirTravel.out')
+    test = pyswmm(inpfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\COLTest.inp',\
+                   rptfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\COLTest.rpt',\
+                   binfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\COLTest.out')
     test.swmm_open()
+    
     print test.swmm_getProjectSize(ObjectType.NODE)
     
     print "Node ID"
     IDS = {test.swmm_getObjectId(ObjectType.NODE,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.NODE))}
     print 'ID,Invert,Type'
-    for idd in IDS.keys():
-        print idd, test.swmm_getNodeParam( IDS[idd], NodeParams.invertElev ),\
-              test.swmm_getNodeParam( IDS[idd], NodeParams.Type ),\
-              test.swmm_getNodeParam( IDS[idd], NodeParams.fullDepth )
+    for idd in IDS.keys()[:10]:
+        print IDS[idd],idd, test.swmm_getNodeParam( IDS[idd], NodeParams.invertElev ),\
+              test.swmm_getNodeParam( IDS[idd], NodeParams.fullDepth ),\
+              test.swmm_getNodeType( IDS[idd] )
 
     print "Link ID"
+    print 'ID,offset1,LinkConnections'
     IDS = {test.swmm_getObjectId(ObjectType.LINK,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.LINK))}
-    for idd in IDS.keys():
-        print idd
+    for idd in IDS.keys()[:10]:
+        print IDS[idd],idd, test.swmm_getLinkParam( IDS[idd], LinkParams.offset1 ), \
+              test.swmm_getLinkConnections(IDS[idd])
 
     print "SUBCATCH ID"
     IDS = {test.swmm_getObjectId(ObjectType.SUBCATCH,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.SUBCATCH))}
-    for idd in IDS.keys():
-        print idd
+    for idd in IDS.keys()[:100]:
+        print IDS[idd],idd, test.swmm_getSubcatchParam(IDS[idd], SubcParams.area),\
+              test.swmm_getSubcatchOutConnection(IDS[idd])
+
+    test.swmm_close()

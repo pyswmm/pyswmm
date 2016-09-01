@@ -24,47 +24,29 @@ class ObjectType:
 
 
 class NodeParams:
-    Type            = 0# int
-    invertElev      = 1# double
-    fullDepth       = 2# double
-    surDepth        = 3# double
-    pondedArea      = 4# double
-    initDepth       = 5# double
-    rptFlag         = 6# char
+    invertElev      = 0# double
+    fullDepth       = 1# double
+    surDepth        = 2# double
+    pondedArea      = 3# double
+    initDepth       = 4# double
+
     
 class LinkParams:
-    Type            = 0#  
-    subIndex        = 0#   
-    rptFlag         = 0#
-    node1           = 0#
-    node2           = 0#
-    offset1         = 0#
-    offset2         = 0#
-    xsect           = 0#
-    q0              = 0#
-    qLimit          = 0#
-    cLossInlet      = 0#
-    cLossOutlet     = 0#
-    cLossAvg        = 0#
-    seepRate        = 0#
-    hasFlapGate     = 0#
+    offset1         = 0# double
+    offset2         = 1# double
+    q0              = 2# double
+    qLimit          = 3# double
+    cLossInlet      = 4# double
+    cLossOutlet     = 5# double
+    cLossAvg        = 6# double
+    seepRate        = 7# double
 
 class SubcParams:
-    rptFlag         = 1
-    gage            = 1
-    outNode         = 1
-    outSubcatch     = 1
-    infil           = 1
-    subArea         = 1
-    width           = 1
-    area            = 1
-    fracImperv      = 1
-    slope           = 1
-    curbLength      = 1
-    initBuildup     = 1
-    landFactor      = 1
-    groundwater     = 1
-    gwLatFlowExpr   = 1
-    gwDeepFlowExpr  = 1
-    snowpack        = 1
+    width           = 0 # double
+    area            = 1 # double
+    fracImperv      = 2 # double
+    slope           = 3 # double
+    curbLength      = 4 # double
+    #initBuildup     = 5 # double
+
 
