@@ -71,10 +71,11 @@ class pyswmm(object):
 ##            libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
 ##            libswmm = "C:\\PROJECTCODE\\pyswmm\\pyswmm\\swmm5.dll"
 ##            self.SWMMlibobj = CDLL(libswmm)
-            libswmm = '.\\data\\Windows\\swmm5.dll'
+            libswmm = '.\\pyswmm\\data\\Windows\\swmm5.dll'
 
 ##            self.SWMMlibobj = windll.LoadLibrary(libswmm)
             self.SWMMlibobj = CDLL(libswmm)
+            
     def _error(self):
         """Print the error text the corresponds to the error code returned"""
         if not self.errcode:
@@ -195,6 +196,17 @@ class pyswmm(object):
 
         return elapsed_time.value
 
+    def swmm_stride(self, advanceSeconds):
+        """ 
+
+        """
+        if not hasattr(self, 'curSimTime'): self.curSimTime = 0.000001
+        
+        elapsed_time = c_double()
+        ctime = self.curSimTime
+        self.SWMMlibobj.swmm_stride(c_double(advanceSeconds), c_double(ctime), byref(elapsed_time))
+        self.curSimTime = elapsed_time.value
+        return elapsed_time.value
         
     def swmm_report(self):
         """frees all memory & files used by SWMM"""
@@ -253,24 +265,87 @@ class pyswmm(object):
 
     #### NETWORK API FUNCTIONS
     def swmm_getProjectSize(self, objecttype):
+        ''' Get Project Size: Number of Objects
+
+        :param objecttype: (member variable)
+        
+        :return: Object Count
+        :rtype: int
+
+        Examples:
+        >>> swmm_model = pyswmm(r'//*.inp',r'//*.rpt',r'//*.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getProjectSize(ObjectType.NODE)
+        >>> 10
+        >>> swmm_model.swmm_close()
+        '''
         count = c_int()
         self.errcode = self.SWMMlibobj.swmm_countObjects(objecttype, byref(count))
         if self.errcode != 0: raise Exception(self.errcode)
         return count.value
     
     def swmm_getObjectId(self, objecttype, index):
+        ''' Get Object ID name
+
+        :param objecttype: (member variable)
+        :param index: ID Index
+        :return: Object ID
+        :rtype: string
+
+        Examples:
+        >>> swmm_model = pyswmm(r'//*.inp',r'//*.rpt',r'//*.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getObjectId(ObjectType.NODE,35)
+        >>> "example_id_name"
+        >>>
+        >>> swmm_model.swmm_close()
+        '''        
         ID = create_string_buffer(61)
         self.errcode = self.SWMMlibobj.swmm_getObjectId(objecttype,index, byref(ID))
         if self.errcode != 0: raise Exception(self.errcode)
         return ID.value
 
     def swmm_getNodeType(self, index):
+        ''' Get Node Type (e.g. Junction, Outfall, Storage, Divider)
+
+        :param index: ID Index
+        :return: Object ID
+        :rtype: int
+
+        Examples:
+        >>> swmm_model = pyswmm(r'//*.inp',r'//*.rpt',r'//*.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getNodeType(35)
+        >>> 0
+        >>>
+        >>> swmm_model.swmm_getNodeType(35) is NodeType.junction
+        >>> True
+        >>>
+        >>> swmm_model.swmm_close()
+        '''          
         Ntype = c_int()
         self.errcode = self.SWMMlibobj.swmm_getNodeType(index, byref(Ntype))
         if self.errcode != 0: raise Exception(self.errcode)
         return Ntype.value
 
     def swmm_getLinkType(self, index):
+        ''' Get Link Type (e.g. Conduit, Pump, Orifice, Weir, Outlet)
+
+        :param index: ID Index
+        :return: Object ID
+        :rtype: int
+
+        Examples:
+        >>> swmm_model = pyswmm(r'//*.inp',r'//*.rpt',r'//*.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getLinkType(35)
+        >>> 3
+        >>>
+        >>> swmm_model.swmm_getLinkType(35) is LinkType.weir
+        >>> True
+        >>>
+        >>> swmm_model.swmm_close()
+        '''            
         Ltype = c_int()
         self.errcode = self.SWMMlibobj.swmm_getLinkType(index, byref(Ltype))
         if self.errcode != 0: raise Exception(self.errcode)
@@ -282,10 +357,19 @@ class pyswmm(object):
 
         self.errcode = self.SWMMlibobj.swmm_getLinkConnections(index, byref(USNodeIND), byref(DSNodeIND))
         if self.errcode != 0: raise Exception(self.errcode)
-        
-        USNodeID = self.swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
-        DSNodeID = self.swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
-        return (USNodeID, DSNodeID) # Return Tuple of Upstream and Downstream Node IDS
+
+        USNodeID = self._swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
+        DSNodeID = self._swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
+        if self.swmm_getLinkDirection(index) == 1:
+            return (USNodeID, DSNodeID) # Return Tuple of Upstream and Downstream Node IDS
+        elif self.swmm_getLinkDirection(index) == -1: # link validations reverse the conduit direction if the slope is < 0
+            return (DSNodeID, USNodeID) # Return Tuple of Upstream and Downstream Node IDS
+            
+    def _swmm_getLinkDirection(self, index):
+        direction = c_byte()
+        self.errcode = self.SWMMlibobj.swmm_getLinkDirection(index, byref(direction))
+        if self.errcode !=0: raise Exception(self.errcode)
+        return direction.value
 
     def swmm_getNodeParam(self, index, Parameter):
         param = c_double()
@@ -316,11 +400,23 @@ class pyswmm(object):
         if TYPELoadSurface.value == ObjectType.SUBCATCH:
             LoadID = self.swmm_getObjectId(ObjectType.SUBCATCH, outindex.value)
         return(TYPELoadSurface.value, LoadID)
+
+
+    #### Active Simulation Result "Getters"
+    
+    def swmm_getNodeResult(self, index, resultType):
+        result = c_double()
+        
+        self.errcode = self.SWMMlibobj.swmm_getNodeResult(index, resultType, byref(result))
+        if self.errcode != 0: raise Exception(self.errcode)
+
+        return result.value
+
                                       
 if __name__ == '__main__':
-    test = pyswmm(inpfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\COLTest.inp',\
-                   rptfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\COLTest.rpt',\
-                   binfile = 'C:\\PROJECTCODE\\pyswmm\\pyswmm\\COLTest.out')
+    test = pyswmm(inpfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.inp",\
+                   rptfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.rpt",\
+                   binfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.out")
     test.swmm_open()
     
     print test.swmm_getProjectSize(ObjectType.NODE)
@@ -346,4 +442,4 @@ if __name__ == '__main__':
         print IDS[idd],idd, test.swmm_getSubcatchParam(IDS[idd], SubcParams.area),\
               test.swmm_getSubcatchOutConnection(IDS[idd])
 
-    test.swmm_close()
+    #test.swmm_close()

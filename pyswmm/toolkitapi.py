@@ -30,6 +30,22 @@ class NodeParams:
     pondedArea      = 3# double
     initDepth       = 4# double
 
+class NodeResults:
+    totalinflow     = 0#// Total Inflow
+    outflow         = 1#// Total Outflow
+    losses          = 2#// Losses (evap + exfiltration loss)
+    newVolume       = 3#// Current Volume
+    overflow        = 4#// overflow
+    newDepth        = 5#// Current water depth
+    newHead         = 6#// Current water head
+    newLatFlow      = 7#// Current Lateral Inflow
+
+class NodeType:
+    junction        = 0#// Junction Type
+    outfall         = 1#// Outfall Type
+    storage         = 2#// Storage Type
+    divider         = 3#// Divider Type
+
     
 class LinkParams:
     offset1         = 0# double
@@ -40,6 +56,13 @@ class LinkParams:
     cLossOutlet     = 5# double
     cLossAvg        = 6# double
     seepRate        = 7# double
+
+class LinkType:
+    conduit         = 0#// Conduit Type
+    pump            = 1#// Pump Type
+    orifice         = 2#// Orifice Type
+    weir            = 3#// Weir Type
+    outlet          = 4#// Outlet Type
 
 class SubcParams:
     width           = 0 # double
