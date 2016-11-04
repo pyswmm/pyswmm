@@ -14,7 +14,7 @@ import os
 import sys
 from toolkitapi import *
 
-from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer
+from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer, c_byte
 
 class SWMMException(Exception):
     pass
@@ -51,6 +51,11 @@ class pyswmm(object):
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
+
+        def get_pkgpath():
+            # Dynamically finds path to SWMM linking library
+            import toolkitapi as tkp
+            return os.path.dirname(tkp.__file__.replace('\\','/'))
         
         # The following should be un commented if using on mac
         #### darwin
@@ -59,21 +64,12 @@ class pyswmm(object):
             libpath = os.getcwd()
             libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
             self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
-        #### darwin
 
-
-
-       #### windows
+        #### windows
         if 'win32' in sys.platform:
             from ctypes import CDLL
-            #from ctypes import windll
-##            libpath = os.getcwd()
-##            libswmm = '\\pyswmm\\data\\Windows\\swmm5_x86.dll'
-##            libswmm = "C:\\PROJECTCODE\\pyswmm\\pyswmm\\swmm5.dll"
-##            self.SWMMlibobj = CDLL(libswmm)
-            libswmm = '.\\pyswmm\\data\\Windows\\swmm5.dll'
-
-##            self.SWMMlibobj = windll.LoadLibrary(libswmm)
+            dllname = 'swmm5.dll'
+            libswmm = get_pkgpath() + '\\data\\Windows\\' + dllname
             self.SWMMlibobj = CDLL(libswmm)
             
     def _error(self):
@@ -202,10 +198,16 @@ class pyswmm(object):
         """
         if not hasattr(self, 'curSimTime'): self.curSimTime = 0.000001
         
-        elapsed_time = c_double()
+        
         ctime = self.curSimTime
-        self.SWMMlibobj.swmm_stride(c_double(advanceSeconds), c_double(ctime), byref(elapsed_time))
-        self.curSimTime = elapsed_time.value
+        #print ctime, advanceSeconds
+        while advanceSeconds/3600./24. + ctime > self.curSimTime:
+            elapsed_time = c_double()
+            self.SWMMlibobj.swmm_step(byref(elapsed_time))
+        
+            #self.SWMMlibobj.swmm_stride(c_double(advanceSeconds), c_double(ctime), byref(elapsed_time))
+            self.curSimTime = elapsed_time.value
+            #print self.curSimTime
         return elapsed_time.value
         
     def swmm_report(self):
@@ -267,7 +269,7 @@ class pyswmm(object):
     def swmm_getProjectSize(self, objecttype):
         ''' Get Project Size: Number of Objects
 
-        :param objecttype: (member variable)
+        :param int objecttype: (member variable)
         
         :return: Object Count
         :rtype: int
@@ -287,7 +289,7 @@ class pyswmm(object):
     def swmm_getObjectId(self, objecttype, index):
         ''' Get Object ID name
 
-        :param objecttype: (member variable)
+        :param int objecttype: (member variable)
         :param index: ID Index
         :return: Object ID
         :rtype: string
@@ -308,7 +310,7 @@ class pyswmm(object):
     def swmm_getNodeType(self, index):
         ''' Get Node Type (e.g. Junction, Outfall, Storage, Divider)
 
-        :param index: ID Index
+        :param int index: ID Index
         :return: Object ID
         :rtype: int
 
@@ -331,7 +333,7 @@ class pyswmm(object):
     def swmm_getLinkType(self, index):
         ''' Get Link Type (e.g. Conduit, Pump, Orifice, Weir, Outlet)
 
-        :param index: ID Index
+        :param int index: ID Index
         :return: Object ID
         :rtype: int
 
@@ -352,20 +354,51 @@ class pyswmm(object):
         return Ltype.value
 
     def swmm_getLinkConnections(self, index):
+        ''' Get Link Connections (Upstream and Downstream Nodes).
+
+        Interestingly, if the dynamic wave solver is used,
+        when the input file is parsed and added to the SWMM5 data model,
+        any negatively sloped conduits are reversed automatically. The
+        swmm_getLinkConnections function always calls the _swmm_getLinkDirection
+        function to ensure the user-assigned upstream ID and downstream IDs
+        are in the correct order. This way, the functions provides support for
+        directed graphs automatically. 
+
+        :param int index: ID Index
+        :return: (Upstream Node Index, Downstream Node Index)
+        :rtype: tuple
+
+        Examples:
+        >>> swmm_model = pyswmm(r'//*.inp',r'//*.rpt',r'//*.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getLinkConnections(35)
+        >>> ('NodeUSID','NodeDSID')
+        >>>
+        >>> swmm_model.swmm_close()        
+        '''
         USNodeIND = c_int()
         DSNodeIND = c_int()
 
         self.errcode = self.SWMMlibobj.swmm_getLinkConnections(index, byref(USNodeIND), byref(DSNodeIND))
         if self.errcode != 0: raise Exception(self.errcode)
 
-        USNodeID = self._swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
-        DSNodeID = self._swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
-        if self.swmm_getLinkDirection(index) == 1:
+        USNodeID = self.swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
+        DSNodeID = self.swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
+        if self._swmm_getLinkDirection(index) == 1:
             return (USNodeID, DSNodeID) # Return Tuple of Upstream and Downstream Node IDS
-        elif self.swmm_getLinkDirection(index) == -1: # link validations reverse the conduit direction if the slope is < 0
+        elif self._swmm_getLinkDirection(index) == -1: # link validations reverse the conduit direction if the slope is < 0
             return (DSNodeID, USNodeID) # Return Tuple of Upstream and Downstream Node IDS
             
     def _swmm_getLinkDirection(self, index):
+        '''
+        Internal Method: returns conduit flow direction
+
+        :param int index: link ID index
+        :return: 1 for conduit flow from upstream node to downstream node and -1 for conduit flow from downstream node to upstream node
+        :rtype: int
+
+        
+        '''
         direction = c_byte()
         self.errcode = self.SWMMlibobj.swmm_getLinkDirection(index, byref(direction))
         if self.errcode !=0: raise Exception(self.errcode)
@@ -401,16 +434,51 @@ class pyswmm(object):
             LoadID = self.swmm_getObjectId(ObjectType.SUBCATCH, outindex.value)
         return(TYPELoadSurface.value, LoadID)
 
-
-    #### Active Simulation Result "Getters"
-    
+    ############################################
+    #### Active Simulation Result "Getters" ####
+    ############################################
     def swmm_getNodeResult(self, index, resultType):
+        ''' Get Node Result at current time
+        '''
         result = c_double()
         
         self.errcode = self.SWMMlibobj.swmm_getNodeResult(index, resultType, byref(result))
         if self.errcode != 0: raise Exception(self.errcode)
 
         return result.value
+    
+    def swmm_getLinkResult(self, index, resultType):
+        ''' Get Link Result at current time
+        '''
+        result = c_double()
+        
+        self.errcode = self.SWMMlibobj.swmm_getLinkResult(index, resultType, byref(result))
+        if self.errcode != 0: raise Exception(self.errcode)
+
+        return result.value
+
+    def swmm_getSubcatchResult(self, index, resultType):
+        ''' Get Subcatchment Result at current time
+        '''
+        result = c_double()
+        
+        self.errcode = self.SWMMlibobj.swmm_getSubcatchResult(index, resultType, byref(result))
+        if self.errcode != 0: raise Exception(self.errcode)
+
+        return result.value
+    
+    ###############################################
+    #### Active Simulation Parameter "Setters" ####
+    ###############################################
+
+    def swmm_setLinkSetting(self, index, targetSetting):
+        ''' Set Link Setting
+        '''
+        targetSetting = c_double(targetSetting)
+        self.errcode = self.SWMMlibobj.swmm_setLinkSetting(index, targetSetting)
+        if self.errcode != 0: raise Exception(self.errcode)
+        return 0
+
 
                                       
 if __name__ == '__main__':
@@ -442,4 +510,4 @@ if __name__ == '__main__':
         print IDS[idd],idd, test.swmm_getSubcatchParam(IDS[idd], SubcParams.area),\
               test.swmm_getSubcatchOutConnection(IDS[idd])
 
-    #test.swmm_close()
+    test.swmm_close()

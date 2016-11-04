@@ -57,6 +57,17 @@ class LinkParams:
     cLossAvg        = 6# double
     seepRate        = 7# double
 
+class LinkResults:
+    newFlow         = 0# double
+    newDepth        = 1# double
+    newVolume       = 2# double
+    surfArea1       = 3# double
+    surfArea2       = 4# double
+    setting         = 5# double
+    targetSetting   = 6# double
+    froude          = 7# double
+    
+
 class LinkType:
     conduit         = 0#// Conduit Type
     pump            = 1#// Pump Type
