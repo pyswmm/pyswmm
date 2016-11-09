@@ -3,7 +3,7 @@ Python extensions for the SWMM5 Programmers toolkit
 
 Open Water Analytics (http://wateranalytics.org/)
 
-Auhor: Bryant E. McDonnell (EmNet LLC)
+Author: Bryant E. McDonnell (EmNet LLC)
 
 Last Update: 11/07/2016 
 
@@ -31,10 +31,12 @@ class pyswmm(object):
 
     PySWMM can be run in two different modes:
     
-    * Mode 1: Execute simulation without any intervention \
-    1) Open the Input file using swmm_open(),\
-    2) Execute the simlation without intervening swmmExec(), \
-    3) then close calling swmm_close()
+    Mode 1: Execute simulation without any intervention 
+    
+    * Open the Input file using swmm_open()
+    * Execute the simlation without intervening swmmExec()
+    * then close calling swmm_close()
+    
     Examples:
 
     >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
@@ -42,13 +44,18 @@ class pyswmm(object):
     >>> swmm_model.swmmExec()
     >>> swmmobject.swmm_close()
     
-    or
+    ---or---
 
-    * Mode 2: Step through the entire simulation manually by (This mode allows \
-    the user to invervene and stream simulation data as well as set parameters \
-    and use outside controls approaches) 1) swmm_open()\ 2) swmm_start() \
-    3 swmm_step() or swmm_stride() until it returns 0 4) swmm_end() \
-    5) swmm_report() 6) swmm_close()
+    Mode 2: Step through the entire simulation manually by (This mode allows 
+    the user to invervene and stream simulation data as well as set parameters 
+    and use outside controls approaches)
+    
+    * swmm_open()
+    * swmm_start() 
+    * swmm_step() or swmm_stride() until it returns 0
+    * swmm_end() 
+    * swmm_report()
+    * swmm_close()
 
     Examples:
 
@@ -63,20 +70,7 @@ class pyswmm(object):
     >>> swmmobject.swmm_report()
     >>> swmmobject.swmm_close()        
     """
-    SWMMlibobj = None
-    #""" The variable that holds the ctypes Library object"""
-    errcode = 0
-    #""" Return code from the SWMM library functions"""
-    Warnflag = False
-    #""" A warning occured at some point during SWMM execution"""
-    Errflag = False
-    #""" A fatal error occured at some point during SWMM execution"""
 
-    inpfile = ''
-    rptfile = ''
-    binfile = ''
-
-    fileLoaded = False
 
     def __init__(self, inpfile = '', rptfile = '', binfile =''):
         """
@@ -86,6 +80,8 @@ class pyswmm(object):
         :param str rptfile: Report file to generate (default '')
         :param str binfile: Optional binary output file (default '')
         """
+        self.fileLoaded = False
+        self.errcode = 0
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
@@ -209,7 +205,7 @@ class pyswmm(object):
         self.errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
                                                  c_char_p(rptfile),\
                                                  c_char_p(binfile))
-        print self.errcode
+        #print self.errcode
         #self._error()
         #if self.errcode < 100:
             #self.fileLoaded = True
@@ -388,6 +384,12 @@ class pyswmm(object):
         return self.SWMMlibobj.swmm_getVersion()
 
     def swmm_getMassBalErr(self):
+        """ Get Mass Balance Errors
+
+        :return: Runoff Error, Flow Routing Error, Quality Error
+        :rtype: tuple
+        
+        """
         runoffErr = c_float()
         flowErr = c_float()
         qualErr = c_float()
@@ -443,10 +445,35 @@ class pyswmm(object):
         if self.errcode != 0: raise Exception(self.errcode)
         return ID.value
 
-    def swmm_getNodeType(self, index):
+    def swmm_getObjectIDList(self, objecttype):
+        """ Get Object ID Dictionary and store as a member variable.
+
+        :param int objecttype: (member variable)
+
+        Examples:
+
+        >>>
+        """
+        IDS = []
+        for index in range(self.swmm_getProjectSize(objecttype)):
+            IDS.append(self.swmm_getObjectId(objecttype,index))
+
+        return IDS
+
+    def swmm_getObjectIDIndex(self, objecttype, ID):
+        """
+        Get Object ID Index. Mostly used as an internal function.
+        
+        """
+        C_ID = c_char_p(ID)
+        index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
+        if index != -1: return index
+        else: raise Exception("ID Does Not Exist")
+
+    def swmm_getNodeType(self, ID):
         """ Get Node Type (e.g. Junction, Outfall, Storage, Divider)
 
-        :param int index: ID Index
+        :param str index: ID 
         :return: Object ID
         :rtype: int
 
@@ -461,16 +488,18 @@ class pyswmm(object):
         >>> True
         >>>
         >>> swmm_model.swmm_close()
-        """          
+        """
+
+        index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         Ntype = c_int()
         self.errcode = self.SWMMlibobj.swmm_getNodeType(index, byref(Ntype))
         if self.errcode != 0: raise Exception(self.errcode)
         return Ntype.value
 
-    def swmm_getLinkType(self, index):
+    def swmm_getLinkType(self, ID):
         """ Get Link Type (e.g. Conduit, Pump, Orifice, Weir, Outlet)
 
-        :param int index: ID Index
+        :param str index: ID 
         :return: Object ID
         :rtype: int
 
@@ -485,13 +514,14 @@ class pyswmm(object):
         >>> True
         >>>
         >>> swmm_model.swmm_close()
-        """            
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         Ltype = c_int()
         self.errcode = self.SWMMlibobj.swmm_getLinkType(index, byref(Ltype))
         if self.errcode != 0: raise Exception(self.errcode)
         return Ltype.value
 
-    def swmm_getLinkConnections(self, index):
+    def swmm_getLinkConnections(self, ID):
         """ Get Link Connections (Upstream and Downstream Nodes).
 
         Interestingly, if the dynamic wave solver is used,
@@ -502,7 +532,7 @@ class pyswmm(object):
         are in the correct order. This way, the function provides support for
         directed graphs automatically. 
 
-        :param int index: ID Index
+        :param str index: ID 
         :return: (Upstream Node Index, Downstream Node Index)
         :rtype: tuple
 
@@ -515,6 +545,8 @@ class pyswmm(object):
         >>>
         >>> swmm_model.swmm_close()        
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
+        
         USNodeIND = c_int()
         DSNodeIND = c_int()
 
@@ -523,52 +555,58 @@ class pyswmm(object):
 
         USNodeID = self.swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
         DSNodeID = self.swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
-        if self._swmm_getLinkDirection(index) == 1:
+        if self._swmm_getLinkDirection(ID) == 1:
             return (USNodeID, DSNodeID) # Return Tuple of Upstream and Downstream Node IDS
-        elif self._swmm_getLinkDirection(index) == -1: # link validations reverse the conduit direction if the slope is < 0
+        elif self._swmm_getLinkDirection(ID) == -1: # link validations reverse the conduit direction if the slope is < 0
             return (DSNodeID, USNodeID) # Return Tuple of Upstream and Downstream Node IDS
             
-    def _swmm_getLinkDirection(self, index):
+    def _swmm_getLinkDirection(self, ID):
         """
         Internal Method: returns conduit flow direction
 
-        :param int index: link ID index
+        :param str index: link ID
         :return: 1 for conduit flow from upstream node to downstream node
         and -1 for conduit flow from downstream node to upstream node
         :rtype: int
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
+        
         direction = c_byte()
         self.errcode = self.SWMMlibobj.swmm_getLinkDirection(index, byref(direction))
         if self.errcode !=0: raise Exception(self.errcode)
         return direction.value
 
-    def swmm_getNodeParam(self, index, Parameter):
+    def swmm_getNodeParam(self, ID, Parameter):
         """ Get Node Parameter
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         param = c_double()
         self.errcode = self.SWMMlibobj.swmm_getNodeParam(index,Parameter, byref(param))
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
 
-    def swmm_getLinkParam(self, index, Parameter):
+    def swmm_getLinkParam(self, ID, Parameter):
         """ Get Link Parameter
-        """        
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         param = c_double()
         self.errcode = self.SWMMlibobj.swmm_getLinkParam(index,Parameter, byref(param))
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
 
-    def swmm_getSubcatchParam(self, index, Parameter):
+    def swmm_getSubcatchParam(self, ID, Parameter):
         """ Get Subcatchment Parameter
-        """        
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         param = c_double()
         self.errcode = self.SWMMlibobj.swmm_getSubcatchParam(index,Parameter, byref(param))
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
 
-    def swmm_getSubcatchOutConnection(self, index):
+    def swmm_getSubcatchOutConnection(self, ID):
         """ Get Subcatchment out connection
-        """        
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         TYPELoadSurface = c_int()
         outindex = c_int()
         self.errcode = self.SWMMlibobj.swmm_getSubcatchOutConnection(index, byref(TYPELoadSurface), byref(outindex))
@@ -583,9 +621,11 @@ class pyswmm(object):
     ############################################
     #### Active Simulation Result "Getters" ####
     ############################################
-    def swmm_getNodeResult(self, index, resultType):
+    
+    def swmm_getNodeResult(self, ID, resultType):
         """ Get Node Result at current time
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         result = c_double()
         
         self.errcode = self.SWMMlibobj.swmm_getNodeResult(index, resultType, byref(result))
@@ -593,9 +633,10 @@ class pyswmm(object):
 
         return result.value
     
-    def swmm_getLinkResult(self, index, resultType):
+    def swmm_getLinkResult(self, ID, resultType):
         """ Get Link Result at current time
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         result = c_double()
         
         self.errcode = self.SWMMlibobj.swmm_getLinkResult(index, resultType, byref(result))
@@ -603,9 +644,10 @@ class pyswmm(object):
 
         return result.value
 
-    def swmm_getSubcatchResult(self, index, resultType):
+    def swmm_getSubcatchResult(self, ID, resultType):
         """ Get Subcatchment Result at current time
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         result = c_double()
         
         self.errcode = self.SWMMlibobj.swmm_getSubcatchResult(index, resultType, byref(result))
@@ -617,13 +659,15 @@ class pyswmm(object):
     #### Active Simulation Parameter "Setters" ####
     ###############################################
 
-    def swmm_setLinkSetting(self, index, targetSetting):
+    def swmm_setLinkSetting(self, ID, targetSetting):
         """ Set Link Setting
         """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         targetSetting = c_double(targetSetting)
         self.errcode = self.SWMMlibobj.swmm_setLinkSetting(index, targetSetting)
         if self.errcode != 0: raise Exception(self.errcode)
         return 0
+
 
 
                                       
@@ -633,27 +677,30 @@ if __name__ == '__main__':
                    binfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.out")
     test.swmm_open()
     
-    print test.swmm_getProjectSize(ObjectType.NODE)
+    print(test.swmm_getProjectSize(ObjectType.NODE))
     
-    print "Node ID"
-    IDS = {test.swmm_getObjectId(ObjectType.NODE,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.NODE))}
-    print 'ID,Invert,Type'
-    for idd in IDS.keys()[:10]:
-        print IDS[idd],idd, test.swmm_getNodeParam( IDS[idd], NodeParams.invertElev ),\
-              test.swmm_getNodeParam( IDS[idd], NodeParams.fullDepth ),\
-              test.swmm_getNodeType( IDS[idd] )
+    print("Node ID")
+    IDS = test.swmm_getObjectIDList(ObjectType.NODE)
+    print(IDS)
+    print('ID,Invert,Type')
+    for ind, idd  in enumerate(IDS):
+        print (ind,idd, test.swmm_getNodeParam( idd, NodeParams.invertElev ),\
+              test.swmm_getNodeParam( idd, NodeParams.fullDepth ),\
+              test.swmm_getNodeType( idd ))
 
-    print "Link ID"
-    print 'ID,offset1,LinkConnections'
-    IDS = {test.swmm_getObjectId(ObjectType.LINK,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.LINK))}
-    for idd in IDS.keys()[:10]:
-        print IDS[idd],idd, test.swmm_getLinkParam( IDS[idd], LinkParams.offset1 ), \
-              test.swmm_getLinkConnections(IDS[idd])
+    print("Link ID")
+    print('ID,offset1,LinkConnections')
+    IDS = test.swmm_getObjectIDList(ObjectType.LINK)
+    print(IDS)
+    for ind, idd  in enumerate(IDS):
+        print(ind,idd, test.swmm_getLinkParam( idd, LinkParams.offset1 ), \
+              test.swmm_getLinkConnections(idd))
 
-    print "SUBCATCH ID"
-    IDS = {test.swmm_getObjectId(ObjectType.SUBCATCH,ind):ind for ind in range(test.swmm_getProjectSize(ObjectType.SUBCATCH))}
-    for idd in IDS.keys()[:100]:
-        print IDS[idd],idd, test.swmm_getSubcatchParam(IDS[idd], SubcParams.area),\
-              test.swmm_getSubcatchOutConnection(IDS[idd])
+    print("SUBCATCH ID")
+    IDS = test.swmm_getObjectIDList(ObjectType.SUBCATCH)
+    print(IDS)    
+    for ind, idd  in enumerate(IDS):
+        print(ind,idd, test.swmm_getSubcatchParam(idd, SubcParams.area),\
+              test.swmm_getSubcatchOutConnection(idd))
 
-    test.swmm_close()
+    #test.swmm_close()
