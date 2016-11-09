@@ -481,10 +481,10 @@ class pyswmm(object):
         
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_getNodeType(35)
+        >>> swmm_model.swmm_getNodeType('J1')
         >>> 0
         >>>
-        >>> swmm_model.swmm_getNodeType(35) is NodeType.junction
+        >>> swmm_model.swmm_getNodeType('J1') is NodeType.junction
         >>> True
         >>>
         >>> swmm_model.swmm_close()
@@ -507,10 +507,10 @@ class pyswmm(object):
         
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_getLinkType(35)
+        >>> swmm_model.swmm_getLinkType('C1')
         >>> 3
         >>>
-        >>> swmm_model.swmm_getLinkType(35) is LinkType.weir
+        >>> swmm_model.swmm_getLinkType('C1') is LinkType.weir
         >>> True
         >>>
         >>> swmm_model.swmm_close()
@@ -540,7 +540,7 @@ class pyswmm(object):
         
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_getLinkConnections(35)
+        >>> swmm_model.swmm_getLinkConnections('C1')
         >>> ('NodeUSID','NodeDSID')
         >>>
         >>> swmm_model.swmm_close()        
