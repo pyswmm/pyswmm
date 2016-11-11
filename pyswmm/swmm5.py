@@ -5,7 +5,7 @@ Open Water Analytics (http://wateranalytics.org/)
 
 Author: Bryant E. McDonnell (EmNet LLC)
 
-Last Update: 11/07/2016 
+Last Update: 11/10/2016 
 
 """
 
