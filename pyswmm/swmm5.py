@@ -93,17 +93,17 @@ class pyswmm(object):
         
         # The following should be un commented if using on mac
         #### darwin
-        if 'darwin' in sys.platform:
-            from ctypes import cdll
-            libpath = os.getcwd()
-            libswmm = '/pyswmm/data/Darwin/libswmm.dylib'
-            self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
+        #if 'darwin' in sys.platform:
+        #    from ctypes import cdll
+        #    libpath = os.getcwd()
+        #    libswmm = '/pyswmm/swmmLinkedLibs/Darwin/libswmm.dylib'
+        #    self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
 
         #### windows
         if 'win32' in sys.platform:
             from ctypes import CDLL
             dllname = 'swmm5.dll'
-            libswmm = get_pkgpath() + '\\data\\Windows\\' + dllname
+            libswmm = get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname
             self.SWMMlibobj = CDLL(libswmm)
             
     def _error(self):
