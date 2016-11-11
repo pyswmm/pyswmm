@@ -19,7 +19,7 @@
 import os
 import sys
 #sys.path.append(r'C:\PROJECTCODE\pyswmm\pyswmm')
-sys.path.insert(0, os.path.abspath("pyswmm"))
+sys.path.insert(0, os.path.abspath("../../pyswmm"))
 
 # -- General configuration ------------------------------------------------
 
