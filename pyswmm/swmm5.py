@@ -12,9 +12,10 @@ Last Update: 11/10/2016
 
 import os
 import sys
-from toolkitapi import *
-
+from datetime import datetime
 from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer, c_byte
+
+from toolkitapi import *
 
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
 __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
@@ -623,6 +624,43 @@ class pyswmm(object):
     ############################################
     #### Active Simulation Result "Getters" ####
     ############################################
+
+    def swmm_getCurrentSimualationTime(self):
+        """
+        Get Current Simulation DateTime in Python Format
+
+        :return: Python Datetime
+        :rtype: datetime
+        
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmmobject.swmm_start()
+        >>> while(True):
+        ...     time = swmmobject.swmm_step()
+        ...     print swmmobject.swmm_getCurrentSimualationTime()
+        ...     if (time <= 0.0): break
+        ...
+        >>> NOV-01-2015 14:10:01
+        >>> NOV-01-2015 14:20:01
+        >>> NOV-01-2015 14:30:01
+        >>> NOV-01-2015 14:40:01
+        >>> NOV-01-2015 14:50:01
+        >>> NOV-01-2015 15:00:01
+        >>> NOV-01-2015 15:10:02
+        >>> NOV-01-2015 15:20:02
+        >>> NOV-01-2015 15:30:02
+        >>>
+        >>> swmmobject.swmm_end()
+        >>> swmmobject.swmm_report()
+        >>> swmmobject.swmm_close()        
+        """
+        dtme = create_string_buffer(61)
+        self.errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
+        if self.errcode != 0: raise Exception(self.errcode)
+        
+        return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
     
     def swmm_getNodeResult(self, ID, resultType):
         """ Get Node Result at current time
