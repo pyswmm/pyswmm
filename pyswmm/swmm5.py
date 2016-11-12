@@ -309,6 +309,8 @@ class pyswmm(object):
             elapsed_time = c_double()
             self.SWMMlibobj.swmm_step(byref(elapsed_time))
             self.curSimTime = elapsed_time.value
+            if elapsed_time.value == 0:
+                return 0.0
 
         return elapsed_time.value
         
