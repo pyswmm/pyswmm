@@ -674,9 +674,9 @@ class pyswmm(object):
 
                                       
 if __name__ == '__main__':
-    test = pyswmm(inpfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.inp",\
-                   rptfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.rpt",\
-                   binfile = r"C:\PROJECTCODE\pyswmm\test\OutputTestModel522_SHORT.out")
+    test = pyswmm(inpfile = r"../test/TestModel1_weirSetting.inp",\
+                   rptfile = r"../test/TestModel1_weirSetting.rpt",\
+                   binfile = r"../test/TestModel1_weirSetting.out")
     test.swmm_open()
     
     print(test.swmm_getProjectSize(ObjectType.NODE))
@@ -705,4 +705,4 @@ if __name__ == '__main__':
         print(ind,idd, test.swmm_getSubcatchParam(idd, SubcParams.area),\
               test.swmm_getSubcatchOutConnection(idd))
 
-    #test.swmm_close()
+    test.swmm_close()
