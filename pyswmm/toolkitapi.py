@@ -3,6 +3,12 @@
 SWMM Object Enum
 '''
 
+
+class SimulationTime:    
+    StartDateTime   = 0  
+    EndDateTime     = 1
+    ReportStart     = 2
+
 class ObjectType:
     GAGE            = 0# // rain gage
     SUBCATCH        = 1# // subcatchment
@@ -21,7 +27,6 @@ class ObjectType:
     SHAPE           = 14#// custom conduit shape
     LID             = 15#// LID treatment units
     MAX_OBJ_TYPES   = 16#// MaximumObjectTypes
-
 
 class NodeParams:
     invertElev      = 0# double
@@ -46,7 +51,6 @@ class NodeType:
     storage         = 2#// Storage Type
     divider         = 3#// Divider Type
 
-    
 class LinkParams:
     offset1         = 0# double
     offset2         = 1# double
@@ -67,7 +71,6 @@ class LinkResults:
     targetSetting   = 6# double
     froude          = 7# double
     
-
 class LinkType:
     conduit         = 0#// Conduit Type
     pump            = 1#// Pump Type
@@ -82,5 +85,13 @@ class SubcParams:
     slope           = 3 # double
     curbLength      = 4 # double
     #initBuildup     = 5 # double
+
+class SubcResults:
+    rainfall        = 0 # // Current Rainfall
+    evapLoss        = 1 # // Current Evaporation Loss
+    infilLoss       = 2 # // Current Infiltration Loss
+    runon           = 3 # // Subcatchment Runon
+    newRunoff       = 4 # // Current Runoff
+    newSnowDepth    = 5 # // Current Snow Depth
 
 

@@ -405,6 +405,34 @@ class pyswmm(object):
         return runoffErr.value, flowErr.value, qualErr.value
 
     #### NETWORK API FUNCTIONS
+    def swmm_getSimulationDateTime(self, timeType):
+        """
+        Get Simulation Time Data (Based on SimulationTime options)
+
+        :param int timeType: (toolkitapi.SimulationTime member variable)
+        :return: datetime
+        :rtype: datetime
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getSimulationDateTime(SimulationTime.StartDateTime)
+        >>> 2015-11-01 14:00:00
+        >>> swmm_model.swmm_getSimulationDateTime(SimulationTime.EndDateTime)
+        >>> 2015-11-04 00:00:00
+        >>> swmm_model.swmm_getSimulationDateTime(SimulationTime.ReportStart)
+        >>> 2015-11-01 14:00:00     
+        >>>
+        >>> swmm_model.swmm_close()   
+        """
+        dtme = create_string_buffer(61)
+
+        self.errcode = self.SWMMlibobj.swmm_getSimulationDateTime(c_int(timeType), dtme)
+        if self.errcode != 0: raise Exception(self.errcode)
+        
+        return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
+        
     def swmm_getProjectSize(self, objecttype):
         """Get Project Size: Number of Objects
 
@@ -449,12 +477,18 @@ class pyswmm(object):
         return ID.value
 
     def swmm_getObjectIDList(self, objecttype):
-        """ Get Object ID Dictionary and store as a member variable.
+        """ Get Object ID list.
 
         :param int objecttype: (member variable)
 
         Examples:
 
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getObjectIDList(ObjectType.LINK)
+        >>> ['C1:C2', 'C2', 'C3']
+        >>>
+        >>> swmm_model.swmm_close()
         >>>
         """
         IDS = []
@@ -580,7 +614,23 @@ class pyswmm(object):
         return direction.value
 
     def swmm_getNodeParam(self, ID, Parameter):
-        """ Get Node Parameter
+        """
+        Get Node Parameter
+
+        :param str ID: Node ID
+        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getNodeParam('J2',NodeParams.invertElev )
+        >>> 13.392
+        >>>
+        >>> swmm_model.swmm_close()    
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         param = c_double()
@@ -589,7 +639,23 @@ class pyswmm(object):
         return param.value
 
     def swmm_getLinkParam(self, ID, Parameter):
-        """ Get Link Parameter
+        """
+        Get Link Parameter
+
+        :param str ID: Link ID
+        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getLinkParam('C1:C2',LinkParams.offset1 )
+        >>> 0.0
+        >>>
+        >>> swmm_model.swmm_close()    
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         param = c_double()
@@ -598,7 +664,23 @@ class pyswmm(object):
         return param.value
 
     def swmm_getSubcatchParam(self, ID, Parameter):
-        """ Get Subcatchment Parameter
+        """
+        Get Subcatchment Parameter
+
+        :param str ID: Subcatchment ID
+        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getLinkParam('S2',SubcParams.area )
+        >>> 43561.596096880996
+        >>>
+        >>> swmm_model.swmm_close()    
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         param = c_double()
@@ -607,7 +689,30 @@ class pyswmm(object):
         return param.value
 
     def swmm_getSubcatchOutConnection(self, ID):
-        """ Get Subcatchment out connection
+        """
+        Get Subcatchment Outlet Connection.  This function return the type of loading
+        surface and the ID. The two load to objects are nodes and other subcatchments.
+
+        Nodes are ObjectType.NODE
+        Subcatchments are ObjectType.SUBCATCH
+
+        :param str ID: Subcatchment ID
+        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
+        :return: (Loading Surface Type, ID)
+        :rtype: tuple
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getSubcatchOutConnection('S2',SubcParams.area )
+        >>> (2, 'J2')
+        >>>
+        >>> swmm_model.swmm_getSubcatchOutConnection('S2',SubcParams.area )[0] == ObjectType.NODE
+        >>> True
+        >>>
+        >>> swmm_model.swmm_close()    
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         TYPELoadSurface = c_int()
@@ -642,15 +747,10 @@ class pyswmm(object):
         ...     print swmmobject.swmm_getCurrentSimualationTime()
         ...     if (time <= 0.0): break
         ...
-        >>> NOV-01-2015 14:10:01
-        >>> NOV-01-2015 14:20:01
-        >>> NOV-01-2015 14:30:01
-        >>> NOV-01-2015 14:40:01
-        >>> NOV-01-2015 14:50:01
-        >>> NOV-01-2015 15:00:01
-        >>> NOV-01-2015 15:10:02
-        >>> NOV-01-2015 15:20:02
-        >>> NOV-01-2015 15:30:02
+        >>> 2015-11-03 10:10:12
+        >>> 2015-11-03 10:20:12
+        >>> 2015-11-03 10:30:12
+        >>> 2015-11-03 10:40:12
         >>>
         >>> swmmobject.swmm_end()
         >>> swmmobject.swmm_report()
@@ -663,7 +763,33 @@ class pyswmm(object):
         return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
     
     def swmm_getNodeResult(self, ID, resultType):
-        """ Get Node Result at current time
+        """
+        Get Node Result
+
+        :param str ID: Node ID
+        :param int Parameter: Paramter (toolkitapi.NodeResults member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmmobject.swmm_start()
+        >>> while(True):
+        ...     time = swmmobject.swmm_step()
+        ...     print swmmobject.swmm_getNodeResult('J1', NodeResults.newDepth)
+        ...     if (time <= 0.0): break
+        ...
+        >>> 1.2
+        >>> 1.5
+        >>> 1.9
+        >>> 1.2
+        >>>
+        >>> swmmobject.swmm_end()
+        >>> swmmobject.swmm_report()
+        >>> swmmobject.swmm_close()   
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         result = c_double()
@@ -674,7 +800,33 @@ class pyswmm(object):
         return result.value
     
     def swmm_getLinkResult(self, ID, resultType):
-        """ Get Link Result at current time
+        """
+        Get Link Result
+
+        :param str ID: Link ID
+        :param int Parameter: Paramter (toolkitapi.LinkResults member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmmobject.swmm_start()
+        >>> while(True):
+        ...     time = swmmobject.swmm_step()
+        ...     print swmmobject.swmm_getLinkResult('J1', LinkResults.newFlow)
+        ...     if (time <= 0.0): break
+        ...
+        >>> 1.2
+        >>> 1.5
+        >>> 1.9
+        >>> 1.2
+        >>>
+        >>> swmmobject.swmm_end()
+        >>> swmmobject.swmm_report()
+        >>> swmmobject.swmm_close()   
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         result = c_double()
@@ -685,7 +837,33 @@ class pyswmm(object):
         return result.value
 
     def swmm_getSubcatchResult(self, ID, resultType):
-        """ Get Subcatchment Result at current time
+        """
+        Get Subcatchment Result
+
+        :param str ID: Subcatchment ID
+        :param int Parameter: Paramter (toolkitapi.LinkResults member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmmobject.swmm_start()
+        >>> while(True):
+        ...     time = swmmobject.swmm_step()
+        ...     print swmmobject.swmm_getSubcatchResult('S3', SubcResults.newRunoff)
+        ...     if (time <= 0.0): break
+        ...
+        >>> 0.01
+        >>> 0.05
+        >>> 0.09
+        >>> 0.08
+        >>>
+        >>> swmmobject.swmm_end()
+        >>> swmmobject.swmm_report()
+        >>> swmmobject.swmm_close()   
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         result = c_double()
@@ -700,13 +878,39 @@ class pyswmm(object):
     ###############################################
 
     def swmm_setLinkSetting(self, ID, targetSetting):
-        """ Set Link Setting
+        """
+        Set Link Setting (Pumps, Orifices, Weirs)
+
+        :param str ID: Link ID
+        :param float targetSetting: New target setting which will be applied at the start of\
+        the next routing step
+
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmmobject.swmm_start()
+        >>> i = 0
+        >>> while(True):
+        ...     time = swmmobject.swmm_step()
+        ...     i+=1
+        ...
+        ...     if i == 80:
+        ...         swmmobject.swmm_setLinkSetting('C3',0.5)
+        ...     if (time <= 0.0): break
+        ...
+        >>>
+        >>> swmmobject.swmm_end()
+        >>> swmmobject.swmm_report()
+        >>> swmmobject.swmm_close()   
+        
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         targetSetting = c_double(targetSetting)
         self.errcode = self.SWMMlibobj.swmm_setLinkSetting(index, targetSetting)
         if self.errcode != 0: raise Exception(self.errcode)
-        return 0
+
 
 
 
@@ -716,6 +920,14 @@ if __name__ == '__main__':
                    rptfile = r"../test/TestModel1_weirSetting.rpt",\
                    binfile = r"../test/TestModel1_weirSetting.out")
     test.swmm_open()
+
+    print("Simulation Time Info")
+    print("Start Time")
+    print(test.swmm_getSimulationDateTime(SimulationTime.StartDateTime))
+    print("End Time")
+    print(test.swmm_getSimulationDateTime(SimulationTime.EndDateTime))
+    print("Report Time")          
+    print(test.swmm_getSimulationDateTime(SimulationTime.ReportStart))
     
     print(test.swmm_getProjectSize(ObjectType.NODE))
     
