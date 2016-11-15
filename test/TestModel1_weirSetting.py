@@ -29,7 +29,7 @@ swmmobject = pyswmm('./TestModel1_weirSetting.inp',\
                     './TestModel1_weirSetting.out')
 swmmobject.swmm_open()
 
-swmmobject.swmm_start()
+swmmobject.swmm_start(True)
 
 fig = plt.figure()
 ax = fig.add_subplot(221)
@@ -121,7 +121,7 @@ def run(t):
 
 ani = animation.FuncAnimation(fig, run, data_gen, blit=False,repeat=False, save_count=800, interval = 10)
 
-ShowFig = True
+ShowFig = False
 if ShowFig == True:
     plt.show()
 else:

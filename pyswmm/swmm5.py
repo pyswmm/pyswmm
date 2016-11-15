@@ -211,7 +211,7 @@ class pyswmm(object):
         #if self.errcode < 100:
             #self.fileLoaded = True
         
-    def swmm_start(self, SaveOut2rpt = False):
+    def swmm_start(self, SaveOut2rpt = True):
         """Prepares to Start SWMM Simulation
 
         :param bool SaveOut2rpt: Save timeseries results to rpt file (default is False).
