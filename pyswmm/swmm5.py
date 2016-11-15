@@ -13,7 +13,7 @@ Last Update: 11/10/2016
 import os
 import sys
 from datetime import datetime
-from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer, c_byte
+from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer, c_byte, c_bool
 
 from toolkitapi import *
 
@@ -211,8 +211,10 @@ class pyswmm(object):
         #if self.errcode < 100:
             #self.fileLoaded = True
         
-    def swmm_start(self):
+    def swmm_start(self, SaveOut2rpt = False):
         """Prepares to Start SWMM Simulation
+
+        :param bool SaveOut2rpt: Save timeseries results to rpt file (default is False).
 
         Examples:
 
@@ -228,8 +230,8 @@ class pyswmm(object):
         >>> swmmobject.swmm_close()
         
         """
-        Save2Out = 1
-        self.errcode = self.SWMMlibobj.swmm_start(c_int(Save2Out))
+        
+        self.errcode = self.SWMMlibobj.swmm_start(c_bool(SaveOut2rpt))
         
         self._error()
         if self.errcode < 100:
