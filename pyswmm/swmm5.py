@@ -914,8 +914,37 @@ class pyswmm(object):
         if self.errcode != 0: raise Exception(self.errcode)
 
 
+    def swmm_setNodeInflow(self, ID, flowrate):
+        """
+        Set Node Inflow rate.  The flow rate should be in the user defined
+        units.  The value is help constant in the model until it is redefined
+        by the toolkit API. 
 
+        :param str ID: Node ID
+        :param float flowrate: New flow rate in the user-defined flow units
 
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmmobject.swmm_start()
+        >>> i = 0
+        >>> while(True):
+        ...     if i == 80:
+        ...         swmmobject.swmm_setNodeInflow('J1',4)
+        ...     time = swmmobject.swmm_step()
+        ...     i+=1
+        ...
+        >>>
+        >>> swmmobject.swmm_end()
+        >>> swmmobject.swmm_report()
+        >>> swmmobject.swmm_close()           
+        """
+        
+        index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
+        q = c_double(flowrate)
+        self.errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
+        if self.errcode != 0: raise Exception(self.errcode)
                                       
 if __name__ == '__main__':
     test = pyswmm(inpfile = r"../test/TestModel1_weirSetting.inp",\

@@ -1,5 +1,5 @@
 '''
-PySWMM Test 1: Weir Setting and Simulation Results Streaming
+PySWMM Test 2: Pump Setting and Simulation Results Streaming
 
 Author: Bryant E. McDonnell (EmNet LLC)
 Date: 11/15/2016
@@ -24,21 +24,21 @@ from toolkitapi import *
 
 
 
-swmmobject = pyswmm('./TestModel1_weirSetting.inp',\
-                    './TestModel1_weirSetting.rpt',\
-                    './TestModel1_weirSetting.out')
+swmmobject = pyswmm('./TestModel2_pumpSetting.inp',\
+                    './TestModel2_pumpSetting.rpt',\
+                    './TestModel2_pumpSetting.out')
 swmmobject.swmm_open()
 
-swmmobject.swmm_start(True)
+swmmobject.swmm_start()
 
 fig = plt.figure()
-ax = fig.add_subplot(221)
+ax = fig.add_subplot(2,3,(1,2))
 ax.set_ylabel('Flow Rate')
 line, = ax.plot([], [], label = 'C3')
 ax.grid()
 ax.legend()
 
-ax2 = fig.add_subplot(223, sharex=ax)
+ax2 = fig.add_subplot(2,3,(4,5), sharex=ax)
 ax2.set_ylabel('Setting')
 line2, = ax2.plot([], [], label = 'C3')
 ax2.grid()
@@ -46,10 +46,10 @@ ax2.grid()
 xdata, ydata = [], []
 ydata2 = []
 
-ax3 = fig.add_subplot(2,2,(2,4))
+ax3 = fig.add_subplot(2,3,(3,6))
 
 arr_lena = read_png("./TestModel1_weirSetting.PNG")
-imagebox = OffsetImage(arr_lena, zoom=0.45)
+imagebox = OffsetImage(arr_lena, zoom=0.67)
 ab = AnnotationBbox(imagebox, (0.5,0.5),
                     xybox=(0.5,0.5),
                     xycoords='data',
@@ -125,7 +125,7 @@ ShowFig = False
 if ShowFig == True:
     plt.show()
 else:
-    ani.save("TestModel1_weirSetting.mp4", fps=20,dpi=170, bitrate=50000)
+    ani.save("TestModel2_pumpSetting.mp4", fps=20,dpi=170, bitrate=50000)
     
 #if 0 == 0:  
 #    from JSAnimation import HTMLWriter
@@ -134,7 +134,7 @@ else:
 plt.close()
 
 swmmobject.swmm_end()
-#swmmobject.swmm_report()
+swmmobject.swmm_report()
 swmmobject.swmm_close()
 
  
