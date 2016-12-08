@@ -1,23 +1,33 @@
+build: false
+
 environment:
-
   matrix:
-
-    # For Python versions available on Appveyor, see
-    # http://www.appveyor.com/docs/installed-software#python
-    # The list here is complete (excluding Python 2.6, which
-    # isn't covered by this document) at the time of writing.
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7.8"
+      PYTHON_ARCH: "32"
 
     - PYTHON: "C:\\Python27"
-    - PYTHON: "C:\\Python33"
-    - PYTHON: "C:\\Python34"
-    - PYTHON: "C:\\Python35"
-    - PYTHON: "C:\\Python27-x64"
-    - PYTHON: "C:\\Python33-x64"
-      DISTUTILS_USE_SDK: "1"
-    - PYTHON: "C:\\Python34-x64"
-      DISTUTILS_USE_SDK: "1"
-    - PYTHON: "C:\\Python35-x64"
+      PYTHON_VERSION: "2.7.9"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7.10"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7.11"
+      PYTHON_ARCH: "32"
+      
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7.12"
+      PYTHON_ARCH: "32"      
+      
+init:
+  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 
 install:
-  # We need wheel installed to build wheels
-  - "%PYTHON%\\python.exe -m pip install wheel"
+  - "%PYTHON%/Scripts/pip.exe install nose"
+  - "%PYTHON%/Scripts/pip.exe install coverage"
+
+test_script:
+  - "%PYTHON%/Scripts/nosetests"
