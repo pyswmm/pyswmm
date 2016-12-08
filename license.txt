@@ -1,3 +1,5 @@
+BSD-2 Clause License
+
 Copyright (c) 2014, Bryant E. McDonnell
 All rights reserved.
 
