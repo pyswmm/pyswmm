@@ -8,20 +8,4 @@ Goals:
 
 As the project evolves, the goal is to not only extend the SWMM data model into Python, but to expose and input API enabling a user to deliver a model to the engine outside to formal scope of an input file.  
 
-
-Welcome to pyswmm's documentation!
-==================================
-
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+See more in the PySWMM Wiki: https://github.com/OpenWaterAnalytics/pyswmm/wiki

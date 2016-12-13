@@ -64,9 +64,9 @@ ax3.axis('off')
 def data_gen(t=0):
     i = 0
     while(True):
-        if i == 80:
-            swmmobject.swmm_setNodeInflow('J1',4)
-        time = swmmobject.swmm_stride(300)
+        if i >= 80:
+            swmmobject.swmm_setNodeInflow('J1',random.randint(1,5))
+        time = swmmobject.swmm_stride(1500)
         i+=1
             
         if i > 0 and time == 0.0:
