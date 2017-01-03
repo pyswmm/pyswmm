@@ -434,7 +434,68 @@ class pyswmm(object):
         if self.errcode != 0: raise Exception(self.errcode)
         
         return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
-        
+
+    def swmm_getSimUnit(self, unittype):
+        """Get Simulation Units
+
+        :param int unittype: Simulation Unit Type
+        :return Simulation Unit Type
+        :rtype: str
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getSimUnit(SimulationUnits.FlowUnits)
+        >>> CFS
+        >>> swmm_model.swmm_close()
+        """
+        value = c_int()
+        self.errcode = self.SWMMlibobj.swmm_getSimulationUnit(unittype, byref(value))
+        if self.errcode != 0: raise Exception(self.errcode)
+        _flowunitnames = ["CFS","GPM","MGD","CMS","LPS","MLD"] # Temporary Solution (2017-1-2 BEM)
+        return _flowunitnames[value.value]
+
+    def swmm_getSimAnalysisSetting(self, settingtype):
+        """Get Simulation Analysis Settings
+
+        :param int settingtype: Analysis Option Setting
+        :return Simulation Analysis option setting
+        :rtype: bool
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getSimAnalysisSetting(SimAnalysisSettings.AllowPonding)
+        >>> False
+        >>> swmm_model.swmm_close()
+        """
+        value = c_int()
+        self.errcode = self.SWMMlibobj.swmm_getSimulationAnalysisSetting(settingtype, byref(value))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return bool(value.value)
+
+    def swmm_getSimAnalysisSetting(self, paramtype):
+        """Get Simulation Configuration Parameter
+
+        :param int paramtype: Simulation Parameter Type
+        :return Simulation Analysis Parameter Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getSimAnalysisSetting(SimulationParameters.RouteStep)
+        >>> 300
+        >>> swmm_model.swmm_close()
+        """
+        value = c_double()
+        self.errcode = self.SWMMlibobj.swmm_getSimulationParam(paramtype, byref(value))
+        if self.errcode != 0: raise Exception(self.errcode)
+        return value.value
+    
     def swmm_getProjectSize(self, objecttype):
         """Get Project Size: Number of Objects
 
@@ -960,6 +1021,16 @@ if __name__ == '__main__':
     print("Report Time")          
     print(test.swmm_getSimulationDateTime(SimulationTime.ReportStart))
     
+    print("Simulation Units")
+    print(test.swmm_getSimUnit(SimulationUnits.FlowUnits))
+
+    print("Simulation Allow Ponding Option Selection")
+    print(test.swmm_getSimAnalysisSetting(SimAnalysisSettings.AllowPonding))
+
+    print("Simulation Routing Step")
+    print(test.swmm_getSimAnalysisSetting(SimulationParameters.RouteStep))
+
+    print("Number of Nodes")
     print(test.swmm_getProjectSize(ObjectType.NODE))
     
     print("Node ID")

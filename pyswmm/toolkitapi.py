@@ -9,6 +9,36 @@ class SimulationTime:
     EndDateTime     = 1
     ReportStart     = 2
 
+class SimulationUnits:
+    UnitSystem      = 0# (0-US, 1-SI)
+    FlowUnits       = 1# 
+
+class SimAnalysisSettings:
+    AllowPonding    = 0# // No ponding at nodes
+    SkipSteadyState = 1# // Do flow routing in steady state periods 
+    IgnoreRainfall  = 2# // Analyze rainfall/runoff
+    IgnoreRDII      = 3# // Analyze RDII   
+    IgnoreSnowmelt  = 4# // Analyze snowmelt 
+    IgnoreGwater    = 5# // Analyze groundwater  
+    IgnoreRouting   = 6# // Analyze flow routing
+    IgnoreQuality   = 7# // Analyze water quality
+
+class SimulationParameters:
+    RouteStep       = 0# // Routing time step (sec)
+    MinRouteStep    = 1# // Minimum variable time step (sec)
+    LengtheningStep = 2# // Time step for lengthening (sec)
+    StartDryDays    = 3# // Antecedent dry days
+    CourantFactor   = 4# // Courant time step factor
+    MinSurfArea     = 5# // Minimum nodal surface area
+    MinSlope        = 6# // Minimum conduit slope
+    RunoffError     = 7# // Runoff continuity error
+    GwaterError     = 8# // Groundwater continuity error
+    FlowError       = 9# // Flow routing error
+    QualError       = 10#// Quality routing error
+    HeadTol         = 11#// DW routing head tolerance (ft)
+    SysFlowTol      = 12#// Tolerance for steady system flow
+    LatFlowTol      = 13#// Tolerance for steady nodal inflow   
+
 class ObjectType:
     GAGE            = 0# // rain gage
     SUBCATCH        = 1# // subcatchment
