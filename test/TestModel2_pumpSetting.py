@@ -74,7 +74,7 @@ def data_gen(t=0):
         if i == 110:
             swmmobject.swmm_setLinkSetting('C3',0.6)
         if i == 120:
-            swmmobject.swmm_setLinkSetting('C3',0.5)
+            swmmobject.swmm_setLinkSetting('C3',2.0)
         if i == 130:
             swmmobject.swmm_setLinkSetting('C3',0.4)
         if i == 140:

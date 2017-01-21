@@ -225,7 +225,7 @@ SCS_24h_Type_I_1in            23:45      0.0185
 SCS_24h_Type_I_1in            24:00      0         
 
 [REPORT]
-INPUT      NO
+INPUT      YES
 CONTROLS   YES
 SUBCATCHMENTS ALL
 NODES ALL

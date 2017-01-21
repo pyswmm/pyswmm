@@ -9,6 +9,7 @@ Date: 11/12/2016
 import time
 import os
 import sys
+from datetime import datetime, timedelta
 
 #point to location of the pyswmm file
 sys.path.append(os.getcwd()+'\\..\\pyswmm\\')
@@ -20,7 +21,23 @@ swmmobject = pyswmm('./TestModel1_weirSetting.inp',\
                     './TestModel1_weirSetting.rpt',\
                     './TestModel1_weirSetting.out')
 swmmobject.swmm_open()
+
 print swmmobject.swmm_getSimulationDateTime(0)
+print swmmobject.swmm_getSimulationDateTime(0) - timedelta(days = 10)
+swmmobject.swmm_setSimulationDateTime(0, swmmobject.swmm_getSimulationDateTime(0) - timedelta(days = 10))
+print swmmobject.swmm_getSimulationDateTime(0)
+
+print swmmobject.swmm_getSimulationDateTime(1)
+print swmmobject.swmm_getSimulationDateTime(1) - timedelta(days = 10)
+swmmobject.swmm_setSimulationDateTime(1, swmmobject.swmm_getSimulationDateTime(1) - timedelta(days = 10))
+print swmmobject.swmm_getSimulationDateTime(1)
+
+print swmmobject.swmm_getSimulationDateTime(2)
+print swmmobject.swmm_getSimulationDateTime(2) - timedelta(days = 10)
+swmmobject.swmm_setSimulationDateTime(2, swmmobject.swmm_getSimulationDateTime(2) - timedelta(days = 10))
+print swmmobject.swmm_getSimulationDateTime(2)
+
+
 swmmobject.swmm_start()
 
 i = 0
@@ -37,7 +54,7 @@ while(True):
     if i %144==0: print i
     
 swmmobject.swmm_end()
-swmmobject.swmm_report()
+#swmmobject.swmm_report()
 swmmobject.swmm_close()
 
  

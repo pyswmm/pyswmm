@@ -435,6 +435,25 @@ class pyswmm(object):
         
         return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
 
+    def swmm_setSimulationDateTime(self, timeType, newDateTime):
+        """
+        Set Simulation Time Data (Based on SimulationTime options)
+
+        :param int timeType: (toolkitapi.SimulationTime member variable)
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_setSimulationDateTime(SimulationTime.StartDateTime, datetime(2009, 10, 1, 12,30))
+        >>>
+        """
+        dtme = create_string_buffer(newDateTime.strftime("%m/%d/%Y %H:%M:%S"))
+
+        self.errcode = self.SWMMlibobj.swmm_setSimulationDateTime(c_int(timeType), dtme)
+        if self.errcode != 0: raise Exception(self.errcode)
+        
+
     def swmm_getSimUnit(self, unittype):
         """Get Simulation Units
 
@@ -701,6 +720,27 @@ class pyswmm(object):
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
 
+    def swmm_setNodeParam(self, ID, Parameter, value):
+        """
+        Set Node Parameter
+
+        :param str ID: Node ID
+        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_getNodeParam('J2',NodeParams.invertElev, 19 )
+        >>>
+        >>> swmm_model.swmm_close()    
+        
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
+        _val = c_double(value)
+        self.errcode = self.SWMMlibobj.swmm_setNodeParam(index,Parameter, _val)
+        if self.errcode != 0: raise Exception(self.errcode)
+
     def swmm_getLinkParam(self, ID, Parameter):
         """
         Get Link Parameter
@@ -726,6 +766,27 @@ class pyswmm(object):
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
 
+    def swmm_setLinkParam(self, ID, Parameter, value):
+        """
+        Set Link Parameter
+
+        :param str ID: Link ID
+        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_setLinkParam('C1:C2',LinkParams.offset1, 2 )
+        >>>
+        >>> swmm_model.swmm_close()    
+        
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
+        _val = c_double(value)
+        self.errcode = self.SWMMlibobj.swmm_setLinkParam(index,Parameter, _val)
+        if self.errcode != 0: raise Exception(self.errcode)
+
     def swmm_getSubcatchParam(self, ID, Parameter):
         """
         Get Subcatchment Parameter
@@ -750,6 +811,27 @@ class pyswmm(object):
         self.errcode = self.SWMMlibobj.swmm_getSubcatchParam(index,Parameter, byref(param))
         if self.errcode != 0: raise Exception(self.errcode)
         return param.value
+
+    def swmm_setSubcatchParam(self, ID, Parameter, value):
+        """
+        Set Subcatchment Parameter
+
+        :param str ID: Subcatchment ID
+        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
+
+        Examples:
+
+        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_setLinkParam('S2',SubcParams.area, 100 )
+        >>>
+        >>> swmm_model.swmm_close()    
+        
+        """
+        index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
+        _val = c_double(value)
+        self.errcode = self.SWMMlibobj.swmm_setSubcatchParam(index,Parameter, _val)
+        if self.errcode != 0: raise Exception(self.errcode)
 
     def swmm_getSubcatchOutConnection(self, ID):
         """
