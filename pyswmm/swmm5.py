@@ -458,7 +458,7 @@ class pyswmm(object):
         """Get Simulation Units
 
         :param int unittype: Simulation Unit Type
-        :return Simulation Unit Type
+        :return: Simulation Unit Type
         :rtype: str
 
         Examples:
@@ -479,7 +479,7 @@ class pyswmm(object):
         """Get Simulation Analysis Settings
 
         :param int settingtype: Analysis Option Setting
-        :return Simulation Analysis option setting
+        :return: Simulation Analysis option setting
         :rtype: bool
 
         Examples:
@@ -499,7 +499,7 @@ class pyswmm(object):
         """Get Simulation Configuration Parameter
 
         :param int paramtype: Simulation Parameter Type
-        :return Simulation Analysis Parameter Value
+        :return: Simulation Analysis Parameter Value
         :rtype: float
 
         Examples:
@@ -1077,6 +1077,7 @@ class pyswmm(object):
         ...         swmmobject.swmm_setNodeInflow('J1',4)
         ...     time = swmmobject.swmm_step()
         ...     i+=1
+        ...     if (time <= 0.0): break        
         ...
         >>>
         >>> swmmobject.swmm_end()
