@@ -13,6 +13,8 @@ Last Update: 11/10/2016
 import os
 import sys
 from datetime import datetime
+import warnings
+
 from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buffer, c_byte, c_bool
 
 from toolkitapi import *
@@ -23,8 +25,26 @@ __licence__ = 'BSD2'
 __version__ = '0.2.1'
 
 class SWMMException(Exception):
-    pass
+    """
+    Custom exception class for SWMM errors.
+    """
+    def __init__(self, error_code, error_message):
+        self.warning = False
+        self.args = (error_code,)
+        self.message = error_message
+    def __str__(self):
+        return self.message
 
+class PYSWMMException(Exception):
+    """
+    Custom exception class for SWMM errors.
+    """
+    def __init__(self, error_message):
+        self.warning = False
+        self.message = error_message
+    def __str__(self):
+        return self.message
+    
 class pyswmm(object):
     """
     Wrapper class to lead SWMM DLL object, then perform operations on
@@ -43,7 +63,7 @@ class pyswmm(object):
     >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
     >>> swmm_model.swmmExec()
-    >>> swmmobject.swmm_close()
+    >>> swmm_model.swmm_close()
     
     ---or---
 
@@ -62,18 +82,18 @@ class pyswmm(object):
 
     >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
-    >>> swmmobject.swmm_start()
+    >>> swmm_model.swmm_start()
     >>> while(True):
-    ...     time = swmmobject.swmm_step() # or swmm_stride()
+    ...     time = swmm_model.swmm_step() # or swmm_stride()
     ...     if (time <= 0.0): break
     >>>
-    >>> swmmobject.swmm_end()
-    >>> swmmobject.swmm_report()
-    >>> swmmobject.swmm_close()        
+    >>> swmm_model.swmm_end()
+    >>> swmm_model.swmm_report()
+    >>> swmm_model.swmm_close()        
     """
 
 
-    def __init__(self, inpfile = '', rptfile = '', binfile =''):
+    def __init__(self, inpfile = '', rptfile = '', binfile ='', dllpath = None):
         """
         Initialize the pyswmm object class
 
@@ -82,7 +102,6 @@ class pyswmm(object):
         :param str binfile: Optional binary output file (default '')
         """
         self.fileLoaded = False
-        self.errcode = 0
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
@@ -103,21 +122,38 @@ class pyswmm(object):
         #### windows
         if 'win32' in sys.platform:
             from ctypes import CDLL
-            dllname = 'swmm5.dll'
-            libswmm = get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname
+            if dllpath == None:
+                dllname = 'swmm5.dll'
+                libswmm = get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname
+            else:
+                libswmm = dllpath
             self.SWMMlibobj = CDLL(libswmm)
+##            self.SWMMlibobj = windll.LoadLibrary(libswmm)
+
+    def _error_message(self, errcode):
+        """
+        Returns SWMM Error Message
+
+        :param int errcode: SWMM error code index
+        :return: Error Message from SWMM
+        :rtype: str
+        
+        """
+        errcode = c_int(errcode)
+        _errmsg = create_string_buffer(257)
+        self.SWMMlibobj.swmm_getError(errcode, _errmsg)
+        return _errmsg.value
             
-    def _error(self):
-        """Print the error text the corresponds to the error code returned"""
-        if not self.errcode:
-            return
-        errtxt = self.SWMMlibobj.swmmgeterror(self.errcode)
-        if self.errcode >= 100:
-            self.Errflag = True
-            raise(SWMMException('Fatal error occured {}'.format(errtxt)))
-        else:
-            self.Warnflag = True
-        return
+    def _error_check(self, errcode):
+        """
+        Checks SWMM Error Message and raises Exception or warning
+
+        :param int errcode: SWMM error code index
+        """
+        if errcode != 0 and errcode <= 103:
+            raise SWMMException(errcode, self._error_message(errcode))
+        if errcode != 0 and errcode > 103:
+            warnings.warn(self._error_message(errcode))
         
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):
         """
@@ -132,47 +168,41 @@ class pyswmm(object):
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmmExec()
-        >>> swmmobject.swmm_close()        
+        >>> swmm_model.swmm_close()        
         """
         
         if inpfile is None:
             inpfile = self.inpfile
         if rptfile is None:
             if self.rptfile != '': rptfile = self.rptfile
-            else: self.rptfile = self.inpfile.replace('.inp','.rpt')
+            else: rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
             if self.binfile != '': binfile = self.binfile
-            else: self.binfile = self.inpfile.replace('.inp','.rpt') 
-        sys.stdout.write("\n... SWMM Version 5.1")
+            else: binfile = self.inpfile.replace('.inp','.rpt') 
+        sys.stdout.write("\n... SWMM Version {}".format(self.swmm_getVersion()))
 
         try:
             self.swmm_run()
             sys.stdout.write("\n... Run Complete")
         except:
-            pass
-
-        try:
-            self.swmm_close()
-            sys.stdout.write("\n... Closed")
-        except:
-            print('close fail')
-            pass
-
-        if self.Errflag: 
-            sys.stdout.write("\n\n... SWMM completed. There are errors.\n")
-        elif self.Warnflag:
-            sys.stdout.write("\n\n... SWMM completed. There are warnings.\n")
-        else:
-            sys.stdout.write("\n\n... SWMM completed.\n")
+            PYSWMMException("Run Failed")
+        finally:
+            try:
+                self.swmm_close()
+                sys.stdout.write("\n... Closed")
+                sys.stdout.write("\n\n... SWMM completed.\n")
+            except:
+                PYSWMMException("SWMM Close Failed")
+                sys.stdout.write("\n\n... SWMM completed. There are errors.\n")
             
     def swmm_run(self,inpfile=None, rptfile=None,binfile = None):
         if inpfile is None: inpfile = self.inpfile
         if rptfile is None:
             if self.rptfile != '': rptfile = self.rptfile
-            else: self.rptfile = self.inpfile.replace('.inp','.rpt')
+            else: rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
             if self.binfile != '': binfile = self.binfile
-            else: self.binfile = self.inpfile.replace('.inp','.rpt') 
+            else: binfile = self.inpfile.replace('.inp','.out') 
 
         self.SWMMlibobj.swmm_run(c_char_p(inpfile), c_char_p(rptfile), c_char_p(binfile))
         
@@ -188,30 +218,27 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_close()          
+        >>> swmm_model.swmm_close()          
         """
         if self.fileLoaded:
             self.swmm_close()
-        if self.fileLoaded: 
-            raise(SWMMException('Fatal error closing previously opened file'))
+            raise(PYSWMMException('Fatal error closing previously opened file'))
         if inpfile is None:
             inpfile = self.inpfile
         if rptfile is None:
             if self.rptfile != '': rptfile = self.rptfile
-            else: self.rptfile = self.inpfile.replace('.inp','.rpt')
+            else: rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
             if self.binfile != '': binfile = self.binfile
-            else: self.binfile = self.inpfile.replace('.inp','.rpt')            
+            else: binfile = self.inpfile.replace('.inp','.out')            
 
-        self.errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
-                                                 c_char_p(rptfile),\
-                                                 c_char_p(binfile))
-        #print self.errcode
-        #self._error()
-        #if self.errcode < 100:
-            #self.fileLoaded = True
+        errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
+                                            c_char_p(rptfile),\
+                                            c_char_p(binfile))
+        self._error_check(errcode)
+        self.fileLoaded = True
         
-    def swmm_start(self, SaveOut2rpt = True):
+    def swmm_start(self, SaveOut2rpt = False):
         """Prepares to Start SWMM Simulation
 
         :param bool SaveOut2rpt: Save timeseries results to rpt file (default is False).
@@ -220,22 +247,19 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
+        ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
         
         """
         
-        self.errcode = self.SWMMlibobj.swmm_start(c_bool(SaveOut2rpt))
-        
-        self._error()
-        if self.errcode < 100:
-            self.fileLoaded = False
+        errcode = self.SWMMlibobj.swmm_start(c_bool(SaveOut2rpt))
+        self._error_check(errcode)
         
     def swmm_end(self):
         """Ends SWMM Simulation
@@ -244,20 +268,17 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
+        ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
         """
-        self.errcode = self.SWMMlibobj.swmm_end()
-        
-        self._error()
-        if self.errcode < 100:
-            self.fileLoaded = False
+        errcode = self.SWMMlibobj.swmm_end()
+        self._error_check(errcode)
         
     def swmm_step(self):
         """ Advances SWMM Simulation by a single routing step
@@ -266,14 +287,14 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
+        ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
         """
         elapsed_time = c_double()
         self.SWMMlibobj.swmm_step(byref(elapsed_time))
@@ -297,15 +318,14 @@ class pyswmm(object):
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> while(True):
-        ...     time = swmmobject.swmm_stride(600)
+        ...     time = swmm_model.swmm_stride(600)
         ...     if (time <= 0.0): break
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()        
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()        
         """
         if not hasattr(self, 'curSimTime'): self.curSimTime = 0.000001
-        
         
         ctime = self.curSimTime
         while advanceSeconds/3600./24. + ctime > self.curSimTime:
@@ -324,22 +344,17 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
+        ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
         """
-        self.errcode = self.SWMMlibobj.swmm_report()
-        self.check_error()
-
-    def check_error(self):
-        self._error()
-        if self.errcode < 100:
-            self.fileLoaded = False   
+        errcode = self.SWMMlibobj.swmm_report()
+        self._error_check(errcode)
             
     def swmm_close(self):
         """ Closes model and supporting files and cleans up memory
@@ -348,33 +363,18 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
+        ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
         """
-        self.errcode = self.SWMMlibobj.swmm_close()
-        self.check_error()
-
-##    def swmmgeterror(self, iErrcode):
-##        """
-##        retrieves text of error/warning message
-##        
-##        Arguments:
-##         * errcode = error/warning code number
-##        
-##        Returns: string
-##         * text of error/warning message
-##        
-##        """
-##        sErrmsg = ctypes.create_string_buffer(256)
-##        self.errcode = self.SWMMlibobj.swmmgeterror(iErrcode, byref(sErrmsg), 256)
-##        self._error()
-##        return sErrmsg.value
+        errcode = self.SWMMlibobj.swmm_close()
+        self._error_check(errcode)
+        self.fileLoaded = False
 
     def swmm_getVersion(self):
         """
@@ -399,10 +399,10 @@ class pyswmm(object):
         flowErr = c_float()
         qualErr = c_float()
 
-        self.errcode = self.SWMMlibobj.swmm_getMassBalErr(byref(runoffErr),\
+        errcode = self.SWMMlibobj.swmm_getMassBalErr(byref(runoffErr),\
                                                           byref(flowErr),\
                                                           byref(qualErr))
-        self._error()
+        self._error_check(errcode)
         
         return runoffErr.value, flowErr.value, qualErr.value
 
@@ -430,8 +430,8 @@ class pyswmm(object):
         """
         dtme = create_string_buffer(61)
 
-        self.errcode = self.SWMMlibobj.swmm_getSimulationDateTime(c_int(timeType), dtme)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSimulationDateTime(c_int(timeType), dtme)
+        self._error_check(errcode)
         
         return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
 
@@ -450,8 +450,8 @@ class pyswmm(object):
         """
         dtme = create_string_buffer(newDateTime.strftime("%m/%d/%Y %H:%M:%S"))
 
-        self.errcode = self.SWMMlibobj.swmm_setSimulationDateTime(c_int(timeType), dtme)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_setSimulationDateTime(c_int(timeType), dtme)
+        self._error_check(errcode)
         
 
     def swmm_getSimUnit(self, unittype):
@@ -470,8 +470,8 @@ class pyswmm(object):
         >>> swmm_model.swmm_close()
         """
         value = c_int()
-        self.errcode = self.SWMMlibobj.swmm_getSimulationUnit(unittype, byref(value))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSimulationUnit(unittype, byref(value))
+        self._error_check(errcode)
         _flowunitnames = ["CFS","GPM","MGD","CMS","LPS","MLD"] # Temporary Solution (2017-1-2 BEM)
         return _flowunitnames[value.value]
 
@@ -491,8 +491,8 @@ class pyswmm(object):
         >>> swmm_model.swmm_close()
         """
         value = c_int()
-        self.errcode = self.SWMMlibobj.swmm_getSimulationAnalysisSetting(settingtype, byref(value))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSimulationAnalysisSetting(settingtype, byref(value))
+        self._error_check(errcode)
         return bool(value.value)
 
     def swmm_getSimAnalysisSetting(self, paramtype):
@@ -511,15 +511,14 @@ class pyswmm(object):
         >>> swmm_model.swmm_close()
         """
         value = c_double()
-        self.errcode = self.SWMMlibobj.swmm_getSimulationParam(paramtype, byref(value))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSimulationParam(paramtype, byref(value))
+        self._error_check(errcode)
         return value.value
     
     def swmm_getProjectSize(self, objecttype):
         """Get Project Size: Number of Objects
 
         :param int objecttype: (member variable)
-        
         :return: Object Count
         :rtype: int
 
@@ -532,8 +531,8 @@ class pyswmm(object):
         >>> swmm_model.swmm_close()
         """
         count = c_int()
-        self.errcode = self.SWMMlibobj.swmm_countObjects(objecttype, byref(count))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_countObjects(objecttype, byref(count))
+        self._error_check(errcode)
         return count.value
     
     def swmm_getObjectId(self, objecttype, index):
@@ -554,8 +553,8 @@ class pyswmm(object):
         >>> swmm_model.swmm_close()
         """        
         ID = create_string_buffer(61)
-        self.errcode = self.SWMMlibobj.swmm_getObjectId(objecttype,index, byref(ID))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getObjectId(objecttype,index, byref(ID))
+        self._error_check(errcode)
         return ID.value
 
     def swmm_getObjectIDList(self, objecttype):
@@ -611,8 +610,8 @@ class pyswmm(object):
 
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         Ntype = c_int()
-        self.errcode = self.SWMMlibobj.swmm_getNodeType(index, byref(Ntype))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getNodeType(index, byref(Ntype))
+        self._error_check(errcode)
         return Ntype.value
 
     def swmm_getLinkType(self, ID):
@@ -636,8 +635,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         Ltype = c_int()
-        self.errcode = self.SWMMlibobj.swmm_getLinkType(index, byref(Ltype))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getLinkType(index, byref(Ltype))
+        self._error_check(errcode)
         return Ltype.value
 
     def swmm_getLinkConnections(self, ID):
@@ -669,8 +668,8 @@ class pyswmm(object):
         USNodeIND = c_int()
         DSNodeIND = c_int()
 
-        self.errcode = self.SWMMlibobj.swmm_getLinkConnections(index, byref(USNodeIND), byref(DSNodeIND))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getLinkConnections(index, byref(USNodeIND), byref(DSNodeIND))
+        self._error_check(errcode)
 
         USNodeID = self.swmm_getObjectId(ObjectType.NODE, USNodeIND.value)
         DSNodeID = self.swmm_getObjectId(ObjectType.NODE, DSNodeIND.value)
@@ -691,8 +690,8 @@ class pyswmm(object):
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         
         direction = c_byte()
-        self.errcode = self.SWMMlibobj.swmm_getLinkDirection(index, byref(direction))
-        if self.errcode !=0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getLinkDirection(index, byref(direction))
+        self._error_check(errcode)
         return direction.value
 
     def swmm_getNodeParam(self, ID, Parameter):
@@ -716,8 +715,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         param = c_double()
-        self.errcode = self.SWMMlibobj.swmm_getNodeParam(index,Parameter, byref(param))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getNodeParam(index,Parameter, byref(param))
+        self._error_check(errcode)
         return param.value
 
     def swmm_setNodeParam(self, ID, Parameter, value):
@@ -738,8 +737,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         _val = c_double(value)
-        self.errcode = self.SWMMlibobj.swmm_setNodeParam(index,Parameter, _val)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_setNodeParam(index,Parameter, _val)
+        self._error_check(errcode)
 
     def swmm_getLinkParam(self, ID, Parameter):
         """
@@ -762,8 +761,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         param = c_double()
-        self.errcode = self.SWMMlibobj.swmm_getLinkParam(index,Parameter, byref(param))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getLinkParam(index,Parameter, byref(param))
+        self._error_check(errcode)
         return param.value
 
     def swmm_setLinkParam(self, ID, Parameter, value):
@@ -784,8 +783,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         _val = c_double(value)
-        self.errcode = self.SWMMlibobj.swmm_setLinkParam(index,Parameter, _val)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_setLinkParam(index,Parameter, _val)
+        self._error_check(errcode)
 
     def swmm_getSubcatchParam(self, ID, Parameter):
         """
@@ -808,8 +807,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         param = c_double()
-        self.errcode = self.SWMMlibobj.swmm_getSubcatchParam(index,Parameter, byref(param))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSubcatchParam(index,Parameter, byref(param))
+        self._error_check(errcode)
         return param.value
 
     def swmm_setSubcatchParam(self, ID, Parameter, value):
@@ -830,8 +829,8 @@ class pyswmm(object):
         """
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         _val = c_double(value)
-        self.errcode = self.SWMMlibobj.swmm_setSubcatchParam(index,Parameter, _val)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_setSubcatchParam(index,Parameter, _val)
+        self._error_check(errcode)
 
     def swmm_getSubcatchOutConnection(self, ID):
         """
@@ -862,8 +861,8 @@ class pyswmm(object):
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         TYPELoadSurface = c_int()
         outindex = c_int()
-        self.errcode = self.SWMMlibobj.swmm_getSubcatchOutConnection(index, byref(TYPELoadSurface), byref(outindex))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSubcatchOutConnection(index, byref(TYPELoadSurface), byref(outindex))
+        self._error_check(errcode)
 
         if TYPELoadSurface.value == ObjectType.NODE:
             LoadID = self.swmm_getObjectId(ObjectType.NODE, outindex.value)
@@ -886,10 +885,10 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
-        ...     print swmmobject.swmm_getCurrentSimualationTime()
+        ...     time = swmm_model.swmm_step()
+        ...     print swmm_model.swmm_getCurrentSimualationTime()
         ...     if (time <= 0.0): break
         ...
         >>> 2015-11-03 10:10:12
@@ -897,13 +896,13 @@ class pyswmm(object):
         >>> 2015-11-03 10:30:12
         >>> 2015-11-03 10:40:12
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()        
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()        
         """
         dtme = create_string_buffer(61)
-        self.errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
+        self._error_check(errcode)
         
         return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
     
@@ -920,10 +919,10 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
-        ...     print swmmobject.swmm_getNodeResult('J1', NodeResults.newDepth)
+        ...     time = swmm_model.swmm_step()
+        ...     print swmm_model.swmm_getNodeResult('J1', NodeResults.newDepth)
         ...     if (time <= 0.0): break
         ...
         >>> 1.2
@@ -931,16 +930,16 @@ class pyswmm(object):
         >>> 1.9
         >>> 1.2
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()   
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()   
         
         """
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         result = c_double()
         
-        self.errcode = self.SWMMlibobj.swmm_getNodeResult(index, resultType, byref(result))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getNodeResult(index, resultType, byref(result))
+        self._error_check(errcode)
 
         return result.value
     
@@ -957,10 +956,10 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
-        ...     print swmmobject.swmm_getLinkResult('J1', LinkResults.newFlow)
+        ...     time = swmm_model.swmm_step()
+        ...     print swmm_model.swmm_getLinkResult('J1', LinkResults.newFlow)
         ...     if (time <= 0.0): break
         ...
         >>> 1.2
@@ -968,16 +967,16 @@ class pyswmm(object):
         >>> 1.9
         >>> 1.2
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()   
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()   
         
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         result = c_double()
         
-        self.errcode = self.SWMMlibobj.swmm_getLinkResult(index, resultType, byref(result))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getLinkResult(index, resultType, byref(result))
+        self._error_check(errcode)
 
         return result.value
 
@@ -994,10 +993,10 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
-        ...     print swmmobject.swmm_getSubcatchResult('S3', SubcResults.newRunoff)
+        ...     time = swmm_model.swmm_step()
+        ...     print swmm_model.swmm_getSubcatchResult('S3', SubcResults.newRunoff)
         ...     if (time <= 0.0): break
         ...
         >>> 0.01
@@ -1005,16 +1004,16 @@ class pyswmm(object):
         >>> 0.09
         >>> 0.08
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()   
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()   
         
         """
         index = self.swmm_getObjectIDIndex(ObjectType.SUBCATCH,ID)
         result = c_double()
         
-        self.errcode = self.SWMMlibobj.swmm_getSubcatchResult(index, resultType, byref(result))
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_getSubcatchResult(index, resultType, byref(result))
+        self._error_check(errcode)
 
         return result.value
     
@@ -1035,26 +1034,26 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> i = 0
         >>> while(True):
-        ...     time = swmmobject.swmm_step()
+        ...     time = swmm_model.swmm_step()
         ...     i+=1
         ...
         ...     if i == 80:
-        ...         swmmobject.swmm_setLinkSetting('C3',0.5)
+        ...         swmm_model.swmm_setLinkSetting('C3',0.5)
         ...     if (time <= 0.0): break
         ...
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()   
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()   
         
         """
         index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
         targetSetting = c_double(targetSetting)
-        self.errcode = self.SWMMlibobj.swmm_setLinkSetting(index, targetSetting)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_setLinkSetting(index, targetSetting)
+        self._error_check(errcode)
 
 
     def swmm_setNodeInflow(self, ID, flowrate):
@@ -1070,25 +1069,25 @@ class pyswmm(object):
 
         >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmmobject.swmm_start()
+        >>> swmm_model.swmm_start()
         >>> i = 0
         >>> while(True):
         ...     if i == 80:
-        ...         swmmobject.swmm_setNodeInflow('J1',4)
-        ...     time = swmmobject.swmm_step()
+        ...         swmm_model.swmm_setNodeInflow('J1',4)
+        ...     time = swmm_model.swmm_step()
         ...     i+=1
         ...     if (time <= 0.0): break        
         ...
         >>>
-        >>> swmmobject.swmm_end()
-        >>> swmmobject.swmm_report()
-        >>> swmmobject.swmm_close()           
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()           
         """
         
         index = self.swmm_getObjectIDIndex(ObjectType.NODE,ID)
         q = c_double(flowrate)
-        self.errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
-        if self.errcode != 0: raise Exception(self.errcode)
+        errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
+        self._error_check(errcode)
                                       
 if __name__ == '__main__':
     test = pyswmm(inpfile = r"../test/TestModel1_weirSetting.inp",\

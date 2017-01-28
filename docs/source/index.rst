@@ -4,6 +4,7 @@
    contain the root `toctree` directive.
 
 PYSWMM - Python Wrapper for Stormwater Management Model (SWMM)
+==============================================================
 
 Abstract:
 
@@ -15,10 +16,6 @@ As the project evolves, the goal is to not only extend the SWMM data model into 
 
 See more in the PySWMM Wiki: https://github.com/OpenWaterAnalytics/pyswmm/wiki
    
-   
-Welcome to pyswmm's documentation!
-==================================
-
 Contents:
 
 .. toctree::

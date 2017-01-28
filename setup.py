@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 
-VERSION = '0.1.0'  
+VERSION = '0.2.1'  
 AUTHOR_NAME = 'Bryant E. McDonnell (EmNet LLC)'
 AUTHOR_EMAIL = 'bemcdonnell@gmail.com'
 
