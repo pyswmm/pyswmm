@@ -80,8 +80,8 @@ Distributed with a BSD2 license; see LICENSE.txt::
 Sponsors
 --------
 
-EmNet LLC: (www.EmNet.net)
-	.. image:: http://emnet.net/
+EmNet LLC: 
+	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
 	  :target: http://emnet.net/
 	  
 Acknowledgements
