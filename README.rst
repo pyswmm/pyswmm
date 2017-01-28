@@ -6,7 +6,9 @@ PYSWMM
 Documentation
 	http://pyswmm.readthedocs.io/
 Development
-	https://github.com/OpenWaterAnalytics/pyswmm
+	https://github.com/OpenWaterAnalytics/pyswmm/
+PySWMM Wiki 
+	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
 	
    .. image:: https://readthedocs.org/projects/pyswmm/badge/?version=inputapienhancements
       :target: http://pyswmm.readthedocs.io/en/inputapienhancements/?badge=inputapienhancements
@@ -27,7 +29,7 @@ In support of the OpenWaterAnalytics open source initiative, the PySWMM project 
 Download
 --------
 
-Get the latest version of PySWMM from
+Get the latest version of PySWMM from (COMING SOON!!!!!)
 https://pypi.python.org/pypi/pyswmm/
 
 ::
@@ -75,5 +77,18 @@ Distributed with a BSD2 license; see LICENSE.txt::
    Copyright (C) 2004-2017 PySWMM Developers
    Bryant E. McDonnell <bemcdonnell@gmail.com>
 
-	
-See more in the PySWMM Wiki: https://github.com/OpenWaterAnalytics/pyswmm/wiki
+Sponsors
+--------
+
+EmNet LLC: (www.EmNet.net)
+	.. image:: http://emnet.net/
+	  :target: http://emnet.net/
+	  
+Acknowledgements
+----------------
+
+- Tim Cera
+- Assela Pathirana
+
+
+
