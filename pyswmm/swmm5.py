@@ -37,7 +37,7 @@ class SWMMException(Exception):
 
 class PYSWMMException(Exception):
     """
-    Custom exception class for SWMM errors.
+    Custom exception class for PySWMM errors.
     """
     def __init__(self, error_message):
         self.warning = False
@@ -1088,6 +1088,162 @@ class pyswmm(object):
         q = c_double(flowrate)
         errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
         self._error_check(errcode)
+
+
+class Nodes(object):
+    """
+    Node Iterator Methods
+
+    :param object model: Open Model Instance 
+
+    Examples:
+        
+    >>> swmm_model = pyswmm(r'\\.inp')
+    >>> swmm_model.swmm_open()
+    >>> for node in Nodes(swmmobject):
+    ...     print node
+    ...     print node.nodeid
+    ...     print node.invertel
+    ...     node.set_invertel(10)
+    ...     print node.invertel
+
+    >>> <swmm5.Node object at 0x031B0350>
+    >>> J1
+    >>> 20.728
+    >>> 10.0
+    >>> <swmm5.Node object at 0x030693D0>
+    >>> J2
+    >>> 13.392
+    >>> 10.0
+    >>> <swmm5.Node object at 0x031B0350>
+    >>> J3
+    >>> 6.547
+    >>> 10.0
+    >>> <swmm5.Node object at 0x030693D0>
+    >>> J4
+    >>> 0.0
+    >>> 10.0
+    >>> swmm_model.swmm_close()
+    
+    """
+    def __init__(self, model):
+        if not model.fileLoaded:
+            raise PYSWMMException("SWMM Model Not Open")
+        self._model = model
+        self.cuindex = 0
+        self.nNodes = self._model.swmm_getProjectSize(ObjectType.NODE)
+    def __iter__(self):
+        return self
+    
+    def next(self):
+        if self.cuindex < self.nNodes:
+            nodeobject = Node(self._model, self.nodeid)
+            self.cuindex+=1 #Next Iteration
+            return nodeobject
+        else:
+            raise StopIteration()        
+    def node(self, nodeid):
+        "Node instance"
+        return Node(self._model, nodeid)
+    @property
+    def nodeid(self):
+        "Node ID"
+        return self._model.swmm_getObjectId(ObjectType.NODE,self.cuindex)
+
+class Node(object):
+    """
+    Node Methods
+    
+    :param object model: Open Model Instance 
+    :param str nodeid: Node ID
+
+    Examples:
+        
+    >>> swmm_model = pyswmm(r'\\.inp')
+    >>> swmm_model.swmm_open()
+    >>> node = Node(swmmobject, "J1")
+    >>> print node.invertel
+    >>> 10.0
+    >>> swmm_model.swmm_close()
+    
+    """
+    def __init__(self, model, nodeid):
+        if not model.fileLoaded:
+            raise PYSWMMException("SWMM Model Not Open")        
+        self._model = model
+        self._nodeid = nodeid
+    #Get Parameters
+    @property
+    def nodeid(self):
+        return self._nodeid      
+    @property
+    def ntype(self):
+        return self._model.swmm_getNodeType(self._nodeid)
+    @property
+    def invertel(self):
+        return self._model.swmm_getNodeParam(self._nodeid,NodeParams.invertElev)
+    @property
+    def fullDepth(self):
+        return self._model.swmm_getNodeParam(self._nodeid,NodeParams.fullDepth)
+    @property
+    def surDepth(self):
+        return self._model.swmm_getNodeParam(self._nodeid,NodeParams.surDepth)
+    @property
+    def pondedArea(self):
+        return self._model.swmm_getNodeParam(self._nodeid,NodeParams.pondedArea)
+    @property
+    def initDepth(self):
+        return self._model.swmm_getNodeParam(self._nodeid,NodeParams.initDepth)
+    ## Simulation Results
+    @property
+    def totalinflow(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.totalinflow)  
+    @property
+    def outflow(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.outflow)
+    @property
+    def losses(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.losses)
+    @property
+    def Volume(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.newVolume)
+    @property
+    def overflow(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.overflow)
+    @property
+    def Depth(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.newDepth)
+    @property
+    def Head(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.newHead)
+    @property
+    def LatFlow(self):
+        return self._model.swmm_getNodeResult(self._nodeid,NodeResults.newLatFlow)
+    # Set Parameters
+    def set_invertel(self, param):
+        return self._model.swmm_setNodeParam(self._nodeid,NodeParams.invertElev, param)
+    def set_fullDepth(self, param):
+        return self._model.swmm_setNodeParam(self._nodeid,NodeParams.fullDepth, param)
+    def set_surDepth(self, param):
+        return self._model.swmm_setNodeParam(self._nodeid,NodeParams.surDepth, param)
+    def set_pondedArea(self, param):
+        return self._model.swmm_setNodeParam(self._nodeid,NodeParams.pondedArea, param)
+    def set_initDepth(self, param):
+        return self._model.swmm_setNodeParam(self._nodeid,NodeParams.initDepth, param)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                       
 if __name__ == '__main__':
     test = pyswmm(inpfile = r"../test/TestModel1_weirSetting.inp",\
