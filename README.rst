@@ -48,7 +48,7 @@ Usage
 
 A quick example that steps through a simulation::
 
-	>>> from swmm5 import pyswmm
+    >>> from swmm5 import pyswmm
     >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
     >>> swmm_model.swmm_start()
