@@ -1130,6 +1130,8 @@ class Nodes(object):
     def __init__(self, model):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
+        if nodeid not in model.getObjectIDList(ObjectType.NODE):
+            raise PYSWMMException("ID Not valid")        
         self._model = model
         self.cuindex = 0
         self.nNodes = self._model.getProjectSize(ObjectType.NODE)
@@ -1142,10 +1144,7 @@ class Nodes(object):
             self.cuindex+=1 #Next Iteration
             return nodeobject
         else:
-            raise StopIteration()        
-    def node(self, nodeid):
-        "Node instance"
-        return Node(self._model, nodeid)
+            raise StopIteration()
     @property
     def nodeid(self):
         "Node ID"
@@ -1681,7 +1680,9 @@ class Link(object):
     """
     def __init__(self, model, linkid):
         if not model.fileLoaded:
-            raise PYSWMMException("SWMM Model Not Open")        
+            raise PYSWMMException("SWMM Model Not Open")
+        if linkid not in model.getObjectIDList(ObjectType.LINK):
+            raise PYSWMMException("ID Not valid")
         self._model = model
         self._linkid = linkid
     #Get Parameters
