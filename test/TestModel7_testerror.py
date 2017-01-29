@@ -34,7 +34,7 @@ swmmobject = pyswmm('./TestModel1_weirSetting.inp',\
                     './TestModel1_weirSetting.out')
 swmmobject.swmm_open()
 
-swmmobject.swmm_getLinkResult('C2',0)
+swmmobject.getLinkResult('C2',0)
 swmmobject.swmm_close()
 
 ## Test PYSWMMException

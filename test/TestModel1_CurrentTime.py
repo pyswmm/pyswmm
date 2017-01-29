@@ -20,7 +20,7 @@ swmmobject = pyswmm('./TestModel1_weirSetting.inp',\
                     './TestModel1_weirSetting.rpt',\
                     './TestModel1_weirSetting.out')
 swmmobject.swmm_open()
-print swmmobject.swmm_getSimulationDateTime(0)
+print swmmobject.getSimulationDateTime(0)
 swmmobject.swmm_start()
 
 i = 0
@@ -28,8 +28,8 @@ while(True):
     
     time = swmmobject.swmm_stride(600)
     i+=1
-    print(swmmobject.swmm_getCurrentSimualationTime())
-    print(type(swmmobject.swmm_getCurrentSimualationTime()))
+    print(swmmobject.getCurrentSimualationTime())
+    print(type(swmmobject.getCurrentSimualationTime()))
      
 
     if (time <= 0.0):

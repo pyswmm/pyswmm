@@ -65,7 +65,7 @@ def data_gen(t=0):
     i = 0
     while(True):
         if i >= 80:
-            swmmobject.swmm_setNodeInflow('J1',random.randint(1,5))
+            swmmobject.setNodeInflow('J1',random.randint(1,5))
         time = swmmobject.swmm_stride(1500)
         i+=1
             
@@ -76,10 +76,10 @@ def data_gen(t=0):
 def run(t):
     
     xdata.append(t)
-    new_y = swmmobject.swmm_getLinkResult('C2',LinkResults.newFlow)
+    new_y = swmmobject.getLinkResult('C2',LinkResults.newFlow)
     ydata.append(new_y)
     
-    new_y2 = swmmobject.swmm_getNodeResult('J1',NodeResults.newLatFlow)
+    new_y2 = swmmobject.getNodeResult('J1',NodeResults.newLatFlow)
     ydata2.append(new_y2)
     
     xmin, xmax = ax.get_xlim()

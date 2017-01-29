@@ -66,27 +66,27 @@ def data_gen(t=0):
         time = swmmobject.swmm_stride(300)
         i+=1
         if i == 80:
-            swmmobject.swmm_setLinkSetting('C3',0.9)
+            swmmobject.setLinkSetting('C3',0.9)
         if i == 90:
-            swmmobject.swmm_setLinkSetting('C3',0.8)
+            swmmobject.setLinkSetting('C3',0.8)
         if i == 100:
-            swmmobject.swmm_setLinkSetting('C3',0.7)
+            swmmobject.setLinkSetting('C3',0.7)
         if i == 110:
-            swmmobject.swmm_setLinkSetting('C3',0.6)
+            swmmobject.setLinkSetting('C3',0.6)
         if i == 120:
-            swmmobject.swmm_setLinkSetting('C3',0.5)
+            swmmobject.setLinkSetting('C3',0.5)
         if i == 130:
-            swmmobject.swmm_setLinkSetting('C3',0.4)
+            swmmobject.setLinkSetting('C3',0.4)
         if i == 140:
-            swmmobject.swmm_setLinkSetting('C3',0.3)
+            swmmobject.setLinkSetting('C3',0.3)
         if i == 150:
-            swmmobject.swmm_setLinkSetting('C3',0.2)
+            swmmobject.setLinkSetting('C3',0.2)
         if i == 160:
-            swmmobject.swmm_setLinkSetting('C3',0.1)
+            swmmobject.setLinkSetting('C3',0.1)
         if i == 170:
-            swmmobject.swmm_setLinkSetting('C3',0.0)          
+            swmmobject.setLinkSetting('C3',0.0)          
         if i == 220:
-            swmmobject.swmm_setLinkSetting('C3',1.0)
+            swmmobject.setLinkSetting('C3',1.0)
             
         if i > 0 and time == 0.0:
             break
@@ -95,10 +95,10 @@ def data_gen(t=0):
 def run(t):
     
     xdata.append(t)
-    new_y = swmmobject.swmm_getLinkResult('C3',LinkResults.newFlow)
+    new_y = swmmobject.getLinkResult('C3',LinkResults.newFlow)
     ydata.append(new_y)
     
-    new_y2 = swmmobject.swmm_getLinkResult('C3',LinkResults.setting)
+    new_y2 = swmmobject.getLinkResult('C3',LinkResults.setting)
     ydata2.append(new_y2)
     
     xmin, xmax = ax.get_xlim()
