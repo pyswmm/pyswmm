@@ -19,12 +19,12 @@ import sys
 #point to location of the pyswmm file
 sys.path.append(os.getcwd()+'\\..\\pyswmm\\')
 
-from swmm5 import pyswmm
+from swmm5 import PYSWMM
 from toolkitapi import *
 
 
 
-swmmobject = pyswmm('./TestModel2_pumpSetting.inp',\
+swmmobject = PYSWMM('./TestModel2_pumpSetting.inp',\
                     './TestModel2_pumpSetting.rpt',\
                     './TestModel2_pumpSetting.out')
 swmmobject.swmm_open()

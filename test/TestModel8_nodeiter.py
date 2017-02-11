@@ -13,10 +13,10 @@ import sys
 #point to location of the pyswmm file
 sys.path.append(os.getcwd()+'\\..\\pyswmm\\')
 
-from swmm5 import pyswmm, Nodes, Node, Links, Link
+from swmm5 import PYSWMM, Nodes, Node, Links, Link
 
 
-swmmobject = pyswmm('./TestModel1_weirSetting.inp')
+swmmobject = PYSWMM('./TestModel1_weirSetting.inp')
 swmmobject.swmm_open()
 
 for node in Nodes(swmmobject):

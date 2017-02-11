@@ -45,7 +45,7 @@ class PYSWMMException(Exception):
     def __str__(self):
         return self.message
     
-class pyswmm(object):
+class PYSWMM(object):
     """
     Wrapper class to lead SWMM DLL object, then perform operations on
     the SWMM object that is created when the file is being loaded.
@@ -60,7 +60,7 @@ class pyswmm(object):
     
     Examples:
 
-    >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+    >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
     >>> swmm_model.swmmExec()
     >>> swmm_model.swmm_close()
@@ -80,7 +80,7 @@ class pyswmm(object):
 
     Examples:
 
-    >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+    >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
     >>> swmm_model.swmm_start()
     >>> while(True):
@@ -93,13 +93,13 @@ class pyswmm(object):
     """
 
 
-    def __init__(self, inpfile = '', rptfile = '', binfile ='', dllpath = None):
+    def __init__(self, inpfile = '', rptfile = None, binfile =None, dllpath = None):
         """
-        Initialize the pyswmm object class
+        Initialize the PYSWMM object class
 
         :param str inpfile: Name of SWMM input file (default '')
-        :param str rptfile: Report file to generate (default '')
-        :param str binfile: Optional binary output file (default '')
+        :param str rptfile: Report file to generate (default None)
+        :param str binfile: Optional binary output file (default None)
         """
         self.fileLoaded = False
         self.inpfile = inpfile
@@ -166,7 +166,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmmExec()
         >>> swmm_model.swmm_close()        
@@ -175,11 +175,11 @@ class pyswmm(object):
         if inpfile is None:
             inpfile = self.inpfile
         if rptfile is None:
-            if self.rptfile != '': rptfile = self.rptfile
+            if self.rptfile != '' and self.rptfile != None: rptfile = self.rptfile
             else: rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
-            if self.binfile != '': binfile = self.binfile
-            else: binfile = self.inpfile.replace('.inp','.rpt') 
+            if self.binfile != '' and self.binfile != None: binfile = self.binfile
+            else: binfile = self.inpfile.replace('.inp','.out')    
         sys.stdout.write("\n... SWMM Version {}".format(self.swmm_getVersion()))
 
         try:
@@ -199,11 +199,11 @@ class pyswmm(object):
     def swmm_run(self,inpfile=None, rptfile=None,binfile = None):
         if inpfile is None: inpfile = self.inpfile
         if rptfile is None:
-            if self.rptfile != '': rptfile = self.rptfile
+            if self.rptfile != '' and self.rptfile != None: rptfile = self.rptfile
             else: rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
-            if self.binfile != '': binfile = self.binfile
-            else: binfile = self.inpfile.replace('.inp','.out') 
+            if self.binfile != '' and self.binfile != None: binfile = self.binfile
+            else: binfile = self.inpfile.replace('.inp','.out')    
 
         self.SWMMlibobj.swmm_run(c_char_p(inpfile), c_char_p(rptfile), c_char_p(binfile))
         
@@ -217,7 +217,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_close()          
         """
@@ -227,10 +227,10 @@ class pyswmm(object):
         if inpfile is None:
             inpfile = self.inpfile
         if rptfile is None:
-            if self.rptfile != '': rptfile = self.rptfile
+            if self.rptfile != '' and self.rptfile != None: rptfile = self.rptfile
             else: rptfile = self.inpfile.replace('.inp','.rpt')
         if binfile is None:
-            if self.binfile != '': binfile = self.binfile
+            if self.binfile != '' and self.binfile != None: binfile = self.binfile
             else: binfile = self.inpfile.replace('.inp','.out')            
 
         errcode = self.SWMMlibobj.swmm_open(c_char_p(inpfile),\
@@ -246,7 +246,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -267,7 +267,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -286,7 +286,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -316,7 +316,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -344,7 +344,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -363,7 +363,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -419,7 +419,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimulationDateTime(SimulationTime.StartDateTime)
         >>> 2015-11-01 14:00:00
@@ -445,7 +445,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setSimulationDateTime(SimulationTime.StartDateTime, datetime(2009, 10, 1, 12,30))
         >>>
@@ -465,7 +465,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimUnit(SimulationUnits.FlowUnits)
         >>> CFS
@@ -486,7 +486,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimAnalysisSetting(SimAnalysisSettings.AllowPonding)
         >>> False
@@ -506,7 +506,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimAnalysisSetting(SimulationParameters.RouteStep)
         >>> 300
@@ -526,7 +526,7 @@ class pyswmm(object):
 
         Examples:
         
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getProjectSize(ObjectType.NODE)
         >>> 10
@@ -547,7 +547,7 @@ class pyswmm(object):
 
         Examples:
         
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getObjectId(ObjectType.NODE,35)
         >>> "example_id_name"
@@ -566,7 +566,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getObjectIDList(ObjectType.LINK)
         >>> ['C1:C2', 'C2', 'C3']
@@ -590,6 +590,16 @@ class pyswmm(object):
         if index != -1: return index
         else: raise Exception("ID Does Not Exist")
 
+    def ObjectIDexist(self, objecttype, ID):
+        """
+        Check if Object ID Exists. Mostly used as an internal function.
+        
+        """
+        C_ID = c_char_p(ID)
+        index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
+        if index != -1: return True
+        else: return False
+
     def getNodeType(self, ID):
         """ Get Node Type (e.g. Junction, Outfall, Storage, Divider)
 
@@ -599,7 +609,7 @@ class pyswmm(object):
 
         Examples:
         
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeType('J1')
         >>> 0
@@ -625,7 +635,7 @@ class pyswmm(object):
 
         Examples:
         
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkType('C1')
         >>> 3
@@ -658,7 +668,7 @@ class pyswmm(object):
 
         Examples:
         
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkConnections('C1')
         >>> ('NodeUSID','NodeDSID')
@@ -707,7 +717,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeParam('J2',NodeParams.invertElev )
         >>> 13.392
@@ -730,7 +740,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeParam('J2',NodeParams.invertElev, 19 )
         >>>
@@ -753,7 +763,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkParam('C1:C2',LinkParams.offset1 )
         >>> 0.0
@@ -776,7 +786,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setLinkParam('C1:C2',LinkParams.offset1, 2 )
         >>>
@@ -799,7 +809,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkParam('S2',SubcParams.area )
         >>> 43561.596096880996
@@ -822,7 +832,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setLinkParam('S2',SubcParams.area, 100 )
         >>>
@@ -849,7 +859,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSubcatchOutConnection('S2',SubcParams.area )
         >>> (2, 'J2')
@@ -885,7 +895,7 @@ class pyswmm(object):
         
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -919,7 +929,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -956,7 +966,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -993,7 +1003,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -1034,7 +1044,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> i = 0
@@ -1069,7 +1079,7 @@ class pyswmm(object):
 
         Examples:
 
-        >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> i = 0
@@ -1090,1136 +1100,9 @@ class pyswmm(object):
         q = c_double(flowrate)
         errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
         self._error_check(errcode)
-
-class Nodes(object):
-    """
-    Node Iterator Methods
-
-    :param object model: Open Model Instance 
-
-    Examples:
-        
-    >>> swmm_model = pyswmm(r'\\.inp')
-    >>> swmm_model.swmm_open()
-    >>> for node in Nodes(swmm_model):
-    ...     print node
-    ...     print node.nodeid
-    ...     print node.invertel
-    ...     node.set_invertel(10)
-    ...     print node.invertel
-    ...
-    >>> <swmm5.Node object at 0x031B0350>
-    >>> J1
-    >>> 20.728
-    >>> 10.0
-    >>> <swmm5.Node object at 0x030693D0>
-    >>> J2
-    >>> 13.392
-    >>> 10.0
-    >>> <swmm5.Node object at 0x031B0350>
-    >>> J3
-    >>> 6.547
-    >>> 10.0
-    >>> <swmm5.Node object at 0x030693D0>
-    >>> J4
-    >>> 0.0
-    >>> 10.0
-    >>> swmm_model.swmm_close()
-    
-    """
-    def __init__(self, model):
-        if not model.fileLoaded:
-            raise PYSWMMException("SWMM Model Not Open")
-        if nodeid not in model.getObjectIDList(ObjectType.NODE):
-            raise PYSWMMException("ID Not valid")        
-        self._model = model
-        self.cuindex = 0
-        self.nNodes = self._model.getProjectSize(ObjectType.NODE)
-    def __iter__(self):
-        return self
-    
-    def next(self):
-        if self.cuindex < self.nNodes:
-            nodeobject = Node(self._model, self.nodeid)
-            self.cuindex+=1 #Next Iteration
-            return nodeobject
-        else:
-            raise StopIteration()
-    @property
-    def nodeid(self):
-        "Node ID"
-        return self._model.getObjectId(ObjectType.NODE,self.cuindex)
-
-class Node(object):
-    """
-    Node Methods
-    
-    :param object model: Open Model Instance 
-    :param str nodeid: Node ID
-
-    Examples:
-        
-    >>> swmm_model = pyswmm(r'\\.inp')
-    >>> swmm_model.swmm_open()
-    >>> node = Node(swmm_model, "J1")
-    >>> print node.invertel
-    >>> 10.0
-    >>> swmm_model.swmm_close()
-    
-    """
-    def __init__(self, model, nodeid):
-        if not model.fileLoaded:
-            raise PYSWMMException("SWMM Model Not Open")        
-        self._model = model
-        self._nodeid = nodeid
-    #Get Parameters
-    @property
-    def nodeid(self):
-        """
-        Get Node ID
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.nodeid
-        >>> "J1"
-        >>> swmm_model.swmm_close()
-        """
-        return self._nodeid      
-    @property
-    def ntype(self):
-        """
-        Get Node Type
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.ntype
-        >>> 1
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getNodeType(self._nodeid)
-    @property
-    def invertel(self):
-        """
-        Get Node Invert El
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.invertel
-        >>> 10
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getNodeParam(self._nodeid,NodeParams.invertElev)
-    @property
-    def fullDepth(self):
-        """
-        Get Node Full Depth
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.fullDepth
-        >>> 10
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getNodeParam(self._nodeid,NodeParams.fullDepth)
-    @property
-    def surDepth(self):
-        """
-        Get Node Surcharge Depth
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.surDepth
-        >>> 100
-        >>> swmm_model.swmm_close()
-        """        
-        return self._model.getNodeParam(self._nodeid,NodeParams.surDepth)
-    @property
-    def pondedArea(self):
-        """
-        Get Node Ponding Area
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.pondedArea
-        >>> 100
-        >>> swmm_model.swmm_close()
-        """           
-        return self._model.getNodeParam(self._nodeid,NodeParams.pondedArea)
-    @property
-    def initDepth(self):
-        """
-        Get Node Initial Depth at t0
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.initDepth
-        >>> 100
-        >>> swmm_model.swmm_close()
-        """          
-        return self._model.getNodeParam(self._nodeid,NodeParams.initDepth)
-    ## Simulation Results
-    @property
-    def totalinflow(self):
-        """
-        Get Simulation Results for Total Inflow. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.totalinflow
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """             
-        return self._model.getNodeResult(self._nodeid,NodeResults.totalinflow)  
-    @property
-    def outflow(self):
-        """
-        Get Simulation Results for Outflow. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.outflow
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """            
-        return self._model.getNodeResult(self._nodeid,NodeResults.outflow)
-    @property
-    def losses(self):
-        """
-        Get Simulation Results for Outflow. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.losses
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """           
-        return self._model.getNodeResult(self._nodeid,NodeResults.losses)
-    @property
-    def Volume(self):
-        """
-        Get Simulation Results for Current Volume. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.Volume
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """         
-        return self._model.getNodeResult(self._nodeid,NodeResults.newVolume)
-    @property
-    def overflow(self):
-        """
-        Get Simulation Results for Overflow Volume (Flooding). If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.overflow
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """         
-        return self._model.getNodeResult(self._nodeid,NodeResults.overflow)
-    @property
-    def Depth(self):
-        """
-        Get Simulation Results for Depth. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.Depth
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getNodeResult(self._nodeid,NodeResults.newDepth)
-    @property
-    def Head(self):
-        """
-        Get Simulation Results for Head. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.Head
-        ...     if (time <= 0.0): break
-        ...
-        >>> 10
-        >>> 10.5
-        >>> 10.9
-        >>> 10.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getNodeResult(self._nodeid,NodeResults.newHead)
-    @property
-    def LatFlow(self):
-        """
-        Get Simulation Results for Lateral Inflow. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> node = Node(swmm_model, "J1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print node.LatFlow
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getNodeResult(self._nodeid,NodeResults.newLatFlow)
-    # Set Parameters
-    def set_invertel(self, param):
-        """
-        Set Node parameter
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.invertel
-        >>> 10       
-        >>> node.set_invertel(25)
-        >>> print node.invertel
-        >>> 25
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setNodeParam(self._nodeid,NodeParams.invertElev, param)
-    def set_fullDepth(self, param):
-        """
-        Set Node Depth
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.fulldepth
-        >>> 10       
-        >>> node.set_fullDepth(25)
-        >>> print node.fulldepth
-        >>> 25
-        >>> swmm_model.swmm_close()
-        """ 
-        self._model.setNodeParam(self._nodeid,NodeParams.fullDepth, param)
-    def set_surDepth(self, param):
-        """
-        Set Node Surcharge Depth
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.surDepth
-        >>> 10       
-        >>> node.set_surDepth(25)
-        >>> print node.surDepth
-        >>> 25
-        >>> swmm_model.swmm_close()
-        """ 
-        self._model.setNodeParam(self._nodeid,NodeParams.surDepth, param)
-    def set_pondedArea(self, param):
-        """
-        Set Node Ponding Area
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.pondedArea
-        >>> 0       
-        >>> node.set_pondedArea(25)
-        >>> print node.pondedArea
-        >>> 25
-        >>> swmm_model.swmm_close()
-        """ 
-        self._model.setNodeParam(self._nodeid,NodeParams.pondedArea, param)
-    def set_initDepth(self, param):
-        """
-        Set Node Initial Depth
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> node = Node(swmm_model, "J1")
-        >>> print node.initDepth
-        >>> 0       
-        >>> node.set_initDepth(25)
-        >>> print node.initDepth
-        >>> 25
-        >>> swmm_model.swmm_close()
-        """ 
-        self._model.setNodeParam(self._nodeid,NodeParams.initDepth, param)
-
-
-
-class Links(object):
-    """
-    Link Iterator Methods
-
-    :param object model: Open Model Instance 
-
-    Examples:
-        
-    >>> swmm_model = pyswmm(r'\\.inp')
-    >>> swmm_model.swmm_open()
-    >>> for link in Links(swmm_model):
-    ...     print link
-    ...     print link.linkid
-    ...
-    >>> <swmm5.Link object at 0x031B0350>
-    >>> C1
-    >>> <swmm5.Link object at 0x030693D0>
-    >>> C2
-    >>> <swmm5.Link object at 0x031B0350>
-    >>> C3
-    >>> <swmm5.Link object at 0x030693D0>
-    >>> C0
-    >>> swmm_model.swmm_close()
-    
-    """
-    def __init__(self, model):
-        if not model.fileLoaded:
-            raise PYSWMMException("SWMM Model Not Open")
-        self._model = model
-        self.cuindex = 0
-        self.nLinks = self._model.getProjectSize(ObjectType.LINK)
-    def __iter__(self):
-        return self
-    
-    def next(self):
-        if self.cuindex < self.nLinks:
-            nodeobject = Link(self._model, self.linkid)
-            self.cuindex+=1 #Next Iteration
-            return nodeobject
-        else:
-            raise StopIteration()        
-    @property
-    def linkid(self):
-        "Link ID"
-        return self._model.getObjectId(ObjectType.LINK,self.cuindex)
-
-class Link(object):
-    """
-    Link Methods
-    
-    :param object model: Open Model Instance 
-    :param str linkid: Link ID
-
-    Examples:
-        
-    >>> swmm_model = pyswmm(r'\\.inp')
-    >>> swmm_model.swmm_open()
-    >>> link = Link(swmm_model, "C1")
-    >>> print link.qLimit
-    >>> 10.0
-    >>> swmm_model.swmm_close()
-    
-    """
-    def __init__(self, model, linkid):
-        if not model.fileLoaded:
-            raise PYSWMMException("SWMM Model Not Open")
-        if linkid not in model.getObjectIDList(ObjectType.LINK):
-            raise PYSWMMException("ID Not valid")
-        self._model = model
-        self._linkid = linkid
-    #Get Parameters
-    @property
-    def linkid(self):
-        """
-        Get Link ID
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.linkid
-        >>> "C1"
-        >>> swmm_model.swmm_close()
-        """
-        return self._linkid  
-    @property
-    def offset1(self):
-        """
-        Get Upstream Offset Depth
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.offset1
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.offset1) 
-    @property
-    def offset2(self):
-        """
-        Get Downstream Offset Depth
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.offset2
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.offset1)
-    @property
-    def q0(self):
-        """
-        Get Link Initial Flow
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.q0
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.q0)
-    @property
-    def qLimit(self):
-        """
-        Get Downstream Offset Depth
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.qLimit
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.qLimit)
-    @property
-    def cLossInlet(self):
-        """
-        Get Inlet Head Loss
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.cLossInlet
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.cLossInlet)
-    @property
-    def cLossOutlet(self):
-        """
-        Get Outlet Head Loss
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.cLossOutlet
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.cLossOutlet)
-    @property
-    def cLossAvg(self):
-        """
-        Get Average Conduit Loss
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.cLossAvg
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.cLossAvg)
-    @property
-    def seepRate(self):
-        """
-        Get Conduit Seepage Loss
-
-        :return: Paramater Value
-        :rtype: float
-
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.seepRate
-        >>> 0
-        >>> swmm_model.swmm_close()
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.seepRate)
-    @property
-    def Flow(self):
-        """
-        Get Link Results for Flow. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.Flow
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.newFlow)
-    @property
-    def Depth(self):
-        """
-        Get Link Results for Depth. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.Depth
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.newDepth)
-    @property
-    def Volume(self):
-        """
-        Get Link Results for Volume. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.Volume
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.newVolume)
-    @property
-    def USxArea(self):
-        """
-        Get Link Results for Upstream X-section Flow Area. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.USxArea
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.surfArea1)
-    @property
-    def DSxArea(self):
-        """
-        Get Link Results for Downstream X-section Flow Area. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.DSxArea
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.surfArea2)
-    @property
-    def setting(self):
-        """
-        Get Link setting. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.setting
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.setting)
-    @property
-    def targetSetting(self):
-        """
-        Get Link Target Setting. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.targetSetting
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.targetSetting)
-    @property
-    def froude(self):
-        """
-        Get Link Target Setting. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
-        >>> link = Link(swmm_model, "C1")
-        >>> while(True):
-        ...     time = swmm_model.swmm_step()
-        ...     print link.froude
-        ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        >>> swmm_model.swmm_close()
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.froude)
-    # Set Parameters
-    def set_offset1(self, param):
-        """
-        Set Link Upstream Link Offset
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.offset1
-        >>> 0       
-        >>> link.set_offset1(0.5)
-        >>> print link.offset1
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.offset1, param)
-    def set_offset2(self, param):
-        """
-        Set Link Downstream Link Offset
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.offset2
-        >>> 0       
-        >>> link.set_offset2(0.5)
-        >>> print link.offset2
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.offset2, param)
-    def set_q0(self, param):
-        """
-        Set Link Initial Flow Rate
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.q0
-        >>> 0       
-        >>> link.set_q0(0.5)
-        >>> print link.q0
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.q0, param)
-    def set_qLimit(self, param):
-        """
-        Set Link Flow Limit
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.qLimit
-        >>> 0       
-        >>> link.set_qLimit(0.5)
-        >>> print link.qLimit
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.qLimit, param)
-    def set_cLossInlet(self, param):
-        """
-        Set Link Inlet Head Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.cLossInlet
-        >>> 0       
-        >>> link.set_cLossInlet(0.5)
-        >>> print link.cLossInlet
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.cLossInlet, param)
-    def set_cLossOutlet(self, param):
-        """
-        Set Link Outlet Head Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.cLossOutlet
-        >>> 0       
-        >>> link.set_cLossOutlet(0.5)
-        >>> print link.cLossOutlet
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.cLossOutlet, param)
-    def set_cLossAvg(self, param):
-        """
-        Set Link Average Head Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.cLossAvg
-        >>> 0       
-        >>> link.set_cLossAvg(0.5)
-        >>> print link.cLossAvg
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.cLossAvg, param)
-    def set_seepRate(self, param):
-        """
-        Set Link Average Seepage Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> swmm_model = pyswmm(r'\\.inp')
-        >>> swmm_model.swmm_open()
-        >>> link = Link(swmm_model, "C1")
-        >>> print link.seepRate
-        >>> 0       
-        >>> link.set_seepRate(0.5)
-        >>> print link.seepRate
-        >>> 0.5
-        >>> swmm_model.swmm_close()
-        """  
-        self._model.setLinkParam(self._linkid,LinkParams.seepRate, param)
-                                      
+                                 
 if __name__ == '__main__':
-    test = pyswmm(inpfile = r"../test/TestModel1_weirSetting.inp",\
+    test = PYSWMM(inpfile = r"../test/TestModel1_weirSetting.inp",\
                    rptfile = r"../test/TestModel1_weirSetting.rpt",\
                    binfile = r"../test/TestModel1_weirSetting.out")
     test.swmm_open()
