@@ -10,8 +10,8 @@ Development
 PySWMM Wiki 
 	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
 	
-   .. image:: https://readthedocs.org/projects/pyswmm/badge/?version=inputapienhancements
-      :target: http://pyswmm.readthedocs.io/en/inputapienhancements/?badge=inputapienhancements
+   .. image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
+      :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
       :alt: Documentation Status	
 
 
@@ -48,18 +48,39 @@ Usage
 
 A quick example that steps through a simulation::
 
-    >>> from swmm5 import pyswmm
-    >>> swmm_model = pyswmm(r'\\.inp',r'\\.rpt',r'\\.out')
-    >>> swmm_model.swmm_open()
-    >>> swmm_model.swmm_start()
-    >>> while(True):
-    ...     time = swmm_model.swmm_step() # or swmm_stride()
-    ...     if (time <= 0.0): break
-    >>>
-    >>> swmm_model.swmm_end()
-    >>> swmm_model.swmm_report()
-    >>> swmm_model.swmm_close()  	
+    Examples:
 
+    Intialize using with statement.  This automatically cleans up
+    after a simulation
+
+    >>> from pyswmm import Simulation
+    >>>       
+    >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
+    ...     for ind, step in enumerate(sim):
+    ...         pass
+    ...     sim.report()
+
+    Initialize the simulation and execute.  This style does not allow
+    the user to interact with the simulation.  However, this approach
+    tends to be the fastes. 
+
+    >>> from pyswmm import Simulation
+    >>>   
+    >>> sim = Simulation('./TestModel1_weirSetting.inp')        
+    >>> sim.execute()	
+
+    Intialize a simulation and iterate through a simulation. This
+    approach requires some clean up.
+    
+    >>> from pyswmm import Simulation
+    >>>    
+    >>> sim = Simulation('./TestModel1_weirSetting.inp')
+    >>> for ind, step in enumerate(sim):
+    ...     pass
+    >>>     
+    >>> sim.report()
+    >>> sim.close()	
+	
 Bugs
 ----
 
