@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2014 Bryant E. McDonnell
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
+"""Links module for the pythonic interface to SWMM5."""
+
 from toolkitapi import *
 from swmm5 import SWMMException, PYSWMMException
 
