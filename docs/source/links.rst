@@ -2,6 +2,6 @@ links module
 ============
 
 .. automodule:: links
-    :members:
+    :members: Links, Link
     :undoc-members:
     :show-inheritance:
