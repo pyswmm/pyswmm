@@ -14,7 +14,10 @@ PySWMM Wiki
       :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
       :alt: Documentation Status	
 
-
+   .. image:: https://www.quantifiedcode.com/api/v1/project/8f76319eee384957bd1b83325774e52c/badge.svg
+      :target: https://www.quantifiedcode.com/app/project/8f76319eee384957bd1b83325774e52c
+      :alt: Code issues
+	  
 YouTube Examples
 ----------------
 Stream Results and Adjust Weir Setting

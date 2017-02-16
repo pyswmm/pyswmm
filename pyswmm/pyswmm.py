@@ -8,6 +8,7 @@
 """Base class for a SWMM Simulation."""
 
 from swmm5 import PySWMM
+from toolkitapi import *
 
 class Simulation(object):
     """
@@ -169,7 +170,7 @@ class Simulation(object):
         self._model.swmmExec()
         
     @property
-    def starttime(self):
+    def start_time(self):
         """Get/set Simulation start time
 
         Examples:
@@ -184,13 +185,13 @@ class Simulation(object):
         """
         return self._model.getSimulationDateTime(SimulationTime.StartDateTime)
     
-    @starttime.setter
-    def starttime(self):
+    @start_time.setter
+    def start_time(self, dtimeval):
         """Set simulation Start time"""
         self._model.setSimulationDateTime(SimulationTime.StartDateTime, dtimeval)
 
     @property
-    def endtime(self):
+    def end_time(self):
         """Get/set Simulation end time
 
         Examples:
@@ -205,13 +206,13 @@ class Simulation(object):
         """
         return self._model.getSimulationDateTime(SimulationTime.EndDateTime)
     
-    @endtime.setter
-    def endtime(self):
+    @end_time.setter
+    def end_time(self, dtimeval):
         """Set simulation End time"""
         self._model.setSimulationDateTime(SimulationTime.EndDateTime, dtimeval)
 
     @property
-    def reportstart(self):
+    def report_start(self):
         """Get/set Simulation report start time
 
         Examples:
@@ -226,13 +227,13 @@ class Simulation(object):
         """
         return self._model.getSimulationDateTime(SimulationTime.ReportStart)
     
-    @reportstart.setter
-    def reportstart(self):
+    @report_start.setter
+    def report_start(self, dtimeval):
         """Set simulation report start time"""
         self._model.setSimulationDateTime(SimulationTime.ReportStart, dtimeval)
 
     @property
-    def flowunits(self):
+    def flow_units(self):
         """Get Simulation Units (CFS, GPM, MGD, CMS, LPS, MLD)
 
         :return: Flow Unit 
@@ -250,7 +251,7 @@ class Simulation(object):
         return self._model.getSimUnit(SimulationUnits.FlowUnits)
 
     @property
-    def systemunits(self):
+    def system_units(self):
         """Get system units (US, SI)
 
         :return: System Unit 
