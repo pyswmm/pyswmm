@@ -8,6 +8,7 @@
 """Base class for a SWMM Simulation."""
 
 from swmm5 import PySWMM
+from toolkitapi import *
 
 class Simulation(object):
     """
@@ -166,5 +167,103 @@ class Simulation(object):
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmmExec()     
         """
-        
         self._model.swmmExec()
+        
+    @property
+    def start_time(self):
+        """Get/set Simulation start time
+
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     print sim.sim_starttime
+        ...     sim.sim_starttime = datetime(2015,5,10,15,15,1)
+        >>>
+        >>> datetime.datetime(2015,5,10,15,15,1)
+        """
+        return self._model.getSimulationDateTime(SimulationTime.StartDateTime)
+    
+    @start_time.setter
+    def start_time(self, dtimeval):
+        """Set simulation Start time"""
+        self._model.setSimulationDateTime(SimulationTime.StartDateTime, dtimeval)
+
+    @property
+    def end_time(self):
+        """Get/set Simulation end time
+
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     print sim.sim_endtime
+        ...     sim.sim_endtime = datetime(2016,5,10,15,15,1)
+        >>>
+        >>> datetime.datetime(2016,5,10,15,15,1)
+        """
+        return self._model.getSimulationDateTime(SimulationTime.EndDateTime)
+    
+    @end_time.setter
+    def end_time(self, dtimeval):
+        """Set simulation End time"""
+        self._model.setSimulationDateTime(SimulationTime.EndDateTime, dtimeval)
+
+    @property
+    def report_start(self):
+        """Get/set Simulation report start time
+
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     print sim.sim_reportstart
+        ...     sim.sim_reportstart = datetime(2015,5,10,15,15,1)
+        >>>
+        >>> datetime.datetime(2015,5,10,15,15,1)
+        """
+        return self._model.getSimulationDateTime(SimulationTime.ReportStart)
+    
+    @report_start.setter
+    def report_start(self, dtimeval):
+        """Set simulation report start time"""
+        self._model.setSimulationDateTime(SimulationTime.ReportStart, dtimeval)
+
+    @property
+    def flow_units(self):
+        """Get Simulation Units (CFS, GPM, MGD, CMS, LPS, MLD)
+
+        :return: Flow Unit 
+        :rtype: str
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     print sim.flowunits
+        >>>
+        >>> CFS
+        """
+        return self._model.getSimUnit(SimulationUnits.FlowUnits)
+
+    @property
+    def system_units(self):
+        """Get system units (US, SI)
+
+        :return: System Unit 
+        :rtype: str
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     print sim.systemunits
+        >>>
+        >>> US
+        """
+        return self._model.getSimUnit(SimulationUnits.UnitSystem)

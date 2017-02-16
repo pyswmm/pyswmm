@@ -476,11 +476,15 @@ class PySWMM(object):
         value = c_int()
         errcode = self.SWMMlibobj.swmm_getSimulationUnit(unittype, byref(value))
         self._error_check(errcode)
-        _flowunitnames = ["CFS","GPM","MGD","CMS","LPS","MLD"] # Temporary Solution (2017-1-2 BEM)
-        return _flowunitnames[value.value]
+        if unittype == SimulationUnits.FlowUnits:
+            _flowunitnames = ["CFS","GPM","MGD","CMS","LPS","MLD"] # Temporary Solution (2017-1-2 BEM)
+            return _flowunitnames[value.value]
+        elif unittype == SimulationUnits.UnitSystem:
+            _flowunitnames = ["US","SI"] # Temporary Solution (2017-1-2 BEM)
+            return _flowunitnames[value.value]    
 
-    def getSimAnalysisSetting(self, settingtype):
-        """Get Simulation Analysis Settings
+    def getSimOptionSetting(self, settingtype):
+        """Get Simulation Option Settings
 
         :param int settingtype: Analysis Option Setting
         :return: Simulation Analysis option setting
