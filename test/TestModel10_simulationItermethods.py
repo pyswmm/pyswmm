@@ -25,9 +25,9 @@ with Simulation('TestModel1_weirSetting.inp') as sim:
     print c1c2.flow
     sim.step_advance(300)
     for ind, step in enumerate(sim):
-        print c1c2.flow,c1c2.targetsetting
+        print c1c2.flow,c1c2.target_setting
         if c1c2.flow > 9.19:
-            c1c2.targetsetting = 0.9
+            c1c2.target_setting = 0.9
 
     sim.report()
 

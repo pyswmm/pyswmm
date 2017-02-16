@@ -1,14 +1,6 @@
-"""Base class for a SWMM Simulation.
+"""Base class for a SWMM Simulation."""
 
-"""
-
-from swmm5 import PYSWMM
-
-
-__author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
-__copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
-__licence__ = 'BSD2'
-__version__ = '0.2.1'
+from swmm5 import PySWMM
 
 class Simulation(object):
     """
@@ -52,7 +44,7 @@ class Simulation(object):
     """
 
     def __init__(self, inputfile, reportfile = None, outputfile = None):
-        self._model = PYSWMM(inputfile, reportfile, outputfile)
+        self._model = PySWMM(inputfile, reportfile, outputfile)
         self._model.swmm_open()
         self._advance_seconds = None
         self._isStarted = False
@@ -99,7 +91,7 @@ class Simulation(object):
         self._model.swmm_end()
         self._model.swmm_close()
 
-    def step_advance(self,advance_seconds):
+    def step_advance(self, advance_seconds):
         """
         Advances the model by X number of seconds instead of
         intervening at every routing step.  This does not change
@@ -142,6 +134,21 @@ class Simulation(object):
         """
 
     def close(self):
+        """
+        Intialize a simulation and iterate through a simulation. This
+        approach requires some clean up.
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>    
+        >>> sim = Simulation('./TestModel1_weirSetting.inp')
+        >>> for ind, step in enumerate(sim):
+        ...     pass
+        >>>     
+        >>> sim.report()
+        >>> sim.close()        
+        """
         self.__exit__()
         
     def execute(self):

@@ -19,11 +19,6 @@ from ctypes import byref, c_double, c_float, c_int, c_char_p, create_string_buff
 
 from toolkitapi import *
 
-__author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
-__copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
-__licence__ = 'BSD2'
-__version__ = '0.2.1'
-
 class SWMMException(Exception):
     """
     Custom exception class for SWMM errors.
@@ -45,7 +40,7 @@ class PYSWMMException(Exception):
     def __str__(self):
         return self.message
     
-class PYSWMM(object):
+class PySWMM(object):
     """
     Wrapper class to lead SWMM DLL object, then perform operations on
     the SWMM object that is created when the file is being loaded.

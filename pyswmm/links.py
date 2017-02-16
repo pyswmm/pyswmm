@@ -1,11 +1,6 @@
 from toolkitapi import *
 from swmm5 import SWMMException, PYSWMMException
 
-__author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
-__copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
-__licence__ = 'BSD2'
-__version__ = '0.2.1'
-
 class Links(object):
     """
     Link Iterator Methods
@@ -92,11 +87,12 @@ class Links(object):
             self._cuindex+=1 #Next Iteration
             return linkobject
         else:
-            raise StopIteration()        
+            raise StopIteration()
+        
     @property
     def linkid(self):
-        "Link ID"
-        return self._model.getObjectId(ObjectType.LINK,self._cuindex)
+        """Link ID"""
+        return self._model.getObjectId(ObjectType.LINK, self._cuindex)
     
 class Link(object):
     """
@@ -146,9 +142,9 @@ class Link(object):
         return self._linkid
     
     @property
-    def offset1(self):
+    def inlet_offset(self):
         """
-        Get Upstream Offset Depth
+        Get/set Upstream Offset Depth
 
         :return: Paramater Value
         :rtype: float
@@ -159,36 +155,32 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.offset1
+        ...     print link.inlet_offset
         >>> 0.1
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.offset1)
 
-    @offset1.setter
-    def offset1(self, param):
-        """
-        Set Link Upstream Link Offset
-
-        :param float param: New Parameter value
-  
-        Examples:
+        Setting the value
 
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.offset1
-        ...     link.offset1 = 0.2
-        ...     print link.offset1
+        ...     print link.inlet_offset
+        ...     link.inlet_offset = 0.2
+        ...     print link.inlet_offset
         >>> 0.1
-        >>> 0.2
-        """  
+        >>> 0.2        
+        """
+        return self._model.getLinkParam(self._linkid,LinkParams.offset1)
+
+    @inlet_offset.setter
+    def inlet_offset(self, param):
+        """Set Link Upstream Link Offset"""  
         self._model.setLinkParam(self._linkid,LinkParams.offset1, param)
         
     @property
-    def offset2(self):
+    def outlet_offset(self):
         """
-        Get Downstream Offset Depth
+        Get/set Downstream Offset Depth
 
         :return: Paramater Value
         :rtype: float
@@ -199,36 +191,32 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.offset2
+        ...     print link.outlet_offset
         >>> 0.1
+
+        Setting the value
+        
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     print link.outlet_offset
+        ...     link.outlet_offset = 0.2
+        ...     print link.outlet_offset
+        >>> 0.1
+        >>> 0.2        
         """
         return self._model.getLinkParam(self._linkid,LinkParams.offset1)
 
-    @offset2.setter
-    def offset2(self, param):
-        """
-        Set Link Downstream Link Offset
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     print link.offset2
-        ...     link.offset2 = 0.2
-        ...     print link.offset2
-        >>> 0.1
-        >>> 0.2
-        """  
+    @outlet_offset.setter
+    def outlet_offset(self, param):
+        """Set Link Downstream Link Offset"""  
         self._model.setLinkParam(self._linkid,LinkParams.offset2, param)
     
     @property
-    def q0(self):
+    def initial_flow(self):
         """
-        Get Link Initial Flow
+        Get/set Link Initial Flow
 
         :return: Paramater Value
         :rtype: float
@@ -239,19 +227,10 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.q0
+        ...     print link.initial_flow
         >>> 0
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.q0)
 
-    @q0.setter    
-    def q0(self, param):
-        """
-        Set Link Initial Flow Rate
-
-        :param float param: New Parameter value
-  
-        Examples:
+        Setting the Value
 
         >>> from pyswmm import Simulation
         >>>
@@ -261,14 +240,19 @@ class Link(object):
         ...     link.offset1 = 0.2
         ...     print link.offset1
         >>> 0.1
-        >>> 0.2
-        """  
+        >>> 0.2        
+        """
+        return self._model.getLinkParam(self._linkid,LinkParams.q0)
+
+    @initial_flow.setter    
+    def initial_flow(self, param):
+        """Set Link Initial Flow Rate"""  
         self._model.setLinkParam(self._linkid,LinkParams.q0, param)
     
     @property
-    def qlimit(self):
+    def flow_limit(self):
         """
-        Get Downstream Offset Depth
+        Get/set link flow limit
 
         :return: Paramater Value
         :rtype: float
@@ -279,36 +263,32 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.qlimit
+        ...     print link.flow_limit
         >>> 0
+
+        Setting the Value
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     print link.flow_limit
+        ...     link.flow_limit = 0.2
+        ...     print link.flow_limit
+        >>> 0
+        >>> 0.2        
         """
         return self._model.getLinkParam(self._linkid,LinkParams.qLimit)
 
-    @qlimit.setter
-    def qlimit(self, param):
-        """
-        Set Link Flow Limit
-
-        :param float param: New Parameter value
-  
-        Examples:
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     print link.qlimi
-        ...     link.qlimi = 0.2
-        ...     print link.qlimi
-        >>> 0
-        >>> 0.2
-        
-        """  
+    @flow_limit.setter
+    def flow_limit(self, param):
+        """Set Link Flow Limit"""  
         self._model.setLinkParam(self._linkid,LinkParams.qLimit, param)
     
     @property
-    def clossinlet(self):
+    def inlet_head_loss(self):
         """
-        Get Inlet Head Loss
+        Get/set Inlet Head Loss
 
         :return: Paramater Value
         :rtype: float
@@ -319,36 +299,32 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.q0
+        ...     print link.inlet_head_loss
         >>> 0
+
+        Setting the Value
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     print link.inlet_head_loss
+        ...     link.inlet_head_loss = 0.2
+        ...     print link.inlet_head_loss
+        >>> 0
+        >>> 0.2          
         """
         return self._model.getLinkParam(self._linkid,LinkParams.cLossInlet)
 
-    @clossinlet.setter
-    def clossinlet(self, param):
-        """
-        Set Link Inlet Head Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     print link.cLossInlet
-        ...     link.cLossInlet = 0.2
-        ...     print link.cLossInlet
-        >>> 0
-        >>> 0.2        
-        """  
+    @inlet_head_loss.setter
+    def inlet_head_loss(self, param):
+        """Set Link Inlet Head Loss"""  
         self._model.setLinkParam(self._linkid,LinkParams.cLossInlet, param)
     
     @property
-    def clossoutlet(self):
+    def outlet_head_loss(self):
         """
-        Get Outlet Head Loss
+        Get/set Outlet Head Loss
 
         :return: Paramater Value
         :rtype: float
@@ -359,36 +335,32 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.clossoutlet
+        ...     print link.outlet_head_loss
         >>> 0
+
+        Setting the Value
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     print link.outlet_head_loss
+        ...     link.outlet_head_loss = 0.2
+        ...     print link.outlet_head_loss
+        >>> 0
+        >>> 0.2            
         """
         return self._model.getLinkParam(self._linkid,LinkParams.cLossOutlet)
     
-    @clossoutlet.setter
-    def clossoutlet(self, param):
-        """
-        Set Link Outlet Head Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     print link.clossoutlet
-        ...     link.clossoutlet = 0.2
-        ...     print link.clossoutlet
-        >>> 0
-        >>> 0.2    
-        """  
+    @outlet_head_loss.setter
+    def outlet_head_loss(self, param):
+        """Set Link Outlet Head Loss"""  
         self._model.setLinkParam(self._linkid,LinkParams.cLossOutlet, param)
     
     @property
-    def clossave(self):
+    def average_head_loss(self):
         """
-        Get Average Conduit Loss
+        Get/set Average Conduit Loss
 
         :return: Paramater Value
         :rtype: float
@@ -399,36 +371,32 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.clossave
+        ...     print link.average_head_loss
         >>> 0
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.cLossAvg)
 
-    @clossave.setter
-    def clossave(self, param):
-        """
-        Set Link Average Head Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
+        Setting the value
 
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     link = Links(sim)["C1:C2"]
-        ...     print link.clossave
-        ...     link.clossave = 0.2
-        ...     print link.clossave
+        ...     print link.average_head_loss
+        ...     link.average_head_loss = 0.2
+        ...     print link.average_head_loss
         >>> 0
-        >>> 0.2   
-        """  
+        >>> 0.2           
+        """
+        return self._model.getLinkParam(self._linkid,LinkParams.cLossAvg)
+
+    @average_head_loss.setter
+    def average_head_loss(self, param):
+        """Set Link Average Head Loss"""  
         self._model.setLinkParam(self._linkid,LinkParams.cLossAvg, param)
     
     @property
     def seepagerate(self):
         """
-        Get Conduit Seepage Loss
+        Get/set Conduit Seepage Loss
 
         :return: Paramater Value
         :rtype: float
@@ -441,17 +409,8 @@ class Link(object):
         ...     link = Links(sim)["C1:C2"]
         ...     print link.seepagerate
         >>> 0
-        """
-        return self._model.getLinkParam(self._linkid,LinkParams.seepRate)
 
-    @seepagerate.setter
-    def seepagerate(self, param):
-        """
-        Set Link Average Seepage Loss
-
-        :param float param: New Parameter value
-  
-        Examples:
+        Setting the Value
 
         >>> from pyswmm import Simulation
         >>>
@@ -461,8 +420,13 @@ class Link(object):
         ...     link.seepagerate = 0.2
         ...     print link.seepagerate
         >>> 0
-        >>> 0.2  
-        """  
+        >>> 0.2          
+        """
+        return self._model.getLinkParam(self._linkid,LinkParams.seepRate)
+
+    @seepagerate.setter
+    def seepagerate(self, param):
+        """Set Link Average Seepage Loss"""  
         self._model.setLinkParam(self._linkid,LinkParams.seepRate, param)
         
     @property
@@ -539,138 +503,11 @@ class Link(object):
         >>> 1.2
         """  
         return self._model.getLinkResult(self._linkid,LinkResults.newVolume)
-    
-    @property
-    def usxsectionarea(self):
-        """
-        Get Link Results for Upstream X-section Flow Area. If Simulation is not running
-        this method will raise a warning and return 0. 
 
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     for step in sim:
-        ...         print link.usxsectionarea
-        >>> 0
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.surfArea1)
-    
-    @property
-    def dsxsectionarea(self):
-        """
-        Get Link Results for Downstream X-section Flow Area. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     for step in sim:
-        ...         print link.dsxsectionarea
-        >>> 0
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.surfArea2)
-    
-    @property
-    def currentsetting(self):
-        """
-        Get Link current setting. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     for step in sim:
-        ...         print link.currentsetting
-        >>> 0
-        >>> 1
-        >>> 0
-        >>> 0.5
-        >>> 1
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.setting)
-    
-    @property
-    def targetsetting(self):
-        """
-        Get Link Target Setting. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     for step in sim:
-        ...         print link.targetsetting
-        >>> 0
-        >>> 0
-        >>> 1
-        >>> 0.5
-        >>> 1
-        """  
-        return self._model.getLinkResult(self._linkid,LinkResults.targetSetting)
-
-    @targetsetting.setter
-    def targetsetting(self, setting):
-        """
-        Set Link Target Setting. If Simulation is not running
-        this method will raise a warning and return 0. 
-
-        :return: Paramater Value
-        :rtype: float
-        
-        Examples:
-
-        >>> from pyswmm import Simulation
-        >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     link = Links(sim)["C1:C2"]
-        ...     for step in sim:
-        ...         print link.targetsetting
-        ...         if link.flow > 3:
-        ...             link.targetsetting = 0.1
-        >>> 0
-        >>> 0
-        >>> 0.1
-        >>> 0.1
-        >>> 0.1
-        """  
-        return self._model.setLinkSetting(self._linkid, setting)
-    
     @property
     def froude(self):
         """
-        Get Link Target Setting. If Simulation is not running
+        Get Link Results for Froude. If Simulation is not running
         this method will raise a warning and return 0. 
 
         :return: Paramater Value
@@ -691,3 +528,129 @@ class Link(object):
         >>> 1.2
         """  
         return self._model.getLinkResult(self._linkid,LinkResults.froude)
+    
+    @property
+    def ups_xsection_area(self):
+        """
+        Get Link Results for Upstream X-section Flow Area. If Simulation is not running
+        this method will raise a warning and return 0. 
+
+        :return: Paramater Value
+        :rtype: float
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     for step in sim:
+        ...         print link.ups_xsection_area
+        >>> 0
+        >>> 1.2
+        >>> 1.5
+        >>> 1.9
+        >>> 1.2
+        """  
+        return self._model.getLinkResult(self._linkid,LinkResults.surfArea1)
+    
+    @property
+    def ds_xsection_area(self):
+        """
+        Get Link Results for Downstream X-section Flow Area. If Simulation is not running
+        this method will raise a warning and return 0. 
+
+        :return: Paramater Value
+        :rtype: float
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     for step in sim:
+        ...         print link.ds_xsection_area
+        >>> 0
+        >>> 1.2
+        >>> 1.5
+        >>> 1.9
+        >>> 1.2
+        """  
+        return self._model.getLinkResult(self._linkid,LinkResults.surfArea2)
+    
+    @property
+    def current_setting(self):
+        """
+        Get Link current setting. If Simulation is not running
+        this method will raise a warning and return 0. 
+
+        :return: Paramater Value
+        :rtype: float
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     for step in sim:
+        ...         print link.current_setting
+        >>> 0
+        >>> 1
+        >>> 0
+        >>> 0.5
+        >>> 1
+        """  
+        return self._model.getLinkResult(self._linkid,LinkResults.setting)
+    
+    @property
+    def target_setting(self):
+        """
+        Get/set Link Target Setting. If Simulation is not running
+        this method will raise a warning and return 0. 
+
+        :return: Paramater Value
+        :rtype: float
+        
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     for step in sim:
+        ...         print link.target_setting
+        >>> 0
+        >>> 0
+        >>> 1
+        >>> 0.5
+        >>> 1
+
+        Setting the Value
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     link = Links(sim)["C1:C2"]
+        ...     for step in sim:
+        ...         print link.target_setting
+        ...         if link.flow > 3:
+        ...             link.target_setting = 0.1
+        >>> 0
+        >>> 0
+        >>> 0.1
+        >>> 0.1
+        >>> 0.1        
+        """  
+        return self._model.getLinkResult(self._linkid,LinkResults.targetSetting)
+
+    @target_setting.setter
+    def target_setting(self, setting):
+        """
+        Set Link Target Setting. If Simulation is not running
+        this method will raise a warning and return 0.
+        """  
+        return self._model.setLinkSetting(self._linkid, setting)
+    
+

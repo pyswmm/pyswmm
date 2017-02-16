@@ -14,10 +14,10 @@ from datetime import datetime, timedelta
 #point to location of the pyswmm file
 sys.path.append(os.getcwd()+'\\..\\pyswmm\\')
 
-from swmm5 import PYSWMM
+from swmm5 import PySWMM
 from toolkitapi import *
 
-swmmobject = PYSWMM('./TestModel1_weirSetting.inp',\
+swmmobject = PySWMM('./TestModel1_weirSetting.inp',\
                     './TestModel1_weirSetting.rpt',\
                     './TestModel1_weirSetting.out')
 swmmobject.swmm_open()

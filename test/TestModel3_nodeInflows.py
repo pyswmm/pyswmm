@@ -21,12 +21,12 @@ import random
 #point to location of the pyswmm file
 sys.path.append(os.getcwd()+'\\..\\pyswmm\\')
 
-from swmm5 import PYSWMM
+from swmm5 import PySWMM
 from toolkitapi import *
 
 
 
-swmmobject = PYSWMM('./TestModel3_nodeInflows.inp',\
+swmmobject = PySWMM('./TestModel3_nodeInflows.inp',\
                     './TestModel3_nodeInflows.rpt',\
                     './TestModel3_nodeInflows.out')
 swmmobject.swmm_open()
