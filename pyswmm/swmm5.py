@@ -55,7 +55,7 @@ class PySWMM(object):
     
     Examples:
 
-    >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+    >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
     >>> swmm_model.swmmExec()
     >>> swmm_model.swmm_close()
@@ -75,7 +75,7 @@ class PySWMM(object):
 
     Examples:
 
-    >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+    >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
     >>> swmm_model.swmm_start()
     >>> while(True):
@@ -90,7 +90,7 @@ class PySWMM(object):
 
     def __init__(self, inpfile = '', rptfile = None, binfile =None, dllpath = None):
         """
-        Initialize the PYSWMM object class
+        Initialize the PySWMM object class
 
         :param str inpfile: Name of SWMM input file (default '')
         :param str rptfile: Report file to generate (default None)
@@ -161,7 +161,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmmExec()
         >>> swmm_model.swmm_close()        
@@ -212,7 +212,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_close()          
         """
@@ -241,7 +241,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -262,7 +262,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -281,7 +281,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -311,7 +311,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -339,7 +339,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -358,7 +358,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -414,7 +414,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimulationDateTime(SimulationTime.StartDateTime)
         >>> 2015-11-01 14:00:00
@@ -440,7 +440,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setSimulationDateTime(SimulationTime.StartDateTime, datetime(2009, 10, 1, 12,30))
         >>>
@@ -460,7 +460,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimUnit(SimulationUnits.FlowUnits)
         >>> CFS
@@ -481,7 +481,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimAnalysisSetting(SimAnalysisSettings.AllowPonding)
         >>> False
@@ -501,7 +501,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimAnalysisSetting(SimulationParameters.RouteStep)
         >>> 300
@@ -521,7 +521,7 @@ class PySWMM(object):
 
         Examples:
         
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getProjectSize(ObjectType.NODE)
         >>> 10
@@ -542,7 +542,7 @@ class PySWMM(object):
 
         Examples:
         
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getObjectId(ObjectType.NODE,35)
         >>> "example_id_name"
@@ -561,7 +561,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getObjectIDList(ObjectType.LINK)
         >>> ['C1:C2', 'C2', 'C3']
@@ -604,7 +604,7 @@ class PySWMM(object):
 
         Examples:
         
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeType('J1')
         >>> 0
@@ -630,7 +630,7 @@ class PySWMM(object):
 
         Examples:
         
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkType('C1')
         >>> 3
@@ -663,7 +663,7 @@ class PySWMM(object):
 
         Examples:
         
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkConnections('C1')
         >>> ('NodeUSID','NodeDSID')
@@ -712,7 +712,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeParam('J2',NodeParams.invertElev )
         >>> 13.392
@@ -735,7 +735,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeParam('J2',NodeParams.invertElev, 19 )
         >>>
@@ -758,7 +758,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkParam('C1:C2',LinkParams.offset1 )
         >>> 0.0
@@ -781,7 +781,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setLinkParam('C1:C2',LinkParams.offset1, 2 )
         >>>
@@ -804,7 +804,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkParam('S2',SubcParams.area )
         >>> 43561.596096880996
@@ -827,7 +827,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setLinkParam('S2',SubcParams.area, 100 )
         >>>
@@ -854,7 +854,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSubcatchOutConnection('S2',SubcParams.area )
         >>> (2, 'J2')
@@ -890,7 +890,7 @@ class PySWMM(object):
         
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -924,7 +924,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -961,7 +961,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -998,7 +998,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> while(True):
@@ -1039,7 +1039,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> i = 0
@@ -1074,7 +1074,7 @@ class PySWMM(object):
 
         Examples:
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.swmm_start()
         >>> i = 0
@@ -1097,7 +1097,7 @@ class PySWMM(object):
         self._error_check(errcode)
                                  
 if __name__ == '__main__':
-    test = PYSWMM(inpfile = r"../test/TestModel1_weirSetting.inp",\
+    test = PySWMM(inpfile = r"../test/TestModel1_weirSetting.inp",\
                    rptfile = r"../test/TestModel1_weirSetting.rpt",\
                    binfile = r"../test/TestModel1_weirSetting.out")
     test.swmm_open()
