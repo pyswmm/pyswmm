@@ -13,17 +13,17 @@ import sys
 #point to location of the pyswmm file
 sys.path.append(os.getcwd()+'\\..\\pyswmm\\')
 
-from swmm5 import pyswmm, Nodes, Node, Links, Link
+from swmm5 import PySWMM, Nodes, Node, Links, Link
 
 
-swmmobject = pyswmm('./TestModel1_weirSetting.inp')
+swmmobject = PySWMM('./TestModel1_weirSetting.inp')
 swmmobject.swmm_open()
 
 for node in Nodes(swmmobject):
     print node
     print node.nodeid
     print node.invertel
-    node.set_invertel(10)
+    node.invertel = 10
     print node.invertel
 
 node = Node(swmmobject, "J1")
@@ -32,12 +32,12 @@ print node.invertel
 for link in Links(swmmobject):
     print link
     print link.linkid
-    print link.qLimit
-    link.set_qLimit(10)
-    print link.qLimit
+    print link.flow_limit
+    link.flow_limit =10
+    print link.flow_limit
 
 link = Link(swmmobject, "C2")
-print link.qLimit
+print link.flow_limit
 
 swmmobject.swmmExec()
 
