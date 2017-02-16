@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2014 Bryant E. McDonnell
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
 """Base class for a SWMM Simulation."""
 
 from swmm5 import PySWMM
