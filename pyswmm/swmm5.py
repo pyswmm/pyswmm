@@ -651,7 +651,7 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        index = self.swmm_getObjectIDIndex(ObjectType.LINK,ID)
+        index = self.getObjectIDIndex(ObjectType.LINK,ID)
         Ltype = c_int()
         errcode = self.SWMMlibobj.swmm_getLinkType(index, byref(Ltype))
         self._error_check(errcode)
