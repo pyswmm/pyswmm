@@ -86,6 +86,8 @@ class Links(object):
     def __getitem__(self, linkid):
         if self.__contains__(linkid):
             return Link(self._model, linkid)
+        else:
+            raise PYSWMMException("Link ID Does not Exist")
         
     def __iter__(self):
         return self
