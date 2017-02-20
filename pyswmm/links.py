@@ -94,14 +94,14 @@ class Links(object):
     
     def next(self):
         if self._cuindex < self._nLinks:
-            linkobject = Link(self._model, self.linkid)
+            linkobject = Link(self._model, self._linkid)
             self._cuindex+=1 #Next Iteration
             return linkobject
         else:
             raise StopIteration()
         
     @property
-    def linkid(self):
+    def _linkid(self):
         """Link ID"""
         return self._model.getObjectId(ObjectType.LINK, self._cuindex)
     

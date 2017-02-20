@@ -98,14 +98,14 @@ class Nodes(object):
     
     def next(self):
         if self._cuindex < self._nNodes:
-            nodeobject = Node(self._model, self.nodeid)
+            nodeobject = Node(self._model, self._nodeid)
             self._cuindex+=1 #Next Iteration
             return nodeobject
         else:
             raise StopIteration()
         
     @property
-    def nodeid(self):
+    def _nodeid(self):
         """Node ID"""
         return self._model.getObjectId(ObjectType.NODE, self._cuindex)
     
