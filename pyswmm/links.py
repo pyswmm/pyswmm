@@ -73,7 +73,7 @@ class Links(object):
         :rtype: int
         
         """
-        return self._nLinks
+        return self._model.getProjectSize(ObjectType.LINK)
 
     def __contains__(self, linkid):
         """Checks if Link ID exists

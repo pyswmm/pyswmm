@@ -77,7 +77,7 @@ class Nodes(object):
         :rtype: int
         
         """
-        return self._nNodes
+        return self._model.getProjectSize(ObjectType.NODE)
 
     def __contains__(self, nodeid):
         """Checks if Node ID exists
@@ -606,12 +606,10 @@ class Node(object):
          
     def generated_inflow(self, inflowrate):
         """
-        Generate and Set a Node Inflow Rate. If Simulation is not running
-        this method will raise a warning and return 0. The value is help
+        Generate and Set a Node Inflow Rate. The value is help
         constant in the model until it is redefined. 
 
         :param float inflowrate: Inflow Rate
-        :return: None
         
         Examples:
 
@@ -623,4 +621,4 @@ class Node(object):
         ...         j1.generated_inflow(9)
         >>>    
         """  
-        return self._model.setNodeInflow(self._nodeid, inflowrate)
+        self._model.setNodeInflow(self._nodeid, inflowrate)
