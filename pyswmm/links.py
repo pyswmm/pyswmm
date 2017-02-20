@@ -167,10 +167,7 @@ class Link(object):
         ...     print c1c2.is_conduit()
         >>> True
         """
-        if self._model.getLinkType(self._linkid) is LinkType.conduit:
-            return True
-        else:
-            return False
+        return self._model.getLinkType(self._linkid) is LinkType.conduit
 
     def is_pump(self):
         """ Check if link is a Pump Type
@@ -187,10 +184,7 @@ class Link(object):
         ...     print c1c2.is_pump()
         >>> False
         """
-        if self._model.getLinkType(self._linkid) is LinkType.pump:
-            return True
-        else:
-            return False
+        return self._model.getLinkType(self._linkid) is LinkType.pump
         
     def is_orifice(self):
         """ Check if link is a Orifice Type
@@ -207,10 +201,7 @@ class Link(object):
         ...     print c1c2.is_orifice()
         >>> False
         """
-        if self._model.getLinkType(self._linkid) is LinkType.orifice:
-            return True
-        else:
-            return False
+        return self._model.getLinkType(self._linkid) is LinkType.orifice
         
     def is_weir(self):
         """ Check if link is a Weir Type
@@ -227,10 +218,7 @@ class Link(object):
         ...     print c1c2.is_weir()
         >>> False
         """
-        if self._model.getLinkType(self._linkid) is LinkType.weir:
-            return True
-        else:
-            return False
+        return self._model.getLinkType(self._linkid) is LinkType.weir
         
     def is_outlet(self):
         """ Check if link is a Outlet Type
@@ -247,13 +235,10 @@ class Link(object):
         ...     print c1c2.is_outlet()
         >>> False
         """
-        if self._model.getLinkType(self._linkid) is LinkType.outlet:
-            return True
-        else:
-            return False
+        return self._model.getLinkType(self._linkid) is LinkType.outlet
         
     @property
-    def link_connections(self):
+    def connections(self):
         """ Get link upstream and downstream node IDs
 
         :return: ("UpstreamNodeID","DownstreamNodeID")
@@ -265,7 +250,7 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
-        ...     print c1c2.link_connections
+        ...     print c1c2.connections
         >>> ("C1","C2")
         """
         return self._model.getLinkConnections(self._linkid)

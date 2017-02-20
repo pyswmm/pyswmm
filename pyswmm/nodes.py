@@ -171,10 +171,7 @@ class Node(object):
         ...     print j1.is_junction()
         >>> True
         """
-        if self._model.getNodeType(self._nodeid) is NodeType.junction:
-            return True
-        else:
-            return False
+        return self._model.getNodeType(self._nodeid) is NodeType.junction
 
     def is_outfall(self):
         """ Check if node is a Outfall Type
@@ -191,10 +188,7 @@ class Node(object):
         ...     print j1.is_outfall()
         >>> True
         """
-        if self._model.getNodeType(self._nodeid) is NodeType.outfall:
-            return True
-        else:
-            return False
+        return self._model.getNodeType(self._nodeid) is NodeType.outfall
 
     def is_storage(self):
         """ Check if node is a Storage Type
@@ -211,10 +205,7 @@ class Node(object):
         ...     print j1.is_storage()
         >>> True
         """
-        if self._model.getNodeType(self._nodeid) is NodeType.storage:
-            return True
-        else:
-            return False
+        return self._model.getNodeType(self._nodeid) is NodeType.storage
 
     def is_divider(self):
         """ Check if node is a Divider Type
@@ -231,10 +222,7 @@ class Node(object):
         ...     print j1.is_divider()
         >>> True
         """
-        if self._model.getNodeType(self._nodeid) is NodeType.divider:
-            return True
-        else:
-            return False
+        return self._model.getNodeType(self._nodeid) is NodeType.divider
     
     @property
     def invert_elevation(self):
