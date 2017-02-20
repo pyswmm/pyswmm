@@ -27,7 +27,7 @@ with Simulation('TestModel1_weirSetting.inp') as sim:
     print c1c2.is_weir()
     print c1c2.is_outlet()
 
-    print c1c2.link_connections
+    print c1c2.connections
     print c1c2.inlet_node
     print c1c2.outlet_node
 
