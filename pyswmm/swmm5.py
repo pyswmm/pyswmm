@@ -37,6 +37,7 @@ class SWMMException(Exception):
     def __str__(self):
         return self.message
 
+
 class PYSWMMException(Exception):
     """
     Custom exception class for PySWMM errors.
@@ -47,6 +48,7 @@ class PYSWMMException(Exception):
     def __str__(self):
         return self.message
     
+
 class PySWMM(object):
     """
     Wrapper class to lead SWMM DLL object, then perform operations on
