@@ -34,7 +34,7 @@ install:
   - "activate test"
   # Install the selected Qt version
   - "conda install --file requirements.txt -c spyder-ide"
-  - "if($env:PYTHON_VERSION -eq 2.7) {conda install enum34}"
+  - IF "%PYTHON_VERSION%" == "2.7" conda install enum34
   - "python setup.py develop"
 
 # Not a .NET project, we build in the install step instead
