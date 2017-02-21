@@ -8,8 +8,8 @@
 """Nodes module for the pythonic interface to SWMM5."""
 
 # Local imports
-from swmm5 import PYSWMMException
-from toolkitapi import NodeParams, NodeResults, NodeType, ObjectType
+from pyswmm.swmm5 import PYSWMMException
+from pyswmm.toolkitapi import NodeParams, NodeResults, NodeType, ObjectType
 
 
 class Nodes(object):
@@ -63,6 +63,7 @@ class Nodes(object):
     >>> print(j1.invert_elevation)
     >>> 200
     """
+
     def __init__(self, model):
         if not model._model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
@@ -130,6 +131,7 @@ class Node(object):
     ...         print j1.depth
     ... 0.0
     """
+
     def __init__(self, model, nodeid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")

@@ -8,8 +8,8 @@
 """Links module for the pythonic interface to SWMM5."""
 
 # Local imports
-from swmm5 import PYSWMMException
-from toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
+from pyswmm.swmm5 import PYSWMMException
+from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
 
 
 class Links(object):
@@ -59,6 +59,7 @@ class Links(object):
     >>> c1c2.qlimit
     >>> 12
     """
+
     def __init__(self, model):
         if not model._model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
@@ -125,6 +126,7 @@ class Link(object):
     ...         print c1c2.flow
     ... 0.0
     """
+
     def __init__(self, model, linkid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")

@@ -19,14 +19,15 @@ import sys
 import warnings
 
 # Local imports
-import toolkitapi as tka
+import pyswmm.toolkitapi as tka
 
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
+
     def __init__(self, error_code, error_message):
         self.warning = False
-        self.args = (error_code,)
+        self.args = (error_code, )
         self.message = error_message
 
     def __str__(self):
@@ -35,6 +36,7 @@ class SWMMException(Exception):
 
 class PYSWMMException(Exception):
     """Custom exception class for PySWMM errors. """
+
     def __init__(self, error_message):
         self.warning = False
         self.message = error_message
@@ -121,9 +123,7 @@ class PySWMM(object):
         if 'win32' in sys.platform:
             if dllpath is None:
                 dllname = 'swmm5.dll'
-                libswmm = os.path.join(get_pkgpath() +
-                                       '\\swmmLinkedLibs\\Windows\\' +
-                                       dllname)
+                libswmm = get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname)
             else:
                 libswmm = dllpath
             self.SWMMlibobj = ctypes.CDLL(libswmm)
@@ -357,7 +357,7 @@ class PySWMM(object):
             self.curSimTime = 0.000001
 
         ctime = self.curSimTime
-        while advanceSeconds/3600./24. + ctime > self.curSimTime:
+        while advanceSeconds / 3600. / 24. + ctime > self.curSimTime:
             elapsed_time = ctypes.c_double()
             self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
             self.curSimTime = elapsed_time.value
@@ -1153,9 +1153,10 @@ class PySWMM(object):
 
 
 if __name__ == '__main__':
-    test = PySWMM(inpfile=r"../test/TestModel1_weirSetting.inp",
-                  rptfile=r"../test/TestModel1_weirSetting.rpt",
-                  binfile=r"../test/TestModel1_weirSetting.out")
+    test = PySWMM(
+        inpfile=r"../test/TestModel1_weirSetting.inp",
+        rptfile=r"../test/TestModel1_weirSetting.rpt",
+        binfile=r"../test/TestModel1_weirSetting.out")
     test.swmm_open()
 
     print("Simulation Time Info")

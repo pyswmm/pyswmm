@@ -8,8 +8,8 @@
 """Base class for a SWMM Simulation."""
 
 # Local imports
-from swmm5 import PySWMM
-from toolkitapi import SimulationTime, SimulationUnits
+from pyswmm.swmm5 import PySWMM
+from pyswmm.toolkitapi import SimulationTime, SimulationUnits
 
 
 class Simulation(object):
