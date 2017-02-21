@@ -8,15 +8,43 @@
 """Python setup.py installer script."""
 
 # Standard library imports
+import ast
+import os
 import sys
 
 # Third party imports
 from setuptools import find_packages, setup
 
+HERE = os.path.abspath(os.path.dirname(__file__))
 PY2 = sys.version_info.major == 2
-VERSION = '0.2.1'
+
+
+def get_version(module='pyswmm'):
+    """Get version."""
+    with open(os.path.join(HERE, module, '__init__.py'), 'r') as f:
+        data = f.read()
+    lines = data.split('\n')
+    for line in lines:
+        if line.startswith('VERSION_INFO'):
+            version_tuple = ast.literal_eval(line.split('=')[-1].strip())
+            version = '.'.join(map(str, version_tuple))
+            break
+    return version
+
+
+def get_description():
+    """Get long description."""
+    with open(os.path.join(HERE, 'README.rst'), 'r') as f:
+        data = f.read()
+    return data
+
+
+AUTHOR_NAME = 'Bryant E. McDonnell (EmNet LLC)'
+AUTHOR_EMAIL = 'bemcdonnell@gmail.com'
+
 
 REQUIREMENTS = []
+
 
 if PY2:
     REQUIREMENTS.append('enum34')
