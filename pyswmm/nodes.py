@@ -262,12 +262,14 @@ class Node(object):
         >>> 0.1
         >>> 0.2
         """
-        return self._model.getNodeParam(self._nodeid, NodeParams.invertElev.value)
+        return self._model.getNodeParam(self._nodeid,
+                                        NodeParams.invertElev.value)
 
     @invert_elevation.setter
     def invert_elevation(self, param):
         """Set Node Invert Elevation."""
-        self._model.setNodeParam(self._nodeid, NodeParams.invertElev.value, param)
+        self._model.setNodeParam(self._nodeid, NodeParams.invertElev.value,
+                                 param)
 
     @property
     def full_depth(self):
@@ -298,12 +300,14 @@ class Node(object):
         >>> 10
         >>> 50
         """
-        return self._model.getNodeParam(self._nodeid, NodeParams.fullDepth.value)
+        return self._model.getNodeParam(self._nodeid,
+                                        NodeParams.fullDepth.value)
 
     @full_depth.setter
     def full_depth(self, param):
         """Set Node Full Depth."""
-        self._model.setNodeParam(self._nodeid, NodeParams.fullDepth.value, param)
+        self._model.setNodeParam(self._nodeid, NodeParams.fullDepth.value,
+                                 param)
 
     @property
     def surcharge_depth(self):
@@ -334,12 +338,14 @@ class Node(object):
         >>> 10
         >>> 50
         """
-        return self._model.getNodeParam(self._nodeid, NodeParams.surDepth.value)
+        return self._model.getNodeParam(self._nodeid,
+                                        NodeParams.surDepth.value)
 
     @surcharge_depth.setter
     def surcharge_depth(self, param):
         """Set Node Surcharge Depth."""
-        self._model.setNodeParam(self._nodeid, NodeParams.surDepth.value, param)
+        self._model.setNodeParam(self._nodeid, NodeParams.surDepth.value,
+                                 param)
 
     @property
     def ponding_area(self):
@@ -370,12 +376,14 @@ class Node(object):
         >>> 0
         >>> 50
         """
-        return self._model.getNodeParam(self._nodeid, NodeParams.pondedArea.value)
+        return self._model.getNodeParam(self._nodeid,
+                                        NodeParams.pondedArea.value)
 
     @ponding_area.setter
     def ponding_area(self, param):
         """Set Node Ponding Area."""
-        self._model.setNodeParam(self._nodeid, NodeParams.pondedArea.value, param)
+        self._model.setNodeParam(self._nodeid, NodeParams.pondedArea.value,
+                                 param)
 
     @property
     def initial_depth(self):
@@ -406,12 +414,14 @@ class Node(object):
         >>> 0
         >>> 1
         """
-        return self._model.getNodeParam(self._nodeid, NodeParams.initDepth.value)
+        return self._model.getNodeParam(self._nodeid,
+                                        NodeParams.initDepth.value)
 
     @initial_depth.setter
     def initial_depth(self, param):
         """Set Node Initial Depth."""
-        self._model.setNodeParam(self._nodeid, NodeParams.initDepth.value, param)
+        self._model.setNodeParam(self._nodeid, NodeParams.initDepth.value,
+                                 param)
 
     @property
     def total_inflow(self):
@@ -438,7 +448,8 @@ class Node(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.totalinflow.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.totalinflow.value)
 
     @property
     def total_outflow(self):
@@ -465,7 +476,8 @@ class Node(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.outflow.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.outflow.value)
 
     @property
     def losses(self):
@@ -492,7 +504,8 @@ class Node(object):
         >>> 0.01
         >>> 0.01
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.losses.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.losses.value)
 
     @property
     def volume(self):
@@ -519,7 +532,8 @@ class Node(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.newVolume.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.newVolume.value)
 
     @property
     def flooding(self):
@@ -546,7 +560,8 @@ class Node(object):
         >>> 0
         >>> 0
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.overflow.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.overflow.value)
 
     @property
     def depth(self):
@@ -573,7 +588,8 @@ class Node(object):
         >>> 0.52
         >>> 0.49
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.newDepth.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.newDepth.value)
 
     @property
     def head(self):
@@ -600,7 +616,8 @@ class Node(object):
         >>> 10.52
         >>> 10.49
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.newHead.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.newHead.value)
 
     @property
     def lateral_inflow(self):
@@ -627,7 +644,8 @@ class Node(object):
         >>> 0.3
         >>> 0.4
         """
-        return self._model.getNodeResult(self._nodeid, NodeResults.newLatFlow.value)
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.newLatFlow.value)
 
     def generated_inflow(self, inflowrate):
         """
