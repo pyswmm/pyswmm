@@ -64,7 +64,7 @@ class Links(object):
             raise PYSWMMException("SWMM Model Not Open")
         self._model = model._model
         self._cuindex = 0
-        self._nLinks = self._model.getProjectSize(ObjectType.LINK)
+        self._nLinks = self._model.getProjectSize(ObjectType.LINK.value)
 
     def __len__(self):
         """
@@ -73,7 +73,7 @@ class Links(object):
         :return: Number of Links
         :rtype: int
         """
-        return self._model.getProjectSize(ObjectType.LINK)
+        return self._model.getProjectSize(ObjectType.LINK.value)
 
     def __contains__(self, linkid):
         """
@@ -82,7 +82,7 @@ class Links(object):
         :return: ID Exists
         :rtype: bool
         """
-        return self._model.ObjectIDexist(ObjectType.LINK, linkid)
+        return self._model.ObjectIDexist(ObjectType.LINK.value, linkid)
 
     def __getitem__(self, linkid):
         if self.__contains__(linkid):
@@ -104,7 +104,7 @@ class Links(object):
     @property
     def _linkid(self):
         """Link ID."""
-        return self._model.getObjectId(ObjectType.LINK, self._cuindex)
+        return self._model.getObjectId(ObjectType.LINK.value, self._cuindex)
 
 
 class Link(object):
@@ -128,7 +128,7 @@ class Link(object):
     def __init__(self, model, linkid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
-        if linkid not in model.getObjectIDList(ObjectType.LINK):
+        if linkid not in model.getObjectIDList(ObjectType.LINK.value):
             raise PYSWMMException("ID Not valid")
         self._model = model
         self._linkid = linkid
@@ -170,7 +170,7 @@ class Link(object):
         ...     print c1c2.is_conduit()
         >>> True
         """
-        return self._model.getLinkType(self._linkid) is LinkType.conduit
+        return self._model.getLinkType(self._linkid) is LinkType.conduit.value
 
     def is_pump(self):
         """
@@ -188,7 +188,7 @@ class Link(object):
         ...     print c1c2.is_pump()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.pump
+        return self._model.getLinkType(self._linkid) is LinkType.pump.value
 
     def is_orifice(self):
         """
@@ -206,7 +206,7 @@ class Link(object):
         ...     print c1c2.is_orifice()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.orifice
+        return self._model.getLinkType(self._linkid) is LinkType.orifice.value
 
     def is_weir(self):
         """
@@ -224,7 +224,7 @@ class Link(object):
         ...     print c1c2.is_weir()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.weir
+        return self._model.getLinkType(self._linkid) is LinkType.weir.value
 
     def is_outlet(self):
         """
@@ -242,7 +242,7 @@ class Link(object):
         ...     print c1c2.is_outlet()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.outlet
+        return self._model.getLinkType(self._linkid) is LinkType.outlet.value
 
     @property
     def connections(self):
@@ -330,12 +330,12 @@ class Link(object):
         >>> 0.1
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.offset1)
+        return self._model.getLinkParam(self._linkid, LinkParams.offset1.value)
 
     @inlet_offset.setter
     def inlet_offset(self, param):
         """Set Link Upstream Link Offset."""
-        self._model.setLinkParam(self._linkid, LinkParams.offset1, param)
+        self._model.setLinkParam(self._linkid, LinkParams.offset1.value, param)
 
     @property
     def outlet_offset(self):
@@ -366,12 +366,12 @@ class Link(object):
         >>> 0.1
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.offset1)
+        return self._model.getLinkParam(self._linkid, LinkParams.offset2.value)
 
     @outlet_offset.setter
     def outlet_offset(self, param):
         """Set Link Downstream Link Offset."""
-        self._model.setLinkParam(self._linkid, LinkParams.offset2, param)
+        self._model.setLinkParam(self._linkid, LinkParams.offset2.value, param)
 
     @property
     def initial_flow(self):
@@ -402,12 +402,12 @@ class Link(object):
         >>> 0.1
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.q0)
+        return self._model.getLinkParam(self._linkid, LinkParams.q0.value)
 
     @initial_flow.setter
     def initial_flow(self, param):
         """Set Link Initial Flow Rate."""
-        self._model.setLinkParam(self._linkid, LinkParams.q0, param)
+        self._model.setLinkParam(self._linkid, LinkParams.q0.value, param)
 
     @property
     def flow_limit(self):
@@ -438,12 +438,12 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.qLimit)
+        return self._model.getLinkParam(self._linkid, LinkParams.qLimit.value)
 
     @flow_limit.setter
     def flow_limit(self, param):
         """Set Link Flow Limit."""
-        self._model.setLinkParam(self._linkid, LinkParams.qLimit, param)
+        self._model.setLinkParam(self._linkid, LinkParams.qLimit.value, param)
 
     @property
     def inlet_head_loss(self):
@@ -474,12 +474,12 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.cLossInlet)
+        return self._model.getLinkParam(self._linkid, LinkParams.cLossInlet.value)
 
     @inlet_head_loss.setter
     def inlet_head_loss(self, param):
         """Set Link Inlet Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossInlet, param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossInlet.value, param)
 
     @property
     def outlet_head_loss(self):
@@ -510,12 +510,12 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.cLossOutlet)
+        return self._model.getLinkParam(self._linkid, LinkParams.cLossOutlet.value)
 
     @outlet_head_loss.setter
     def outlet_head_loss(self, param):
         """Set Link Outlet Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossOutlet, param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossOutlet.value, param)
 
     @property
     def average_head_loss(self):
@@ -546,12 +546,12 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.cLossAvg)
+        return self._model.getLinkParam(self._linkid, LinkParams.cLossAvg.value)
 
     @average_head_loss.setter
     def average_head_loss(self, param):
         """Set Link Average Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossAvg, param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossAvg.value, param)
 
     @property
     def seepagerate(self):
@@ -582,12 +582,12 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.seepRate)
+        return self._model.getLinkParam(self._linkid, LinkParams.seepRate.value)
 
     @seepagerate.setter
     def seepagerate(self, param):
         """Set Link Average Seepage Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.seepRate, param)
+        self._model.setLinkParam(self._linkid, LinkParams.seepRate.value, param)
 
     @property
     def flow(self):
@@ -614,7 +614,7 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.newFlow)
+        return self._model.getLinkResult(self._linkid, LinkResults.newFlow.value)
 
     @property
     def depth(self):
@@ -641,7 +641,7 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.newDepth)
+        return self._model.getLinkResult(self._linkid, LinkResults.newDepth.value)
 
     @property
     def volume(self):
@@ -668,7 +668,7 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.newVolume)
+        return self._model.getLinkResult(self._linkid, LinkResults.newVolume.value)
 
     @property
     def froude(self):
@@ -695,7 +695,7 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.froude)
+        return self._model.getLinkResult(self._linkid, LinkResults.froude.value)
 
     @property
     def ups_xsection_area(self):
@@ -722,7 +722,7 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.surfArea1)
+        return self._model.getLinkResult(self._linkid, LinkResults.surfArea1.value)
 
     @property
     def ds_xsection_area(self):
@@ -749,7 +749,7 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.surfArea2)
+        return self._model.getLinkResult(self._linkid, LinkResults.surfArea2.value)
 
     @property
     def current_setting(self):
@@ -776,7 +776,7 @@ class Link(object):
         >>> 0.5
         >>> 1
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.setting)
+        return self._model.getLinkResult(self._linkid, LinkResults.setting.value)
 
     @property
     def target_setting(self):
@@ -820,7 +820,7 @@ class Link(object):
         >>> 0.1
         """
         return self._model.getLinkResult(self._linkid,
-                                         LinkResults.targetSetting)
+                                         LinkResults.targetSetting.value)
 
     @target_setting.setter
     def target_setting(self, setting):
