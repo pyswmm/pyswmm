@@ -39,20 +39,16 @@ def get_description():
     return data
 
 
-AUTHOR_NAME = 'Bryant E. McDonnell (EmNet LLC)'
-AUTHOR_EMAIL = 'bemcdonnell@gmail.com'
-
-
 REQUIREMENTS = []
 
-
-if PY2:
+if sys.version_info < (3, 4):
     REQUIREMENTS.append('enum34')
 
 setup(
     name='pyswmm',
-    version=VERSION,
+    version=get_version(),
     description='Python Wrapper for SWMM5 API',
+    long_description=get_description(),
     url='https://github.com/OpenWaterAnalytics/pyswmm/wiki',
     author='Bryant E. McDonnell (EmNet LLC)',
     author_email='bemcdonnell@gmail.com',
@@ -68,6 +64,8 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: C",
         "Development Status :: 4 - Beta",
     ])
