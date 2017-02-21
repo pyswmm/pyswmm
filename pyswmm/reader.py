@@ -13,9 +13,7 @@ import ctypes
 import os
 
 # Local imports
-from toolkitapi import (DLLErrorKeys, SMO_apiFunction, SMO_elementCount,
-                        SMO_elementType, SMO_systemAttribute, SMO_time,
-                        SMO_unit)
+import toolkitapi as tka
 
 
 class _Opaque(ctypes.Structure):
@@ -117,12 +115,13 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         """
         self.smoapi = self._initsmoapi()
         ErrNo = self._openBinFile(self.smoapi, OutLoc)
         if ErrNo != 0:
-            error_msg = "API ErrNo {0}:{1}".format(ErrNo, DLLErrorKeys[ErrNo])
+            error_msg = "API ErrNo {0}:{1}".format(ErrNo,
+                                                   tka.DLLErrorKeys[ErrNo])
             raise Exception(error_msg)
 
     def CloseBinFile(self):
@@ -134,7 +133,7 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.CloseBinFile()
         """
         ErrNo = self._close(self.smoapi)
@@ -149,75 +148,77 @@ class SWMMBinReader(object):
             delattr(self, 'PollutantIDs')
 
         if ErrNo != 0:
-            error_msg = "API ErrNo {0}:{1}".format(ErrNo.value,
-                                                   DLLErrorKeys[ErrNo.value])
+            error_msg = "API ErrNo {0}:{1}".format(
+                ErrNo.value, tka.DLLErrorKeys[ErrNo.value])
             raise Exception(error_msg)
 
     def _get_SubcatchIDs(self):
         """Generates member Element IDs dictionary for Subcatchments."""
         self.SubcatchmentIDs = {}
-        for i in range(self.get_ProjectSize(SMO_elementCount.subcatchCount)):
+        for i in range(self.get_ProjectSize(
+                tka.SMO_elementCount.subcatchCount)):
             NAME = ctypes.create_string_buffer(46)
             LEN = ctypes.c_int(46)
             ErrNo1 = self._getIDs(self.smoapi,
-                                  SMO_elementType.SM_subcatch,
+                                  tka.SMO_elementType.SM_subcatch,
                                   i,
                                   ctypes.byref(NAME),
                                   ctypes.byref(LEN))
             if ErrNo1 != 0:
                 error_msg = "API ErrNo {0}:{1}".format(
-                    ErrNo1.value, DLLErrorKeys[ErrNo1.value])
+                    ErrNo1.value, tka.DLLErrorKeys[ErrNo1.value])
                 raise Exception(error_msg)
             self.SubcatchmentIDs[str(NAME.value)] = i
 
     def _get_NodeIDs(self):
         """Generates member Element IDs dictionary for Nodes."""
         self.NodeIDs = {}
-        for i in range(self.get_ProjectSize(SMO_elementCount.nodeCount)):
+        for i in range(self.get_ProjectSize(tka.SMO_elementCount.nodeCount)):
             NAME = ctypes.create_string_buffer(46)
             LEN = ctypes.c_int(46)
             ErrNo1 = self._getIDs(self.smoapi,
-                                  SMO_elementType.SM_node,
+                                  tka.SMO_elementType.SM_node,
                                   i,
                                   ctypes.byref(NAME),
                                   ctypes.byref(LEN))
             if ErrNo1 != 0:
                 error_msg = "API ErrNo {0}:{1}".format(
-                    ErrNo1.value, DLLErrorKeys[ErrNo1.value])
+                    ErrNo1.value, tka.DLLErrorKeys[ErrNo1.value])
                 raise Exception(error_msg)
             self.NodeIDs[str(NAME.value)] = i
 
     def _get_LinkIDs(self):
         """Generates member Element IDs dictionary for Links."""
         self.LinkIDs = {}
-        for i in range(self.get_ProjectSize(SMO_elementCount.linkCount)):
+        for i in range(self.get_ProjectSize(tka.SMO_elementCount.linkCount)):
             NAME = ctypes.create_string_buffer(46)
             LEN = ctypes.c_int(46)
             ErrNo1 = self._getIDs(self.smoapi,
-                                  SMO_elementType.SM_link,
+                                  tka.SMO_elementType.SM_link,
                                   i,
                                   ctypes.byref(NAME),
                                   ctypes.byref(LEN))
             if ErrNo1 != 0:
                 error_msg = "API ErrNo {0}:{1}".format(
-                    ErrNo1.value, DLLErrorKeys[ErrNo1.value])
+                    ErrNo1.value, tka.DLLErrorKeys[ErrNo1.value])
                 raise Exception(error_msg)
             self.LinkIDs[str(NAME.value)] = i
 
     def _get_PollutantIDs(self):
         """Generates member Element IDs dictionary for Pollutants."""
         self.PollutantIDs = {}
-        for i in range(self.get_ProjectSize(SMO_elementCount.pollutantCount)):
+        for i in range(self.get_ProjectSize(
+                tka.SMO_elementCount.pollutantCount)):
             NAME = ctypes.create_string_buffer(46)
             LEN = ctypes.c_int(46)
             ErrNo1 = self._getIDs(self.smoapi,
-                                  SMO_elementType.SM_sys,
+                                  tka.SMO_elementType.SM_sys,
                                   i,
                                   ctypes.byref(NAME),
                                   ctypes.byref(LEN))
             if ErrNo1 != 0:
                 error_msg = "API ErrNo {0}:{1}".format(
-                    ErrNo1.value, DLLErrorKeys[ErrNo1.value])
+                    ErrNo1.value, tka.DLLErrorKeys[ErrNo1.value])
                 raise Exception(error_msg)
             self.PollutantIDs[str(NAME.value)] = i
 
@@ -233,7 +234,7 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> Test.get_IDs(SM_subcatch)
         >>> ['S3', 'S2', 'S1']
         >>> Test.get_IDs(SM_node)
@@ -241,25 +242,25 @@ class SWMMBinReader(object):
         >>> Test.get_IDs(SM_link)
         >>> ['C3', 'C2', 'C1']
         """
-        if SMO_elementIDType == SMO_elementType.subcatchCount:
+        if SMO_elementIDType == tka.SMO_elementType.subcatchCount:
             if not hasattr(self, 'SubcatchmentIDs'):
                 self._get_SubcatchIDs()
             IDlist = self.SubcatchmentIDs.keys()
-        elif SMO_elementIDType == SMO_elementType.SM_node:
+        elif SMO_elementIDType == tka.SMO_elementType.SM_node:
             if not hasattr(self, 'NodeIDs'):
                 self._get_NodeIDs()
             IDlist = self.NodeIDs.keys()
-        elif SMO_elementIDType == SMO_elementType.SM_link:
+        elif SMO_elementIDType == tka.SMO_elementType.SM_link:
             if not hasattr(self, 'LinkIDs'):
                 self._get_LinkIDs()
             IDlist = self.LinkIDs.keys()
-        elif SMO_elementIDType == SMO_elementType.SM_sys:
+        elif SMO_elementIDType == tka.SMO_elementType.SM_sys:
             if not hasattr(self, 'PollutantIDs'):
                 self._get_PollutantIDs()
             IDlist = self.PollutantIDs.keys()
         else:
             error_msg = "SMO_elementType: {} Outside Valid Types".format(
-                SMO_elementType)
+                tka.SMO_elementType)
             raise Exception(error_msg)
             return 0
 
@@ -278,7 +279,7 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_Units(flow_rate)
         >>> 'CFS'
         """
@@ -299,15 +300,15 @@ class SWMMBinReader(object):
 
         x = ctypes.c_int()
         ErrNo1 = self._getUnits(self.smoapi,
-                                SMO_unit,
+                                unit,
                                 ctypes.byref(x))
         if ErrNo1 != 0:
             error_msg = "API ErrNo {0}:{1}".format(ErrNo1,
-                                                   DLLErrorKeys[ErrNo1])
+                                                   tka.DLLErrorKeys[ErrNo1])
             raise Exception(error_msg)
-        if unit == SMO_unit.flow_rate:
+        if unit == tka.SMO_unit.flow_rate:
             return FlowUnitsType[x.value]
-        elif unit == SMO_unit.concentration:
+        elif unit == tka.SMO_unit.concentration:
             return ConcUnitsType[x.value]
         else:
             error_msg = "SMO_unit: {} Outside Valid Types".format(unit)
@@ -325,7 +326,7 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_Times(reportStep)
         >>> 300
         """
@@ -335,7 +336,7 @@ class SWMMBinReader(object):
                                 ctypes.byref(timeElement))
         if ErrNo1 != 0:
             error_msg = "API ErrNo {0}:{1}".format(ErrNo1,
-                                                   DLLErrorKeys[ErrNo1])
+                                                   tka.DLLErrorKeys[ErrNo1])
             raise Exception(error_msg)
         return timeElement.value
 
@@ -345,7 +346,7 @@ class SWMMBinReader(object):
         ErrNo1 = self._getStartTime(self.smoapi, ctypes.byref(StartTime))
         if ErrNo1 != 0:
             error_msg = "API ErrNo {0}:{1}".format(ErrNo1,
-                                                   DLLErrorKeys[ErrNo1])
+                                                   tka.DLLErrorKeys[ErrNo1])
             raise Exception(error_msg)
         return StartTime.value
 
@@ -361,7 +362,7 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_StartTime()
         >>> datetime.datetime(2016,10,4,12,4,0)
         """
@@ -391,13 +392,15 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_TimeSeries()
-        >>> [datetime.datetime(2015, 11, 29, 14, 0), datetime.datetime(2015, 11, 29, 14, 1), ..., datetime.datetime(2015, 11, 29, 14, 9)]
+        >>> [datetime.datetime(2015, 11, 29, 14, 0),
+             datetime.datetime(2015, 11, 29, 14, 1), ...,
+             datetime.datetime(2015, 11, 29, 14, 9)]
         """
         return [self.get_StartTime() +
-                timedelta(seconds=ind*self.get_Times(SMO_time.reportStep))
-                for ind in range(self.get_Times(SMO_time.numPeriods))]
+                timedelta(seconds=ind*self.get_Times(tka.SMO_time.reportStep))
+                for ind in range(self.get_Times(tka.SMO_time.numPeriods))]
 
     def get_ProjectSize(self, SMO_elementCount):
         """
@@ -411,7 +414,7 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_ProjectSize(nodeCount)
         >>> 10
         """
@@ -421,7 +424,7 @@ class SWMMBinReader(object):
                                       ctypes.byref(numel))
         if ErrNo1 != 0:
             error_msg = "API ErrNo {0}:{1}".format(ErrNo1,
-                                                   DLLErrorKeys[ErrNo1])
+                                                   tka.DLLErrorKeys[ErrNo1])
             raise Exception(error_msg)
         return numel.value
 
@@ -439,9 +442,12 @@ class SWMMBinReader(object):
 
         :param int SMO_elementType: Element type :doc:`/keyrefs`.
         :param int SMO_Attribute: Attribute Type :doc:`/keyrefs`.
-        :param str IDName: Element ID name (Default is None for to reach sys variables) (ID Names are case sensitive).
-        :param int TimeStartInd: Starting index for the time series data period (default is 0).
-        :param int TimeEndInd: Array index for the time series data period (defualt is -1 for end).
+        :param str IDName: Element ID name (Default is None for to reach sys
+                           variables) (ID Names are case sensitive).
+        :param int TimeStartInd: Starting index for the time series data
+                                 period (default is 0).
+        :param int TimeEndInd: Array index for the time series data period
+                               (defualt is -1 for end).
 
         :return: data series
         :rtype: list
@@ -449,23 +455,28 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_Series(SM_subcatch, runoff_rate, 'S3', 0, 50)
         >>> [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, .... 0.0]
 
         >>> OutputFile.get_Series(SM_node, invert_depth, 'J1', 0, 50)
-        >>> [3.908519983291626, 4.6215434074401855, 4.594745635986328, 4.595311641693115, ...,  4.595311641693115]
+        >>> [3.908519983291626, 4.6215434074401855, 4.594745635986328,
+             4.595311641693115, ...,  4.595311641693115]
 
         >>> OutputFile.get_Series(SM_link, rainfall_subcatch, 'C2', 0, 50)
-        >>> [10.2869873046875, 10.04793643951416, 9.997148513793945, 10.000744819641113, ..., 10.011372566223145]
+        >>> [10.2869873046875, 10.04793643951416, 9.997148513793945,
+             10.000744819641113, ..., 10.011372566223145]
 
-        >>> OutputFile.get_Series(SM_sys, rainfall_system, TimeStartInd = 0, TimeEndInd = 50)
-        >>> [0.017500000074505806, 0.017500000074505806, 0.017500000074505806, 0.017500000074505806, ..., 0.017500000074505806]        
-        """        
-        if TimeEndInd > self.get_Times(SMO_time.numPeriods):
+        >>> OutputFile.get_Series(SM_sys, rainfall_system, TimeStartInd=0,
+                                  TimeEndInd=50)
+        >>> [0.017500000074505806, 0.017500000074505806, 0.017500000074505806,
+             0.017500000074505806, ..., 0.017500000074505806]
+        """
+        if TimeEndInd > self.get_Times(tka.SMO_time.numPeriods):
             raise Exception("Outside Number of TimeSteps")
         elif TimeEndInd == -1:
-            TimeEndInd = self.get_Times(SMO_time.numPeriods) + 1 - TimeEndInd
+            TimeEndInd = 1
+            TimeEndInd += self.get_Times(tka.SMO_time.numPeriods) - TimeEndInd
 
         sLength = ctypes.c_int()
         ErrNo1 = ctypes.c_int()
@@ -476,10 +487,10 @@ class SWMMBinReader(object):
                                             ctypes.byref(ErrNo1))
         if ErrNo1.value != 0:
             error_msg = "API ErrNo {0}:{1}".format(
-                ErrNo1.value, DLLErrorKeys[ErrNo1.value])
+                ErrNo1.value, tka.DLLErrorKeys[ErrNo1.value])
             raise Exception(error_msg)
 
-        if element_type == SMO_elementType.SM_subcatch:
+        if element_type == tka.SMO_elementType.SM_subcatch:
             if not hasattr(self, 'SubcatchmentIDs'):
                 self._get_SubcatchIDs()
             ErrNo2 = self._getSubcatchSeries(self.smoapi,
@@ -487,7 +498,7 @@ class SWMMBinReader(object):
                                              SMO_Attribute,
                                              TimeStartInd, sLength.value,
                                              SeriesPtr)
-        elif element_type == SMO_elementType.SM_node:
+        elif element_type == tka.SMO_elementType.SM_node:
             if not hasattr(self, 'NodeIDs'):
                 self._get_NodeIDs()
             ErrNo2 = self._getNodeSeries(self.smoapi,
@@ -496,7 +507,7 @@ class SWMMBinReader(object):
                                          TimeStartInd,
                                          sLength.value,
                                          SeriesPtr)
-        elif element_type == SMO_elementType.SM_link:
+        elif element_type == tka.SMO_elementType.SM_link:
             if not hasattr(self, 'LinkIDs'):
                 self._get_LinkIDs()
             ErrNo2 = self._getLinkSeries(self.smoapi,
@@ -506,7 +517,7 @@ class SWMMBinReader(object):
                                          sLength.value,
                                          SeriesPtr)
         # Add Pollutants Later
-        elif element_type == SMO_elementType.SM_sys:
+        elif element_type == tka.SMO_elementType.SM_sys:
             ErrNo2 = self._getSystemSeries(self.smoapi,
                                            SMO_Attribute,
                                            TimeStartInd,
@@ -514,12 +525,12 @@ class SWMMBinReader(object):
                                            SeriesPtr)
         else:
             error_msg = "SMO_elementType: {} Outside Valid Types".format(
-                SMO_elementType)
+                element_type)
             raise Exception(error_msg)
 
         if ErrNo2 != 0:
             error_msg = "API ErrNo {0}:{1}".format(ErrNo2,
-                                                   DLLErrorKeys[ErrNo2])
+                                                   tka.DLLErrorKeys[ErrNo2])
             raise Exception(error_msg)
 
         BldArray = [SeriesPtr[i] for i in range(sLength.value)]
@@ -540,42 +551,43 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
-        >>> OutputFile.get_Attribute(SM_subcatch, rainfall_subcatch, 0) 
+        >>> OutputFile.OpenBinFile("outputfile.out")
+        >>> OutputFile.get_Attribute(SM_subcatch, rainfall_subcatch, 0)
         >>> [0.017500000074505806, 0.017500000074505806, 0.017500000074505806]
 
         >>> OutputFile.get_Attribute(SM_node, invert_depth, 10)
-        >>> [4.596884250640869, 0.720202624797821, 0.6315776705741882, 0.6312257051467896]
+        >>> [4.596884250640869, 0.720202624797821, 0.6315776705741882,
+             0.6312257051467896]
 
         >>> OutputFile.get_Attribute(SM_link, flow_rate_link, 50)
         >>> [9.00419807434082, 10.011459350585938, 11.020767211914062]
         """
-        if TimeInd > self.get_Times(SMO_time.numPeriods)-1:
+        if TimeInd > self.get_Times(tka.SMO_time.numPeriods)-1:
             raise Exception("Outside Number of TimeSteps")
 
         aLength = ctypes.c_int()
-        ErrNo1 = ctypes.c_int()            
+        ErrNo1 = ctypes.c_int()
         ValArrayPtr = self._newOutValueArray(self.smoapi,
-                                             SMO_apiFunction.getAttribute,
-                                             SMO_elementType,
+                                             tka.SMO_apiFunction.getAttribute,
+                                             element_type,
                                              ctypes.byref(aLength),
                                              ctypes.byref(ErrNo1))
         if ErrNo1.value != 0:
             error_msg = "API ErrNo {0}:{1}".format(
-                ErrNo1.value, DLLErrorKeys[ErrNo1.value])
+                ErrNo1.value, tka.DLLErrorKeys[ErrNo1.value])
             raise Exception(error_msg)
 
-        if element_type == SMO_elementType.SM_subcatch:
+        if element_type == tka.SMO_elementType.SM_subcatch:
             ErrNo2 = self._getSubcatchAttribute(self.smoapi,
                                                 TimeInd,
                                                 SMO_Attribute,
                                                 ValArrayPtr)
-        elif element_type == SMO_elementType.SM_link:
+        elif element_type == tka.SMO_elementType.SM_link:
             ErrNo2 = self._getLinkAttribute(self.smoapi,
                                             TimeInd,
                                             SMO_Attribute,
                                             ValArrayPtr)
-        elif element_type == SMO_elementType.SM_node:
+        elif element_type == tka.SMO_elementType.SM_node:
             ErrNo2 = self._getNodeAttribute(self.smoapi,
                                             TimeInd,
                                             SMO_Attribute,
@@ -583,12 +595,12 @@ class SWMMBinReader(object):
         # Add Pollutants Later
         else:
             error_msg = "SMO_elementType: {} Outside Valid Types".format(
-                SMO_elementType)
+                element_type)
             raise Exception(error_msg)
 
         if ErrNo2 != 0:
             error_msg = "API ErrNo {0}:{1}".format(ErrNo2,
-                                                   DLLErrorKeys[ErrNo2])
+                                                   tka.DLLErrorKeys[ErrNo2])
             raise Exception(error_msg)
 
         BldArray = [ValArrayPtr[i] for i in range(aLength.value)]
@@ -606,45 +618,48 @@ class SWMMBinReader(object):
         Examples:
 
         >>> OutputFile = SWMMBinReader()
-        >>> OutputFile.OpenBinFile(r"C:\\PROJECTCODE\\SWMMOutputAPI\\testing\\outputfile.out")
+        >>> OutputFile.OpenBinFile("outputfile.out")
         >>> OutputFile.get_Result(SM_subcatch,3000,'S3')
         >>> [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         >>> OutputFile.get_Result(SM_node,3000,'J1')
-        >>> [4.594789505004883, 25.322790145874023, 0.0, 9.000000953674316, 9.000000953674316, 0.0]
+        >>> [4.594789505004883, 25.322790145874023, 0.0, 9.000000953674316,
+             9.000000953674316, 0.0]
 
         >>> OutputFile.get_Result(SM_link,9000,'C3')
-        >>> [11.0, 0.6312892436981201, 12.93112564086914, 185.72474670410156, 0.270773708820343]
+        >>> [11.0, 0.6312892436981201, 12.93112564086914,
+             185.72474670410156, 0.270773708820343]
 
         >>> OutputFile.get_Result(SM_sys,3000,'S3')
-        >>> [70.0, 0.0, 0.0, 0.0, 0.0, 8.0, 0.0, 0.0, 3.0, 11.0, 0.0, 11.000021934509277, 532.2583618164062, 0.0, 0.0]
+        >>> [70.0, 0.0, 0.0, 0.0, 0.0, 8.0, 0.0, 0.0, 3.0, 11.0, 0.0,
+             11.000021934509277, 532.2583618164062, 0.0, 0.0]
         """
-        if TimeInd > self.get_Times(SMO_time.numPeriods)-1:
+        if TimeInd > self.get_Times(tka.SMO_time.numPeriods)-1:
             raise Exception("Outside Number of TimeSteps")
 
         alength = ctypes.c_int()
         ErrNo1 = ctypes.c_int()
         ValArrayPtr = self._newOutValueArray(self.smoapi,
-                                             SMO_apiFunction.getResult,
-                                             SMO_elementType,
+                                             tka.SMO_apiFunction.getResult,
+                                             element_type,
                                              ctypes.byref(alength),
                                              ctypes.byref(ErrNo1))
 
-        if element_type == SMO_elementType.SM_subcatch:
+        if element_type == tka.SMO_elementType.SM_subcatch:
             if not hasattr(self, 'SubcatchmentIDs'):
                 self._get_SubcatchIDs()
             ErrNo2 = self._getSubcatchResult(self.smoapi,
                                              TimeInd,
                                              self.SubcatchmentIDs[IDName],
                                              ValArrayPtr)
-        elif element_type == SMO_elementType.SM_node:
+        elif element_type == tka.SMO_elementType.SM_node:
             if not hasattr(self, 'NodeIDs'):
                 self._get_NodeIDs()
             ErrNo2 = self._getNodeResult(self.smoapi,
                                          TimeInd,
                                          self.NodeIDs[IDName],
                                          ValArrayPtr)
-        elif element_type == SMO_elementType.SM_link:
+        elif element_type == tka.SMO_elementType.SM_link:
             if not hasattr(self, 'LinkIDs'):
                 self._get_LinkIDs()
             ErrNo2 = self._getLinkResult(self.smoapi,
@@ -652,7 +667,7 @@ class SWMMBinReader(object):
                                          self.LinkIDs[IDName],
                                          ValArrayPtr)
         # Add Pollutants Later
-        elif element_type == SMO_elementType.SM_sys:
+        elif element_type == tka.SMO_elementType.SM_sys:
             # This is not used?
             ErrNo2 = self._getSystemResult(self.smoapi, TimeInd, ValArrayPtr)
         else:
@@ -675,25 +690,30 @@ if __name__ in "__main__":
 
     # Get IDs
     print("\nProject Element ID Info")
-    print(Test.get_IDs(SMO_elementType.SM_subcatch))
-    print(Test.get_IDs(SMO_elementType.SM_node))
-    print(Test.get_IDs(SMO_elementType.SM_link))
+    print(Test.get_IDs(tka.SMO_elementType.SM_subcatch))
+    print(Test.get_IDs(tka.SMO_elementType.SM_node))
+    print(Test.get_IDs(tka.SMO_elementType.SM_link))
 
     print("\nGet Units")
-    print('flow_rate: {}'.format(Test.get_Units(SMO_unit.flow_rate)))
-    print('concentration: {}'.format(Test.get_Units(SMO_unit.concentration)))
+    print('flow_rate: {}'.format(Test.get_Units(tka.SMO_unit.flow_rate)))
+    print('concentration: {}'.format(
+        Test.get_Units(tka.SMO_unit.concentration)))
 
     # Get Project Size
     print("\nProject Size Info")
-    print("Subcatchments: {}".format(Test.get_ProjectSize(SMO_elementCount.subcatchCount)))
-    print("Nodes: {}".format(Test.get_ProjectSize(SMO_elementCount.nodeCount)))
-    print("Links: {}".format(Test.get_ProjectSize(SMO_elementCount.linkCount)))
-    print("Pollutants: {}".format(Test.get_ProjectSize(SMO_elementCount.pollutantCount)))
+    print("Subcatchments: {}".format(
+        Test.get_ProjectSize(tka.SMO_elementCount.subcatchCount)))
+    print("Nodes: {}".format(
+        Test.get_ProjectSize(tka.SMO_elementCount.nodeCount)))
+    print("Links: {}".format(
+        Test.get_ProjectSize(tka.SMO_elementCount.linkCount)))
+    print("Pollutants: {}".format(
+        Test.get_ProjectSize(tka.SMO_elementCount.pollutantCount)))
 
     # Project Time Steps
     print("\nProject Time Info")
-    print("Report Step: {}".format(Test.get_Times(SMO_time.reportStep)))
-    print("Periods: {}".format(Test.get_Times(SMO_time.numPeriods)))
+    print("Report Step: {}".format(Test.get_Times(tka.SMO_time.reportStep)))
+    print("Periods: {}".format(Test.get_Times(tka.SMO_time.numPeriods)))
 
     # Get Time Series
     print("\nGet Time Series")
@@ -702,44 +722,56 @@ if __name__ in "__main__":
 
     # Get Series
     print("\nSeries Tests")
-    SubcSeries = Test.get_Series(SMO_elementType.SM_subcatch,
-                                 SMO_systemAttribute.runoff_rate, 'S3', 0, 50)
+    SubcSeries = Test.get_Series(tka.SMO_elementType.SM_subcatch,
+                                 tka.SMO_systemAttribute.runoff_rate,
+                                 'S3',
+                                 0,
+                                 50)
     print(SubcSeries)
-    NodeSeries = Test.get_Series(SMO_elementType.SM_node,
-                                 SMO_systemAttribute.invert_depth, 'J1', 0, 50)
+    NodeSeries = Test.get_Series(tka.SMO_elementType.SM_node,
+                                 tka.SMO_systemAttribute.invert_depth,
+                                 'J1',
+                                 0,
+                                 50)
     print(NodeSeries)
-    LinkSeries = Test.get_Series(SMO_elementType.SM_link,
-                                 SMO_systemAttribute.rainfall_subcatch,
-                                 'C2', 0, 50)
+    LinkSeries = Test.get_Series(tka.SMO_elementType.SM_link,
+                                 tka.SMO_systemAttribute.rainfall_subcatch,
+                                 'C2',
+                                 0,
+                                 50)
     print(LinkSeries)
-    SystSeries = Test.get_Series(SMO_elementType.SM_sys,
-                                 SMO_systemAttribute.rainfall_system,
-                                 TimeStartInd=0, TimeEndInd=50)
+    SystSeries = Test.get_Series(tka.SMO_elementType.SM_sys,
+                                 tka.SMO_systemAttribute.rainfall_system,
+                                 TimeStartInd=0,
+                                 TimeEndInd=50)
     print(SystSeries)
 
     # Get Attributes
     print("\nAttributes Tests")
     # Check Values.. Might be issue here
-    SubcAttributes = Test.get_Attribute(SMO_elementType.SM_subcatch,
-                                        SMO_systemAttribute.rainfall_subcatch,
-                                        0)
+    SubcAttributes = Test.get_Attribute(
+        tka.SMO_elementType.SM_subcatch,
+        tka.SMO_systemAttribute.rainfall_subcatch,
+        0)
     print(SubcAttributes)
-    NodeAttributes = Test.get_Attribute(SMO_elementType.SM_node,
-                                        SMO_systemAttribute.invert_depth, 10)
+    NodeAttributes = Test.get_Attribute(tka.SMO_elementType.SM_node,
+                                        tka.SMO_systemAttribute.invert_depth,
+                                        10)
     print(NodeAttributes)
-    LinkAttributes = Test.get_Attribute(SMO_elementType.SM_link,
-                                        SMO_systemAttribute.flow_rate_link, 50)
+    LinkAttributes = Test.get_Attribute(tka.SMO_elementType.SM_link,
+                                        tka.SMO_systemAttribute.flow_rate_link,
+                                        50)
     print(LinkAttributes)
 
     # Get Results
     print("\nResult Tests")
-    SubcResults = Test.get_Result(SMO_elementType.SM_subcatch, 3000, 'S3')
+    SubcResults = Test.get_Result(tka.SMO_elementType.SM_subcatch, 3000, 'S3')
     print(SubcResults)
-    NodeResults = Test.get_Result(SMO_elementType.SM_node, 3000, 'J1')
+    NodeResults = Test.get_Result(tka.SMO_elementType.SM_node, 3000, 'J1')
     print(NodeResults)
-    LinkResults = Test.get_Result(SMO_elementType.SM_link, 9000, 'C3')
+    LinkResults = Test.get_Result(tka.SMO_elementType.SM_link, 9000, 'C3')
     print(LinkResults)
-    SystResults = Test.get_Result(SMO_elementType.SM_sys, 3000, 'S3')
+    SystResults = Test.get_Result(tka.SMO_elementType.SM_sys, 3000, 'S3')
     print(SystResults)
 
     # Close Output File
