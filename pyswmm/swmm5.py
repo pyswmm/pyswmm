@@ -19,14 +19,15 @@ import sys
 import warnings
 
 # Local imports
-import toolkitapi as tka
+import pyswmm.toolkitapi as tka
 
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
+
     def __init__(self, error_code, error_message):
         self.warning = False
-        self.args = (error_code,)
+        self.args = (error_code, )
         self.message = error_message
 
     def __str__(self):
@@ -35,6 +36,7 @@ class SWMMException(Exception):
 
 class PYSWMMException(Exception):
     """Custom exception class for PySWMM errors. """
+
     def __init__(self, error_message):
         self.warning = False
         self.message = error_message
@@ -121,9 +123,8 @@ class PySWMM(object):
         if 'win32' in sys.platform:
             if dllpath is None:
                 dllname = 'swmm5.dll'
-                libswmm = os.path.join(get_pkgpath() +
-                                       '\\swmmLinkedLibs\\Windows\\' +
-                                       dllname)
+                libswmm = (
+                    get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname)
             else:
                 libswmm = dllpath
             self.SWMMlibobj = ctypes.CDLL(libswmm)
@@ -184,8 +185,8 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        sys.stdout.write("\n... SWMM Version {}".format(
-            self.swmm_getVersion()))
+        sys.stdout.write("\n... SWMM Version {}".format(self.swmm_getVersion(
+        )))
 
         try:
             self.swmm_run()
@@ -218,9 +219,9 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        self.SWMMlibobj.swmm_run(ctypes.c_char_p(inpfile),
-                                 ctypes.c_char_p(rptfile),
-                                 ctypes.c_char_p(binfile))
+        self.SWMMlibobj.swmm_run(
+            ctypes.c_char_p(inpfile),
+            ctypes.c_char_p(rptfile), ctypes.c_char_p(binfile))
 
     def swmm_open(self, inpfile=None, rptfile=None, binfile=None):
         """
@@ -239,7 +240,7 @@ class PySWMM(object):
         if self.fileLoaded:
             self.swmm_close()
             error_msg = 'Fatal error closing previously opened file'
-            raise(PYSWMMException(error_msg))
+            raise (PYSWMMException(error_msg))
 
         if inpfile is None:
             inpfile = self.inpfile
@@ -256,9 +257,9 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        errcode = self.SWMMlibobj.swmm_open(ctypes.c_char_p(inpfile),
-                                            ctypes.c_char_p(rptfile),
-                                            ctypes.c_char_p(binfile))
+        errcode = self.SWMMlibobj.swmm_open(
+            ctypes.c_char_p(inpfile),
+            ctypes.c_char_p(rptfile), ctypes.c_char_p(binfile))
         self._error_check(errcode)
         self.fileLoaded = True
 
@@ -357,7 +358,7 @@ class PySWMM(object):
             self.curSimTime = 0.000001
 
         ctime = self.curSimTime
-        while advanceSeconds/3600./24. + ctime > self.curSimTime:
+        while advanceSeconds / 3600. / 24. + ctime > self.curSimTime:
             elapsed_time = ctypes.c_double()
             self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
             self.curSimTime = elapsed_time.value
@@ -429,9 +430,9 @@ class PySWMM(object):
         flowErr = ctypes.c_float()
         qualErr = ctypes.c_float()
 
-        errcode = self.SWMMlibobj.swmm_getMassBalErr(ctypes.byref(runoffErr),
-                                                     ctypes.byref(flowErr),
-                                                     ctypes.byref(qualErr))
+        errcode = self.SWMMlibobj.swmm_getMassBalErr(
+            ctypes.byref(runoffErr),
+            ctypes.byref(flowErr), ctypes.byref(qualErr))
         self._error_check(errcode)
         return runoffErr.value, flowErr.value, qualErr.value
 
@@ -552,8 +553,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         value = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSimulationParam(
-            paramtype, ctypes.byref(value))
+        errcode = self.SWMMlibobj.swmm_getSimulationParam(paramtype,
+                                                          ctypes.byref(value))
         self._error_check(errcode)
         return value.value
 
@@ -574,8 +575,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         count = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_countObjects(
-            objecttype, ctypes.byref(count))
+        errcode = self.SWMMlibobj.swmm_countObjects(objecttype,
+                                                    ctypes.byref(count))
         self._error_check(errcode)
         return count.value
 
@@ -598,8 +599,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         ID = ctypes.create_string_buffer(61)
-        errcode = self.SWMMlibobj.swmm_getObjectId(
-            objecttype, index, ctypes.byref(ID))
+        errcode = self.SWMMlibobj.swmm_getObjectId(objecttype, index,
+                                                   ctypes.byref(ID))
         self._error_check(errcode)
         return ID.value
 
@@ -775,8 +776,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         param = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getNodeParam(index,
-                                                    Parameter,
+        errcode = self.SWMMlibobj.swmm_getNodeParam(index, Parameter,
                                                     ctypes.byref(param))
         self._error_check(errcode)
         return param.value
@@ -798,9 +798,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         _val = ctypes.c_double(value)
-        errcode = self.SWMMlibobj.swmm_setNodeParam(index,
-                                                    Parameter,
-                                                    _val)
+        errcode = self.SWMMlibobj.swmm_setNodeParam(index, Parameter, _val)
         self._error_check(errcode)
 
     def getLinkParam(self, ID, Parameter):
@@ -823,8 +821,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         param = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getLinkParam(index,
-                                                    Parameter,
+        errcode = self.SWMMlibobj.swmm_getLinkParam(index, Parameter,
                                                     ctypes.byref(param))
         self._error_check(errcode)
         return param.value
@@ -846,9 +843,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         _val = ctypes.c_double(value)
-        errcode = self.SWMMlibobj.swmm_setLinkParam(index,
-                                                    Parameter,
-                                                    _val)
+        errcode = self.SWMMlibobj.swmm_setLinkParam(index, Parameter, _val)
         self._error_check(errcode)
 
     def getSubcatchParam(self, ID, Parameter):
@@ -871,8 +866,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
         param = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSubcatchParam(index,
-                                                        Parameter,
+        errcode = self.SWMMlibobj.swmm_getSubcatchParam(index, Parameter,
                                                         ctypes.byref(param))
         self._error_check(errcode)
         return param.value
@@ -929,18 +923,18 @@ class PySWMM(object):
         TYPELoadSurface = ctypes.c_int()
         outindex = ctypes.c_int()
         errcode = self.SWMMlibobj.swmm_getSubcatchOutConnection(
-            index,
-            ctypes.byref(TYPELoadSurface),
-            ctypes.byref(outindex))
+            index, ctypes.byref(TYPELoadSurface), ctypes.byref(outindex))
         self._error_check(errcode)
 
         if TYPELoadSurface.value == tka.ObjectType.NODE.value:
-            LoadID = self.getObjectId(tka.ObjectType.NODE.value, outindex.value)
+            LoadID = self.getObjectId(tka.ObjectType.NODE.value,
+                                      outindex.value)
 
         if TYPELoadSurface.value == tka.ObjectType.SUBCATCH.value:
-            LoadID = self.getObjectId(tka.ObjectType.SUBCATCH.value, outindex.value)
+            LoadID = self.getObjectId(tka.ObjectType.SUBCATCH.value,
+                                      outindex.value)
 
-        return(TYPELoadSurface.value, LoadID)
+        return (TYPELoadSurface.value, LoadID)
 
     # --- Active Simulation Result "Getters"
     # -------------------------------------------------------------------------
@@ -1005,8 +999,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getNodeResult(index,
-                                                     resultType,
+        errcode = self.SWMMlibobj.swmm_getNodeResult(index, resultType,
                                                      ctypes.byref(result))
         self._error_check(errcode)
         return result.value
@@ -1041,8 +1034,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getLinkResult(index,
-                                                     resultType,
+        errcode = self.SWMMlibobj.swmm_getLinkResult(index, resultType,
                                                      ctypes.byref(result))
         self._error_check(errcode)
         return result.value
@@ -1077,8 +1069,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
         result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSubcatchResult(index,
-                                                         resultType,
+        errcode = self.SWMMlibobj.swmm_getSubcatchResult(index, resultType,
                                                          ctypes.byref(result))
         self._error_check(errcode)
 
@@ -1153,9 +1144,10 @@ class PySWMM(object):
 
 
 if __name__ == '__main__':
-    test = PySWMM(inpfile=r"../test/TestModel1_weirSetting.inp",
-                  rptfile=r"../test/TestModel1_weirSetting.rpt",
-                  binfile=r"../test/TestModel1_weirSetting.out")
+    test = PySWMM(
+        inpfile=r"../test/TestModel1_weirSetting.inp",
+        rptfile=r"../test/TestModel1_weirSetting.rpt",
+        binfile=r"../test/TestModel1_weirSetting.out")
     test.swmm_open()
 
     print("Simulation Time Info")
@@ -1170,7 +1162,9 @@ if __name__ == '__main__':
     print(test.getSimUnit(tka.SimulationUnits.FlowUnits.value))
 
     print("Simulation Allow Ponding Option Selection")
-    print(test.getSimAnalysisSetting(tka.SimAnalysisSettings.AllowPonding.value))
+    print(
+        test.getSimAnalysisSetting(tka.SimAnalysisSettings.AllowPonding.value),
+    )
 
     print("Simulation Routing Step")
     print(test.getSimAnalysisSetting(tka.SimulationParameters.RouteStep.value))
@@ -1183,23 +1177,32 @@ if __name__ == '__main__':
     print(IDS)
     print('ID,Invert,Type')
     for ind, idd in enumerate(IDS):
-        print(ind, idd, test.getNodeParam(idd, tka.NodeParams.invertElev.value),
-              test.getNodeParam(idd, tka.NodeParams.fullDepth.value),
-              test.getNodeType(idd))
+        print(
+            ind,
+            idd,
+            test.getNodeParam(idd, tka.NodeParams.invertElev.value),
+            test.getNodeParam(idd, tka.NodeParams.fullDepth.value),
+            test.getNodeType(idd), )
 
     print("Link ID")
     print('ID,offset1,LinkConnections')
     IDS = test.getObjectIDList(tka.ObjectType.LINK.value)
     print(IDS)
     for ind, idd in enumerate(IDS):
-        print(ind, idd, test.getLinkParam(idd, tka.LinkParams.offset1.value),
-              test.getLinkConnections(idd))
+        print(
+            ind,
+            idd,
+            test.getLinkParam(idd, tka.LinkParams.offset1.value),
+            test.getLinkConnections(idd), )
 
     print("SUBCATCH ID")
     IDS = test.getObjectIDList(tka.ObjectType.SUBCATCH.value)
     print(IDS)
     for ind, idd in enumerate(IDS):
-        print(ind, idd, test.getSubcatchParam(idd, tka.SubcParams.area.value),
-              test.getSubcatchOutConnection(idd))
+        print(
+            ind,
+            idd,
+            test.getSubcatchParam(idd, tka.SubcParams.area.value),
+            test.getSubcatchOutConnection(idd), )
 
     test.swmm_close()

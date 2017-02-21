@@ -1,11 +1,28 @@
+# Compiled python files
+*.py[oc]
 
-# Python stuff
-__pycache__/
-*.pyc
-*.out
-*.ini
-*.rpt
-*.mp4
-*.chi
-*.CSV
-*.thm
+# gedit files
+*~
+
+# kate files
+.directory
+
+# Python special dirs and files
+*.egg-info
+*.cache/
+*.coverage
+build/
+dist/
+bin/
+
+# OS files
+Thumbs.db
+.DS_Store/
+.DS_Store
+
+# git files
+*.orig
+
+# Changelog generator
+CHANGELOG.temp
+labels.txt

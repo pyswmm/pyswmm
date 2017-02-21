@@ -1,0 +1,15 @@
+[run]
+omit = 
+	*/tests/*
+	*/build/*
+	*/external/*
+
+[report]
+fail_under = 0
+show_missing = true
+skip_covered = true
+exclude_lines = 
+	pragma: no cover
+	def test():
+	if __name__ == .__main__.:
+

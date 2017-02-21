@@ -8,8 +8,8 @@
 """Base class for a SWMM Simulation."""
 
 # Local imports
-from swmm5 import PySWMM
-from toolkitapi import SimulationTime, SimulationUnits
+from pyswmm.swmm5 import PySWMM
+from pyswmm.toolkitapi import SimulationTime, SimulationUnits
 
 
 class Simulation(object):
@@ -184,7 +184,8 @@ class Simulation(object):
         >>>
         >>> datetime.datetime(2015,5,10,15,15,1)
         """
-        return self._model.getSimulationDateTime(SimulationTime.StartDateTime.value)
+        return self._model.getSimulationDateTime(
+            SimulationTime.StartDateTime.value)
 
     @start_time.setter
     def start_time(self, dtimeval):
@@ -206,12 +207,14 @@ class Simulation(object):
         >>>
         >>> datetime.datetime(2016,5,10,15,15,1)
         """
-        return self._model.getSimulationDateTime(SimulationTime.EndDateTime.value)
+        return self._model.getSimulationDateTime(
+            SimulationTime.EndDateTime.value)
 
     @end_time.setter
     def end_time(self, dtimeval):
         """Set simulation End time"""
-        self._model.setSimulationDateTime(SimulationTime.EndDateTime.value, dtimeval)
+        self._model.setSimulationDateTime(SimulationTime.EndDateTime.value,
+                                          dtimeval)
 
     @property
     def report_start(self):
@@ -227,12 +230,14 @@ class Simulation(object):
         >>>
         >>> datetime.datetime(2015,5,10,15,15,1)
         """
-        return self._model.getSimulationDateTime(SimulationTime.ReportStart.value)
+        return self._model.getSimulationDateTime(
+            SimulationTime.ReportStart.value)
 
     @report_start.setter
     def report_start(self, dtimeval):
         """Set simulation report start time"""
-        self._model.setSimulationDateTime(SimulationTime.ReportStart.value, dtimeval)
+        self._model.setSimulationDateTime(SimulationTime.ReportStart.value,
+                                          dtimeval)
 
     @property
     def flow_units(self):

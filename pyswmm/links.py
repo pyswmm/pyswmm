@@ -8,8 +8,8 @@
 """Links module for the pythonic interface to SWMM5."""
 
 # Local imports
-from swmm5 import PYSWMMException
-from toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
+from pyswmm.swmm5 import PYSWMMException
+from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
 
 
 class Links(object):
@@ -59,6 +59,7 @@ class Links(object):
     >>> c1c2.qlimit
     >>> 12
     """
+
     def __init__(self, model):
         if not model._model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
@@ -125,6 +126,7 @@ class Link(object):
     ...         print c1c2.flow
     ... 0.0
     """
+
     def __init__(self, model, linkid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
@@ -474,12 +476,14 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.cLossInlet.value)
+        return self._model.getLinkParam(self._linkid,
+                                        LinkParams.cLossInlet.value)
 
     @inlet_head_loss.setter
     def inlet_head_loss(self, param):
         """Set Link Inlet Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossInlet.value, param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossInlet.value,
+                                 param)
 
     @property
     def outlet_head_loss(self):
@@ -510,12 +514,14 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.cLossOutlet.value)
+        return self._model.getLinkParam(self._linkid,
+                                        LinkParams.cLossOutlet.value)
 
     @outlet_head_loss.setter
     def outlet_head_loss(self, param):
         """Set Link Outlet Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossOutlet.value, param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossOutlet.value,
+                                 param)
 
     @property
     def average_head_loss(self):
@@ -546,12 +552,14 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.cLossAvg.value)
+        return self._model.getLinkParam(self._linkid,
+                                        LinkParams.cLossAvg.value)
 
     @average_head_loss.setter
     def average_head_loss(self, param):
         """Set Link Average Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossAvg.value, param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossAvg.value,
+                                 param)
 
     @property
     def seepagerate(self):
@@ -582,12 +590,14 @@ class Link(object):
         >>> 0
         >>> 0.2
         """
-        return self._model.getLinkParam(self._linkid, LinkParams.seepRate.value)
+        return self._model.getLinkParam(self._linkid,
+                                        LinkParams.seepRate.value)
 
     @seepagerate.setter
     def seepagerate(self, param):
         """Set Link Average Seepage Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.seepRate.value, param)
+        self._model.setLinkParam(self._linkid, LinkParams.seepRate.value,
+                                 param)
 
     @property
     def flow(self):
@@ -614,7 +624,8 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.newFlow.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.newFlow.value)
 
     @property
     def depth(self):
@@ -641,7 +652,8 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.newDepth.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.newDepth.value)
 
     @property
     def volume(self):
@@ -668,7 +680,8 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.newVolume.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.newVolume.value)
 
     @property
     def froude(self):
@@ -695,7 +708,8 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.froude.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.froude.value)
 
     @property
     def ups_xsection_area(self):
@@ -722,7 +736,8 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.surfArea1.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.surfArea1.value)
 
     @property
     def ds_xsection_area(self):
@@ -749,7 +764,8 @@ class Link(object):
         >>> 1.9
         >>> 1.2
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.surfArea2.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.surfArea2.value)
 
     @property
     def current_setting(self):
@@ -776,7 +792,8 @@ class Link(object):
         >>> 0.5
         >>> 1
         """
-        return self._model.getLinkResult(self._linkid, LinkResults.setting.value)
+        return self._model.getLinkResult(self._linkid,
+                                         LinkResults.setting.value)
 
     @property
     def target_setting(self):
