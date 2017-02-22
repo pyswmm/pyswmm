@@ -1,0 +1,215 @@
+[TITLE]
+
+[OPTIONS]
+;;Options            Value
+;;------------------ ------------
+FLOW_UNITS           MGD
+INFILTRATION         HORTON
+FLOW_ROUTING         DYNWAVE
+START_DATE           11/01/2015
+START_TIME           14:00:00
+REPORT_START_DATE    11/01/2015
+REPORT_START_TIME    14:00:00
+END_DATE             11/02/2015
+END_TIME             00:00:00
+SWEEP_START          01/01
+SWEEP_END            12/31
+DRY_DAYS             0
+REPORT_STEP          00:01:00
+WET_STEP             00:05:00
+DRY_STEP             00:05:00
+ROUTING_STEP         1
+ALLOW_PONDING        NO
+INERTIAL_DAMPING     NONE
+VARIABLE_STEP        0.75
+LENGTHENING_STEP     0
+MIN_SURFAREA         12.557
+NORMAL_FLOW_LIMITED  BOTH
+SKIP_STEADY_STATE    NO
+FORCE_MAIN_EQUATION  H-W
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+MAX_TRIALS           8
+HEAD_TOLERANCE       0.005
+SYS_FLOW_TOL         5
+LAT_FLOW_TOL         5
+MINIMUM_STEP         0.5
+THREADS              1
+
+[EVAPORATION]
+;;Type          Parameters
+;;------------- ----------
+CONSTANT     0.0
+DRY_ONLY     NO
+
+[RAINGAGES]
+;;                 Rain      Time   Snow   Data      
+;;Name             Type      Intrvl Catch  Source    
+;;---------------- --------- ------ ------ ----------
+SCS_24h_Type_I_1in INTENSITY 0:15   1.0    TIMESERIES SCS_24h_Type_I_1in
+
+[JUNCTIONS]
+;;               Invert     Max.       Init.      Surcharge  Ponded    
+;;Name           Elev.      Depth      Depth      Depth      Area      
+;;-------------- ---------- ---------- ---------- ---------- ----------
+J1               20.728     15         0          0          0         
+J2               13.392     15         0          0          0         
+
+[OUTFALLS]
+;;               Invert     Outfall      Stage/Table      Tide
+;;Name           Elev.      Type         Time Series      Gate Route To        
+;;-------------- ---------- ------------ ---------------- ---- ----------------
+J3               6.547      FREE                          NO                   
+
+[CONDUITS]
+;;               Inlet            Outlet                      Manning    Inlet      Outlet     Init.      Max.      
+;;Name           Node             Node             Length     N          Offset     Offset     Flow       Flow      
+;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
+C1:C2            J1               J2               244.63     0.01       0          0          0          0         
+C2               J2               J3               228.28     0.01       0          0          0          0         
+
+[XSECTIONS]
+;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels   
+;;-------------- ------------ ---------------- ---------- ---------- ---------- ----------
+C1:C2            CIRCULAR     1                0          0          0          1                    
+C2               CIRCULAR     1.5              0          0          0          1                    
+
+[LOSSES]
+;;Link           Inlet      Outlet     Average    Flap Gate  SeepageRate
+;;-------------- ---------- ---------- ---------- ---------- ----------
+
+[CURVES]
+;;Name           Type       X-Value    Y-Value   
+;;-------------- ---------- ---------- ----------
+Curve1           Pump4      0          20        
+Curve1                      100        20        
+
+[TIMESERIES]
+;;Name           Date       Time       Value     
+;;-------------- ---------- ---------- ----------
+;SCS_24h_Type_I_1in design storm, total rainfall = 1 in, rain units = in/hr.
+SCS_24h_Type_I_1in            0:00       0.0175    
+SCS_24h_Type_I_1in            0:15       0.0175    
+SCS_24h_Type_I_1in            0:30       0.0175    
+SCS_24h_Type_I_1in            0:45       0.0175    
+SCS_24h_Type_I_1in            1:00       0.0175    
+SCS_24h_Type_I_1in            1:15       0.0175    
+SCS_24h_Type_I_1in            1:30       0.0175    
+SCS_24h_Type_I_1in            1:45       0.0175    
+SCS_24h_Type_I_1in            2:00       0.0205    
+SCS_24h_Type_I_1in            2:15       0.0205    
+SCS_24h_Type_I_1in            2:30       0.0205    
+SCS_24h_Type_I_1in            2:45       0.0205    
+SCS_24h_Type_I_1in            3:00       0.0205    
+SCS_24h_Type_I_1in            3:15       0.0205    
+SCS_24h_Type_I_1in            3:30       0.0205    
+SCS_24h_Type_I_1in            3:45       0.0205    
+SCS_24h_Type_I_1in            4:00       0.0245    
+SCS_24h_Type_I_1in            4:15       0.0245    
+SCS_24h_Type_I_1in            4:30       0.0245    
+SCS_24h_Type_I_1in            4:45       0.0245    
+SCS_24h_Type_I_1in            5:00       0.0245    
+SCS_24h_Type_I_1in            5:15       0.0245    
+SCS_24h_Type_I_1in            5:30       0.0245    
+SCS_24h_Type_I_1in            5:45       0.0245    
+SCS_24h_Type_I_1in            6:00       0.031     
+SCS_24h_Type_I_1in            6:15       0.031     
+SCS_24h_Type_I_1in            6:30       0.031     
+SCS_24h_Type_I_1in            6:45       0.031     
+SCS_24h_Type_I_1in            7:00       0.038     
+SCS_24h_Type_I_1in            7:15       0.038     
+SCS_24h_Type_I_1in            7:30       0.038     
+SCS_24h_Type_I_1in            7:45       0.038     
+SCS_24h_Type_I_1in            8:00       0.05      
+SCS_24h_Type_I_1in            8:15       0.05      
+SCS_24h_Type_I_1in            8:30       0.07      
+SCS_24h_Type_I_1in            8:45       0.07      
+SCS_24h_Type_I_1in            9:00       0.098     
+SCS_24h_Type_I_1in            9:15       0.098     
+SCS_24h_Type_I_1in            9:30       0.236     
+SCS_24h_Type_I_1in            9:45       0.612     
+SCS_24h_Type_I_1in            10:00      0.136     
+SCS_24h_Type_I_1in            10:15      0.136     
+SCS_24h_Type_I_1in            10:30      0.082     
+SCS_24h_Type_I_1in            10:45      0.082     
+SCS_24h_Type_I_1in            11:00      0.06      
+SCS_24h_Type_I_1in            11:15      0.06      
+SCS_24h_Type_I_1in            11:30      0.06      
+SCS_24h_Type_I_1in            11:45      0.052     
+SCS_24h_Type_I_1in            12:00      0.048     
+SCS_24h_Type_I_1in            12:15      0.048     
+SCS_24h_Type_I_1in            12:30      0.042     
+SCS_24h_Type_I_1in            12:45      0.042     
+SCS_24h_Type_I_1in            13:00      0.042     
+SCS_24h_Type_I_1in            13:15      0.042     
+SCS_24h_Type_I_1in            13:30      0.038     
+SCS_24h_Type_I_1in            13:45      0.038     
+SCS_24h_Type_I_1in            14:00      0.0315    
+SCS_24h_Type_I_1in            14:15      0.0315    
+SCS_24h_Type_I_1in            14:30      0.0315    
+SCS_24h_Type_I_1in            14:45      0.0315    
+SCS_24h_Type_I_1in            15:00      0.0315    
+SCS_24h_Type_I_1in            15:15      0.0315    
+SCS_24h_Type_I_1in            15:30      0.0315    
+SCS_24h_Type_I_1in            15:45      0.0315    
+SCS_24h_Type_I_1in            16:00      0.024     
+SCS_24h_Type_I_1in            16:15      0.024     
+SCS_24h_Type_I_1in            16:30      0.024     
+SCS_24h_Type_I_1in            16:45      0.024     
+SCS_24h_Type_I_1in            17:00      0.024     
+SCS_24h_Type_I_1in            17:15      0.024     
+SCS_24h_Type_I_1in            17:30      0.024     
+SCS_24h_Type_I_1in            17:45      0.024     
+SCS_24h_Type_I_1in            18:00      0.024     
+SCS_24h_Type_I_1in            18:15      0.024     
+SCS_24h_Type_I_1in            18:30      0.024     
+SCS_24h_Type_I_1in            18:45      0.024     
+SCS_24h_Type_I_1in            19:00      0.024     
+SCS_24h_Type_I_1in            19:15      0.024     
+SCS_24h_Type_I_1in            19:30      0.024     
+SCS_24h_Type_I_1in            19:45      0.024     
+SCS_24h_Type_I_1in            20:00      0.0185    
+SCS_24h_Type_I_1in            20:15      0.0185    
+SCS_24h_Type_I_1in            20:30      0.0185    
+SCS_24h_Type_I_1in            20:45      0.0185    
+SCS_24h_Type_I_1in            21:00      0.0185    
+SCS_24h_Type_I_1in            21:15      0.0185    
+SCS_24h_Type_I_1in            21:30      0.0185    
+SCS_24h_Type_I_1in            21:45      0.0185    
+SCS_24h_Type_I_1in            22:00      0.0185    
+SCS_24h_Type_I_1in            22:15      0.0185    
+SCS_24h_Type_I_1in            22:30      0.0185    
+SCS_24h_Type_I_1in            22:45      0.0185    
+SCS_24h_Type_I_1in            23:00      0.0185    
+SCS_24h_Type_I_1in            23:15      0.0185    
+SCS_24h_Type_I_1in            23:30      0.0185    
+SCS_24h_Type_I_1in            23:45      0.0185    
+SCS_24h_Type_I_1in            24:00      0         
+
+[REPORT]
+INPUT      NO
+CONTROLS   YES
+SUBCATCHMENTS ALL
+NODES ALL
+LINKS ALL
+
+[TAGS]
+
+[MAP]
+DIMENSIONS       -22.9529         -118.80225       482.0109         5.65725         
+UNITS            Feet
+
+[COORDINATES]
+;;Node           X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
+J1               0                0               
+J2               238.75           -53.332         
+J3               459.058          -113.145        
+
+[VERTICES]
+;;Link           X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
+
+[SYMBOLS]
+;;Gage           X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
