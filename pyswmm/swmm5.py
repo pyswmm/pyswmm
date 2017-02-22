@@ -19,7 +19,11 @@ import sys
 import warnings
 
 # Local imports
+from pyswmm.lib import LIB_SWMM_WIN_32
 import pyswmm.toolkitapi as tka
+
+MACHINE_BITS = 8 * tuple.__itemsize__
+IS_WINDOWS = os.name == 'nt'
 
 
 class SWMMException(Exception):
@@ -107,10 +111,6 @@ class PySWMM(object):
         self.rptfile = rptfile
         self.binfile = binfile
 
-        def get_pkgpath():
-            # Dynamically finds path to SWMM linking library
-            return os.path.dirname(tka.__file__.replace('\\', '/'))
-
         # The following should be un commented if using on mac
         # Darwin
         # if 'darwin' in sys.platform:
@@ -120,15 +120,13 @@ class PySWMM(object):
         #     self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
 
         # Windows
-        if 'win32' in sys.platform:
+        if IS_WINDOWS and MACHINE_BITS == 32:
             if dllpath is None:
-                dllname = 'swmm5.dll'
-                libswmm = (
-                    get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname)
+                libswmm = LIB_SWMM_WIN_32
             else:
                 libswmm = dllpath
-            self.SWMMlibobj = ctypes.CDLL(libswmm)
-            # self.SWMMlibobj = windll.LoadLibrary(libswmm)
+            print(libswmm)
+            self.SWMMlibobj = ctypes.WinDLL(libswmm)
 
     def _error_message(self, errcode):
         """
@@ -756,12 +754,12 @@ class PySWMM(object):
         self._error_check(errcode)
         return direction.value
 
-    def getNodeParam(self, ID, Parameter):
+    def getNodeParam(self, ID, parameter):
         """
         Get Node Parameter.
 
         :param str ID: Node ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :param int parameter: Paramter (toolkitapi.NodeParams member variable)
         :return: Paramater Value
         :rtype: float
 
@@ -776,12 +774,14 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         param = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getNodeParam(index, Parameter,
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_getNodeParam(index, parameter,
                                                     ctypes.byref(param))
         self._error_check(errcode)
         return param.value
 
-    def setNodeParam(self, ID, Parameter, value):
+    def setNodeParam(self, ID, parameter, value):
         """
         Set Node Parameter.
 
@@ -798,10 +798,12 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         _val = ctypes.c_double(value)
-        errcode = self.SWMMlibobj.swmm_setNodeParam(index, Parameter, _val)
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setNodeParam(index, parameter, _val)
         self._error_check(errcode)
 
-    def getLinkParam(self, ID, Parameter):
+    def getLinkParam(self, ID, parameter):
         """
         Get Link Parameter.
 
@@ -821,12 +823,14 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         param = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getLinkParam(index, Parameter,
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_getLinkParam(index, parameter,
                                                     ctypes.byref(param))
         self._error_check(errcode)
         return param.value
 
-    def setLinkParam(self, ID, Parameter, value):
+    def setLinkParam(self, ID, parameter, value):
         """
         Set Link Parameter.
 
@@ -843,10 +847,12 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         _val = ctypes.c_double(value)
-        errcode = self.SWMMlibobj.swmm_setLinkParam(index, Parameter, _val)
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setLinkParam(index, parameter, _val)
         self._error_check(errcode)
 
-    def getSubcatchParam(self, ID, Parameter):
+    def getSubcatchParam(self, ID, parameter):
         """
         Get Subcatchment Parameter
 
@@ -866,12 +872,14 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
         param = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSubcatchParam(index, Parameter,
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_getSubcatchParam(index, parameter,
                                                         ctypes.byref(param))
         self._error_check(errcode)
         return param.value
 
-    def setSubcatchParam(self, ID, Parameter, value):
+    def setSubcatchParam(self, ID, parameter, value):
         """
         Set Subcatchment Parameter.
 
@@ -888,7 +896,9 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
         _val = ctypes.c_double(value)
-        errcode = self.SWMMlibobj.swmm_setSubcatchParam(index, Parameter, _val)
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setSubcatchParam(index, parameter, _val)
         self._error_check(errcode)
 
     def getSubcatchOutConnection(self, ID):

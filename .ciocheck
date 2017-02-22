@@ -6,7 +6,7 @@
 branch = origin/master
 diff_mode = commited
 file_mode = all
-check = pydocstyle,flake8,isort,yapf,coverage,pytest
+check = pydocstyle,flake8,isort,yapf
 enforce = pydocstyle,flake8,isort,yapf
 
 # Python (pyformat)
@@ -59,8 +59,8 @@ import_heading_firstparty = Local imports
 import_heading_thirdparty = Third party imports
 indent = '    '
 known_first_party = pyswmm
-known_third_party = setuptools
-known_standard_library = mimetypes, enum
+known_third_party = setuptools, matplotlib
+known_standard_library = mimetypes, enum, ast
 line_length = 79
 sections = FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
 
