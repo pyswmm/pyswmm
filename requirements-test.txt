@@ -1,3 +1,4 @@
 # Test/Dev dependencies
 ciocheck
 coveralls
+matplotlib
