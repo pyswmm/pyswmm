@@ -19,7 +19,12 @@ import sys
 import warnings
 
 # Local imports
+from pyswmm.lib import LIB_SWMM_WIN_32
 import pyswmm.toolkitapi as tka
+
+
+MACHINE_BITS = 8 * tuple.__itemsize__
+IS_WINDOWS = os.name == 'nt'
 
 
 class SWMMException(Exception):
@@ -107,10 +112,6 @@ class PySWMM(object):
         self.rptfile = rptfile
         self.binfile = binfile
 
-        def get_pkgpath():
-            # Dynamically finds path to SWMM linking library
-            return os.path.dirname(tka.__file__.replace('\\', '/'))
-
         # The following should be un commented if using on mac
         # Darwin
         # if 'darwin' in sys.platform:
@@ -120,15 +121,12 @@ class PySWMM(object):
         #     self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
 
         # Windows
-        if 'win32' in sys.platform:
+        if IS_WINDOWS and MACHINE_BITS == 32:
             if dllpath is None:
-                dllname = 'swmm5.dll'
-                libswmm = (
-                    get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname)
+                libswmm = LIB_SWMM_WIN_32
             else:
                 libswmm = dllpath
             self.SWMMlibobj = ctypes.CDLL(libswmm)
-            # self.SWMMlibobj = windll.LoadLibrary(libswmm)
 
     def _error_message(self, errcode):
         """
