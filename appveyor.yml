@@ -33,7 +33,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "activate test"
   # Install the selected Qt version
-  - "conda install --file requirements.txt -c spyder-ide"
+  - "conda install --file requirements-test.txt -c spyder-ide"
   - IF "%PYTHON_VERSION%" == "2.7" conda install enum34
   - "python setup.py develop"
 

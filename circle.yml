@@ -23,7 +23,7 @@ dependencies:
       git clone git://github.com/astropy/ci-helpers.git &&
       source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh;
     # Install dependencies. This include test and lint dependencies
-    - $CMD_CONDA install -n test --file requirements.txt -c spyder-ide -q;
+    - $CMD_CONDA install -n test --file requirements-test.txt -c spyder-ide -q;
     - if [[ "${TRAVIS_PYTHON_VERSION}" == "2.7" ]] ; then $CMD_CONDA install -n test enum34 -c -q; fi
     # Install this package
     - $CMD_TEST_PYTHON setup.py develop;
@@ -33,6 +33,8 @@ dependencies:
 test:
   override:
     # Check style
+    - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && ciocheck setup.py -dt: # note the colon
+        parallel: true
     - export PATH="$HOME/miniconda/bin:$PATH" && source activate test && ciocheck pyswmm -dt: # note the colon
         parallel: true
     # Run tests (enable when pytest is implemented)
