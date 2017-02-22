@@ -45,3 +45,4 @@ test_script:
   - ciocheck setup.py --disable-tests
   - ciocheck pyswmm --disable-tests
   - pytest pyswmm
+  - coveralls
