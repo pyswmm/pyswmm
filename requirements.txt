@@ -3,7 +3,3 @@
 #setuptools
 
 # Run dependencies
-
-# Test/Dev dependencies
-#ciocheck
-#coveralls
