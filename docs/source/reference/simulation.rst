@@ -1,11 +1,11 @@
 ..  -*- coding: utf-8 -*-
 
-.. currentmodule:: pyswmm
+.. currentmodule:: simulation
 
-pyswmm module
+simulation module
 ============
 
-.. automodule:: pyswmm
+.. automodule:: simulation
     :members: 
     :undoc-members:
     :show-inheritance:

@@ -12,7 +12,7 @@ Reference
    :maxdepth: 2
 
    introduction
-   pyswmm
+   simulation
    nodes
    links
    legal
