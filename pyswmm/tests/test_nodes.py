@@ -7,7 +7,8 @@
 # -----------------------------------------------------------------------------
 
 # Local imports
-from pyswmm import Node, Nodes, PySWMM, Simulation
+from pyswmm import Node, Nodes, Simulation
+from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka

@@ -7,7 +7,8 @@
 # -----------------------------------------------------------------------------
 
 # Local imports
-from pyswmm import Link, Links, PySWMM, Simulation
+from pyswmm import Link, Links, Simulation
+from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
