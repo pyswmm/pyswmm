@@ -18,6 +18,8 @@ from pyswmm.utils.fixtures import get_model_files
 def test_error_rpt_out():
     swmmobject = PySWMM(MODEL_WEIR_SETTING_PATH)
     swmmobject.swmm_open()
+
+
 #    swmmobject.swmmExec()
 #    swmmobject.swmm_close()
 

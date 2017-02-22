@@ -22,7 +22,6 @@ import warnings
 from pyswmm.lib import LIB_SWMM_WIN_32
 import pyswmm.toolkitapi as tka
 
-
 MACHINE_BITS = 8 * tuple.__itemsize__
 IS_WINDOWS = os.name == 'nt'
 
@@ -777,7 +776,7 @@ class PySWMM(object):
         param = ctypes.c_double()
         if not isinstance(parameter, int):
             parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_getNodeParam(index,parameter,
+        errcode = self.SWMMlibobj.swmm_getNodeParam(index, parameter,
                                                     ctypes.byref(param))
         self._error_check(errcode)
         return param.value
