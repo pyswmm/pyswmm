@@ -5,5 +5,5 @@
 # Run dependencies
 
 # Test/Dev dependencies
-ciocheck
-coveralls
+#ciocheck
+#coveralls
