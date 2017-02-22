@@ -127,8 +127,8 @@ class PySWMM(object):
                     get_pkgpath() + '\\swmmLinkedLibs\\Windows\\' + dllname)
             else:
                 libswmm = dllpath
-            self.SWMMlibobj = ctypes.CDLL(libswmm)
-            # self.SWMMlibobj = windll.LoadLibrary(libswmm)
+            #self.SWMMlibobj = ctypes.CDLL(libswmm)
+            self.SWMMlibobj = ctypes.windll.LoadLibrary(libswmm)
 
     def _error_message(self, errcode):
         """
