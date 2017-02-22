@@ -23,7 +23,7 @@ def test_current_time():
     swmmobject.swmm_start()
 
     i = 0
-    while(True):
+    while (True):
         time = swmmobject.swmm_stride(600)
         print(time)
         i += 1
@@ -69,7 +69,7 @@ def test_set_current_time():
     swmmobject.swmm_start()
 
     i = 0
-    while(True):
+    while (True):
         time = swmmobject.swmm_stride(600)
         i += 1
         print(swmmobject.getCurrentSimualationTime())

@@ -57,7 +57,7 @@ def test_nodes_3():
 
     swmmobject.swmm_start()
     i = 0
-    while(True):
+    while (True):
         time = swmmobject.swmm_stride(600)
         i += 1
 

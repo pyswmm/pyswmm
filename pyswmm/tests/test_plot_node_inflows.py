@@ -61,7 +61,7 @@ def test_plot_node_inflows():
 
     def data_gen(t=0):
         i = 0
-        while(True):
+        while (True):
             if i >= 80:
                 swmmobject.setNodeInflow('J1', random.randint(1, 5))
             time = swmmobject.swmm_stride(1500)
@@ -86,9 +86,9 @@ def test_plot_node_inflows():
 
         # ax
         if new_y > ymax:
-            ax.set_ylim(-0.1, 1.5*ymax)
+            ax.set_ylim(-0.1, 1.5 * ymax)
         if t >= xmax:
-            ax.set_xlim(xmin, 1.5*xmax)
+            ax.set_xlim(xmin, 1.5 * xmax)
             ax.figure.canvas.draw()
         line.set_data(xdata, ydata)
 

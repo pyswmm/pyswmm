@@ -59,7 +59,7 @@ def test_plot_pump_setting():
 
     def data_gen(t=0):
         i = 0
-        while(True):
+        while (True):
             time = swmmobject.swmm_stride(300)
             i += 1
             if i == 80:
@@ -104,17 +104,17 @@ def test_plot_pump_setting():
 
         # ax
         if new_y > ymax:
-            ax.set_ylim(-0.1, 1.5*ymax)
+            ax.set_ylim(-0.1, 1.5 * ymax)
 
         if t >= xmax:
-            ax.set_xlim(xmin, 1.5*xmax)
+            ax.set_xlim(xmin, 1.5 * xmax)
             ax.figure.canvas.draw()
 
         line.set_data(xdata, ydata)
 
         # ax1
         if new_y2 > ymax2:
-            ax2.set_ylim(-0.1, 1.2*ymax2)
+            ax2.set_ylim(-0.1, 1.2 * ymax2)
 
         line2.set_data(xdata, ydata2)
 

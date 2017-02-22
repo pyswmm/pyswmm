@@ -6,4 +6,3 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Main tests for the  pyswmm wrapper."""
-
