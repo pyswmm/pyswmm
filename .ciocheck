@@ -6,7 +6,7 @@
 branch = origin/master
 diff_mode = commited
 file_mode = all
-check = pydocstyle,flake8,isort,yapf,coverage,pytest
+check = pydocstyle,flake8,isort,yapf
 enforce = pydocstyle,flake8,isort,yapf
 
 # Python (pyformat)
