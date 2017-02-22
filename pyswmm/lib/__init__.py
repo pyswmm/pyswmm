@@ -13,4 +13,4 @@ import os
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # Library paths
-LIB_SWMM_WIN_32 = os.path.join(HERE, 'windows', 'swmm5.dll')
+LIB_SWMM_WIN_32 = os.path.join(HERE, 'windows', 'swmm5.dll').replace('\\', '/')
