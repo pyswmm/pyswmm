@@ -35,9 +35,9 @@ def test_simulation_2():
         sim.report()
 
 
-def test_simulation_3():
-    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-    sim.execute()
+#def test_simulation_3():
+#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+#    sim.execute()
 
 
 def test_simulation_iter():

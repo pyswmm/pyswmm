@@ -17,7 +17,8 @@ import matplotlib.pyplot as plt
 
 # Local imports
 from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import DATA_PATH, MODEL_WEIR_SETTING_PATH
+from pyswmm.tests.data import (DATA_PATH, IMAGE_WEIR_SETTING_PATH,
+                               MODEL_WEIR_SETTING_PATH)
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka
 
@@ -43,7 +44,7 @@ def test_plot_weir_setting():
     ydata2 = []
 
     ax3 = fig.add_subplot(2, 2, (2, 4))
-    arr_lena = read_png("./TestModel1_weirSetting.PNG")
+    arr_lena = read_png(IMAGE_WEIR_SETTING_PATH)
     imagebox = OffsetImage(arr_lena, zoom=0.45)
     ab = AnnotationBbox(
         imagebox,
@@ -129,7 +130,8 @@ def test_plot_weir_setting():
         plt.show()
     else:
         movie_path = os.path.join(DATA_PATH, "weir_setting.mp4")
-        ani.save(movie_path, fps=20, dpi=170, bitrate=50000)
+        print(movie_path, ani)
+        # ani.save(movie_path, fps=20, dpi=170, bitrate=50000)
 
     plt.close()
 

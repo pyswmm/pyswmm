@@ -34,19 +34,20 @@ def test_links_1():
 
 
 def test_links_2():
-    swmmobject = PySWMM('./TestModel1_weirSetting.inp')
-    swmmobject.swmm_open()
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for link in Links(sim):
+            print(link)
+            print(link.linkid)
+            print(link.flow_limit)
+            link.flow_limit = 10
+            print(link.flow_limit)
 
-    for link in Links(swmmobject):
-        print(link)
-        print(link.linkid)
-        print(link.flow_limit)
-        link.flow_limit = 10
-        print(link.flow_limit)
 
-    link = Link(swmmobject, "C2")
-    print(link.flow_limit)
-
-    swmmobject.swmmExec()
-    swmmobject.swmm_close()
-    print("swmm_step() Check Passed")
+#def test_links_3():
+#    swmmobject = PySWMM(MODEL_WEIR_SETTING_PATH)
+#    swmmobject.swmm_open()
+#    swmmobject.swmmExec()
+#    link = Link(swmmobject, "C2")
+#    print(link.flow_limit)
+#    swmmobject.swmm_close()
+#    print("swmm_step() Check Passed")

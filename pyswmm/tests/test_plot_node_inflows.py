@@ -111,7 +111,8 @@ def test_plot_node_inflows():
         plt.show()
     else:
         movie_path = os.path.join(DATA_PATH, "node_inflows.mp4")
-        ani.save(movie_path, fps=20, dpi=170, bitrate=50000)
+        print(movie_path, ani)
+        # ani.save(movie_path, fps=20, dpi=170, bitrate=50000)
     plt.close()
 
     swmmobject.swmm_end()
