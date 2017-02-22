@@ -1,7 +1,7 @@
 links module
 ============
 
-.. automodule:: links
+.. automodule:: pyswmm.links
     :members: Links, Link
     :undoc-members:
     :show-inheritance:
