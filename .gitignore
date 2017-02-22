@@ -26,3 +26,12 @@ Thumbs.db
 # Changelog generator
 CHANGELOG.temp
 labels.txt
+
+# SWMM files
+*.out
+#*.ini
+*.rpt
+*.mp4
+*.chi
+*.CSV
+*.thm
