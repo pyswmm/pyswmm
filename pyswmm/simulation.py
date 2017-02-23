@@ -168,7 +168,7 @@ class Simulation(object):
         Open an input file, run SWMM, then close the file.
 
         Examples:
-        
+
         >>> sim = PYSWMM(r'\\test.inp')
         >>> sim.execute()
         """
