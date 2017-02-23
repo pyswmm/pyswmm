@@ -575,7 +575,7 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
-        ...     print c1c2.seepagerate
+        ...     print c1c2.seepage_rate
         >>> 0
 
         Setting the Value
