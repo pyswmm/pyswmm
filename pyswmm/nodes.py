@@ -20,7 +20,7 @@ class Nodes(object):
 
     Examples:
 
-    >>> from pyswmm import Simulation
+    >>> from pyswmm import Simulation, Nodes
     >>>
     >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
     ...     for node in Nodes(sim):
@@ -122,7 +122,7 @@ class Node(object):
 
     Examples:
 
-    >>> from pyswmm import Simulation
+    >>> from pyswmm import Simulation, Nodes
     >>>
     >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
     ...     j1 = Nodes(sim)["J1"]
@@ -152,7 +152,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -170,7 +170,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -188,7 +188,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -206,7 +206,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -224,7 +224,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -243,7 +243,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -252,7 +252,7 @@ class Node(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -281,7 +281,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -290,7 +290,7 @@ class Node(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -319,7 +319,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -328,7 +328,7 @@ class Node(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -357,7 +357,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -366,7 +366,7 @@ class Node(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -395,7 +395,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -404,7 +404,7 @@ class Node(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -436,7 +436,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -464,7 +464,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -492,7 +492,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -520,7 +520,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -548,7 +548,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -576,7 +576,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -604,7 +604,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -632,7 +632,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]
@@ -657,7 +657,7 @@ class Node(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     j1 = Nodes(sim)["J1"]

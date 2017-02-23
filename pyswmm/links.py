@@ -20,7 +20,7 @@ class Links(object):
 
     Examples:
 
-    >>> from pyswmm import Simulation
+    >>> from pyswmm import Simulation, Links
     >>>
     >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
     ...     for link in Links(sim):
@@ -117,7 +117,7 @@ class Link(object):
 
     Examples:
 
-    >>> from pyswmm import Simulation
+    >>> from pyswmm import Simulation, Links
     >>>
     >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
     ...     c1c2 = Links(sim)["C1:C2"]
@@ -147,7 +147,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -165,7 +165,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -183,7 +183,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -201,7 +201,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -219,7 +219,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -237,7 +237,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -256,7 +256,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -275,7 +275,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -294,7 +294,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -313,7 +313,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -322,7 +322,7 @@ class Link(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -349,7 +349,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -358,7 +358,7 @@ class Link(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -385,7 +385,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -394,7 +394,7 @@ class Link(object):
 
         Setting the Value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -421,7 +421,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -430,7 +430,7 @@ class Link(object):
 
         Setting the Value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -457,7 +457,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -466,7 +466,7 @@ class Link(object):
 
         Setting the Value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -495,7 +495,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -504,7 +504,7 @@ class Link(object):
 
         Setting the Value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -533,7 +533,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -542,7 +542,7 @@ class Link(object):
 
         Setting the value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -571,7 +571,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -580,7 +580,7 @@ class Link(object):
 
         Setting the Value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -612,7 +612,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -640,7 +640,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -668,7 +668,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -696,7 +696,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -724,7 +724,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -752,7 +752,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -780,7 +780,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -808,7 +808,7 @@ class Link(object):
 
         Examples:
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
@@ -822,7 +822,7 @@ class Link(object):
 
         Setting the Value
 
-        >>> from pyswmm import Simulation
+        >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]

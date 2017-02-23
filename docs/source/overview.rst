@@ -37,11 +37,19 @@ PySWMM is intended to provide
 
 -  an interface to USEPA SWMM5, 
 
--  enable controls development outside of native EPA-SWMM Controls,
+-  controls development outside of native EPA-SWMM Controls,
 
--  Allow users to establish their own node inflows,
+-  users to establish their own node inflows,
 
--  an interface to binary output files. 
+-  a coding interface to binary output files, 
+
+-  new modeling possibilities for the SWMM5 Community.
+
+Sponsors
+--------
+
+.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
+  :target: http://emnet.net/
 
 Free software
 -------------
@@ -51,7 +59,6 @@ modify it under the terms of the :doc:`BSD License </reference/legal>`.
 We welcome contributions from the community.  Information on
 PySWMM development is found at the PySWMM Github Page
 https://github.com/OpenWaterAnalytics/pyswmm
-
 
 
 What Next

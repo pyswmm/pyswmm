@@ -14,7 +14,7 @@ PySWMM Basics
 
 After starting Python, import the pyswmm module with
 
->>> import pyswmm
+>>> from pyswmm import Simulation
 
 To save repetition, in the documentation we assume that 
 PySWMM has been imported this way.
@@ -29,7 +29,7 @@ The following simulation classes are available:
 
 Initialize a SWMM Model with
 
->>> sim=pyswmm.Simulation(r"./example.inp")
+>>> sim = Simulation(r"./example.inp")
 
 Once a model is initialized, there are several options available to 
 run a simulation as well as edit the simulation. 

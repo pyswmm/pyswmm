@@ -21,6 +21,10 @@ PySWMM documentation
 
 .. only:: html
 
+Sponsors
+========
+.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
+  :target: http://emnet.net/
    
 Indices and tables
 ==================
