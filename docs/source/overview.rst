@@ -37,7 +37,7 @@ PySWMM is intended to provide
 
 -  an interface to USEPA SWMM5, 
 
--  controls development outside of native EPA-SWMM Controls,
+-  development and implementation of control logic outside of native EPA-SWMM Controls,
 
 -  users to establish their own node inflows,
 
