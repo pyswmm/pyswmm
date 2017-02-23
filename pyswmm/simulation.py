@@ -26,7 +26,7 @@ class Simulation(object):
     >>> from pyswmm import Simulation
     >>>
     >>> sim = Simulation('./TestModel1_weirSetting.inp')
-    >>> for ind, step in enumerate(sim):
+    >>> for step in sim:
     ...     pass
     >>>
     >>> sim.report()
@@ -38,7 +38,7 @@ class Simulation(object):
     >>> from pyswmm import Simulation
     >>>
     >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
-    ...     for ind, step in enumerate(sim):
+    ...     for step in sim:
     ...         pass
     ...     sim.report()
 
@@ -65,8 +65,8 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     for ind, step in enumerate(sim):
-        ...         print(step.getCurrentSimualationTime())
+        ...     for step in sim:
+        ...         print(sim.current_time)
         ...     sim.report()
         >>>
         >>> 2015-11-01 14:00:01
@@ -77,9 +77,11 @@ class Simulation(object):
         return self
 
     def __iter__(self):
+        """Iterator over Simulation"""
         return self
 
     def next(self):
+        """Next"""
         # Start Simulation
         if not self._isStarted:
             self._model.swmm_start()
@@ -97,6 +99,7 @@ class Simulation(object):
         return self._model
 
     def __exit__(self, *a):
+        """close"""
         self._model.swmm_end()
         self._model.swmm_close()
 
@@ -115,8 +118,8 @@ class Simulation(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     sim.step_advance(300)
-        ...     for ind, step in enumerate(sim):
-        ...         print(step.getCurrentSimualationTime())
+        ...     for step in sim:
+        ...         print(step.current_time)
         ...         # or here! sim.step_advance(newvalue)
         ...     sim.report()
         >>>
@@ -136,11 +139,11 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     for ind, step in enumerate(sim):
+        ...     for step in sim:
         ...         pass
         ...     sim.report()
-        self._model.swmm_report()
         """
+        self._model.swmm_report()
 
     def close(self):
         """
@@ -152,7 +155,7 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> sim = Simulation('./TestModel1_weirSetting.inp')
-        >>> for ind, step in enumerate(sim):
+        >>> for step in sim:
         ...     pass
         >>>
         >>> sim.report()
@@ -164,9 +167,10 @@ class Simulation(object):
         """
         Open an input file, run SWMM, then close the file.
 
-        >>> swmm_model = PYSWMM(r'\\.inp',r'\\.rpt',r'\\.out')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.swmmExec()
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
         """
         self._model.swmmExec()
 
@@ -179,8 +183,8 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.sim_starttime
-        ...     sim.sim_starttime = datetime(2015,5,10,15,15,1)
+        ...     print sim.start_time
+        ...     sim.start_time = datetime(2015,5,10,15,15,1)
         >>>
         >>> datetime.datetime(2015,5,10,15,15,1)
         """
@@ -202,8 +206,8 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.sim_endtime
-        ...     sim.sim_endtime = datetime(2016,5,10,15,15,1)
+        ...     print sim.end_time
+        ...     sim.end_time = datetime(2016,5,10,15,15,1)
         >>>
         >>> datetime.datetime(2016,5,10,15,15,1)
         """
@@ -225,8 +229,8 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.sim_reportstart
-        ...     sim.sim_reportstart = datetime(2015,5,10,15,15,1)
+        ...     print sim.report_start
+        ...     sim.report_start = datetime(2015,5,10,15,15,1)
         >>>
         >>> datetime.datetime(2015,5,10,15,15,1)
         """
@@ -252,7 +256,7 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.flowunits
+        ...     print sim.flow_units
         >>>
         >>> CFS
         """
@@ -270,8 +274,31 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.systemunits
+        ...     print sim.system_units
         >>>
         >>> US
         """
         return self._model.getSimUnit(SimulationUnits.UnitSystem.value)
+
+    @property
+    def current_time(self):
+        """Get Simulation Current Time.
+
+        :return: Current Simulation Time
+        :rtype: Datetime
+
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     for step in sim:
+        ...         print(sim.current_time)
+        ...     sim.report()
+        >>>
+        >>> 2015-11-01 14:00:01
+        >>> 2015-11-01 14:00:02
+        >>> 2015-11-01 14:00:03
+        >>> 2015-11-01 14:00:04
+        """
+        return self._model.getCurrentSimualationTime()
