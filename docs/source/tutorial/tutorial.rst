@@ -5,7 +5,7 @@ Start here to begin working with pyswmm.
 
 The pyswmm package allows seamless interaction with the USEPA-SWMM5
 data model.  Parameter getters/setters and results getters have been
-exposed allowing the user to see results while a simulations is
+exposed, allowing the user to see results while a simulation is
 running as well as update link settings. 
 
 Loading a Model
@@ -128,7 +128,7 @@ rules can now be removed from USEPA SWMM5 and brought into Python.  Now that thi
 functionality exists, open-source Python packages can now be used in conjunction 
 with pyswmm to bring even more complex control routines.  
 
-The following example illustrate the use of functions for 
+The following example illustrates the use of functions for 
 comparing two depths. 
 
 .. code-block:: python
@@ -162,8 +162,8 @@ comparing two depths.
 
 If an EPA-SWMM5 Model has existing control actions within, any control 
 rules developed using pyswmm will have the highest priority.  All pyswmm
-control actions are prepared at the end of each simulation step, after 
-EPA-SWMM native controls are evaluated.  If control actions are reported,
+control actions are evaluated at the end of each simulation step, after 
+EPA-SWMM native controls have been evaluated.  If control actions are reported,
 any control action updated by pyswmm will be output to the *.rpt file. 
 
 
@@ -171,7 +171,7 @@ Generate Node Inflows
 ---------------------
 
 Among the newest features pyswmm brings to SWMM5 modeling is the ability to 
-set a nodes inflow.  This can enable the user to model differnt behavior such as
+set a nodes inflow.  This can enable the user to model different behavior such as
 runoff or seasonality.  
 
 .. code-block:: python

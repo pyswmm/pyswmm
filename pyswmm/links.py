@@ -142,7 +142,7 @@ class Link(object):
         """
         Get Link ID.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -308,7 +308,7 @@ class Link(object):
         """
         Get/set Upstream Offset Depth.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -344,7 +344,7 @@ class Link(object):
         """
         Get/set Downstream Offset Depth.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -380,7 +380,7 @@ class Link(object):
         """
         Get/set Link Initial Flow.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -416,7 +416,7 @@ class Link(object):
         """
         Get/set link flow limit.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -452,7 +452,7 @@ class Link(object):
         """
         Get/set Inlet Head Loss.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -490,7 +490,7 @@ class Link(object):
         """
         Get/set Outlet Head Loss.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -528,7 +528,7 @@ class Link(object):
         """
         Get/set Average Conduit Loss.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -562,11 +562,11 @@ class Link(object):
                                  param)
 
     @property
-    def seepagerate(self):
+    def seepage_rate(self):
         """
         Get/set Conduit Seepage Loss.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -584,17 +584,17 @@ class Link(object):
         >>>
         >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
-        ...     print c1c2.seepagerate
+        ...     print c1c2.seepage_rate
         ...     c1c2.seepagerate = 0.2
-        ...     print c1c2.seepagerate
+        ...     print c1c2.seepage_rate
         >>> 0
         >>> 0.2
         """
         return self._model.getLinkParam(self._linkid,
                                         LinkParams.seepRate.value)
 
-    @seepagerate.setter
-    def seepagerate(self, param):
+    @seepage_rate.setter
+    def seepage_rate(self, param):
         """Set Link Average Seepage Loss."""
         self._model.setLinkParam(self._linkid, LinkParams.seepRate.value,
                                  param)
@@ -607,7 +607,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -635,7 +635,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -663,7 +663,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -691,7 +691,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -719,7 +719,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -747,7 +747,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -775,7 +775,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -803,7 +803,7 @@ class Link(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:

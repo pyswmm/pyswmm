@@ -36,7 +36,7 @@ class Nodes(object):
     >>> <swmm5.Node object at 0x030693D0>
     >>> J0
 
-    Iterating or Nodes Object
+    Iterating over Nodes Object
 
     >>> nodes = Nodes(sim)
     >>> for node in nodes:
@@ -147,7 +147,7 @@ class Node(object):
         """
         Get Node ID.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -238,7 +238,7 @@ class Node(object):
         """
         Get/set node invert elevation.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -276,7 +276,7 @@ class Node(object):
         """
         Get node full depth (Physical Depth of manhole).
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -314,7 +314,7 @@ class Node(object):
         """
         Get/set node surcharge depth.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -352,7 +352,7 @@ class Node(object):
         """
         Get/set node ponding area.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -390,7 +390,7 @@ class Node(object):
         """
         Get/set node initial depth.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -431,7 +431,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -459,7 +459,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -487,7 +487,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -515,7 +515,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -543,7 +543,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -571,7 +571,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -599,7 +599,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -627,7 +627,7 @@ class Node(object):
         If Simulation is not running this method will raise a warning and
         return 0.
 
-        :return: Paramater Value
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -651,7 +651,10 @@ class Node(object):
         """
         Generate and Set a Node Inflow Rate.
 
-        The value is help constant in the model until it is redefined.
+        The value is held constant in the model until it is redefined.
+        Generated inflows work like any SWMM inflow.  This does not
+        introduce any continuity errors since all flows is counted as
+        an inflow.
 
         :param float inflowrate: Inflow Rate
 

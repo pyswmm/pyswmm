@@ -44,7 +44,7 @@ class Simulation(object):
 
     Initialize the simulation and execute. This style does not allow
     the user to interact with the simulation. However, this approach
-    tends to be the fastes.
+    tends to be the fastest.
 
     >>> from pyswmm import Simulation
     >>>
@@ -69,10 +69,10 @@ class Simulation(object):
         ...         print(sim.current_time)
         ...     sim.report()
         >>>
-        >>> 2015-11-01 14:00:01
-        >>> 2015-11-01 14:00:02
-        >>> 2015-11-01 14:00:03
-        >>> 2015-11-01 14:00:04
+        >>> 2015-11-01 14:00:30
+        >>> 2015-11-01 14:01:00
+        >>> 2015-11-01 14:01:30
+        >>> 2015-11-01 14:02:00
         """
         return self
 
@@ -123,10 +123,10 @@ class Simulation(object):
         ...         # or here! sim.step_advance(newvalue)
         ...     sim.report()
         >>>
-        >>> 2015-11-01 14:00:01
-        >>> 2015-11-01 14:00:02
-        >>> 2015-11-01 14:00:03
-        >>> 2015-11-01 14:00:04
+        >>> 2015-11-01 14:00:30
+        >>> 2015-11-01 14:01:00
+        >>> 2015-11-01 14:01:30
+        >>> 2015-11-01 14:02:00
         """
         self._advance_seconds = advance_seconds
 
@@ -296,9 +296,9 @@ class Simulation(object):
         ...         print(sim.current_time)
         ...     sim.report()
         >>>
-        >>> 2015-11-01 14:00:01
-        >>> 2015-11-01 14:00:02
-        >>> 2015-11-01 14:00:03
-        >>> 2015-11-01 14:00:04
+        >>> 2015-11-01 14:00:30
+        >>> 2015-11-01 14:01:00
+        >>> 2015-11-01 14:01:30
+        >>> 2015-11-01 14:02:00
         """
         return self._model.getCurrentSimualationTime()

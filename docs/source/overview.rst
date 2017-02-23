@@ -27,7 +27,7 @@ Goals
 PySWMM is intended to provide
 
 -  tools for the study of the structure and
-   dynamics USEPA SWMM5,
+   dynamics within USEPA SWMM5,
 
 -  a standard programming interface and graph implementation that is suitable
    for many applications, 
@@ -39,7 +39,7 @@ PySWMM is intended to provide
 
 -  development and implementation of control logic outside of native EPA-SWMM Controls,
 
--  users to establish their own node inflows,
+-  methods for users to establish their own node inflows,
 
 -  a coding interface to binary output files, 
 
