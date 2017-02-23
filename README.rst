@@ -88,40 +88,42 @@ To get the git version do
 Usage
 -----
 
-A quick example that steps through a simulation::
+A quick example that steps through a simulation:
 
-    Examples:
+Examples:
 
-    Intialize using with statement.  This automatically cleans up
-    after a simulation
+Intialize using with statement.  This automatically cleans up
+after a simulation
 
-    >>> from pyswmm import Simulation
-    >>>       
-    >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
-    ...     for ind, step in enumerate(sim):
-    ...         pass
-    ...     sim.report()
+>>> from pyswmm import Simulation
+>>>       
+>>> with Simulation('model.inp') as sim:
+...     for ind in sim:
+...         pass
+...     sim.report()
 
-    Initialize the simulation and execute.  This style does not allow
-    the user to interact with the simulation.  However, this approach
-    tends to be the fastes. 
 
-    >>> from pyswmm import Simulation
-    >>>   
-    >>> sim = Simulation('./TestModel1_weirSetting.inp')        
-    >>> sim.execute()	
+Initialize the simulation and execute.  This style does not allow
+the user to interact with the simulation.  However, this approach
+tends to be the fastest. 
 
-    Intialize a simulation and iterate through a simulation. This
-    approach requires some clean up.
-    
-    >>> from pyswmm import Simulation
-    >>>    
-    >>> sim = Simulation('./TestModel1_weirSetting.inp')
-    >>> for ind, step in enumerate(sim):
-    ...     pass
-    >>>     
-    >>> sim.report()
-    >>> sim.close()	
+>>> from pyswmm import Simulation
+>>>   
+>>> sim = Simulation('model.inp')        
+>>> sim.execute()	
+
+
+Intialize a simulation and iterate through a simulation. This
+approach requires some clean up.
+
+>>> from pyswmm import Simulation
+>>>    
+>>> sim = Simulation('model.inp')
+>>> for ind in sim:
+...     pass
+>>>     
+>>> sim.report()
+>>> sim.close()	
 	
 Bugs
 ----
@@ -137,7 +139,7 @@ License
 
 Distributed with a BSD2 license; see LICENSE.txt::
 
-   Copyright (C) 2004-2017 PySWMM Developers
+   Copyright (C) 2014 PySWMM Developers
    Bryant E. McDonnell <bemcdonnell@gmail.com>
 
 Sponsors
