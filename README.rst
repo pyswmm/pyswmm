@@ -4,7 +4,7 @@ PYSWMM
 *Python Wrapper for Stormwater Management Model (SWMM5)*
 
 Documentation
-	http://pyswmm.readthedocs.io/en/latest/?badge=latest#
+	http://pyswmm.readthedocs.io/en/latest/
 Development
 	https://github.com/OpenWaterAnalytics/pyswmm/
 PySWMM Wiki 
