@@ -10,6 +10,7 @@
 # Local imports
 from pyswmm.links import Link, Links
 from pyswmm.nodes import Node, Nodes
+from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.simulation import Simulation
 
 VERSION_INFO = (0, 3, 'dev0')
