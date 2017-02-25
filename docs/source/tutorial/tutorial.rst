@@ -118,6 +118,33 @@ you can then initialize a :py:class:`pyswmm.links.Link`
 	... 	
 	... 	sim.report()
 
+	
+Subcatchments
+-------------
+
+For interacting with subcatchments a :py:class:`pyswmm.subcatchments.Subcatchments` 
+object must be initialized. See the following example. Once the ``Subcatchments`` object is initialized,
+you can then initialize a :py:class:`pyswmm.subcatchments.Subcatchment`
+
+.. code-block:: python
+
+	
+	>>> from pyswmm import Simulation, Subcatchments
+	>>> 
+	>>> with Simulation('./testmodel.inp') as sim:
+	... 	subcatch_object = Subcatchments(sim)
+	... 	
+	... 	#SC1 subcatchment instantiation
+	... 	SC1 = subcatch_object["S1"]
+	... 	print(SC1.area)
+	... 	
+	... 	#Step through a simulation
+	... 	for step in sim:
+	... 		print(SC1.runoff)
+	... 	
+	... 	sim.report()
+
+	
 In the example above we introduce the option to change a link's settings. 	
 
 PySWMM Controls
