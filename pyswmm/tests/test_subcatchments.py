@@ -12,7 +12,7 @@ from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
-def test_links_1():
+def test_subcatchments_1():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nSubcatchments\n")
         S3 = Subcatchments(sim)["S3"]
@@ -27,7 +27,7 @@ def test_links_1():
             print(S3.runoff)
 
 
-def test_links_2():
+def test_subcatchments_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         for subcatchment in Subcatchments(sim):
             print(subcatchment)
@@ -35,13 +35,3 @@ def test_links_2():
             print(subcatchment.curb_length)
             subcatchment.curb_length = 10
             print(subcatchment.curb_length)
-
-
-#def test_links_3():
-#    swmmobject = PySWMM(MODEL_WEIR_SETTING_PATH)
-#    swmmobject.swmm_open()
-#    swmmobject.swmmExec()
-#    link = Link(swmmobject, "C2")
-#    print(link.flow_limit)
-#    swmmobject.swmm_close()
-#    print("swmm_step() Check Passed")
