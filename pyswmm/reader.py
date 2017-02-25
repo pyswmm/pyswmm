@@ -15,6 +15,12 @@ import os
 # Local imports
 import pyswmm.toolkitapi as tka
 
+class OutReaderNotImplementedYet(Exception):
+    """ """
+    def __init__(self, error_message):
+        self.message = error_message
+    def __str__(self):
+        return self.error_message
 
 class _Opaque(ctypes.Structure):
     """Used soley for passing the pointer to the smoapu struct to API."""
@@ -23,6 +29,7 @@ class _Opaque(ctypes.Structure):
 
 class SWMMBinReader(object):
     """Instantiate python Wrapper Object and build Wrapper functions."""
+    raise OutReaderNotImplementedYet("Output Reader has not been implemented")
 
     def __init__(self):
         """Instantiate python Wrapper Object and build Wrapper functions."""
@@ -666,7 +673,7 @@ if __name__ in "__main__":
     # Run Tests
 
     # Open
-    path = r"C:\PROJECTCODE\SWMMOutputAPI\testing\OutputTestModel522_SHORT.out"
+    path = r"C:\PROJECTCODE\pyswmm\pyswmm\tests\data\model_node_inflows.out"
     Test = SWMMBinReader()
     Test.OpenBinFile(path)
 
