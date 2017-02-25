@@ -9,14 +9,37 @@ Development
 	https://github.com/OpenWaterAnalytics/pyswmm/
 PySWMM Wiki 
 	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
-	
-   .. image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
-      :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
-      :alt: Documentation Status	
 
-   .. image:: https://www.quantifiedcode.com/api/v1/project/8f76319eee384957bd1b83325774e52c/badge.svg
-      :target: https://www.quantifiedcode.com/app/project/8f76319eee384957bd1b83325774e52c
-      :alt: Code issues
+Build status
+------------
+|appveyor status| |circleci status| |quantified| |scrutinizer|
+
+Project information
+-------------------
+|docs| |license| |pypi version|
+
+.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/ajm7s6ivtya433e5?svg=true
+   :target: https://ci.appveyor.com/project/goanpeca/pyswmm
+   :alt: Appveyor build status
+.. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
+   :target: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master
+   :alt: Circle-CI build status
+.. |scrutinizer| image:: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/badges/quality-score.png?b=master
+   :target: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/?branch=master
+   :alt: Scrutinizer Code Quality
+.. |license| image:: https://img.shields.io/pypi/p/pyswmm.svg
+   :target: LICENSE.txt
+   :alt: License
+.. |pypi version| image:: https://img.shields.io/pypi/v/pyswmm.svg
+   :target: https://pypi.python.org/pypi/pyswmm/
+   :alt: Latest PyPI version
+.. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
+   :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status	
+.. |quantified| image:: https://www.quantifiedcode.com/api/v1/project/8f76319eee384957bd1b83325774e52c/badge.svg
+   :target: https://www.quantifiedcode.com/app/project/8f76319eee384957bd1b83325774e52c
+   :alt: Code issues
+   
 	  
 YouTube Examples
 ----------------
