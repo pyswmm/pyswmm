@@ -54,7 +54,7 @@ setup(
     author_email='bemcdonnell@gmail.com',
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    package_data={'': ['swmmLinkedLibs/Windows/swmm5.dll', 'LICENSE.txt']},
+    package_data={'': ['lib/windows/swmm5.dll', 'LICENSE.txt']},
     include_package_data=True,
     license="BSD2 License",
     keywords="swmm5, swmm, hydraulics, hydrology, modeling, collection system",
@@ -64,8 +64,6 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: C",
         "Development Status :: 4 - Beta",
     ])
