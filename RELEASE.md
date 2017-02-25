@@ -9,7 +9,7 @@
 
 **2.)** Update [CHANGELOG.md](https://github.com/spyder-ide/pyswmm/blob/master/CHANGELOG.md), using loghub
 
-    loghub OpenWaterAnalytics/pyswmm -m <milestone> -u <username> ilr "reso:completed" -ilg "type:feature" "New Features" -ilg "type:enhancements" "Enhancements" -ilg "type:bug" "Bugs fixed"
+    loghub OpenWaterAnalytics/pyswmm -m <milestone> -u <username> -ilr "reso:completed" -ilg "type:feature" "New Features" -ilg "type:enhancements" "Enhancements" -ilg "type:bug" "Bugs fixed"
 
 **3.)** Update [`pyswmm/__init__.py`](https://github.com/OpenWaterAnalytics/pyswmm/blob/master/pyswmm/__init__.py) (set release version, remove 'dev0')
 
