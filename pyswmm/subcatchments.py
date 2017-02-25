@@ -257,7 +257,7 @@ class Subcatchment(object):
         >>> 50
         """
         return self._model.getSubcatchParam(self._subcatchmentid,
-                                        SubcParams.fullDepth.value)
+                                        SubcParams.area.value)
 
     @area.setter
     def area(self, param):
