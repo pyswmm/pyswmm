@@ -55,7 +55,7 @@ significant time to the simulation.
 	>>> with Simulation('testmodel.inp') as sim:
 	... 	sim.step_advance(300)
 	... 	for step in sim:
-	... 		print(step.current_time)
+	... 		print(sim.current_time)
 	... 		# or here! sim.step_advance(newvalue)
 	... 	sim.report()
 
