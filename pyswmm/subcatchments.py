@@ -59,7 +59,7 @@ class Subcatchments(object):
     >>> print(s1.area)
     >>> 12
     >>>
-    >>> s1.invert_elevation = 200
+    >>> s1.area = 200
     >>> print(s1.area)
     >>> 200
     """
