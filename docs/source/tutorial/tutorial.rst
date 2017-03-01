@@ -182,7 +182,7 @@ comparing two depths.
 	...
 	... 	#Step through a simulation
 	... 	for step in sim:
-	... 		if TestDepth(J1, J2):
+	... 		if TestDepth(J1.depth, J2.depth):
 	... 			c1c2.target_setting = 0.5
 	... 	
 	... 	sim.report()
