@@ -84,7 +84,7 @@ class Simulation(object):
         """Next"""
         # Start Simulation
         if not self._isStarted:
-            self._model.swmm_start()
+            self._model.swmm_start(True)
             self._isStarted = True
 
         # Simulation Step Amount
