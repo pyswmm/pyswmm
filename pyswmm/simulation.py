@@ -52,8 +52,8 @@ class Simulation(object):
     >>> sim.execute()
     """
 
-    def __init__(self, inputfile, reportfile=None, outputfile=None):
-        self._model = PySWMM(inputfile, reportfile, outputfile)
+    def __init__(self, inputfile, reportfile=None, outputfile=None, DLL = None):
+        self._model = PySWMM(inputfile, reportfile, outputfile, dllpath = DLL)
         self._model.swmm_open()
         self._advance_seconds = None
         self._isStarted = False
