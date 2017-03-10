@@ -1,5 +1,18 @@
 # History of changes
 
+
+## Version 0.3.1 (2017/03/10)
+
+
+### Pull Requests Merged
+
+* [PR 76](https://github.com/OpenWaterAnalytics/pyswmm/pull/76) - re-compiled SWMM to fix set simulation time functions
+* [PR 73](https://github.com/OpenWaterAnalytics/pyswmm/pull/73) - updated default save to bin file
+* [PR 70](https://github.com/OpenWaterAnalytics/pyswmm/pull/70) - PR: Update readme
+
+In this release 3 pull requests were closed.
+
+
 ## Version 0.3 (2017/02/24)
 
 ### Issues Closed
