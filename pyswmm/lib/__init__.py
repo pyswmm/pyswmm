@@ -45,7 +45,7 @@ class _DllPath(object):
         """ """
         return self._dll_loc
 
-#Initialize dll path object
+# Initialize dll path object
 DLL_SELECTION = _DllPath()
 
 def use(arg):
