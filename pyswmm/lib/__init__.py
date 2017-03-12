@@ -29,9 +29,7 @@ if os.name == 'nt':
                             'swmm5.dll').replace('\\', '/')
 
 class _DllPath(object):
-    """
-    DllPath Object.
-    """
+    """DllPath Object."""
     def __init__(self):
         self._dll_loc = LIB_SWMM
 
