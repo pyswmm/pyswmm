@@ -107,7 +107,8 @@ class PySWMM(object):
         self.rptfile = rptfile
         self.binfile = binfile
 
-        self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
+        if os.name == 'nt':
+            self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
 
     def _error_message(self, errcode):
         """
