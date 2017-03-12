@@ -58,7 +58,6 @@ def use(arg):
 
     from pyswmm import Simulation
     """
-    dir_name = os.path.dirname(LIB_SWMM)
     if not arg.endswith('.dll'):
         arg = arg + ".dll"
     if os.path.isfile(os.path.join(HERE, _platform(),
