@@ -1,6 +1,15 @@
 # History of changes
 
 
+## Version 0.3.2 (2017/03/13)
+
+
+### Pull Requests Merged
+
+* [PR 78](https://github.com/OpenWaterAnalytics/pyswmm/pull/78) - added SWMM5 engine selector
+
+In this release 1 pull request was closed.
+
 ## Version 0.3.1 (2017/03/10)
 
 
