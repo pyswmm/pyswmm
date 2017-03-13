@@ -27,6 +27,8 @@ def _platform():
 if os.name == 'nt':
     LIB_SWMM = os.path.join(HERE, _platform(),
                             'swmm5.dll').replace('\\', '/')
+else:
+    LIB_SWMM = ''
 
 class _DllPath(object):
     """DllPath Object."""
