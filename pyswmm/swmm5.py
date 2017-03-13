@@ -19,12 +19,8 @@ import sys
 import warnings
 
 # Local imports
-from pyswmm.lib import LIB_SWMM_WIN_32
+from pyswmm.lib import DLL_SELECTION
 import pyswmm.toolkitapi as tka
-
-MACHINE_BITS = 8 * tuple.__itemsize__
-IS_WINDOWS = os.name == 'nt'
-
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
@@ -98,7 +94,7 @@ class PySWMM(object):
     >>> swmm_model.swmm_close()
     """
 
-    def __init__(self, inpfile='', rptfile=None, binfile=None, dllpath=None):
+    def __init__(self, inpfile='', rptfile=None, binfile=None):
         """
         Initialize the PySWMM object class.
 
@@ -111,22 +107,8 @@ class PySWMM(object):
         self.rptfile = rptfile
         self.binfile = binfile
 
-        # The following should be un commented if using on mac
-        # Darwin
-        # if 'darwin' in sys.platform:
-        #     from ctypes import cdll
-        #     libpath = os.getcwd()
-        #     libswmm = '/pyswmm/swmmLinkedLibs/Darwin/libswmm.dylib'
-        #     self.SWMMlibobj = cdll.LoadLibrary(libpath+libswmm)
-
-        # Windows
-        if IS_WINDOWS and MACHINE_BITS == 32:
-            if dllpath is None:
-                libswmm = LIB_SWMM_WIN_32
-            else:
-                libswmm = dllpath
-            print(libswmm)
-            self.SWMMlibobj = ctypes.WinDLL(libswmm)
+        if os.name == 'nt':
+            self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
 
     def _error_message(self, errcode):
         """
