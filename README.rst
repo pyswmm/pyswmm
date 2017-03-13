@@ -94,7 +94,7 @@ PySWMM is intended to provide
 Download
 --------
 
-Get the latest version of PySWMM from (COMING SOON!!!!!)
+Get the latest version of PySWMM from
 https://pypi.python.org/pypi/pyswmm/
 
 ::
