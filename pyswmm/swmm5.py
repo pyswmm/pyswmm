@@ -121,7 +121,7 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getError(errcode, _errmsg)
-        return _errmsg.value
+        return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
         """
@@ -238,8 +238,8 @@ class PySWMM(object):
                 binfile = self.inpfile.replace('.inp', '.out')
 
         errcode = self.SWMMlibobj.swmm_open(
-            ctypes.c_char_p(inpfile),
-            ctypes.c_char_p(rptfile), ctypes.c_char_p(binfile))
+            ctypes.c_char_p(inpfile.encode('utf-8')),
+            ctypes.c_char_p(rptfile.encode('utf-8')), ctypes.c_char_p(binfile.encode('utf-8')))
         self._error_check(errcode)
         self.fileLoaded = True
 
@@ -443,7 +443,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
+        return datetime.strptime(dtme.value.decode("utf-8") , "%b-%d-%Y %H:%M:%S")
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -460,7 +460,7 @@ class PySWMM(object):
         >>>
         """
         dtme = ctypes.create_string_buffer(
-            newDateTime.strftime("%m/%d/%Y %H:%M:%S"))
+            newDateTime.strftime("%m/%d/%Y %H:%M:%S").encode("utf-8"))
         errcode = self.SWMMlibobj.swmm_setSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
@@ -582,7 +582,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getObjectId(objecttype, index,
                                                    ctypes.byref(ID))
         self._error_check(errcode)
-        return ID.value
+        return ID.value.decode("utf-8")
 
     def getObjectIDList(self, objecttype):
         """
@@ -607,7 +607,7 @@ class PySWMM(object):
 
     def getObjectIDIndex(self, objecttype, ID):
         """Get Object ID Index. Mostly used as an internal function."""
-        C_ID = ctypes.c_char_p(ID)
+        C_ID = ctypes.c_char_p(ID.encode("utf-8"))
         index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
         if index != -1:
             return index
@@ -616,7 +616,7 @@ class PySWMM(object):
 
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
-        C_ID = ctypes.c_char_p(ID)
+        C_ID = ctypes.c_char_p(ID.encode("utf-8"))
         index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
         if index != -1:
             return True
@@ -959,7 +959,7 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
+        return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """
@@ -1137,9 +1137,9 @@ class PySWMM(object):
 
 if __name__ == '__main__':
     test = PySWMM(
-        inpfile=r"../test/TestModel1_weirSetting.inp",
-        rptfile=r"../test/TestModel1_weirSetting.rpt",
-        binfile=r"../test/TestModel1_weirSetting.out")
+        inpfile=r"./tests/data/model_weir_setting.inp",
+        rptfile=r"./tests/data/model_weir_setting.rpt",
+        binfile=r"./tests/data/model_weir_setting.out")
     test.swmm_open()
 
     print("Simulation Time Info")

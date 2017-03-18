@@ -80,7 +80,7 @@ class Simulation(object):
         """Iterator over Simulation"""
         return self
 
-    def next(self):
+    def __next__(self):
         """Next"""
         # Start Simulation
         if not self._isStarted:
@@ -97,6 +97,8 @@ class Simulation(object):
             self._model.swmm_end()
             raise StopIteration
         return self._model
+
+    next = __next__  # Python 2
 
     def __exit__(self, *a):
         """close"""
