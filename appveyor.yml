@@ -19,10 +19,10 @@ environment:
   matrix:
     #- PYTHON_VERSION: "3.6"
     #  TARGET_ARCH: x86
-    - PYTHON_VERSION: "3.4"
-      TARGET_ARCH: x86
     - PYTHON_VERSION: "2.7"
       TARGET_ARCH: x86
+    - PYTHON_VERSION: "3.4"
+      TARGET_ARCH: x86      
 
 platform:
     - x86
@@ -45,4 +45,4 @@ test_script:
   - ciocheck setup.py --disable-tests
   - ciocheck pyswmm --disable-tests
   - pytest pyswmm
-  - coveralls
+  - coveralls --disable-tests
