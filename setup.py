@@ -39,7 +39,7 @@ def get_description():
     return data
 
 
-REQUIREMENTS = []
+REQUIREMENTS = ['six']
 
 if sys.version_info < (3, 4):
     REQUIREMENTS.append('enum34')
