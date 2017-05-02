@@ -39,7 +39,7 @@ def get_description():
     return data
 
 
-REQUIREMENTS = []
+REQUIREMENTS = ['six']
 
 if sys.version_info < (3, 4):
     REQUIREMENTS.append('enum34')
@@ -64,6 +64,9 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: C",
         "Development Status :: 4 - Beta",
     ])

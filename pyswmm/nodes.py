@@ -99,13 +99,15 @@ class Nodes(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._cuindex < self._nNodes:
             nodeobject = Node(self._model, self._nodeid)
             self._cuindex += 1  # Next Iteration
             return nodeobject
         else:
             raise StopIteration()
+
+    next = __next__  # Python 2
 
     @property
     def _nodeid(self):

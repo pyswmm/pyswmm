@@ -94,13 +94,15 @@ class Links(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._cuindex < self._nLinks:
             linkobject = Link(self._model, self._linkid)
             self._cuindex += 1  # Next Iteration
             return linkobject
         else:
             raise StopIteration()
+
+    next = __next__  # Python 2
 
     @property
     def _linkid(self):

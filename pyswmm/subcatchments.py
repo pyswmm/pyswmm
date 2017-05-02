@@ -103,7 +103,7 @@ class Subcatchments(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._cuindex < self._nSubcatchments:
             subcatchmentobject = Subcatchment(self._model,
                                               self._subcatchmentid)
@@ -111,6 +111,8 @@ class Subcatchments(object):
             return subcatchmentobject
         else:
             raise StopIteration()
+
+    next = __next__  # Python 2
 
     @property
     def _subcatchmentid(self):
