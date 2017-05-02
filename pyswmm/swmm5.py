@@ -122,7 +122,7 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getError(errcode, _errmsg)
-        return _errmsg.value.decode()
+        return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
         """
@@ -444,7 +444,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value.decode(), "%b-%d-%Y %H:%M:%S")
+        return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -583,7 +583,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getObjectId(objecttype, index,
                                                    ctypes.byref(ID))
         self._error_check(errcode)
-        return ID.value.decode()
+        return ID.value.decode("utf-8")
 
     def getObjectIDList(self, objecttype):
         """
@@ -960,7 +960,7 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value.decode(), "%b-%d-%Y %H:%M:%S")
+        return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """
