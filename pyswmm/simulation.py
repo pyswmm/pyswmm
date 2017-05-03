@@ -177,6 +177,77 @@ class Simulation(object):
         self._model.swmmExec()
 
     @property
+    def engine_version(self):
+        """
+        Retrieves the SWMM Engine Version
+
+        :return: Engine Version
+        :rtype: StrictVersion
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.engine_version
+        StrictVersion("5.1.13")
+        
+        """
+        return self._model.swmm_getVersion()
+
+    @property
+    def runoff_error(self):
+        """
+        Retrieves the Runoff Mass Balance Error
+
+        :return: Runoff Mass Balance Error
+        :rtype: float
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
+        >>> sim.runoff_error
+        0.01
+        
+        """
+        return self._model.swmm_getMassBalErr()[0]
+
+    @property
+    def flow_routing_error(self):
+        """
+        Retrieves the Flow Routing Mass Balance Error
+
+        :return: Flow Routing Mass Balance Error
+        :rtype: float
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
+        >>> sim.flow_routing_error
+        0.01
+        
+        """
+        return self._model.swmm_getMassBalErr()[1]
+
+    @property
+    def quality_error(self):
+        """
+        Retrieves the Quality Routing Mass Balance Error
+
+        :return: Quality Routing Mass Balance Error
+        :rtype: float
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
+        >>> sim.quality_error
+        0.01
+        
+        """
+        return self._model.swmm_getMassBalErr()[2]
+        
+    @property
     def start_time(self):
         """Get/set Simulation start time
 

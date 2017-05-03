@@ -18,6 +18,7 @@ import os
 import sys
 import warnings
 import six
+import distutils.version
 
 # Local imports
 from pyswmm.lib import DLL_SELECTION
@@ -121,7 +122,7 @@ class PySWMM(object):
         """
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
-        self.SWMMlibobj.swmm_getError(errcode, _errmsg)
+        self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
         return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
@@ -398,7 +399,12 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        return self.SWMMlibobj.swmm_getVersion()
+        version = str(self.SWMMlibobj.swmm_getVersion())
+        major = version[0]
+        minor = version[1]
+        build = str(int(version[2:]))
+        ver = [major, minor, build]
+        return distutils.version.StrictVersion('.'.join(ver))
 
     def swmm_getMassBalErr(self):
         """
@@ -444,7 +450,10 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        if self.swmm_getVersion() < distutils.version.StrictVersion('5.1.11'):
+            return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        else:
+            return datetime.strptime(dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -960,7 +969,10 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        if self.swmm_getVersion() < distutils.version.StrictVersion('5.1.11'):
+            return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        else:
+            return datetime.strptime(dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """
