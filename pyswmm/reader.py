@@ -8,8 +8,8 @@
 """SWMM ouput toolkit api."""
 
 # Standard library imports
-import ctypes
 from datetime import datetime, timedelta
+import ctypes
 import os
 
 # Local imports
