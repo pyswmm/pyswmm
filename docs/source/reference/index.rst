@@ -16,6 +16,7 @@ Reference
    nodes
    links
    subcatchments
+   lib
    legal
    glossary
 
