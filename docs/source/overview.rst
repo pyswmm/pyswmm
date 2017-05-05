@@ -45,8 +45,8 @@ PySWMM is intended to provide
 
 -  new modeling possibilities for the SWMM5 Community.
 
-Sponsors
---------
+Powered By
+----------
 
 .. image:: http://emnet.net/templates/emnet/images/footer_logo.png
   :target: http://emnet.net/
