@@ -7,9 +7,9 @@
 # -----------------------------------------------------------------------------
 
 # Local imports
-import pyswmm
 from pyswmm import Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+import pyswmm
 
 
 def test_engine_version():
@@ -17,17 +17,20 @@ def test_engine_version():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     print(sim.engine_version)
 
+
 def test_runoff_error():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     sim.execute()
     print(sim.runoff_error)
     assert sim.runoff_error >= 0.0
 
+
 def test_flow_routing_error():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     sim.execute()
     print(sim.flow_routing_error)
     assert sim.flow_routing_error >= 0.0
+
 
 def test_quality_error():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)

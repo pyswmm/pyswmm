@@ -7,18 +7,20 @@
 # -----------------------------------------------------------------------------
 
 # Local imports
-import pyswmm
 from pyswmm import Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+import pyswmm
 
 
 def test_use_1():
     pyswmm.lib.use("swmm5.dll")
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
 
+
 def test_use_2():
     pyswmm.lib.use("swmm5")
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
+
 
 def test_use_3():
     try:
@@ -26,9 +28,9 @@ def test_use_3():
     except:
         pass
 
+
 def test_use_4():
     try:
         pyswmm.lib.use("fakedll")
     except:
         pass
-

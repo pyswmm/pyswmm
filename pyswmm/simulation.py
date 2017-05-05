@@ -246,7 +246,7 @@ class Simulation(object):
         
         """
         return self._model.swmm_getMassBalErr()[2]
-        
+
     @property
     def start_time(self):
         """Get/set Simulation start time.

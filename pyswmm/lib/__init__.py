@@ -23,15 +23,17 @@ def _platform():
     if os.name == 'nt':
         return 'windows'
 
+
 # Library paths
 if os.name == 'nt':
-    LIB_SWMM = os.path.join(HERE, _platform(),
-                            'swmm5.dll').replace('\\', '/')
+    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
 else:
     LIB_SWMM = ''
 
+
 class _DllPath(object):
     """DllPath Object."""
+
     def __init__(self):
         self._dll_loc = LIB_SWMM
 
@@ -49,8 +51,10 @@ class _DllPath(object):
         """Caller returns DLL Name."""
         return self._dll_loc
 
+
 # Initialize dll path object
 DLL_SELECTION = _DllPath()
+
 
 def use(arg):
     """
@@ -64,9 +68,8 @@ def use(arg):
     """
     if not arg.endswith('.dll'):
         arg = arg + ".dll"
-    if os.path.isfile(os.path.join(HERE, _platform(),
-                                   arg).replace('\\', '/')):
+    if os.path.isfile(os.path.join(HERE, _platform(), arg).replace('\\', '/')):
         DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
                                              arg).replace('\\', '/')
     else:
-        raise(Exception("Library Not Found"))
+        raise (Exception("Library Not Found"))

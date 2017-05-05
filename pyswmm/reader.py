@@ -9,10 +9,10 @@
 
 # Standard library imports
 from datetime import datetime, timedelta
-import ctypes
 import os
 
 # Local imports
+import ctypes
 import pyswmm.toolkitapi as tka
 
 

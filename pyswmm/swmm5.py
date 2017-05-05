@@ -13,15 +13,17 @@ Open Water Analytics (http://wateranalytics.org/)
 
 # Standard library imports
 from datetime import datetime
-import ctypes
 import os
 import sys
 import warnings
+
+# Third party imports
 import six
-import distutils.version
 
 # Local imports
 from pyswmm.lib import DLL_SELECTION
+import ctypes
+import distutils.version
 import pyswmm.toolkitapi as tka
 
 # Local variables
@@ -454,10 +456,13 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion(SWMM_VER_51011):
-            return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        if self.swmm_getVersion() < distutils.version.StrictVersion(
+                SWMM_VER_51011):
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
         else:
-            return datetime.strptime(dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -973,10 +978,13 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion(SWMM_VER_51011):
-            return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        if self.swmm_getVersion() < distutils.version.StrictVersion(
+                SWMM_VER_51011):
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
         else:
-            return datetime.strptime(dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """
