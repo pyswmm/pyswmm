@@ -165,8 +165,8 @@ Distributed with a BSD2 license; see LICENSE.txt::
    Copyright (C) 2014 PySWMM Developers
    Bryant E. McDonnell <bemcdonnell@gmail.com>
 
-Sponsors
---------
+Powered By
+----------
 
 EmNet LLC: 
 	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
