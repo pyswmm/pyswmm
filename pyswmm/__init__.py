@@ -13,7 +13,7 @@ from pyswmm.nodes import Node, Nodes
 from pyswmm.simulation import Simulation
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 
-VERSION_INFO = (0, 3, 3)
+VERSION_INFO = (0, 3, 4, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
 __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
