@@ -189,7 +189,6 @@ class Simulation(object):
         >>> sim = PYSWMM(r'\\test.inp')
         >>> sim.engine_version
         StrictVersion("5.1.13")
-        
         """
         return self._model.swmm_getVersion()
 
@@ -207,7 +206,6 @@ class Simulation(object):
         >>> sim.execute()
         >>> sim.runoff_error
         0.01
-        
         """
         return self._model.swmm_getMassBalErr()[0]
 
@@ -225,7 +223,6 @@ class Simulation(object):
         >>> sim.execute()
         >>> sim.flow_routing_error
         0.01
-        
         """
         return self._model.swmm_getMassBalErr()[1]
 
@@ -243,7 +240,6 @@ class Simulation(object):
         >>> sim.execute()
         >>> sim.quality_error
         0.01
-        
         """
         return self._model.swmm_getMassBalErr()[2]
 
