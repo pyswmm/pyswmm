@@ -134,7 +134,7 @@ class Simulation(object):
 
     def report(self):
         """
-        Writes to report file after simulation
+        Writes to report file after simulation.
 
         Examples:
 
@@ -179,7 +179,7 @@ class Simulation(object):
     @property
     def engine_version(self):
         """
-        Retrieves the SWMM Engine Version
+        Retrieves the SWMM Engine Version.
 
         :return: Engine Version
         :rtype: StrictVersion
@@ -196,7 +196,7 @@ class Simulation(object):
     @property
     def runoff_error(self):
         """
-        Retrieves the Runoff Mass Balance Error
+        Retrieves the Runoff Mass Balance Error.
 
         :return: Runoff Mass Balance Error
         :rtype: float
@@ -214,7 +214,7 @@ class Simulation(object):
     @property
     def flow_routing_error(self):
         """
-        Retrieves the Flow Routing Mass Balance Error
+        Retrieves the Flow Routing Mass Balance Error.
 
         :return: Flow Routing Mass Balance Error
         :rtype: float
@@ -232,7 +232,7 @@ class Simulation(object):
     @property
     def quality_error(self):
         """
-        Retrieves the Quality Routing Mass Balance Error
+        Retrieves the Quality Routing Mass Balance Error.
 
         :return: Quality Routing Mass Balance Error
         :rtype: float
@@ -249,7 +249,7 @@ class Simulation(object):
         
     @property
     def start_time(self):
-        """Get/set Simulation start time
+        """Get/set Simulation start time.
 
         Examples:
 
@@ -272,7 +272,7 @@ class Simulation(object):
 
     @property
     def end_time(self):
-        """Get/set Simulation end time
+        """Get/set Simulation end time.
 
         Examples:
 
@@ -289,13 +289,13 @@ class Simulation(object):
 
     @end_time.setter
     def end_time(self, dtimeval):
-        """Set simulation End time"""
+        """Set simulation End time."""
         self._model.setSimulationDateTime(SimulationTime.EndDateTime.value,
                                           dtimeval)
 
     @property
     def report_start(self):
-        """Get/set Simulation report start time
+        """Get/set Simulation report start time.
 
         Examples:
 
@@ -312,7 +312,7 @@ class Simulation(object):
 
     @report_start.setter
     def report_start(self, dtimeval):
-        """Set simulation report start time"""
+        """Set simulation report start time."""
         self._model.setSimulationDateTime(SimulationTime.ReportStart.value,
                                           dtimeval)
 

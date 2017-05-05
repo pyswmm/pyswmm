@@ -24,6 +24,10 @@ import distutils.version
 from pyswmm.lib import DLL_SELECTION
 import pyswmm.toolkitapi as tka
 
+# Local variables
+SWMM_VER_51011 = '5.1.11'
+
+
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
 
@@ -450,7 +454,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion('5.1.11'):
+        if self.swmm_getVersion() < distutils.version.StrictVersion(SWMM_VER_51011):
             return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
         else:
             return datetime.strptime(dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
@@ -969,7 +973,7 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion('5.1.11'):
+        if self.swmm_getVersion() < distutils.version.StrictVersion(SWMM_VER_51011):
             return datetime.strptime(dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
         else:
             return datetime.strptime(dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")

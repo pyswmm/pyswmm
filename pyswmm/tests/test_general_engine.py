@@ -16,7 +16,6 @@ def test_engine_version():
     pyswmm.lib.use("swmm5.dll")
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     print(sim.engine_version)
-    assert sim.engine_version == sim.engine_version
 
 def test_runoff_error():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
