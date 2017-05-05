@@ -12,25 +12,28 @@ from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pyswmm
 
 
-def test_use_1():
+def test_engine_version():
     pyswmm.lib.use("swmm5.dll")
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    print(sim.engine_version)
 
 
-def test_use_2():
-    pyswmm.lib.use("swmm5")
+def test_runoff_error():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    sim.execute()
+    print(sim.runoff_error)
+    assert sim.runoff_error >= 0.0
 
 
-def test_use_3():
-    try:
-        pyswmm.lib.use("fakedll.dll")
-    except:
-        pass
+def test_flow_routing_error():
+    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    sim.execute()
+    print(sim.flow_routing_error)
+    assert sim.flow_routing_error >= 0.0
 
 
-def test_use_4():
-    try:
-        pyswmm.lib.use("fakedll")
-    except:
-        pass
+def test_quality_error():
+    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    sim.execute()
+    print(sim.quality_error)
+    assert sim.quality_error >= 0.0
