@@ -27,7 +27,7 @@ Project information
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/badges/quality-score.png?b=master
    :target: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/?branch=master
    :alt: Scrutinizer Code Quality
-.. |license| image:: https://img.shields.io/pypi/p/pyswmm.svg
+.. |license| image:: https://img.shields.io/pypi/l/pyswmm.svg
    :target: LICENSE.txt
    :alt: License
 .. |pypi version| image:: https://img.shields.io/pypi/v/pyswmm.svg
