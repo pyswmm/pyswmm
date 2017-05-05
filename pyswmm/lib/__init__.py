@@ -73,10 +73,10 @@ def use(arg):
     before Simulation is imported.
 
     Examples:
-    
+
     >>> import pyswmm
     >>> pyswmm.lib.use("swmm5")
-    >>> 
+    >>>
     >>> from pyswmm import Simulation
     """
     if not arg.endswith('.dll'):
