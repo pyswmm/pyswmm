@@ -8,11 +8,11 @@
 """SWMM ouput toolkit api."""
 
 # Standard library imports
+import ctypes
 from datetime import datetime, timedelta
 import os
 
 # Local imports
-import ctypes
 import pyswmm.toolkitapi as tka
 
 
