@@ -22,13 +22,16 @@ def _platform():
     """Folder based on platform."""
     if os.name == 'nt':
         return 'windows'
+    
+    if os.name == 'posix':
+        return 'linux'
 
 # Library paths
 if os.name == 'nt':
     LIB_SWMM = os.path.join(HERE, _platform(),
                             'swmm5.dll').replace('\\', '/')
 else:
-    LIB_SWMM = ''
+    LIB_SWMM = 'libswmm5.so'
 
 class _DllPath(object):
     """DllPath Object."""
@@ -62,8 +65,15 @@ def use(arg):
 
     from pyswmm import Simulation
     """
-    if not arg.endswith('.dll'):
-        arg = arg + ".dll"
+    
+    if _platform() == 'windows':
+        if not arg.endswith('.dll'):
+            arg = arg + ".dll"
+            
+    if _platform() == 'linux':
+        if not arg.endswith('.so'):
+            arg = arg + ".so"
+        
     if os.path.isfile(os.path.join(HERE, _platform(),
                                    arg).replace('\\', '/')):
         DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),

@@ -110,6 +110,9 @@ class PySWMM(object):
         if os.name == 'nt':
             self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
 
+	if os.name == 'posix':
+		self.SWMMlibobj = ctypes.CDLL('libswmm5.so')
+
     def _error_message(self, errcode):
         """
         Returns SWMM Error Message.
