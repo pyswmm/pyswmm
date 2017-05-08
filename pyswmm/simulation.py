@@ -395,4 +395,4 @@ class Simulation(object):
         """
         dt = self.current_time - self.start_time
         total_time = self.end_time - self.start_time
-        return dt.total_seconds() / total_time.total_seconds()
+        return float(dt.total_seconds()) / total_time.total_seconds()

@@ -13,8 +13,6 @@ Open Water Analytics (http://wateranalytics.org/)
 
 # Standard library imports
 from datetime import datetime
-import ctypes
-import distutils.version
 import os
 import sys
 import warnings
@@ -24,6 +22,8 @@ import six
 
 # Local imports
 from pyswmm.lib import DLL_SELECTION
+import ctypes
+import distutils.version
 import pyswmm.toolkitapi as tka
 
 # Local variables
