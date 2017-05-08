@@ -60,7 +60,7 @@ import_heading_thirdparty = Third party imports
 indent = '    '
 known_first_party = pyswmm
 known_third_party = setuptools, matplotlib
-known_standard_library = mimetypes, enum, ast
+known_standard_library = mimetypes, enum, ast, ctypes, distutils
 line_length = 79
 sections = FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
 
