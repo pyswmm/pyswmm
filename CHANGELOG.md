@@ -1,5 +1,14 @@
 # History of changes
 
+## Version 0.3.4 (2017-05-08)
+
+
+### Pull Requests Merged
+
+* [PR 89](https://github.com/OpenWaterAnalytics/pyswmm/pull/89) - added Simulation.percent_complete property and fixed function name
+
+In this release 1 pull request was closed.
+
 
 ## Version 0.3.3 (2017/05/05)
 
