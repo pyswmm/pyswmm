@@ -18,7 +18,7 @@ from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 def test_simulation_1():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     for ind, step in enumerate(sim):
-        print(step.getCurrentSimualationTime())
+        print(step.getCurrentSimulationTime())
         sim.step_advance(randint(300, 900))
 
     sim.report()
@@ -28,16 +28,26 @@ def test_simulation_1():
 def test_simulation_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         for ind, step in enumerate(sim):
-            current_time = step.getCurrentSimualationTime()
+            current_time = step.getCurrentSimulationTime()
             sys.stdout.write("Status: {0}".format(current_time))
             sys.stdout.flush()
             sim.step_advance(randint(300, 900))
         sim.report()
 
 
-#def test_simulation_3():
-#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-#    sim.execute()
+def test_simulation_3():
+    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    sim.execute()
+
+
+def test_simulation_4():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for ind, step in enumerate(sim):
+            percent_complete = sim.percent_complete
+            sys.stdout.write("Status: {0}".format(percent_complete))
+            sys.stdout.flush()
+            sim.step_advance(randint(300, 900))
+        sim.report()
 
 
 def test_simulation_iter():
