@@ -370,4 +370,29 @@ class Simulation(object):
         >>> 2015-11-01 14:01:30
         >>> 2015-11-01 14:02:00
         """
-        return self._model.getCurrentSimualationTime()
+        return self._model.getCurrentSimulationTime()
+
+    @property
+    def percent_complete(self):
+        """Get Simulation Percent Complete.
+
+        :return: Current Percent Complete
+        :rtype: Datetime
+
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     for step in sim:
+        ...         print(sim.percent_complete)
+        ...     sim.report()
+        >>>
+        >>> 0.01
+        >>> 0.25
+        >>> 0.50
+        >>> 0.75
+        """
+        dt = self.current_time - self.start_time
+        total_time = self.end_time - self.start_time
+        return dt.total_seconds() / total_time.total_seconds()

@@ -949,7 +949,7 @@ class PySWMM(object):
 
     # --- Active Simulation Result "Getters"
     # -------------------------------------------------------------------------
-    def getCurrentSimualationTime(self):
+    def getCurrentSimulationTime(self):
         """
         Get Current Simulation DateTime in Python Format.
 
