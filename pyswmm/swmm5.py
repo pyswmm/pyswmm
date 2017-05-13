@@ -1092,6 +1092,32 @@ class PySWMM(object):
 
         return result.value
 
+    def system_flow_routing(self, resultType):
+        """
+        Get Cumulative System Flow Routing Stats.
+
+        :param int resultType: Results Type based on SysRoutingStats
+        """
+        result = ctypes.c_double()
+        errcode = self.SWMMlibobj.swmm_getSystemRoutingTotals(resultType, ctypes.byref(result))
+
+        self._error_check(errcode)
+
+        return result.value
+
+    def system_runoff_routing(self, resultType):
+        """
+        Get Cumulative System Runoff Routing Stats.
+
+        :param int resultType: Results Type based on SysRunoffStats
+        """
+        result = ctypes.c_double()
+        errcode = self.SWMMlibobj.swmm_getSystemRunoffTotals(resultType, ctypes.byref(result))
+
+        self._error_check(errcode)
+
+        return result.value
+
     # --- Active Simulation Parameter "Setters"
     # -------------------------------------------------------------------------
     def setLinkSetting(self, ID, targetSetting):
