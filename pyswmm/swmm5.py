@@ -1099,7 +1099,8 @@ class PySWMM(object):
         :param int resultType: Results Type based on SysRoutingStats
         """
         result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSystemRoutingTotals(resultType, ctypes.byref(result))
+        errcode = self.SWMMlibobj.swmm_getSystemRoutingTotals(
+            resultType, ctypes.byref(result))
 
         self._error_check(errcode)
 
@@ -1112,7 +1113,8 @@ class PySWMM(object):
         :param int resultType: Results Type based on SysRunoffStats
         """
         result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSystemRunoffTotals(resultType, ctypes.byref(result))
+        errcode = self.SWMMlibobj.swmm_getSystemRunoffTotals(
+            resultType, ctypes.byref(result))
 
         self._error_check(errcode)
 

@@ -116,7 +116,8 @@ class FlowRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_flow_routing(SysRoutingStats.evaporation.value)
+        return self._model.system_flow_routing(
+            SysRoutingStats.evaporation.value)
 
     @property
     def seepage(self):
@@ -136,7 +137,8 @@ class FlowRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_flow_routing(SysRoutingStats.routing_error.value)
+        return self._model.system_flow_routing(
+            SysRoutingStats.routing_error.value)
 
 
 class RunoffRouting(object):
@@ -183,7 +185,8 @@ class RunoffRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_runoff_routing(SysRunoffStats.evaporation.value)
+        return self._model.system_runoff_routing(
+            SysRunoffStats.evaporation.value)
 
     @property
     def infiltration(self):
@@ -193,7 +196,8 @@ class RunoffRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_runoff_routing(SysRunoffStats.infiltration.value)
+        return self._model.system_runoff_routing(
+            SysRunoffStats.infiltration.value)
 
     @property
     def runoff(self):
@@ -233,7 +237,8 @@ class RunoffRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_runoff_routing(SysRunoffStats.snow_removed.value)
+        return self._model.system_runoff_routing(
+            SysRunoffStats.snow_removed.value)
 
     @property
     def initial_storage(self):
@@ -243,7 +248,8 @@ class RunoffRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_runoff_routing(SysRunoffStats.initial_storage.value)
+        return self._model.system_runoff_routing(
+            SysRunoffStats.initial_storage.value)
 
     @property
     def initial_snow_cover(self):
@@ -253,7 +259,8 @@ class RunoffRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_runoff_routing(SysRunoffStats.initial_snow_cover.value)
+        return self._model.system_runoff_routing(
+            SysRunoffStats.initial_snow_cover.value)
 
     @property
     def routing_error(self):
@@ -263,4 +270,5 @@ class RunoffRouting(object):
         :return: Parameter Value
         :rtype: float
         """
-        return self._model.system_runoff_routing(SysRunoffStats.routing_error.value)
+        return self._model.system_runoff_routing(
+            SysRunoffStats.routing_error.value)

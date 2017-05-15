@@ -19,4 +19,7 @@ __version__ = '.'.join(map(str, VERSION_INFO))
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
 __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
 __licence__ = 'BSD2'
-__all__ = [Link, Links, Node, Nodes, Subcatchment, Subcatchments, Simulation, FlowRouting, RunoffRouting]
+__all__ = [
+    Link, Links, Node, Nodes, Subcatchment, Subcatchments, Simulation,
+    FlowRouting, RunoffRouting
+]
