@@ -167,7 +167,7 @@ class SysRunoffStats(Enum):
     snow_removed = 6  # Cumulative Snow Removed Volume
     initial_storage = 7  # Initial Storage Volume
     initial_snow_cover = 8  # Snow Cover Volume
-    routing_error = 9  # Current Runoff Routing Error 
+    routing_error = 9  # Current Runoff Routing Error
 
 
 # --- SWMM Output API
