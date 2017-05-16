@@ -21,8 +21,8 @@ PySWMM documentation
 
 .. only:: html
 
-Sponsors
-========
+Powered By
+==========
 .. image:: http://emnet.net/templates/emnet/images/footer_logo.png
   :target: http://emnet.net/
    
