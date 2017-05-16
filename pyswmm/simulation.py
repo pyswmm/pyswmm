@@ -87,7 +87,7 @@ class Simulation(object):
             self._isStarted = True        
         
 
-    def next(self):
+    def __next__(self):
         """Next"""
         # Start Simulation
         self.start()
@@ -102,6 +102,8 @@ class Simulation(object):
             self._model.swmm_end()
             raise StopIteration
         return self._model
+
+    next = __next__  # Python 2
 
     def __exit__(self, *a):
         """close"""
@@ -137,7 +139,7 @@ class Simulation(object):
 
     def report(self):
         """
-        Writes to report file after simulation
+        Writes to report file after simulation.
 
         Examples:
 
@@ -180,8 +182,75 @@ class Simulation(object):
         self._model.swmmExec()
 
     @property
+    def engine_version(self):
+        """
+        Retrieves the SWMM Engine Version.
+
+        :return: Engine Version
+        :rtype: StrictVersion
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.engine_version
+        StrictVersion("5.1.13")
+        """
+        return self._model.swmm_getVersion()
+
+    @property
+    def runoff_error(self):
+        """
+        Retrieves the Runoff Mass Balance Error.
+
+        :return: Runoff Mass Balance Error
+        :rtype: float
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
+        >>> sim.runoff_error
+        0.01
+        """
+        return self._model.swmm_getMassBalErr()[0]
+
+    @property
+    def flow_routing_error(self):
+        """
+        Retrieves the Flow Routing Mass Balance Error.
+
+        :return: Flow Routing Mass Balance Error
+        :rtype: float
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
+        >>> sim.flow_routing_error
+        0.01
+        """
+        return self._model.swmm_getMassBalErr()[1]
+
+    @property
+    def quality_error(self):
+        """
+        Retrieves the Quality Routing Mass Balance Error.
+
+        :return: Quality Routing Mass Balance Error
+        :rtype: float
+
+        Examples:
+
+        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim.execute()
+        >>> sim.quality_error
+        0.01
+        """
+        return self._model.swmm_getMassBalErr()[2]
+
+    @property
     def start_time(self):
-        """Get/set Simulation start time
+        """Get/set Simulation start time.
 
         Examples:
 
@@ -204,7 +273,7 @@ class Simulation(object):
 
     @property
     def end_time(self):
-        """Get/set Simulation end time
+        """Get/set Simulation end time.
 
         Examples:
 
@@ -221,13 +290,13 @@ class Simulation(object):
 
     @end_time.setter
     def end_time(self, dtimeval):
-        """Set simulation End time"""
+        """Set simulation End time."""
         self._model.setSimulationDateTime(SimulationTime.EndDateTime.value,
                                           dtimeval)
 
     @property
     def report_start(self):
-        """Get/set Simulation report start time
+        """Get/set Simulation report start time.
 
         Examples:
 
@@ -244,7 +313,7 @@ class Simulation(object):
 
     @report_start.setter
     def report_start(self, dtimeval):
-        """Set simulation report start time"""
+        """Set simulation report start time."""
         self._model.setSimulationDateTime(SimulationTime.ReportStart.value,
                                           dtimeval)
 
@@ -306,4 +375,29 @@ class Simulation(object):
         >>> 2015-11-01 14:01:30
         >>> 2015-11-01 14:02:00
         """
-        return self._model.getCurrentSimualationTime()
+        return self._model.getCurrentSimulationTime()
+
+    @property
+    def percent_complete(self):
+        """Get Simulation Percent Complete.
+
+        :return: Current Percent Complete
+        :rtype: Datetime
+
+        Examples:
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     for step in sim:
+        ...         print(sim.percent_complete)
+        ...     sim.report()
+        >>>
+        >>> 0.01
+        >>> 0.25
+        >>> 0.50
+        >>> 0.75
+        """
+        dt = self.current_time - self.start_time
+        total_time = self.end_time - self.start_time
+        return float(dt.total_seconds()) / total_time.total_seconds()

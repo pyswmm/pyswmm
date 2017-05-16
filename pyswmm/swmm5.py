@@ -14,13 +14,21 @@ Open Water Analytics (http://wateranalytics.org/)
 # Standard library imports
 from datetime import datetime
 import ctypes
+import distutils.version
 import os
 import sys
 import warnings
 
+# Third party imports
+import six
+
 # Local imports
 from pyswmm.lib import DLL_SELECTION
 import pyswmm.toolkitapi as tka
+
+# Local variables
+SWMM_VER_51011 = '5.1.11'
+
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
@@ -106,12 +114,13 @@ class PySWMM(object):
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
+        
 
         if os.name == 'nt':
             self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
 
-	if os.name == 'posix':
-		self.SWMMlibobj = ctypes.CDLL('libswmm5.so')
+        if os.name == 'posix':
+            self.SWMMlibobj = ctypes.CDLL('libswmm5.so')
 
     def _error_message(self, errcode):
         """
@@ -123,8 +132,8 @@ class PySWMM(object):
         """
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
-        self.SWMMlibobj.swmm_getError(errcode, _errmsg)
-        return _errmsg.value
+        self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
+        return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
         """
@@ -241,8 +250,8 @@ class PySWMM(object):
                 binfile = self.inpfile.replace('.inp', '.out')
 
         errcode = self.SWMMlibobj.swmm_open(
-            ctypes.c_char_p(inpfile),
-            ctypes.c_char_p(rptfile), ctypes.c_char_p(binfile))
+            ctypes.c_char_p(six.b(inpfile)),
+            ctypes.c_char_p(six.b(rptfile)), ctypes.c_char_p(six.b(binfile)))
         self._error_check(errcode)
         self.fileLoaded = True
 
@@ -386,9 +395,11 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
+
         errcode = self.SWMMlibobj.swmm_close()
         self._error_check(errcode)
         self.fileLoaded = False
+
 
     def swmm_getVersion(self):
         """
@@ -400,7 +411,12 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        return self.SWMMlibobj.swmm_getVersion()
+        version = str(self.SWMMlibobj.swmm_getVersion())
+        major = version[0]
+        minor = version[1]
+        build = str(int(version[2:]))
+        ver = [major, minor, build]
+        return distutils.version.StrictVersion('.'.join(ver))
 
     def swmm_getMassBalErr(self):
         """
@@ -446,7 +462,13 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
+        if self.swmm_getVersion() < distutils.version.StrictVersion(
+                SWMM_VER_51011):
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        else:
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -463,7 +485,7 @@ class PySWMM(object):
         >>>
         """
         dtme = ctypes.create_string_buffer(
-            newDateTime.strftime("%m/%d/%Y %H:%M:%S"))
+            six.b(newDateTime.strftime("%m/%d/%Y %H:%M:%S")))
         errcode = self.SWMMlibobj.swmm_setSimulationDateTime(
             ctypes.c_int(timeType), dtme)
         self._error_check(errcode)
@@ -585,7 +607,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getObjectId(objecttype, index,
                                                    ctypes.byref(ID))
         self._error_check(errcode)
-        return ID.value
+        return ID.value.decode("utf-8")
 
     def getObjectIDList(self, objecttype):
         """
@@ -610,7 +632,7 @@ class PySWMM(object):
 
     def getObjectIDIndex(self, objecttype, ID):
         """Get Object ID Index. Mostly used as an internal function."""
-        C_ID = ctypes.c_char_p(ID)
+        C_ID = ctypes.c_char_p(six.b(ID))
         index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
         if index != -1:
             return index
@@ -619,7 +641,7 @@ class PySWMM(object):
 
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
-        C_ID = ctypes.c_char_p(ID)
+        C_ID = ctypes.c_char_p(six.b(ID))
         index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
         if index != -1:
             return True
@@ -933,7 +955,7 @@ class PySWMM(object):
 
     # --- Active Simulation Result "Getters"
     # -------------------------------------------------------------------------
-    def getCurrentSimualationTime(self):
+    def getCurrentSimulationTime(self):
         """
         Get Current Simulation DateTime in Python Format.
 
@@ -962,7 +984,13 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        return datetime.strptime(dtme.value, "%b-%d-%Y %H:%M:%S")
+        if self.swmm_getVersion() < distutils.version.StrictVersion(
+                SWMM_VER_51011):
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+        else:
+            return datetime.strptime(
+                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """
@@ -1070,6 +1098,34 @@ class PySWMM(object):
 
         return result.value
 
+    def system_flow_routing(self, resultType):
+        """
+        Get Cumulative System Flow Routing Stats.
+
+        :param int resultType: Results Type based on SysRoutingStats
+        """
+        result = ctypes.c_double()
+        errcode = self.SWMMlibobj.swmm_getSystemRoutingTotals(
+            resultType, ctypes.byref(result))
+
+        self._error_check(errcode)
+
+        return result.value
+
+    def system_runoff_routing(self, resultType):
+        """
+        Get Cumulative System Runoff Routing Stats.
+
+        :param int resultType: Results Type based on SysRunoffStats
+        """
+        result = ctypes.c_double()
+        errcode = self.SWMMlibobj.swmm_getSystemRunoffTotals(
+            resultType, ctypes.byref(result))
+
+        self._error_check(errcode)
+
+        return result.value
+
     # --- Active Simulation Parameter "Setters"
     # -------------------------------------------------------------------------
     def setLinkSetting(self, ID, targetSetting):
@@ -1140,9 +1196,9 @@ class PySWMM(object):
 
 if __name__ == '__main__':
     test = PySWMM(
-        inpfile=r"../test/TestModel1_weirSetting.inp",
-        rptfile=r"../test/TestModel1_weirSetting.rpt",
-        binfile=r"../test/TestModel1_weirSetting.out")
+        inpfile=r"./tests/data/model_weir_setting.inp",
+        rptfile=r"./tests/data/model_weir_setting.rpt",
+        binfile=r"./tests/data/model_weir_setting.out")
     test.swmm_open()
 
     print("Simulation Time Info")

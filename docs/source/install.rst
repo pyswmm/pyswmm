@@ -40,4 +40,4 @@ Requirements
 Python
 ------
 
-To use PySWMM you need Python 2.7, 3.3 or later.
+To use PySWMM you need Python 2.7, 3.4 or later. Also, this project is currently setup for 32-bit python.

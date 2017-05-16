@@ -27,9 +27,9 @@ def test_current_time():
         time = swmmobject.swmm_stride(600)
         print(time)
         i += 1
-        current_time = swmmobject.getCurrentSimualationTime()
+        current_time = swmmobject.getCurrentSimulationTime()
         print(current_time)
-        print(type(swmmobject.getCurrentSimualationTime()))
+        print(type(swmmobject.getCurrentSimulationTime()))
 
         if (time <= 0.0):
             break
@@ -72,8 +72,8 @@ def test_set_current_time():
     while (True):
         time = swmmobject.swmm_stride(600)
         i += 1
-        print(swmmobject.getCurrentSimualationTime())
-        print(type(swmmobject.getCurrentSimualationTime()))
+        print(swmmobject.getCurrentSimulationTime())
+        print(type(swmmobject.getCurrentSimulationTime()))
 
         if (time <= 0.0):
             break

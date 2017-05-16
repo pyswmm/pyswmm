@@ -5,7 +5,8 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
-"""SWMM5 compiled libraries."""
+"""SWMM5 compiled libraries. This module provides the user with some options
+for selecting the SWMM5 engine. """
 
 # Standard library imports
 import os
@@ -26,15 +27,17 @@ def _platform():
     if os.name == 'posix':
         return 'linux'
 
+
 # Library paths
 if os.name == 'nt':
-    LIB_SWMM = os.path.join(HERE, _platform(),
-                            'swmm5.dll').replace('\\', '/')
+    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
 else:
     LIB_SWMM = 'libswmm5.so'
 
+
 class _DllPath(object):
     """DllPath Object."""
+
     def __init__(self):
         self._dll_loc = LIB_SWMM
 
@@ -52,18 +55,32 @@ class _DllPath(object):
         """Caller returns DLL Name."""
         return self._dll_loc
 
+
 # Initialize dll path object
 DLL_SELECTION = _DllPath()
+
 
 def use(arg):
     """
     Set the SWMM5 DLL.
 
-    Examples:
-    >>> import pyswmm
-    >>> pyswmm.lib.use("TestDLL")
+    This method allows the user to define the engine they would
+    like to use for the simulation.  It is important to understand
+    that previous verisons of EPA-SWMM5 do not have the expanded
+    toolkit functionality.  Therefore, only basic functionality for
+    running a simulation is available.
 
-    from pyswmm import Simulation
+    To use this, the user should copy and rename their SWMM5 DLL into
+    the :file:`site-packages/pyswmm/lib/windows` directory.
+    The example below outlines the steps.  This should be done
+    before Simulation is imported.
+
+    Examples:
+
+    >>> import pyswmm
+    >>> pyswmm.lib.use("swmm5")
+    >>>
+    >>> from pyswmm import Simulation
     """
     
     if _platform() == 'windows':
@@ -79,4 +96,4 @@ def use(arg):
         DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
                                              arg).replace('\\', '/')
     else:
-        raise(Exception("Library Not Found"))
+        raise (Exception("Library Not Found"))

@@ -144,6 +144,32 @@ class SubcResults(Enum):
     newSnowDepth = 5  # Current Snow Depth
 
 
+class SysRoutingStats(Enum):
+    DWinflow = 0  # Cumulative Dry Weather Inflow Volume
+    WWinflow = 1  # Cumulative Wet Weather Inflow Volume
+    GWinflow = 2  # Cumulative Groundwater Inflow Volume
+    IIinflow = 3  # Cumulative I&I Inflow Volume
+    EXinflow = 4  # Cumulative External Inflow Volume
+    flooding = 5  # Cumulative Flooding Volume
+    outfall = 6  # Cumulative Outfall Volume
+    evaporation = 7  # Cumulative Evaporation Loss Volume
+    seepage = 8  # Cumulative Seepage Loss Volume
+    routing_error = 9  # Current Flow Routing Error
+
+
+class SysRunoffStats(Enum):
+    rainfall = 0  # Cumulative Rainfall Volume
+    evaporation = 1  # Cumulative Evaporation Volume
+    infiltration = 2  # Cumulative Infiltration Volume
+    runoff = 3  # Cumulative Runon Volume
+    runon = 4  # Cumulative Runoff Volume
+    drains = 5  # Cumulative Drain Volume
+    snow_removed = 6  # Cumulative Snow Removed Volume
+    initial_storage = 7  # Initial Storage Volume
+    initial_snow_cover = 8  # Snow Cover Volume
+    routing_error = 9  # Current Runoff Routing Error
+
+
 # --- SWMM Output API
 # -----------------------------------------------------------------------------
 DLLErrorKeys = {

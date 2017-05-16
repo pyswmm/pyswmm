@@ -18,8 +18,8 @@ Project information
 -------------------
 |docs| |license| |pypi version|
 
-.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/ajm7s6ivtya433e5?svg=true
-   :target: https://ci.appveyor.com/project/goanpeca/pyswmm
+.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/jjxpum62nf8ajcar/branch/master?svg=true
+   :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
    :alt: Appveyor build status
 .. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
    :target: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master
@@ -27,7 +27,7 @@ Project information
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/badges/quality-score.png?b=master
    :target: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/?branch=master
    :alt: Scrutinizer Code Quality
-.. |license| image:: https://img.shields.io/pypi/p/pyswmm.svg
+.. |license| image:: https://img.shields.io/pypi/l/pyswmm.svg
    :target: LICENSE.txt
    :alt: License
 .. |pypi version| image:: https://img.shields.io/pypi/v/pyswmm.svg
@@ -165,8 +165,8 @@ Distributed with a BSD2 license; see LICENSE.txt::
    Copyright (C) 2014 PySWMM Developers
    Bryant E. McDonnell <bemcdonnell@gmail.com>
 
-Sponsors
---------
+Powered By
+----------
 
 EmNet LLC: 
 	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
