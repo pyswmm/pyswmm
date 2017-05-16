@@ -18,8 +18,8 @@ Project information
 -------------------
 |docs| |license| |pypi version|
 
-.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/ajm7s6ivtya433e5?svg=true
-   :target: https://ci.appveyor.com/project/goanpeca/pyswmm
+.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/39nhwhkxwu4jmv6u?svg=true
+   :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
    :alt: Appveyor build status
 .. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
    :target: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master
