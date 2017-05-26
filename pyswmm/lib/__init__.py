@@ -23,13 +23,15 @@ def _platform():
     """Folder based on platform."""
     if os.name == 'nt':
         return 'windows'
+    if os.name == 'posix':
+        return  'macos'
 
 
 # Library paths
 if os.name == 'nt':
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
 else:
-    LIB_SWMM = ''
+    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
 
 
 class _DllPath(object):
