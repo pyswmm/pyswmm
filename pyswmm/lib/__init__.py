@@ -11,6 +11,7 @@ for selecting the SWMM5 engine. """
 # Standard library imports
 import os
 import sys
+
 # Machine Architechture
 MACHINE_BITS = 8 * tuple.__itemsize__
 
@@ -24,7 +25,7 @@ def _platform():
     if os.name == 'nt':
         return 'windows'
     if sys.platform == 'darwin':
-        return  'macos'
+        return 'macos'
 
 
 # Library paths
@@ -81,10 +82,21 @@ def use(arg):
     >>>
     >>> from pyswmm import Simulation
     """
-    if not arg.endswith('.dll'):
-        arg = arg + ".dll"
-    if os.path.isfile(os.path.join(HERE, _platform(), arg).replace('\\', '/')):
-        DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
-                                             arg).replace('\\', '/')
-    else:
-        raise (Exception("Library Not Found"))
+    if os.name == 'nt':
+        if not arg.endswith('.dll'):
+            arg = arg + ".dll"
+        if os.path.isfile(
+                os.path.join(HERE, _platform(), arg).replace('\\', '/')):
+            DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
+                                                 arg).replace('\\', '/')
+        else:
+            raise (Exception("Library Not Found"))
+    elif sys.platform == 'darwin':
+        if not arg.endswith('.so'):
+            arg = arg + ".so"
+        if os.path.isfile(
+                os.path.join(HERE, _platform(), arg).replace('\\', '/')):
+            DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
+                                                 arg).replace('\\', '/')
+        else:
+            raise (Exception("Library Not Found"))

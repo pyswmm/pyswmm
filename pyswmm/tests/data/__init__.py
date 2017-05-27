@@ -21,4 +21,3 @@ MODEL_WEIR_SETTING_PATH = os.path.join(DATA_PATH, 'model_weir_setting.inp')
 # Images
 IMAGE_NODE_INFLOWS_PATH = os.path.join(DATA_PATH, 'node_inflows.PNG')
 IMAGE_WEIR_SETTING_PATH = os.path.join(DATA_PATH, 'weir_setting.PNG')
-

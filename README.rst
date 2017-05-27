@@ -168,10 +168,14 @@ Distributed with a BSD2 license; see LICENSE.txt::
 Powered By
 ----------
 
-EmNet LLC: 
+EmNet LLC:
 	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
 	  :target: http://emnet.net/
-	  
+
+Open Storm:
+	.. image:: http://open-storm.org/wp-content/uploads/2016/08/graphic.gif
+	  :target: http://open-storm.org/
+
 Acknowledgements
 ----------------
 

@@ -176,8 +176,8 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        sys.stdout.write("\n... SWMM Version {}".format(self.swmm_getVersion(
-        )))
+        sys.stdout.write(
+            "\n... SWMM Version {}".format(self.swmm_getVersion()))
 
         try:
             self.swmm_run()
@@ -504,8 +504,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         value = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_getSimulationUnit(unittype,
-                                                         ctypes.byref(value))
+        errcode = self.SWMMlibobj.swmm_getSimulationUnit(
+            unittype, ctypes.byref(value))
         self._error_check(errcode)
         if unittype == tka.SimulationUnits.FlowUnits.value:
             # Temporary Solution (2017-1-2 BEM)
@@ -555,8 +555,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         value = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSimulationParam(paramtype,
-                                                          ctypes.byref(value))
+        errcode = self.SWMMlibobj.swmm_getSimulationParam(
+            paramtype, ctypes.byref(value))
         self._error_check(errcode)
         return value.value
 
@@ -878,8 +878,8 @@ class PySWMM(object):
         param = ctypes.c_double()
         if not isinstance(parameter, int):
             parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_getSubcatchParam(index, parameter,
-                                                        ctypes.byref(param))
+        errcode = self.SWMMlibobj.swmm_getSubcatchParam(
+            index, parameter, ctypes.byref(param))
         self._error_check(errcode)
         return param.value
 
@@ -1089,8 +1089,8 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
         result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSubcatchResult(index, resultType,
-                                                         ctypes.byref(result))
+        errcode = self.SWMMlibobj.swmm_getSubcatchResult(
+            index, resultType, ctypes.byref(result))
         self._error_check(errcode)
 
         return result.value
