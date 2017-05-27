@@ -10,7 +10,7 @@ for selecting the SWMM5 engine. """
 
 # Standard library imports
 import os
-
+import sys
 # Machine Architechture
 MACHINE_BITS = 8 * tuple.__itemsize__
 
@@ -23,7 +23,7 @@ def _platform():
     """Folder based on platform."""
     if os.name == 'nt':
         return 'windows'
-    if os.name == 'posix':
+    if sys.platform == 'darwin':
         return  'macos'
 
 
