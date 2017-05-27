@@ -10,8 +10,8 @@
 import sys
 
 # Local imports
-#from pyswmm import Simulation
-#from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+# from pyswmm import Simulation
+# from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pyswmm
 
 
