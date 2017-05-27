@@ -1,5 +1,5 @@
 # Build dependencies
 #python
-#setuptools
+six
 
 # Run dependencies
