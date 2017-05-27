@@ -1,5 +1,7 @@
 # Build dependencies
 #python
 six
+enum34
+pytest
 
 # Run dependencies
