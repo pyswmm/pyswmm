@@ -168,15 +168,17 @@ Distributed with a BSD2 license; see LICENSE.txt::
 Powered By
 ----------
 
-EmNet LLC: 
+EmNet LLC:
 	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
 	  :target: http://emnet.net/
-	  
+Open Storm:
+    .. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
+      :target: http://open-storm.org/
+
 Acknowledgements
 ----------------
 
 - Tim Cera
 - Assela Pathirana
-
 
 
