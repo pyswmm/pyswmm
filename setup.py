@@ -54,7 +54,7 @@ setup(
     author_email='bemcdonnell@gmail.com',
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    package_data={'': ['lib/windows/swmm5.dll', 'LICENSE.txt']},
+    package_data={'': ['lib/windows/swmm5.dll', 'LICENSE.txt', 'AUTHORS']},
     include_package_data=True,
     license="BSD2 License",
     keywords="swmm5, swmm, hydraulics, hydrology, modeling, collection system",
