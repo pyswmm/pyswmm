@@ -173,8 +173,7 @@ EmNet LLC:
 	  :target: http://emnet.net/
 
 Open Storm:
-	.. image:: https://github.com/abhiramm7/pyswmm/blob/macosx/docs/source/open_storm.png
-      :scale: 50 %
+	.. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
       :target: http://open-storm.org/
 
 Acknowledgements
@@ -182,6 +181,4 @@ Acknowledgements
 
 - Tim Cera
 - Assela Pathirana
-
-
 
