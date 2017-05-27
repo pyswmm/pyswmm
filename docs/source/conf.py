@@ -12,23 +12,26 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-#sys.path.append(r'C:\PROJECTCODE\pyswmm\pyswmm')
-sys.path.insert(0, os.path.abspath("../../pyswmm"))
+# sys.path.append(r'C:\PROJECTCODE\pyswmm\pyswmm')
+
 # Standard library imports
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
 import os
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
 import sys
 
 # Local imports
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+import pyswmm
+
+# documentation root, use os.path.abspath to make it absolute, like shown here.
+#
+
+sys.path.insert(0, os.path.abspath("../../pyswmm"))
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-import pyswmm
 
 # -- General configuration ------------------------------------------------
 
@@ -156,7 +159,7 @@ html_theme = 'sphinx_rtd_theme'
 # html_logo = None
 
 # The name of an image file (relative to this directory) to use as a favicon of
-# the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# the docs. This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #
 # html_favicon = None
