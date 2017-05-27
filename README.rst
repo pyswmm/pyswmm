@@ -173,8 +173,8 @@ EmNet LLC:
 	  :target: http://emnet.net/
 
 Open Storm:
-	.. image:: http://open-storm.org/wp-content/uploads/2016/08/graphic.gif
-	  :target: http://open-storm.org/
+	.. image:: https://github.com/abhiramm7/pyswmm/blob/macosx/docs/source/open_storm.png
+      :target: http://open-storm.org/
 
 Acknowledgements
 ----------------
