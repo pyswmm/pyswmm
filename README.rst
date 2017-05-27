@@ -171,9 +171,8 @@ Powered By
 EmNet LLC:
 	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
 	  :target: http://emnet.net/
-
 Open Storm:
-	.. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
+    .. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
       :target: http://open-storm.org/
 
 Acknowledgements
@@ -181,4 +180,5 @@ Acknowledgements
 
 - Tim Cera
 - Assela Pathirana
+
 
