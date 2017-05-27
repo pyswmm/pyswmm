@@ -174,6 +174,7 @@ EmNet LLC:
 
 Open Storm:
 	.. image:: https://github.com/abhiramm7/pyswmm/blob/macosx/docs/source/open_storm.png
+      :scale: 50 %
       :target: http://open-storm.org/
 
 Acknowledgements
