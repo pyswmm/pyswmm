@@ -1,5 +1,6 @@
 # Build dependencies
 #python
 six
+enum34
 
 # Run dependencies
