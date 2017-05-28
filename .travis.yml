@@ -1,20 +1,13 @@
 language: python
+python:
+    - "3.6"
+    - "2.7"
 sudo: false
 
 matrix:
   include:
     - os: osx
       language: generic
-      env: TRAVIS_PYTHON_VERSION=2.7
-    - os: osx
-      language: generic
-      env: TRAVIS_PYTHON_VERSION=3.4
-    - os: osx
-      language: generic
-      env: TRAVIS_PYTHON_VERSION=3.5
-    - os: osx
-      language: generic
-      env: TRAVIS_PYTHON_VERSION=3.6
 # install dependecy
 before_install:
     - brew update
