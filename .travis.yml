@@ -1,16 +1,20 @@
 language: python
+sudo: false
 
-os:
-  - osx
-  
-python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-
-# command to install dependencies
-install: "pip install -r requirements.txt"
-
-# command to run tests
-script: pytest
+matrix:
+  include:
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=2.7
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=3.4
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=3.5
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=3.6
+      
+script:
+  - pytest pyswmm
