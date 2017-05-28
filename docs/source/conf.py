@@ -12,14 +12,26 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+# sys.path.append(r'C:\PROJECTCODE\pyswmm\pyswmm')
+
+# Standard library imports
 import os
 import sys
-#sys.path.append(r'C:\PROJECTCODE\pyswmm\pyswmm')
+
+# Local imports
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+import pyswmm
+
+# documentation root, use os.path.abspath to make it absolute, like shown here.
+#
+
 sys.path.insert(0, os.path.abspath("../../pyswmm"))
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
+#
+# The short X.Y version.
 
 # -- General configuration ------------------------------------------------
 
@@ -59,13 +71,6 @@ master_doc = 'index'
 project = u'pyswmm'
 copyright = u'2016, Bryant E. McDonnell (EmNet LLC)'
 author = u'Bryant E. McDonnell (EmNet LLC)'
-
-# The version info for the project you're documenting, acts as replacement for
-# |version| and |release|, also used in various other places throughout the
-# built documents.
-#
-# The short X.Y version.
-import pyswmm
 
 version = pyswmm.__version__
 # The full version, including alpha/beta/rc tags.
@@ -123,7 +128,6 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -155,7 +159,7 @@ html_theme = 'sphinx_rtd_theme'
 # html_logo = None
 
 # The name of an image file (relative to this directory) to use as a favicon of
-# the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# the docs. This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #
 # html_favicon = None
@@ -248,21 +252,21 @@ htmlhelp_basename = 'pyswmmdoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-     # The paper size ('letterpaper' or 'a4paper').
-     #
-     'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #
+    'papersize': 'letterpaper',
 
-     # The font size ('10pt', '11pt' or '12pt').
-     #
-     'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #
+    'pointsize': '10pt',
 
-     # Additional stuff for the LaTeX preamble.
-     #
-     'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    #
+    'preamble': '',
 
-     # Latex figure (float) alignment
-     #
-     # 'figure_align': 'htbp',
+    # Latex figure (float) alignment
+    #
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -305,20 +309,15 @@ latex_documents = [
 #
 # latex_domain_indices = True
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'pyswmm', u'pyswmm Documentation',
-     [author], 1)
-]
+man_pages = [(master_doc, 'pyswmm', u'pyswmm Documentation', [author], 1)]
 
 # If true, show URL addresses after external links.
 #
 # man_show_urls = False
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -326,9 +325,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pyswmm', u'pyswmm Documentation',
-     author, 'pyswmm', 'One line description of project.',
-     'Miscellaneous'),
+    (master_doc, 'pyswmm', u'pyswmm Documentation', author, 'pyswmm',
+     'One line description of project.', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -346,7 +344,6 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
-
 
 # -- Options for Epub output ----------------------------------------------
 
@@ -431,7 +428,6 @@ epub_exclude_files = ['search.html']
 # If false, no index is generated.
 #
 # epub_use_index = True
-
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}

@@ -1,16 +1,17 @@
 language: python
-
-os:
-  - osx
-  
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
+    - "3.6"
+    - "2.7"
+sudo: false
 
-# command to install dependencies
-install: "pip install -r requirements.txt"
-
-# command to run tests
-script: pytest
+matrix:
+  include:
+    - os: osx
+      language: generic
+# install dependecy
+before_install:
+    - brew update
+    - brew install gcc
+install: "pip install -r requirements-travis.txt"
+script:
+  - pytest pyswmm
