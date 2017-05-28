@@ -1,5 +1,3 @@
 # Test/Dev dependencies
 pytest
-ciocheck
-coveralls
 matplotlib
