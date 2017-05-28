@@ -15,6 +15,7 @@ matrix:
     - os: osx
       language: generic
       env: TRAVIS_PYTHON_VERSION=3.6
-      
+# install dependecy
+install: "pip install -r requirements-test.txt"
 script:
   - pytest pyswmm
