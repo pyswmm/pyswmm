@@ -31,20 +31,21 @@ platform:
 
 install:
   # Astropy ci-helpers. See https://github.com/astropy/ci-helpers
-  - "git clone git://github.com/astropy/ci-helpers.git"
-  - "powershell ci-helpers/appveyor/install-miniconda.ps1"
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "activate test"
+  # - "git clone git://github.com/astropy/ci-helpers.git"
+  # - "powershell ci-helpers/appveyor/install-miniconda.ps1"
+  # - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  # - "activate test"
   # Install the selected Qt version
-  - "conda install --file requirements-test.txt -c spyder-ide"
-  - IF "%PYTHON_VERSION%" == "2.7" conda install enum34
-  - "python setup.py develop"
+  - pip install -r requirements-test.txt
+  # - "conda install --file requirements-test.txt -c spyder-ide"
+  # - IF "%PYTHON_VERSION%" == "2.7" conda install enum34
+  - python setup.py develop
 
 # Not a .NET project, we build in the install step instead
 build: false
 
-test_script:
-  - ciocheck setup.py --disable-tests
-  - ciocheck pyswmm --disable-tests
+script:
+  # - ciocheck setup.py --disable-tests
+  # - ciocheck pyswmm --disable-tests
   - pytest pyswmm
 #  - coveralls --disable-tests
