@@ -19,6 +19,6 @@ matrix:
 before_install:
     - brew update
     - brew install gcc
-install: "pip install -r requirements-test.txt"
+install: "pip install -r requirements-test-travis.txt"
 script:
   - pytest pyswmm
