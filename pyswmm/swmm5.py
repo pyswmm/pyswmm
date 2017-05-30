@@ -160,7 +160,7 @@ class PySWMM(object):
         +--------------+---+
         | system       | 3 |
         +--------------+---+
-        
+
         :param int object_type: SWMM Object Type (StatObjectType)
         :param int param_type: Stat Type
         :return: (errcode, array_length, pointer)

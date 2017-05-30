@@ -62,7 +62,7 @@ class SystemStats(object):
         | Seepage Loss Volume     | 8 |
         +-------------------------+---+
         | Routing Error (%)       | 9 |
-        +-------------------------+---+        
+        +-------------------------+---+
 
         :return: Statistics
         :rtype: list

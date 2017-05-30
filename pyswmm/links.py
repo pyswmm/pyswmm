@@ -872,7 +872,7 @@ class Conduit(Link):
         """
         Conduit Flow Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
-        
+
         +---------------+---+
         | Max Flow Rate | 0 |
         +---------------+---+
@@ -880,7 +880,7 @@ class Conduit(Link):
         +---------------+---+
         | Max Depth     | 2 |
         +---------------+---+
-        
+
         :return: Group of Stats
         :rtype: list
         """
@@ -892,7 +892,7 @@ class Conduit(Link):
         """
         Conduit Surcharge Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
-        
+
         +-----------------------------------+---+
         | Fraction of Time in Normal Flow   | 0 |
         +-----------------------------------+---+
@@ -910,7 +910,7 @@ class Conduit(Link):
         +-----------------------------------+---+
         | Fraction of time Courant Critical | 7 |
         +-----------------------------------+---+
-        
+
         :return: Group of Stats
         :rtype: list
         """
@@ -931,7 +931,7 @@ class Pump(Link):
         """
         Pump Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
-        
+
         +--------------------------+---+
         | Fraction of Time Pump On | 0 |
         +--------------------------+---+
@@ -947,7 +947,7 @@ class Pump(Link):
         +--------------------------+---+
         | Number of Start Ups      | 6 |
         +--------------------------+---+
-        
+
         :return: Group of Stats
         :rtype: list
         """

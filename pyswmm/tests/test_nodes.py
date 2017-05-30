@@ -86,8 +86,8 @@ def test_nodes_5():
         j1 = Nodes(sim)["J1"]  #junction
 
         for step in sim:
-            print j4.outfall_stats
-            print j2.storage_stats
-            print j1.node_inflow_stats
-            print j1.node_depth_stats
-            print j1.node_flood_stats
+            print(j4.outfall_stats)
+            print(j2.storage_stats)
+            print(j1.node_inflow_stats)
+            print(j1.node_depth_stats)
+            print(j1.node_flood_stats)

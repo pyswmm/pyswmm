@@ -50,6 +50,6 @@ def test_links_3():
         C1_C2 = Links(sim)["C1:C2"]  #Conduit
 
         for step in sim:
-            print C2.pump_stats
-            print C1_C2.conduit_surcharge_stats
-            print C1_C2.conduit_flow_stats
+            print(C2.pump_stats)
+            print(C1_C2.conduit_surcharge_stats)
+            print(C1_C2.conduit_flow_stats)
