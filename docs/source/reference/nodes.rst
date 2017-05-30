@@ -6,6 +6,6 @@ nodes module
 ============
 
 .. automodule:: pyswmm.nodes
-    :members: Nodes, Node
+    :members: Nodes, Node, Outfall, Storage
     :undoc-members:
     :show-inheritance:

@@ -404,7 +404,7 @@ class PySWMM(object):
 
     def swmm_report(self):
         """
-        Produces SWMM Report (*.rpt) file after simulation.
+        Copies Time Series results from .out to .rpt file.
 
         Examples:
 
@@ -1272,7 +1272,7 @@ class PySWMM(object):
 
         :param str ID: Link ID
         :param float targetSetting: New target setting which will be applied
-        at the start of the next routing step
+        at the start of the next routing step.
 
         Examples:
 

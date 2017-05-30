@@ -3,9 +3,9 @@
 .. currentmodule:: pyswmm.system
 
 system module
-============
+=============
 
 .. automodule:: pyswmm.system
-    :members: FlowRouting, RunoffRouting
+    :members: SystemStats
     :undoc-members:
     :show-inheritance:
