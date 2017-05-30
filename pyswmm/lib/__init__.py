@@ -31,8 +31,10 @@ def _platform():
 # Library paths
 if os.name == 'nt':
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
-else:
+elif sys.platform == 'darwin':
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
+else:
+    LIB_SWMM = ''
 
 
 class _DllPath(object):
