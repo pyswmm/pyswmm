@@ -9,7 +9,8 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
+from pyswmm.toolkitapi import (LinkParams, LinkResults, LinkStats, LinkType,
+                               ObjectType)
 
 
 class Links(object):
@@ -87,7 +88,13 @@ class Links(object):
 
     def __getitem__(self, linkid):
         if self.__contains__(linkid):
-            return Link(self._model, linkid)
+            ln = Link(self._model, linkid)
+            _ln = ln
+            if ln.is_conduit():
+                _ln.__class__ = Conduit
+            elif ln.is_pump():
+                _ln.__class__ = Pump
+            return _ln
         else:
             raise PYSWMMException("Link ID Does not Exist")
 
@@ -850,3 +857,99 @@ class Link(object):
         return 0.
         """
         return self._model.setLinkSetting(self._linkid, setting)
+
+
+class Conduit(Link):
+    """
+    Conduit Object: Subclass of Link Object.
+    """
+
+    def __init__(self):
+        super(Conduit, self).__init__()
+
+    @property
+    def conduit_flow_stats(self):
+        """
+        Conduit Flow Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+        
+        +---------------+---+
+        | Max Flow Rate | 0 |
+        +---------------+---+
+        | Max Velocity  | 1 |
+        +---------------+---+
+        | Max Depth     | 2 |
+        +---------------+---+
+        
+        :return: Group of Stats
+        :rtype: list
+        """
+        return self._model.link_statistics(self.linkid,
+                                           LinkStats.link_flow_stats.value)
+
+    @property
+    def conduit_surcharge_stats(self):
+        """
+        Conduit Surcharge Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+        
+        +-----------------------------------+---+
+        | Fraction of Time in Normal Flow   | 0 |
+        +-----------------------------------+---+
+        | Fraction of Time in Inlet Control | 1 |
+        +-----------------------------------+---+
+        | Fraction of Time Surcharged       | 2 |
+        +-----------------------------------+---+
+        | Fraction of Time Upstream Full    | 3 |
+        +-----------------------------------+---+
+        | Fraction of Time Downstream Full  | 4 |
+        +-----------------------------------+---+
+        | Fraction of Time Full Flow        | 5 |
+        +-----------------------------------+---+
+        | Fraction of time Capacity Limited | 6 |
+        +-----------------------------------+---+
+        | Fraction of time Courant Critical | 7 |
+        +-----------------------------------+---+
+        
+        :return: Group of Stats
+        :rtype: list
+        """
+        return self._model.link_statistics(
+            self.linkid, LinkStats.conduit_surcharge_stats.value)
+
+
+class Pump(Link):
+    """
+    Pump Object: Subclass of Link Object.
+    """
+
+    def __init__(self):
+        super(Pump, self).__init__()
+
+    @property
+    def pump_stats(self):
+        """
+        Pump Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+        
+        +--------------------------+---+
+        | Fraction of Time Pump On | 0 |
+        +--------------------------+---+
+        | Min Flow Rate            | 1 |
+        +--------------------------+---+
+        | Average Flow Rate        | 2 |
+        +--------------------------+---+
+        | Max Flow Rate            | 3 |
+        +--------------------------+---+
+        | Total Volume Pumped      | 4 |
+        +--------------------------+---+
+        | Energy Consumed          | 5 |
+        +--------------------------+---+
+        | Number of Start Ups      | 6 |
+        +--------------------------+---+
+        
+        :return: Group of Stats
+        :rtype: list
+        """
+        return self._model.link_statistics(self.linkid,
+                                           LinkStats.pump_stats.value)

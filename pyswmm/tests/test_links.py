@@ -9,7 +9,7 @@
 # Local imports
 from pyswmm import Links, Simulation
 # from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm.tests.data import MODEL_FULL_FEATURES_PATH, MODEL_WEIR_SETTING_PATH
 
 
 def test_links_1():
@@ -43,11 +43,13 @@ def test_links_2():
             print(link.flow_limit)
 
 
-# def test_links_3():
-#    swmmobject = PySWMM(MODEL_WEIR_SETTING_PATH)
-#    swmmobject.swmm_open()
-#    swmmobject.swmmExec()
-#    link = Link(swmmobject, "C2")
-#    print(link.flow_limit)
-#    swmmobject.swmm_close()
-#    print("swmm_step() Check Passed")
+def test_links_3():
+    with Simulation(MODEL_FULL_FEATURES_PATH) as sim:
+        print("\n\n\nLINKS\n")
+        C2 = Links(sim)["C2"]  #Pump
+        C1_C2 = Links(sim)["C1:C2"]  #Conduit
+
+        for step in sim:
+            print C2.pump_stats
+            print C1_C2.conduit_surcharge_stats
+            print C1_C2.conduit_flow_stats
