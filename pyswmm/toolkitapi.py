@@ -144,6 +144,37 @@ class SubcResults(Enum):
     newSnowDepth = 5  # Current Snow Depth
 
 
+class StatObjectType(Enum):
+    node = 0  # Node
+    link = 1  # Link
+    subcatc = 2  # Subcatchment
+    system = 3  # System
+
+
+class NodeStats(Enum):
+    node_depth_stats = 0
+    node_inflow_stats = 1
+    node_flood_stats = 2
+    storage_volume_stats = 3
+    outfall_load_stats = 4
+
+
+class LinkStats(Enum):
+    link_flow_stats = 0
+    conduit_surcharge_stats = 1
+    pump_stats = 2
+
+
+class SubcStats(Enum):
+    subc_flow_stats = 0
+    subc_climate_stats = 1
+
+
+class SystemStats(Enum):
+    sys_flow_routing = 0
+    sys_runoff_routing = 1
+
+
 class SysRoutingStats(Enum):
     DWinflow = 0  # Cumulative Dry Weather Inflow Volume
     WWinflow = 1  # Cumulative Wet Weather Inflow Volume

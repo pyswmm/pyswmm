@@ -146,6 +146,51 @@ class PySWMM(object):
         if errcode != 0 and errcode > 103:
             warnings.warn(self._error_message(errcode))
 
+    def _array_pointer(self, object_type, param_type):
+        """
+        Initializes C Pointer to array.
+
+        StatObjectType
+        +--------------+---+
+        | node         | 0 |
+        +--------------+---+
+        | link         | 1 |
+        +--------------+---+
+        | subcatchment | 2 |
+        +--------------+---+
+        | system       | 3 |
+        +--------------+---+
+        
+        :param int object_type: SWMM Object Type (StatObjectType)
+        :param int param_type: Stat Type
+        :return: (errcode, array_length, pointer)
+        :rtype: tuple
+        """
+        array_length = ctypes.c_int()
+        errcode = ctypes.c_int()
+
+        ptr_func = self.SWMMlibobj.swmm_newOutValueArray
+        ptr_func.argtypes = [
+            ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_int),
+            ctypes.POINTER(ctypes.c_int)
+        ]
+        ptr_func.restype = ctypes.POINTER(ctypes.c_double)
+
+        ptr = ptr_func(
+            ctypes.c_int(object_type),
+            ctypes.c_int(param_type),
+            ctypes.byref(array_length), ctypes.byref(errcode))
+
+        return errcode.value, array_length.value, ptr
+
+    def _swmm_free(self, ptr):
+        """
+        Frees array.
+
+        :param pointer ptr: Pointer to array
+        """
+        self.SWMMlibobj.swmm_free(ptr)
+
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):
         """
         Open an input file, run SWMM, then close the file.
@@ -1095,33 +1140,129 @@ class PySWMM(object):
 
         return result.value
 
-    def system_flow_routing(self, resultType):
+    def node_statistics(self, ID, param_type):
         """
-        Get Cumulative System Flow Routing Stats.
+        Get node stats for nodes, storage, and outfalls.
 
-        :param int resultType: Results Type based on SysRoutingStats
+        +----------------------+---+
+        | node_depth_stats     | 0 |
+        +----------------------+---+
+        | node_inflow_stats    | 1 |
+        +----------------------+---+
+        | node_flood_stats     | 2 |
+        +----------------------+---+
+        | storage_volume_stats | 3 |
+        +----------------------+---+
+        | outfall_load_stats   | 4 |
+        +----------------------+---+
+
+        :param str ID: Node ID
+        :param int param_type: Group id (NodeStats)
+        :return: Group Stats
+        :rtype: list
         """
-        result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSystemRoutingTotals(
-            resultType, ctypes.byref(result))
+        errcode, array_length, ptr = self._array_pointer(
+            tka.StatObjectType.node.value, param_type)
 
         self._error_check(errcode)
 
-        return result.value
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
 
-    def system_runoff_routing(self, resultType):
-        """
-        Get Cumulative System Runoff Routing Stats.
+        self.SWMMlibobj.swmm_getNodeStats(
+            ctypes.c_int(index), ctypes.c_int(param_type), ptr)
 
-        :param int resultType: Results Type based on SysRunoffStats
+        returned_array = [ptr[i] for i in range(array_length)]
+        self._swmm_free(ptr)
+
+        return returned_array
+
+    def link_statistics(self, ID, param_type):
         """
-        result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSystemRunoffTotals(
-            resultType, ctypes.byref(result))
+        Get link stats for links, conduits, and pumps.
+
+        +-------------------------+---+
+        | link_flow_stats         | 0 |
+        +-------------------------+---+
+        | conduit_surcharge_stats | 1 |
+        +-------------------------+---+
+        | pump_stats              | 2 |
+        +-------------------------+---+
+
+        :param str ID: Link ID
+        :param int param_type: Group id (LinkStats)
+        :return: Group Stats
+        :rtype: list
+        """
+        errcode, array_length, ptr = self._array_pointer(
+            tka.StatObjectType.link.value, param_type)
 
         self._error_check(errcode)
 
-        return result.value
+        index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+
+        self.SWMMlibobj.swmm_getLinkStats(
+            ctypes.c_int(index), ctypes.c_int(param_type), ptr)
+
+        returned_array = [ptr[i] for i in range(array_length)]
+        self._swmm_free(ptr)
+
+        return returned_array
+
+    def subcatch_statistics(self, ID, param_type):
+        """
+        Get Subcatchment stats for Subcatchments.
+
+        +--------------------+---+
+        | subc_flow_stats    | 0 |
+        +--------------------+---+
+        | subc_climate_stats | 1 |
+        +--------------------+---+
+
+        :param str ID: Subcatchment ID
+        :param int param_type: Group id (SubcStats)
+        :return: Group Stats
+        :rtype: list
+        """
+        errcode, array_length, ptr = self._array_pointer(
+            tka.StatObjectType.subcatc.value, param_type)
+
+        self._error_check(errcode)
+
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
+
+        self.SWMMlibobj.swmm_getSubcatchStats(
+            ctypes.c_int(index), ctypes.c_int(param_type), ptr)
+
+        returned_array = [ptr[i] for i in range(array_length)]
+        self._swmm_free(ptr)
+
+        return returned_array
+
+    def system_statistics(self, param_type):
+        """
+        Get System stats.
+
+        +--------------------+---+
+        | sys_flow_routing   | 0 |
+        +--------------------+---+
+        | sys_runoff_routing | 1 |
+        +--------------------+---+
+
+        :param int param_type: Group id (SystemStats)
+        :return: Group Stats
+        :rtype: list
+        """
+        errcode, array_length, ptr = self._array_pointer(
+            tka.StatObjectType.system.value, param_type)
+
+        self._error_check(errcode)
+
+        self.SWMMlibobj.swmm_getSystemStats(ctypes.c_int(param_type), ptr)
+
+        returned_array = [ptr[i] for i in range(array_length)]
+        self._swmm_free(ptr)
+
+        return returned_array
 
     # --- Active Simulation Parameter "Setters"
     # -------------------------------------------------------------------------
