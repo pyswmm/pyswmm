@@ -9,7 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import SystemStats
+import pyswmm.toolkitapi as tka
 
 
 class SystemStats(object):
@@ -68,7 +68,7 @@ class SystemStats(object):
         :rtype: list
         """
         return self._model.system_statistics(
-            SystemStats.sys_flow_routing.value)
+            tka.SystemStats.sys_flow_routing.value)
 
     @property
     def runoff_stats(self):
@@ -101,4 +101,4 @@ class SystemStats(object):
         :rtype: list
         """
         return self._model.system_statistics(
-            SystemStats.sys_runoff_routing.value)
+            tka.SystemStats.sys_runoff_routing.value)

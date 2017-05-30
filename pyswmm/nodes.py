@@ -9,7 +9,8 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import NodeParams, NodeResults, NodeType, ObjectType
+from pyswmm.toolkitapi import (NodeParams, NodeResults, NodeStats, NodeType,
+                               ObjectType)
 
 
 class Nodes(object):
@@ -92,7 +93,14 @@ class Nodes(object):
 
     def __getitem__(self, nodeid):
         if self.__contains__(nodeid):
-            return Node(self._model, nodeid)
+            nd = Node(self._model, nodeid)
+            _nd = nd
+            if nd.is_outfall():
+                _nd.__class__ = Outfall
+            elif nd.is_storage():
+                _nd.__class__ = Storage
+            return _nd
+
         else:
             raise PYSWMMException("Node ID Does not Exist")
 
@@ -671,3 +679,133 @@ class Node(object):
         >>>
         """
         self._model.setNodeInflow(self._nodeid, inflowrate)
+
+    @property
+    def node_depth_stats(self):
+        """
+        Node Depth Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +--------------------+---+
+        | Average Node Depth | 0 |
+        +--------------------+---+
+        | Max Node Depth     | 1 |
+        +--------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.node_statistics(self.nodeid,
+                                    NodeStats.node_depth_stats.value)
+
+    @property
+    def node_inflow_stats(self):
+        """
+        Node Inflow Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +-----------------------------+---+
+        | Max Lateral Inflow Rate     | 0 |
+        +-----------------------------+---+
+        | Max Total Inflow Rate       | 1 |
+        +-----------------------------+---+
+        | Total Lateral Inflow Volume | 2 |
+        +-----------------------------+---+
+        | Total Inflow Volume         | 3 |
+        +-----------------------------+---+
+        | Node Hours Courant Critical | 4 |
+        +-----------------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.node_statistics(self.nodeid,
+                                    NodeStats.node_inflow_stats.value)
+
+    @property
+    def node_flood_stats(self):
+        """
+        Node Flooding Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +-------------------+---+
+        | Flooded Volume    | 0 |
+        +-------------------+---+
+        | Hours Flooded     | 1 |
+        +-------------------+---+
+        | Max Flooding Rate | 2 |
+        +-------------------+---+
+        | Max Ponded Volume | 3 |
+        +-------------------+---+
+        | Hours Surcharged  | 4 |
+        +-------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.node_statistics(self.nodeid,
+                                    NodeStats.node_flood_stats.value)
+
+
+class Outfall(Node):
+    """
+    Outfall Object: Subclass of Node Object.
+    """
+
+    def __init__(self):
+        super(Outfall, self).__init__()
+
+    @property
+    def outfall_stats(self):
+        """
+        Outfall Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +---------------------+---+
+        | Average Inflow Rate | 0 |
+        +---------------------+---+
+        | Max Inflow Rate     | 1 |
+        +---------------------+---+
+        | Inflow Volume       | 2 |
+        +---------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.node_statistics(self.nodeid,
+                                    NodeStats.outfall_load_stats.value)
+
+
+class Storage(Node):
+    """
+    Storage Object: Subclass of Node Object.
+    """
+
+    def __init__(self):
+        super(Storage, self).__init__()
+
+    @property
+    def storage_stats(self):
+        """
+        Storage Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +-----------------------+---+
+        | Initial Stored Volume | 0 |
+        +-----------------------+---+
+        | Average Stored Volume | 1 |
+        +-----------------------+---+
+        | Max Stored Volume     | 2 |
+        +-----------------------+---+
+        | Max Outflow Rate      | 3 |
+        +-----------------------+---+
+        | Evaporated Volume     | 4 |
+        +-----------------------+---+
+        | Exfiltration Volume   | 5 |
+        +-----------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.node_statistics(self.nodeid,
+                                    NodeStats.storage_volume_stats.value)

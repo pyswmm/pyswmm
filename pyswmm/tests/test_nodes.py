@@ -9,7 +9,7 @@
 # Local imports
 from pyswmm import Node, Nodes, Simulation
 from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm.tests.data import MODEL_FULL_FEATURES_PATH, MODEL_WEIR_SETTING_PATH
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka
 
@@ -76,3 +76,18 @@ def test_nodes_4():
     swmmobject.swmm_end()
     swmmobject.swmm_close()
     print("swmm_step() Check Passed")
+
+
+def test_nodes_5():
+    with Simulation(MODEL_FULL_FEATURES_PATH) as sim:
+        print("\n\n\nNODES\n")
+        j4 = Nodes(sim)["J4"]  #outfall
+        j2 = Nodes(sim)["J2"]  #Storage
+        j1 = Nodes(sim)["J1"]  #junction
+
+        for step in sim:
+            print j4.outfall_stats
+            print j2.storage_stats
+            print j1.node_inflow_stats
+            print j1.node_depth_stats
+            print j1.node_flood_stats
