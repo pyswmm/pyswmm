@@ -9,7 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults
+from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults, SubcStats
 
 
 class Subcatchments(object):
@@ -555,3 +555,43 @@ class Subcatchment(object):
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.newSnowDepth.value)
+
+    @property
+    def subcatch_flow_stats(self):
+        """
+        Subcatchment Flow Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +---------------------+---+
+        | Runon Volume        | 0 |
+        +---------------------+---+
+        | Infiltration Volume | 1 |
+        +---------------------+---+
+        | Runoff Volume       | 2 |
+        +---------------------+---+
+        | Max Runoff Rate     | 3 |
+        +---------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.subcatch_statistics(self.subcatchmentid,
+                                        SubcStats.subc_flow_stats.value)
+
+    @property
+    def subcatch_climate_stats(self):
+        """
+        Subcatchment Climate Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +----------------------+---+
+        | Precipitation Volume | 0 |
+        +----------------------+---+
+        | Evaporation Volume   | 1 |
+        +----------------------+---+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        self._model.subcatch_statistics(self.subcatchmentid,
+                                        SubcStats.subc_climate_stats.value)
