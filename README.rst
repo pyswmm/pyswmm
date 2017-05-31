@@ -12,18 +12,21 @@ PySWMM Wiki
 
 Build status
 ------------
-|appveyor status| |circleci status| |quantified| |scrutinizer|
+|circleci status| |travis status| |appveyor status| |quantified| |scrutinizer|
 
 Project information
 -------------------
 |docs| |license| |pypi version|
 
-.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/jjxpum62nf8ajcar/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
-   :alt: Appveyor build status
 .. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
    :target: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master
    :alt: Circle-CI build status
+.. |travis status| image:: https://travis-ci.org/OpenWaterAnalytics/pyswmm.svg?branch=master
+   :target: https://travis-ci.org/OpenWaterAnalytics/pyswmm
+   :alt: Travis build status
+.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/jjxpum62nf8ajcar/branch/master?svg=true
+   :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
+   :alt: Appveyor build status
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/badges/quality-score.png?b=master
    :target: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/?branch=master
    :alt: Scrutinizer Code Quality
@@ -180,5 +183,3 @@ Acknowledgements
 
 - Tim Cera
 - Assela Pathirana
-
-
