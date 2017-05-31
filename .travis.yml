@@ -46,7 +46,7 @@ script:
   - conda info --json
   - ciocheck pyswmm -dt
   - conda remove -n test pytest-xdist -q --no-pin
-  - python runtests.py
+  - pytest pyswmm
 
 after_success:
   - coveralls
