@@ -1,17 +1,52 @@
+# https://travis-ci.com/OpenWaterAnalytics/pyswmm
+
 language: python
-python:
-    - "3.6"
-    - "2.7"
 sudo: false
+
+env:
+  global:
+    # This variable can be used to check if running on a CI service
+    - TEST_CI="True"
 
 matrix:
   include:
     - os: osx
       language: generic
-# install dependecy
-before_install:
-    - brew update
-    - brew install gcc
-install: "pip install -r requirements-travis.txt"
+      env: TRAVIS_PYTHON_VERSION=3.6
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=3.5
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=2.7
+
+cache:
+  directories:
+    - $HOME/condacache/pkgs
+    - $HOME/.cache/pip
+
+install:
+  # Use Astropy ci helpers for initial setup
+  - git clone git://github.com/astropy/ci-helpers.git
+  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+  - source activate test
+  # Update to latest conda
+  - conda update -n root conda -q --no-pin
+  # Install dependencies. This include test and lint dependencies
+  - conda config --add pkgs_dirs ~/condacache/pkgs
+  - conda install -n test --file requirements-test.txt -c spyder-ide -q --no-pin
+  - if [ "${TRAVIS_PYTHON_VERSION}" = "2.7" ]; then
+      conda install -n test enum34 -q --no-pin;
+    fi
+
+  # Install this package
+  - python setup.py develop
+
 script:
+  - conda info --json
+  - ciocheck pyswmm -dt
+  - conda remove -n test pytest-xdist -q --no-pin
   - pytest pyswmm
+
+after_success:
+  - coveralls
