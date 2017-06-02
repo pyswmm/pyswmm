@@ -118,12 +118,14 @@ class PySWMM(object):
 
         if os.name == 'nt':
             self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
-        if os.name == 'posix':
+            
+        if sys.platform == 'darwin':
             # Mac Osx Support
             self.SWMMlibobj = ctypes.cdll.LoadLibrary(DLL_SELECTION())
 
-        if os.name == 'posix':
-            self.SWMMlibobj = ctypes.CDLL('libswmm5.so')
+        if sys.platform.startswith('linux'):
+            # Linux Support
+            self.SWMMlibobj = ctypes.CDLL(DLL_SELECTION())
 
     def _error_message(self, errcode):
         """
