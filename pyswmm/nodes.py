@@ -178,7 +178,7 @@ class Node(object):
         ...     j1 = Nodes(sim)["J1"]
         ...     print j1.is_junction()
         >>> True
-        """
+        """NodeType.divider.value
         return self._model.getNodeType(self._nodeid) is NodeType.junction.value
 
     def is_outfall(self):

@@ -144,7 +144,7 @@ class PySWMM(object):
         if errcode != 0 and errcode <= 103:
             raise SWMMException(errcode, self._error_message(errcode))
 
-        if errcode != 0 and errcode > 103:
+        if errcode != 0 and errcode > 103: 
             warnings.warn(self._error_message(errcode))
 
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):
@@ -346,16 +346,24 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
+        
         if not hasattr(self, 'curSimTime'):
-            self.curSimTime = 0.000001
-
+            self.curSimTime = 0.0
+        
         ctime = self.curSimTime
-        while advanceSeconds / 3600. / 24. + ctime > self.curSimTime:
+        
+        secPday  = 3600.0*24.0        
+        advanceDays = advanceSeconds / secPday
+        
+        eps = advanceDays * 0.00001
+        
+        while self.curSimTime <= ctime + advanceDays - eps:
             elapsed_time = ctypes.c_double()
             self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
-            self.curSimTime = elapsed_time.value
             if elapsed_time.value == 0:
                 return 0.0
+            self.curSimTime = elapsed_time.value
+            print ("====",self.curSimTime*3600*24)
         return elapsed_time.value
 
     def swmm_report(self):
