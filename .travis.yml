@@ -13,8 +13,8 @@ matrix:
 # install dependecy
 before_install:
     - if [`uname` = "Darwin"]; then
-        brew update
-        brew install gcc
+        brew update;
+        brew install gcc;
       fi
 install: "pip install -r requirements-travis.txt"
 script:
