@@ -114,11 +114,10 @@ class PySWMM(object):
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
-        
 
         if os.name == 'nt':
             self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
-            
+
         if sys.platform == 'darwin':
             # Mac Osx Support
             self.SWMMlibobj = ctypes.cdll.LoadLibrary(DLL_SELECTION())
@@ -149,7 +148,7 @@ class PySWMM(object):
         if errcode != 0 and errcode <= 103:
             raise SWMMException(errcode, self._error_message(errcode))
 
-        if errcode != 0 and errcode > 103: 
+        if errcode != 0 and errcode > 103:
             warnings.warn(self._error_message(errcode))
 
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):
@@ -351,24 +350,24 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        
+
         if not hasattr(self, 'curSimTime'):
             self.curSimTime = 0.0
-        
+
         ctime = self.curSimTime
-        
-        secPday  = 3600.0*24.0        
+
+        secPday = 3600.0 * 24.0
         advanceDays = advanceSeconds / secPday
-        
+
         eps = advanceDays * 0.00001
-        
+
         while self.curSimTime <= ctime + advanceDays - eps:
             elapsed_time = ctypes.c_double()
             self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
             if elapsed_time.value == 0:
                 return 0.0
             self.curSimTime = elapsed_time.value
-            print ("====",self.curSimTime*3600*24)
+            print("====", self.curSimTime * 3600 * 24)
         return elapsed_time.value
 
     def swmm_report(self):
@@ -412,7 +411,6 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_close()
         self._error_check(errcode)
         self.fileLoaded = False
-
 
     def swmm_getVersion(self):
         """
