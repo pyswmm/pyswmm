@@ -12,7 +12,7 @@ matrix:
       language: generic
 # install dependecy
 before_install:
-    - if [`uname` = "Darwin"]; then
+    - if [`uname` == "Darwin"]; then
         brew update;
         brew install gcc;
       fi
