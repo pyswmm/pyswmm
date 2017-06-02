@@ -55,8 +55,8 @@ class Links(object):
 
     >>> links = Links(sim)
     >>> c1c2 = links['C1:C2']
-    >>> c1c2.qlimit = 12
-    >>> c1c2.qlimit
+    >>> c1c2.flow_limit = 12
+    >>> c1c2.flow_limit
     >>> 12
     """
 

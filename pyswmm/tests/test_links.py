@@ -7,8 +7,8 @@
 # -----------------------------------------------------------------------------
 
 # Local imports
-from pyswmm import Link, Links, Simulation
-from pyswmm.swmm5 import PySWMM
+from pyswmm import Links, Simulation
+# from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
@@ -43,7 +43,7 @@ def test_links_2():
             print(link.flow_limit)
 
 
-#def test_links_3():
+# def test_links_3():
 #    swmmobject = PySWMM(MODEL_WEIR_SETTING_PATH)
 #    swmmobject.swmm_open()
 #    swmmobject.swmmExec()

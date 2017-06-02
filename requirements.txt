@@ -1,5 +1,7 @@
 # Build dependencies
 #python
-#setuptools
+six
+enum34
+pytest
 
 # Run dependencies

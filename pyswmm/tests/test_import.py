@@ -6,20 +6,30 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 
+# Standard library imports
+import sys
+
 # Local imports
-from pyswmm import Simulation
-from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+# from pyswmm import Simulation
+# from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pyswmm
 
 
 def test_use_1():
-    pyswmm.lib.use("swmm5.dll")
-    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    if sys.platform == 'darwin':
+        pyswmm.lib.use("swmm5.so")
+    else:
+        pyswmm.lib.use("swmm5.dll")
+
+
+#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
 
 
 def test_use_2():
     pyswmm.lib.use("swmm5")
-    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+
+
+#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
 
 
 def test_use_3():

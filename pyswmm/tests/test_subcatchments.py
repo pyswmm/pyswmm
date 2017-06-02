@@ -7,8 +7,8 @@
 # -----------------------------------------------------------------------------
 
 # Local imports
-from pyswmm import Simulation, Subcatchment, Subcatchments
-from pyswmm.swmm5 import PySWMM
+from pyswmm import Simulation, Subcatchments
+# from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
