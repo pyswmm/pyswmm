@@ -8,10 +8,14 @@ matrix:
   include:
     - os: osx
       language: generic
+    - os: linux
+      language: generic
 # install dependecy
 before_install:
-    - brew update
-    - brew install gcc
+    - if [`uname` = "Darwin"]; then
+        brew update
+	brew install gcc
+      fi
 install: "pip install -r requirements-travis.txt"
 script:
   - pytest pyswmm
