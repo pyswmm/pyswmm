@@ -20,6 +20,11 @@ Thumbs.db
 .DS_Store/
 .DS_Store
 
+# eclipse files
+.settings
+.project
+.pydevproject
+
 # git files
 *.orig
 
