@@ -1,0 +1,4 @@
+# Test/Dev dependencies
+enum
+pytest
+matplotlib
