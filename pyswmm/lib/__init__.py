@@ -40,7 +40,7 @@ elif sys.platform == 'darwin':
 elif sys.platform.startswith('linux'):
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')   
 else:
-    LIB_SWMM = 'libswmm5.so'
+    LIB_SWMM = ''
 
 
 class _DllPath(object):
