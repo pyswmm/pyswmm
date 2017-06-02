@@ -14,7 +14,7 @@ matrix:
 before_install:
     - if [`uname` = "Darwin"]; then
         brew update
-	brew install gcc
+        brew install gcc
       fi
 install: "pip install -r requirements-travis.txt"
 script:
