@@ -9,6 +9,7 @@ matrix:
     - os: osx
       language: generic
     - os: linux
+      dist: trusty
       language: generic
 # install dependecy
 before_install:
