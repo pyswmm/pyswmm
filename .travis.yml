@@ -27,7 +27,7 @@ before_install:
         pushd buildproducts;
         cmake ..;
         make;
-        mv bin/libswmm.so ../../../pyswmm/lib/linux/swmm5.so ;
+        mv bin/libswmm.so /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/swmm5.so ;
         popd;
         popd;
         popd;
