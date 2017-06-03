@@ -16,6 +16,21 @@ before_install:
         brew update;
         brew install gcc;
       fi
+    - if [`uname` == "Linux"]; then
+        git clone https://github.com/stoiver/Stormwater-Management-Model.git ;
+        pushd Stormwater-Management-Model;
+        git pull;
+        git checkout toolkitapi;
+        pushd build;
+        mkdir buildproducts;
+        pushd buildproducts;
+        cmake ..;
+        make;
+        mv bin/libswmm.so ../../../pyswmm/pyswmm/lib/linux/swmm5.so
+        popd;
+        popd;
+        popd;
+      fi
 install: "pip install -r requirements-travis.txt"
 script:
   - py.test pyswmm
