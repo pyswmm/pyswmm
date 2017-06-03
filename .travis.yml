@@ -12,9 +12,24 @@ matrix:
       language: generic
 # install dependecy
 before_install:
-    - if [`uname` == "Darwin"]; then
+    - if test ${TRAVIS_OS_NAME} = "osx"; then
         brew update;
         brew install gcc;
+      fi
+    - if test ${TRAVIS_OS_NAME} = "linux"; then
+        git clone https://github.com/stoiver/Stormwater-Management-Model.git ;
+        pushd Stormwater-Management-Model;
+        git pull;
+        git checkout toolkitapi;
+        pushd build;
+        mkdir buildproducts;
+        pushd buildproducts;
+        cmake ..;
+        make;
+        mv bin/libswmm.so ../../../pyswmm/lib/linux/swmm5.so ;
+        popd;
+        popd;
+        popd;
       fi
 install: "pip install -r requirements-travis.txt"
 script:

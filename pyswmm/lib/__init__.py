@@ -38,7 +38,7 @@ if os.name == 'nt':
 elif sys.platform == 'darwin':
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
 elif sys.platform.startswith('linux'):
-    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')   
+    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
 else:
     LIB_SWMM = ''
 
@@ -100,7 +100,7 @@ def use(arg):
                                                  arg).replace('\\', '/')
         else:
             raise (Exception("Library Not Found"))
-        
+
     elif sys.platform == 'darwin':
         if not arg.endswith('.so'):
             arg = arg + ".so"
@@ -110,7 +110,7 @@ def use(arg):
                                                  arg).replace('\\', '/')
         else:
             raise (Exception("Library Not Found"))
-        
+
     elif sys.platform.startswith('linux'):
         if not arg.endswith('.so'):
             arg = arg + ".so"
@@ -119,8 +119,6 @@ def use(arg):
             DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
                                                  arg).replace('\\', '/')
         else:
-            raise (Exception("Library Not Found"))      
+            raise (Exception("Library Not Found"))
     else:
         raise (Exception("Operating System not Supported"))
-    
-

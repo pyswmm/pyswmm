@@ -79,13 +79,12 @@ class Simulation(object):
     def __iter__(self):
         """Iterator over Simulation"""
         return self
-    
+
     def start(self):
         """Start Simulation"""
         if not self._isStarted:
             self._model.swmm_start(True)
-            self._isStarted = True        
-        
+            self._isStarted = True
 
     def __next__(self):
         """Next"""
