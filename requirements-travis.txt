@@ -1,4 +1,5 @@
 # Test/Dev dependencies
+ctypes>=1.0
 enum
 pytest
 matplotlib
