@@ -20,7 +20,6 @@ before_install:
 
     - if test ${TRAVIS_OS_NAME} = "linux"; then
         python -c "import  ctypes; print ctypes.__version__";
-        python -c "import enum; print enum.version";
         git clone https://github.com/stoiver/Stormwater-Management-Model.git ;
         pushd Stormwater-Management-Model;
         git pull;
@@ -40,7 +39,8 @@ before_install:
       fi
 
 install: 
-  - pip install -r requirements-travis.txt
+  - pip install --upgrade -r requirements-travis.txt
+  - python -c "import enum; print enum.version"
 
 script:
   - py.test pyswmm
