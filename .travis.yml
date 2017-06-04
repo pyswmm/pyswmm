@@ -21,27 +21,26 @@ before_install:
 
     - if test ${TRAVIS_OS_NAME} = "linux"; then
         python -c "import  ctypes; print ctypes.__version__";
-        git clone https://github.com/stoiver/Stormwater-Management-Model.git ;
-        pushd Stormwater-Management-Model;
-        git pull;
-        git checkout toolkitapi;
-        pushd build;
-        mkdir buildproducts;
-        pushd buildproducts;
-        cmake ..;
-        make;
-        ls -l bin;
-        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
-        mv -f bin/libswmm.so /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/swmm5.so ;
-        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
-        popd;
-        popd;
-        popd;
+#        git clone https://github.com/stoiver/Stormwater-Management-Model.git ;
+#        pushd Stormwater-Management-Model;
+#        git pull;
+#        git checkout toolkitapi;
+#        pushd build;
+#        mkdir buildproducts;
+#        pushd buildproducts;
+#        cmake ..;
+#        make;
+#        ls -l bin;
+#        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
+#        mv -f bin/libswmm.so /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/swmm5.so ;
+#        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
+#        popd;
+#        popd;
+#        popd;
       fi
 
 install: 
   - pip install -r requirements-travis.txt
-  - python -c "import enum; print enum.version"
 
 script:
   - py.test pyswmm --ignore=pyswmm/tests/test_plot_node_inflows.py --ignore=pyswmm/tests/test_plot_pump_setting.py --ignore=pyswmm/tests/test_plot_toolkit_units.py --ignore=pyswmm/tests/test_plot_weir_setting.py
