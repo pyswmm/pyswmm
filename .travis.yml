@@ -43,5 +43,5 @@ install:
   - python -c "import enum; print enum.version"
 
 script:
-  - py.test pyswmm --ignore=pyswmm/tests/test_plot_node_inflows.py
+  - py.test pyswmm --ignore=pyswmm/tests/test_plot_node_inflows.py --ignore=pyswmm/tests/test_plot_pump_setting.py --ignore=pyswmm/tests/test_plot_toolkit_units.py --ignore=pyswmm/tests/test_plot_weir_setting.py
 
