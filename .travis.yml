@@ -40,6 +40,7 @@ before_install:
 
 install: 
   - pip install --upgrade -r requirements-travis.txt
+  - pip install enum --upgrade
   - python -c "import enum; print enum.version"
 
 script:
