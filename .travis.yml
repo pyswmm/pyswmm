@@ -5,12 +5,22 @@ matrix:
     - os: osx
       language: generic
       sudo: false
+      python: "2.7"
+
+    - os: osx
+      language: generic
+      sudo: false
       python: "3.6"
  
     - os: linux
       dist: trusty
       sudo: false
       python: "2.7"
+
+    - os: linux
+      dist: trusty
+      sudo: false
+      python: "3.6"
 
 # install dependencies
 before_install:
