@@ -30,9 +30,9 @@ before_install:
         cmake ..;
         make;
         ls -l bin;
-        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/
+        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
         mv -f bin/libswmm.so /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/swmm5.so ;
-        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/
+        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
         popd;
         popd;
         popd;
