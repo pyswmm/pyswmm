@@ -3,6 +3,7 @@ language: python
 matrix:
   include:
     - os: osx
+      language: generic
       sudo: false
       python: "3.6"
  
