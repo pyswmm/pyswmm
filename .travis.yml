@@ -21,22 +21,6 @@ before_install:
 
     - if test ${TRAVIS_OS_NAME} = "linux"; then
         python -c "import  ctypes; print ctypes.__version__";
-#        git clone https://github.com/stoiver/Stormwater-Management-Model.git ;
-#        pushd Stormwater-Management-Model;
-#        git pull;
-#        git checkout toolkitapi;
-#        pushd build;
-#        mkdir buildproducts;
-#        pushd buildproducts;
-#        cmake ..;
-#        make;
-#        ls -l bin;
-#        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
-#        mv -f bin/libswmm.so /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/swmm5.so ;
-#        ls -l /home/travis/build/OpenWaterAnalytics/pyswmm/pyswmm/lib/linux/;
-#        popd;
-#        popd;
-#        popd;
       fi
 
 install: 
