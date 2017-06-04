@@ -116,6 +116,7 @@ class PySWMM(object):
         self.binfile = binfile
 
         if os.name == 'nt':
+            # Windows Support
             self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
 
         if sys.platform == 'darwin':
