@@ -1,25 +1,29 @@
 language: python
-python:
-    - "3.6"
-    - "2.7"
-sudo: false
 
 matrix:
   include:
     - os: osx
-      language: generic
+      sudo: false
+      python: "3.6"
+ 
     - os: linux
       dist: trusty
-      language: generic
-# install dependecy
+      sudo: false
+      python: "2.7"
+
+# install dependencies
 before_install:
     - if test ${TRAVIS_OS_NAME} = "osx"; then
         brew update;
         brew install gcc;
       fi
+
     - if test ${TRAVIS_OS_NAME} = "linux"; then
         python -c "import  ctypes; print ctypes.__version__";
       fi
-install: "pip install -r requirements-travis.txt"
+
+install: 
+  - pip install -r requirements-travis.txt"
+
 script:
   - py.test pyswmm
