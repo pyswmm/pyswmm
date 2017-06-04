@@ -29,10 +29,6 @@ before_install:
         brew install gcc;
       fi
 
-    - if test ${TRAVIS_OS_NAME} = "linux"; then
-      
-      fi
-
 install: 
   - pip install -r requirements-travis.txt
 
