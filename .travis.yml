@@ -30,7 +30,7 @@ before_install:
       fi
 
     - if test ${TRAVIS_OS_NAME} = "linux"; then
-        python -c "import  ctypes; print ctypes.__version__";
+      
       fi
 
 install: 
