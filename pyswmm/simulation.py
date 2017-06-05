@@ -80,12 +80,16 @@ class Simulation(object):
         """Iterator over Simulation"""
         return self
 
-    def __next__(self):
-        """Next"""
-        # Start Simulation
+    def start(self):
+        """Start Simulation"""
         if not self._isStarted:
             self._model.swmm_start(True)
             self._isStarted = True
+
+    def __next__(self):
+        """Next"""
+        # Start Simulation
+        self.start()
 
         # Simulation Step Amount
         if self._advance_seconds is None:

@@ -1,17 +1,36 @@
 language: python
-python:
-    - "3.6"
-    - "2.7"
-sudo: false
 
 matrix:
   include:
     - os: osx
       language: generic
-# install dependecy
+      sudo: false
+      python: "2.7"
+
+    - os: osx
+      language: generic
+      sudo: false
+      python: "3.6"
+ 
+    - os: linux
+      dist: trusty
+      sudo: false
+      python: "2.7"
+
+    - os: linux
+      dist: trusty
+      sudo: false
+      python: "3.6"
+
+# install dependencies
 before_install:
-    - brew update
-    - brew install gcc
-install: "pip install -r requirements-travis.txt"
+    - if test ${TRAVIS_OS_NAME} = "osx"; then
+        brew update;
+        brew install gcc;
+      fi
+install: 
+  - pip install -r requirements-travis.txt
+
 script:
-  - pytest pyswmm
+  - py.test pyswmm --ignore=pyswmm/tests/test_plot_node_inflows.py --ignore=pyswmm/tests/test_plot_pump_setting.py --ignore=pyswmm/tests/test_plot_toolkit_units.py  --ignore=pyswmm/tests/test_plot_weir_setting.py
+
