@@ -28,12 +28,9 @@ before_install:
         brew update;
         brew install gcc;
       fi
-    - if test ${TRAVIS_OS_NAME} = "linux"; then
-        export DISPLAY=:99.0;
-      fi
 install: 
   - pip install -r requirements-travis.txt
 
 script:
-  - py.test pyswmm --ignore=pyswmm/tests/test_plot_node_inflows.py --ignore=pyswmm/tests/test_plot_pump_setting.py --ignore=pyswmm/tests/test_plot_toolkit_units.py 
+  - py.test pyswmm --ignore=pyswmm/tests/test_plot_node_inflows.py --ignore=pyswmm/tests/test_plot_pump_setting.py --ignore=pyswmm/tests/test_plot_toolkit_units.py  --ignore=pyswmm/tests/test_plot_weir_setting.py
 
