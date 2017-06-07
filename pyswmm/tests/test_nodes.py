@@ -25,19 +25,19 @@ def test_nodes_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
         for node in Nodes(sim):
-            assert('J' in node.nodeid)
+            assert ('J' in node.nodeid)
             node.invert_elevation = 10
-            assert(node.invert_elevation == 10)
+            assert (node.invert_elevation == 10)
 
 
 def test_nodes_3():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
         j1 = Nodes(sim)["J1"]
-        assert(j1.is_divider() == False)
-        assert(j1.is_junction() == True)
-        assert(j1.is_outfall() == False)
-        assert(j1.is_storage() == False)
+        assert (j1.is_divider() == False)
+        assert (j1.is_junction() == True)
+        assert (j1.is_outfall() == False)
+        assert (j1.is_storage() == False)
 
 
 def test_nodes_4():
@@ -73,6 +73,7 @@ def test_nodes_4():
     swmmobject.swmm_end()
     swmmobject.swmm_close()
     print("swmm_step() Check Passed")
+
 
 def test_nodes_5():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
