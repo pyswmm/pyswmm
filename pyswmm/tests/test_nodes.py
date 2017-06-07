@@ -25,22 +25,19 @@ def test_nodes_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
         for node in Nodes(sim):
-            print(node)
-            print(node.nodeid)
-            print(node.invert_elevation)
+            assert('J' in node.nodeid)
             node.invert_elevation = 10
-            assert node.invert_elevation == 10
+            assert(node.invert_elevation == 10)
 
 
 def test_nodes_3():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
         j1 = Nodes(sim)["J1"]
-        print(j1.is_divider())
-        print(j1.is_junction())
-        print(j1.is_outfall())
-        print(j1.is_storage())
-        print(j1.invert_elevation)
+        assert(j1.is_divider() == False)
+        assert(j1.is_junction() == True)
+        assert(j1.is_outfall() == False)
+        assert(j1.is_storage() == False)
 
 
 def test_nodes_4():
