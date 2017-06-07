@@ -368,7 +368,6 @@ class PySWMM(object):
             if elapsed_time.value == 0:
                 return 0.0
             self.curSimTime = elapsed_time.value
-            print("====", self.curSimTime * 3600 * 24)
         return elapsed_time.value
 
     def swmm_report(self):
