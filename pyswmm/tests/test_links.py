@@ -122,3 +122,74 @@ def test_links_4():
                 assert(c3.target_setting == 1.0)
                 assert(c3.flow == 1.0 * peak_pump_rate)
             
+
+def test_links_5():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        weir_pump_rate = 20#cfs
+        print("\n\n\nWEIR\n")
+        c3 = Links(sim)["C3"]
+        j3 = Nodes(sim)["J3"]
+        
+        sim.step_advance(300)
+        for ind, step in enumerate(sim):
+            #Just adding flow for testing
+            j3.generated_inflow(20)
+            
+            #setting adjustment
+            if ind == 15:
+                c3.target_setting = 0.9
+            if ind == 20:
+                c3.target_setting = 0.8
+            if ind == 25:
+                c3.target_setting = 0.7
+            if ind == 30:
+                c3.target_setting = 0.6
+            if ind == 35:
+                c3.target_setting = 0.5
+            if ind == 40:
+                c3.target_setting = 0.4
+            if ind == 45:
+                c3.target_setting = 0.3                
+            if ind == 50:
+                c3.target_setting = 0.2
+            if ind == 55:
+                c3.target_setting = 0.1
+            if ind == 60:
+                c3.target_setting = 0.0
+            if ind == 65:
+                c3.target_setting = 1.0
+
+            #Check Results
+            if ind == 16:
+                assert(c3.target_setting == 0.9)
+                assert(c3.flow >= 0.9 * weir_pump_rate)
+            if ind == 21:
+                assert(c3.target_setting == 0.8)
+                assert(c3.flow >= 0.8 * weir_pump_rate)
+            if ind == 26:
+                assert(c3.target_setting == 0.7)
+                assert(c3.flow >= 0.7 * weir_pump_rate)
+            if ind == 31:
+                assert(c3.target_setting == 0.6)
+                assert(c3.flow >= 0.6 * weir_pump_rate)
+            if ind == 36:
+                assert(c3.target_setting == 0.5)
+                assert(c3.flow >= 0.5 * weir_pump_rate)
+            if ind == 41:
+                assert(c3.target_setting == 0.4)
+                assert(c3.flow >= 0.4 * weir_pump_rate)
+            if ind == 46:
+                assert(c3.target_setting == 0.3)
+                assert(c3.flow >= 0.3 * weir_pump_rate)               
+            if ind == 51:
+                assert(c3.target_setting == 0.2)
+                assert(c3.flow >= 0.15 * weir_pump_rate)
+            if ind == 56:
+                assert(c3.target_setting == 0.1)
+                assert(c3.flow >= 0.05 * weir_pump_rate)
+            if ind == 61:
+                assert(c3.target_setting == 0.0)
+                assert(c3.flow == 0.0 * weir_pump_rate)
+            if ind == 66:
+                assert(c3.target_setting == 1.0)
+                assert(c3.flow >= 1.0 * weir_pump_rate)
