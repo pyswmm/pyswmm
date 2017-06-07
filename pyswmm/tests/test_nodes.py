@@ -29,7 +29,7 @@ def test_nodes_2():
             print(node.nodeid)
             print(node.invert_elevation)
             node.invert_elevation = 10
-            print(node.invert_elevation)
+            assert node.invert_elevation == 10
 
 
 def test_nodes_3():
@@ -76,3 +76,13 @@ def test_nodes_4():
     swmmobject.swmm_end()
     swmmobject.swmm_close()
     print("swmm_step() Check Passed")
+
+def test_nodes_5():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        print("\n\n\nNODES\n")
+        node = Nodes(sim)["J5"]
+        for ind, step in enumerate(sim):
+            if ind > 7:
+                node.generated_inflow(5)
+            if ind > 8:
+                assert int(node.lateral_inflow) == int(5)
