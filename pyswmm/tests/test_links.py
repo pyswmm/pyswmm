@@ -193,3 +193,4 @@ def test_links_5():
             if ind == 66:
                 assert (c3.target_setting == 1.0)
                 assert (c3.flow >= 1.0 * weir_pump_rate)
+        sim.close()

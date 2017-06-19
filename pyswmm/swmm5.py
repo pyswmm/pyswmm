@@ -138,6 +138,7 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
+        print(_errmsg.value.decode("utf-8"))
         return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
@@ -995,13 +996,14 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion(
-                SWMM_VER_51011):
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
-        else:
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+        if errcode == 0:
+            if self.swmm_getVersion() < distutils.version.StrictVersion(
+                    SWMM_VER_51011):
+                return datetime.strptime(
+                    dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+            else:
+                return datetime.strptime(
+                    dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """
