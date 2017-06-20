@@ -1,5 +1,6 @@
 [TITLE]
 
+
 [OPTIONS]
 ;;Options            Value
 ;;------------------ ------------
@@ -113,13 +114,14 @@ C2               CIRCULAR     1.5              0          0          0          
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
 J1               FLOW             ""               FLOW     1.0      1        1                
 J2               Flow             ""               FLOW     1.0      1        1                
-J3               Flow             ""               FLOW     1.0      1        1                
+J3               FLOW             ""               FLOW     1.0      1        1                
 
 [DWF]
 ;;                                Average    Time      
 ;;Node           Parameter        Value      Patterns  
 ;;-------------- ---------------- ---------- ----------
 J1               FLOW             8          "" "" "" ""
+J3               FLOW             25         "" "" "" ""
 
 [CURVES]
 ;;Name           Type       X-Value    Y-Value   

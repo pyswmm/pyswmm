@@ -470,17 +470,20 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        dtme = ctypes.create_string_buffer(61)
+        _year = ctypes.c_int()
+        _month = ctypes.c_int()
+        _day = ctypes.c_int()
+        _hours = ctypes.c_int()
+        _minutes = ctypes.c_int()
+        _seconds = ctypes.c_int()
+        
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
-            ctypes.c_int(timeType), dtme)
+            ctypes.c_int(timeType), ctypes.byref(_year), ctypes.byref(_month),
+            ctypes.byref(_day), ctypes.byref(_hours), ctypes.byref(_minutes),
+            ctypes.byref(_seconds))
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion(
-                SWMM_VER_51011):
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
-        else:
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+        return datetime(_year.value, _month.value, _day.value, _hours.value,
+                        _minutes.value, _seconds.value)
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """

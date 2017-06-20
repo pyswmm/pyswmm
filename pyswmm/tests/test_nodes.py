@@ -79,10 +79,11 @@ def test_nodes_5():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     print("\n\n\nNODES\n")
     J5 = Nodes(sim)["J5"]
-    
+
     for ind, step in enumerate(sim):
         if ind == 7:
-            J5.generated_inflow(5.0)
+            J5.generated_inflow(544.0)
         if ind > 8:
-            g = 0#assert (node.lateral_inflow == 5)
+            assert (J5.lateral_inflow >= 543.9)
+            print(J5.lateral_inflow)
     sim.close()

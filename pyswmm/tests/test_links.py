@@ -56,13 +56,9 @@ def test_links_4():
         peak_pump_rate = 20  #cfs
         print("\n\n\nLINKS\n")
         c3 = Links(sim)["C3"]
-        j3 = Nodes(sim)["J3"]
 
         sim.step_advance(300)
         for ind, step in enumerate(sim):
-            #Just adding flow for testing
-            j3.generated_inflow(20)
-
             #setting adjustment
             if ind == 15:
                 c3.target_setting = 0.9
@@ -125,15 +121,12 @@ def test_links_4():
 
 def test_links_5():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
-        weir_pump_rate = 20  #cfs
+        weir_pump_rate = 5  #cfs
         print("\n\n\nWEIR\n")
         c3 = Links(sim)["C3"]
-        j3 = Nodes(sim)["J3"]
 
         sim.step_advance(300)
         for ind, step in enumerate(sim):
-            #Just adding flow for testing
-            j3.generated_inflow(20)
 
             #setting adjustment
             if ind == 15:

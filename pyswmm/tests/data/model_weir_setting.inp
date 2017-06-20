@@ -117,8 +117,8 @@ C3               RECT_OPEN    5                1          0          0
 ;;Node           Parameter        Time Series      Type     Factor   Factor   Value    Pattern
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
 J1               FLOW             ""               FLOW     1.0      1        1                
-J2               Flow             ""               FLOW     1.0      1        1                
-J3               Flow             ""               FLOW     1.0      1        1                
+J2               FLOW             ""               FLOW     1.0      1        1                
+J3               FLOW             ""               FLOW     1.0      1        1                
 
 [DWF]
 ;;                                Average    Time      
