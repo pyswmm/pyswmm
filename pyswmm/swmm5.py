@@ -476,11 +476,14 @@ class PySWMM(object):
         _hours = ctypes.c_int()
         _minutes = ctypes.c_int()
         _seconds = ctypes.c_int()
-        
+
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
-            ctypes.c_int(timeType), ctypes.byref(_year), ctypes.byref(_month),
-            ctypes.byref(_day), ctypes.byref(_hours), ctypes.byref(_minutes),
-            ctypes.byref(_seconds))
+            ctypes.c_int(timeType),
+            ctypes.byref(_year),
+            ctypes.byref(_month),
+            ctypes.byref(_day),
+            ctypes.byref(_hours),
+            ctypes.byref(_minutes), ctypes.byref(_seconds))
         self._error_check(errcode)
         return datetime(_year.value, _month.value, _day.value, _hours.value,
                         _minutes.value, _seconds.value)
