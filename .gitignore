@@ -15,6 +15,11 @@ build/
 dist/
 bin/
 
+# Eclipse files
+.project
+.pydevproject
+.settings/
+
 # OS files
 Thumbs.db
 .DS_Store/

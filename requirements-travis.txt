@@ -1,4 +1,4 @@
 # Test/Dev dependencies
-enum
+enum34
 pytest
 matplotlib

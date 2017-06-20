@@ -12,7 +12,7 @@ PySWMM Wiki
 
 Build status
 ------------
-|appveyor status| |circleci status| |quantified| |scrutinizer|
+|appveyor status| |circleci status| |travisci status| |quantified| |scrutinizer|
 
 Project information
 -------------------
@@ -24,6 +24,9 @@ Project information
 .. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
    :target: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master
    :alt: Circle-CI build status
+.. |travisci status| image:: https://travis-ci.org/OpenWaterAnalytics/pyswmm.svg?branch=master
+   :target: https://travis-ci.org/OpenWaterAnalytics/pyswmm
+   :alt: Travis-CI build status
 .. |scrutinizer| image:: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/badges/quality-score.png?b=master
    :target: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/?branch=master
    :alt: Scrutinizer Code Quality
