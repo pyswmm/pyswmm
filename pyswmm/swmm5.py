@@ -138,6 +138,7 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
+        print(_errmsg.value.decode("utf-8"))
         return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
@@ -413,7 +414,6 @@ class PySWMM(object):
             if elapsed_time.value == 0:
                 return 0.0
             self.curSimTime = elapsed_time.value
-            print("====", self.curSimTime * 3600 * 24)
         return elapsed_time.value
 
     def swmm_report(self):
@@ -515,17 +515,23 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        dtme = ctypes.create_string_buffer(61)
+        _year = ctypes.c_int()
+        _month = ctypes.c_int()
+        _day = ctypes.c_int()
+        _hours = ctypes.c_int()
+        _minutes = ctypes.c_int()
+        _seconds = ctypes.c_int()
+
         errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
-            ctypes.c_int(timeType), dtme)
+            ctypes.c_int(timeType),
+            ctypes.byref(_year),
+            ctypes.byref(_month),
+            ctypes.byref(_day),
+            ctypes.byref(_hours),
+            ctypes.byref(_minutes), ctypes.byref(_seconds))
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion(
-                SWMM_VER_51011):
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
-        else:
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+        return datetime(_year.value, _month.value, _day.value, _hours.value,
+                        _minutes.value, _seconds.value)
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -1041,13 +1047,14 @@ class PySWMM(object):
         dtme = ctypes.create_string_buffer(61)
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
-        if self.swmm_getVersion() < distutils.version.StrictVersion(
-                SWMM_VER_51011):
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
-        else:
-            return datetime.strptime(
-                dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+        if errcode == 0:
+            if self.swmm_getVersion() < distutils.version.StrictVersion(
+                    SWMM_VER_51011):
+                return datetime.strptime(
+                    dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
+            else:
+                return datetime.strptime(
+                    dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
     def getNodeResult(self, ID, resultType):
         """

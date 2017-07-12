@@ -25,22 +25,19 @@ def test_nodes_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
         for node in Nodes(sim):
-            print(node)
-            print(node.nodeid)
-            print(node.invert_elevation)
+            assert ('J' in node.nodeid)
             node.invert_elevation = 10
-            print(node.invert_elevation)
+            assert (node.invert_elevation == 10)
 
 
 def test_nodes_3():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
         j1 = Nodes(sim)["J1"]
-        print(j1.is_divider())
-        print(j1.is_junction())
-        print(j1.is_outfall())
-        print(j1.is_storage())
-        print(j1.invert_elevation)
+        assert (j1.is_divider() == False)
+        assert (j1.is_junction() == True)
+        assert (j1.is_outfall() == False)
+        assert (j1.is_storage() == False)
 
 
 def test_nodes_4():
@@ -79,15 +76,14 @@ def test_nodes_4():
 
 
 def test_nodes_5():
-    with Simulation(MODEL_FULL_FEATURES_PATH) as sim:
-        print("\n\n\nNODES\n")
-        j4 = Nodes(sim)["J4"]  #outfall
-        j2 = Nodes(sim)["J2"]  #Storage
-        j1 = Nodes(sim)["J1"]  #junction
+    sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    print("\n\n\nNODES\n")
+    J5 = Nodes(sim)["J5"]
 
-        for step in sim:
-            print(j4.outfall_stats)
-            print(j2.storage_stats)
-            print(j1.node_inflow_stats)
-            print(j1.node_depth_stats)
-            print(j1.node_flood_stats)
+    for ind, step in enumerate(sim):
+        if ind == 7:
+            J5.generated_inflow(544.0)
+        if ind > 8:
+            assert (J5.lateral_inflow >= 543.9)
+            print(J5.lateral_inflow)
+    sim.close()
