@@ -40,40 +40,39 @@ class SystemStats(object):
     @property
     def routing_stats(self):
         """
-        Get rolling/cumulative routing stats. Indeces represent the following:
+        Get rolling/cumulative routing stats. Follow Data are returned:
 
-        +-------------------------+---+
-        | DWF Inflow Volume       | 0 |
-        +-------------------------+---+
-        | WWF Inflow Volume       | 1 |
-        +-------------------------+---+
-        | GW Inflow Volume        | 2 |
-        +-------------------------+---+
-        | I&I Inflow Volume       | 3 |
-        +-------------------------+---+
-        | External Inflow Volume  | 4 |
-        +-------------------------+---+
-        | Flooding Volume         | 5 |
-        +-------------------------+---+
-        | Outflow Volume          | 6 |
-        +-------------------------+---+
-        | Evaporation Loss Volume | 7 |
-        +-------------------------+---+
-        | Seepage Loss Volume     | 8 |
-        +-------------------------+---+
-        | Routing Error (%)       | 9 |
-        +-------------------------+---+
+        +-------------------------+
+        | DWF Inflow Volume       |
+        +-------------------------+
+        | WWF Inflow Volume       |
+        +-------------------------+
+        | GW Inflow Volume        |
+        +-------------------------+
+        | I&I Inflow Volume       |
+        +-------------------------+
+        | External Inflow Volume  |
+        +-------------------------+
+        | Flooding Volume         |
+        +-------------------------+
+        | Outflow Volume          |
+        +-------------------------+
+        | Evaporation Loss Volume |
+        +-------------------------+
+        | Seepage Loss Volume     |
+        +-------------------------+
+        | Routing Error (%)       |
+        +-------------------------+
 
         :return: Statistics
-        :rtype: list
+        :rtype: dict
         """
-        return self._model.system_statistics(
-            tka.SystemStats.sys_flow_routing.value)
+        return self._model.flow_routing_stats()
 
     @property
     def runoff_stats(self):
         """
-        Get rolling/cumulative runoff stats. Indeces represent the following:
+        Get rolling/cumulative runoff stats. Follow Data are returned:
 
         +-----------------------+---+
         | Total Precipitation   | 0 |
@@ -98,7 +97,6 @@ class SystemStats(object):
         +-----------------------+---+
 
         :return: Statistics
-        :rtype: list
+        :rtype: dict
         """
-        return self._model.system_statistics(
-            tka.SystemStats.sys_runoff_routing.value)
+        return self._model.runoff_routing_stats()
