@@ -557,41 +557,26 @@ class Subcatchment(object):
                                              SubcResults.newSnowDepth.value)
 
     @property
-    def subcatch_flow_stats(self):
+    def statistics(self):
         """
         Subcatchment Flow Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------------+---+
-        | Runon Volume        | 0 |
-        +---------------------+---+
-        | Infiltration Volume | 1 |
-        +---------------------+---+
-        | Runoff Volume       | 2 |
-        +---------------------+---+
-        | Max Runoff Rate     | 3 |
-        +---------------------+---+
+        +---------------------+
+        | Precipitation Depth |
+        +---------------------+
+        | Runon Volume        |
+        +---------------------+
+        | Evaporation Volume  |
+        +---------------------+
+        | Infiltration Depth  |
+        +---------------------+
+        | Runoff Volume       |
+        +---------------------+
+        | Peak Runoff Rate    |
+        +---------------------+
 
         :return: Group of Stats
-        :rtype: list
+        :rtype: dict
         """
-        self._model.subcatch_statistics(self.subcatchmentid,
-                                        SubcStats.subc_flow_stats.value)
-
-    @property
-    def subcatch_climate_stats(self):
-        """
-        Subcatchment Climate Stats. The stats returned are rolling/cumulative.
-        Indeces are as follows:
-
-        +----------------------+---+
-        | Precipitation Volume | 0 |
-        +----------------------+---+
-        | Evaporation Volume   | 1 |
-        +----------------------+---+
-
-        :return: Group of Stats
-        :rtype: list
-        """
-        self._model.subcatch_statistics(self.subcatchmentid,
-                                        SubcStats.subc_climate_stats.value)
+        self._model.subcatch_statistics(self.subcatchmentid)

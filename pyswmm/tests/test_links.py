@@ -9,7 +9,8 @@
 # Local imports
 from pyswmm import Links, Nodes, Simulation
 # from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import MODEL_PUMP_SETTINGS_PATH, MODEL_WEIR_SETTING_PATH
+from pyswmm.tests.data import (MODEL_PUMP_SETTINGS_PATH, MODEL_STORAGE_PUMP,
+                               MODEL_WEIR_SETTING_PATH)
 
 
 def test_links_1():
@@ -186,4 +187,25 @@ def test_links_5():
             if ind == 66:
                 assert (c3.target_setting == 1.0)
                 assert (c3.flow >= 1.0 * weir_pump_rate)
-        sim.close()
+
+
+def test_links_6():
+    with Simulation(MODEL_STORAGE_PUMP) as sim:
+        print("\n\n\nConduits\n")
+        link = Links(sim)["C2"]
+
+        sim.step_advance(300)
+        for ind, step in enumerate(sim):
+            if ind % 1000 == 0:
+                print(link.conduit_statistics)
+
+
+def test_links_7():
+    with Simulation(MODEL_STORAGE_PUMP) as sim:
+        print("\n\n\nPUMPS\n")
+        link = Links(sim)["P1"]
+
+        sim.step_advance(300)
+        for ind, step in enumerate(sim):
+            if ind % 1000 == 0:
+                print(link.pump_statistics)

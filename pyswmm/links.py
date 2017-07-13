@@ -868,54 +868,54 @@ class Conduit(Link):
         super(Conduit, self).__init__()
 
     @property
-    def conduit_flow_stats(self):
+    def conduit_statistics(self):
         """
         Conduit Flow Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------+---+
-        | Max Flow Rate | 0 |
-        +---------------+---+
-        | Max Velocity  | 1 |
-        +---------------+---+
-        | Max Depth     | 2 |
-        +---------------+---+
+        +---------------------------+
+        | Max Flow Rate             |
+        +---------------------------+
+        | Max Flow Date             |
+        +---------------------------+        
+        | Max Velocity              |
+        +---------------------------+
+        | Max Depth                 |
+        +---------------------------+
+        | Time in Normal Flow       |
+        +---------------------------+
+        | Time in Inlet Control     |
+        +---------------------------+
+        | Time Surcharged           |
+        +---------------------------+
+        | Time Upstream Full        |
+        +---------------------------+
+        | Time Downstream Full      |
+        +---------------------------+
+        | Time Full Flow            |
+        +---------------------------+
+        | Time Capacity Limited     |
+        +---------------------------+
+        | Time in Flow Class (dict) |
+        +---------------------------+        
+        | Time Courant Critical     |
+        +---------------------------+
+        | Flow Turns                |
+        +---------------------------+
+        | Flow Turn Signs           |
+        +---------------------------+
+
+        Time in Flow Class: (Fraction of Total Time)
+        +-----+--------+----------+----------+----------+---------+-----------+
+        | 0   | 1      | 2        | 3        | 4        | 5       | 6         |
+        +-----+--------+----------+----------+----------+---------+-----------+
+        | Dry | Up Dry | Down Dry | Sub Crit | Sup Crit | Up Crit | Down Crit |
+        +-----+--------+----------+----------+----------+---------+-----------+
 
         :return: Group of Stats
-        :rtype: list
+        :rtype: dict
         """
-        return self._model.link_statistics(self.linkid,
-                                           LinkStats.link_flow_stats.value)
-
-    @property
-    def conduit_surcharge_stats(self):
-        """
-        Conduit Surcharge Stats. The stats returned are rolling/cumulative.
-        Indeces are as follows:
-
-        +-----------------------------------+---+
-        | Fraction of Time in Normal Flow   | 0 |
-        +-----------------------------------+---+
-        | Fraction of Time in Inlet Control | 1 |
-        +-----------------------------------+---+
-        | Fraction of Time Surcharged       | 2 |
-        +-----------------------------------+---+
-        | Fraction of Time Upstream Full    | 3 |
-        +-----------------------------------+---+
-        | Fraction of Time Downstream Full  | 4 |
-        +-----------------------------------+---+
-        | Fraction of Time Full Flow        | 5 |
-        +-----------------------------------+---+
-        | Fraction of time Capacity Limited | 6 |
-        +-----------------------------------+---+
-        | Fraction of time Courant Critical | 7 |
-        +-----------------------------------+---+
-
-        :return: Group of Stats
-        :rtype: list
-        """
-        return self._model.link_statistics(
-            self.linkid, LinkStats.conduit_surcharge_stats.value)
+        return self._model.conduit_statistics(self.linkid)
 
 
 class Pump(Link):
@@ -927,29 +927,34 @@ class Pump(Link):
         super(Pump, self).__init__()
 
     @property
-    def pump_stats(self):
+    def pump_statistics(self):
         """
         Pump Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +--------------------------+---+
-        | Fraction of Time Pump On | 0 |
-        +--------------------------+---+
-        | Min Flow Rate            | 1 |
-        +--------------------------+---+
-        | Average Flow Rate        | 2 |
-        +--------------------------+---+
-        | Max Flow Rate            | 3 |
-        +--------------------------+---+
-        | Total Volume Pumped      | 4 |
-        +--------------------------+---+
-        | Energy Consumed          | 5 |
-        +--------------------------+---+
-        | Number of Start Ups      | 6 |
-        +--------------------------+---+
-
+        +--------------------------+
+        | Fraction of Time Pump On |
+        +--------------------------+
+        | Min Flow Rate            |
+        +--------------------------+
+        | Average Flow Rate        |
+        +--------------------------+
+        | Max Flow Rate            |
+        +--------------------------+
+        | Total Volume Pumped      |
+        +--------------------------+
+        | Energy Consumed          |
+        +--------------------------+
+        | Off Curve Low            |
+        +--------------------------+
+        | Off Curve High           |
+        +--------------------------+
+        | Total Periods            |
+        +--------------------------+
+        | Number of Start Ups      |
+        +--------------------------+
+        
         :return: Group of Stats
-        :rtype: list
+        :rtype: dict
         """
-        return self._model.link_statistics(self.linkid,
-                                           LinkStats.pump_stats.value)
+        return self._model.pump_statistics(self.linkid)

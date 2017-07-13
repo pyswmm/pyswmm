@@ -74,27 +74,27 @@ class SystemStats(object):
         """
         Get rolling/cumulative runoff stats. Follow Data are returned:
 
-        +-----------------------+---+
-        | Total Precipitation   | 0 |
-        +-----------------------+---+
-        | Evaporation Volume    | 1 |
-        +-----------------------+---+
-        | Infiltration Volume   | 2 |
-        +-----------------------+---+
-        | Runoff Volume         | 3 |
-        +-----------------------+---+
-        | Runon Volume          | 4 |
-        +-----------------------+---+
-        | Drain Volume          | 5 |
-        +-----------------------+---+
-        | Snow Removed Volume   | 6 |
-        +-----------------------+---+
-        | Initial Stored Volume | 7 |
-        +-----------------------+---+
-        | Initial Snow Volume   | 8 |
-        +-----------------------+---+
-        | Runoff Routing Error  | 9 |
-        +-----------------------+---+
+        +-----------------------+
+        | Total Precipitation   |
+        +-----------------------+
+        | Evaporation Volume    |
+        +-----------------------+
+        | Infiltration Volume   |
+        +-----------------------+
+        | Runoff Volume         |
+        +-----------------------+
+        | Runon Volume          |
+        +-----------------------+
+        | Drain Volume          |
+        +-----------------------+
+        | Snow Removed Volume   |
+        +-----------------------+
+        | Initial Stored Volume |
+        +-----------------------+
+        | Initial Snow Volume   |
+        +-----------------------+
+        | Runoff Routing Error  |
+        +-----------------------+
 
         :return: Statistics
         :rtype: dict

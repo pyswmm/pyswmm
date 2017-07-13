@@ -42,5 +42,4 @@ def test_nodes_3():
         S2 = Subcatchments(sim)["S2"]  #Subcatchment
 
         for step in sim:
-            print(S2.subcatch_flow_stats)
-            print(S2.subcatch_climate_stats)
+            print(S2.statistics)

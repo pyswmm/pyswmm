@@ -681,70 +681,47 @@ class Node(object):
         self._model.setNodeInflow(self._nodeid, inflowrate)
 
     @property
-    def node_depth_stats(self):
+    def statistics(self):
         """
-        Node Depth Stats. The stats returned are rolling/cumulative.
+        Node Statistics. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +--------------------+---+
-        | Average Node Depth | 0 |
-        +--------------------+---+
-        | Max Node Depth     | 1 |
-        +--------------------+---+
+        +-------------------------+
+        | Average Depth           |
+        +-------------------------+
+        | Max Depth               |
+        +-------------------------+
+        | Max Depth Date          |
+        +-------------------------+
+        | Max Report Depth        |
+        +-------------------------+
+        | Flooding Volume         |
+        +-------------------------+
+        | Flooding Duration       |
+        +-------------------------+
+        | Surcharge Duration      |
+        +-------------------------+
+        | Courant Crit Duration   |
+        +-------------------------+
+        | Lateral Infow Volume    |
+        +-------------------------+
+        | Peak Lateral Inflowrate |
+        +-------------------------+
+        | Peak Total Inflow       |
+        +-------------------------+
+        | Peak Flooding Rate      |
+        +-------------------------+
+        | Max Ponded Volume       |
+        +-------------------------+
+        | Max Inflow Date         |
+        +-------------------------+
+        | Max Flooding Date       |
+        +-------------------------+
 
         :return: Group of Stats
-        :rtype: list
+        :rtype: dict
         """
-        self._model.node_statistics(self.nodeid,
-                                    NodeStats.node_depth_stats.value)
-
-    @property
-    def node_inflow_stats(self):
-        """
-        Node Inflow Stats. The stats returned are rolling/cumulative.
-        Indeces are as follows:
-
-        +-----------------------------+---+
-        | Max Lateral Inflow Rate     | 0 |
-        +-----------------------------+---+
-        | Max Total Inflow Rate       | 1 |
-        +-----------------------------+---+
-        | Total Lateral Inflow Volume | 2 |
-        +-----------------------------+---+
-        | Total Inflow Volume         | 3 |
-        +-----------------------------+---+
-        | Node Hours Courant Critical | 4 |
-        +-----------------------------+---+
-
-        :return: Group of Stats
-        :rtype: list
-        """
-        self._model.node_statistics(self.nodeid,
-                                    NodeStats.node_inflow_stats.value)
-
-    @property
-    def node_flood_stats(self):
-        """
-        Node Flooding Stats. The stats returned are rolling/cumulative.
-        Indeces are as follows:
-
-        +-------------------+---+
-        | Flooded Volume    | 0 |
-        +-------------------+---+
-        | Hours Flooded     | 1 |
-        +-------------------+---+
-        | Max Flooding Rate | 2 |
-        +-------------------+---+
-        | Max Ponded Volume | 3 |
-        +-------------------+---+
-        | Hours Surcharged  | 4 |
-        +-------------------+---+
-
-        :return: Group of Stats
-        :rtype: list
-        """
-        self._model.node_statistics(self.nodeid,
-                                    NodeStats.node_flood_stats.value)
+        return self._model.node_statistics(self.nodeid)
 
 
 class Outfall(Node):
@@ -756,24 +733,39 @@ class Outfall(Node):
         super(Outfall, self).__init__()
 
     @property
-    def outfall_stats(self):
+    def outfall_statistics(self):
         """
         Outfall Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------------+---+
-        | Average Inflow Rate | 0 |
-        +---------------------+---+
-        | Max Inflow Rate     | 1 |
-        +---------------------+---+
-        | Inflow Volume       | 2 |
-        +---------------------+---+
+        +---------------------+
+        | Average Inflow Rate |
+        +---------------------+
+        | Max Inflow Rate     |
+        +---------------------+
+        | Pollutant Loading   |
+        +---------------------+        
+        | Total Periods       |
+        +---------------------+
 
         :return: Group of Stats
         :rtype: list
         """
-        self._model.node_statistics(self.nodeid,
-                                    NodeStats.outfall_load_stats.value)
+        return self._model.outfall_statistics(self.nodeid)
+
+    @property
+    def cumulative_inflow(self):
+        """
+        Get Cumulative Outfall Loading.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Cumulative Volume
+        :rtype: float
+        """
+        stats = self._model.outfall_statistics(self.nodeid)
+        return stats["average_flowrate"] * stats["total_periods"]
 
 
 class Storage(Node):
@@ -785,27 +777,26 @@ class Storage(Node):
         super(Storage, self).__init__()
 
     @property
-    def storage_stats(self):
+    def storage_statistics(self):
         """
         Storage Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +-----------------------+---+
-        | Initial Stored Volume | 0 |
-        +-----------------------+---+
-        | Average Stored Volume | 1 |
-        +-----------------------+---+
-        | Max Stored Volume     | 2 |
-        +-----------------------+---+
-        | Max Outflow Rate      | 3 |
-        +-----------------------+---+
-        | Evaporated Volume     | 4 |
-        +-----------------------+---+
-        | Exfiltration Volume   | 5 |
-        +-----------------------+---+
+        +-----------------------+
+        | Initial Stored Volume |
+        +-----------------------+
+        | Average Stored Volume |
+        +-----------------------+
+        | Max Stored Volume     |
+        +-----------------------+
+        | Max Outflow Rate      |
+        +-----------------------+
+        | Evaporated Volume     |
+        +-----------------------+
+        | Exfiltration Volume   |
+        +-----------------------+
 
         :return: Group of Stats
         :rtype: list
         """
-        self._model.node_statistics(self.nodeid,
-                                    NodeStats.storage_volume_stats.value)
+        return self._model.storage_statistics(self.nodeid)
