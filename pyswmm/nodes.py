@@ -9,8 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import (NodeParams, NodeResults, NodeStats, NodeType,
-                               ObjectType)
+from pyswmm.toolkitapi import NodeParams, NodeResults, NodeType, ObjectType
 
 
 class Nodes(object):
@@ -744,7 +743,7 @@ class Outfall(Node):
         | Max Inflow Rate     |
         +---------------------+
         | Pollutant Loading   |
-        +---------------------+        
+        +---------------------+
         | Total Periods       |
         +---------------------+
 

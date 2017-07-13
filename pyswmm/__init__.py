@@ -14,8 +14,9 @@ from pyswmm.simulation import Simulation
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 
-VERSION_INFO = (0, 3, 5, 'dev0')
+VERSION_INFO = (0, 4, 0, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
+__swmm_version__ = '5.2.0.dev0'
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
 __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
 __licence__ = 'BSD2'

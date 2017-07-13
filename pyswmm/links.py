@@ -9,8 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import (LinkParams, LinkResults, LinkStats, LinkType,
-                               ObjectType)
+from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
 
 
 class Links(object):
@@ -877,7 +876,7 @@ class Conduit(Link):
         | Max Flow Rate             |
         +---------------------------+
         | Max Flow Date             |
-        +---------------------------+        
+        +---------------------------+
         | Max Velocity              |
         +---------------------------+
         | Max Depth                 |
@@ -897,7 +896,7 @@ class Conduit(Link):
         | Time Capacity Limited     |
         +---------------------------+
         | Time in Flow Class (dict) |
-        +---------------------------+        
+        +---------------------------+
         | Time Courant Critical     |
         +---------------------------+
         | Flow Turns                |
@@ -953,7 +952,7 @@ class Pump(Link):
         +--------------------------+
         | Number of Start Ups      |
         +--------------------------+
-        
+
         :return: Group of Stats
         :rtype: dict
         """

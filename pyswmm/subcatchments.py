@@ -9,7 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults, SubcStats
+from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults
 
 
 class Subcatchments(object):

@@ -428,7 +428,10 @@ class PySWMM(object):
         patch = ctypes.create_string_buffer(100)
         self.SWMMlibobj.swmm_getVersionInfo(
             ctypes.byref(major), ctypes.byref(minor), ctypes.byref(patch))
-        ver = [major.value, minor.value, patch.value]
+        ver = [
+            major.value.decode("utf-8"), minor.value.decode("utf-8"),
+            patch.value.decode("utf-8")
+        ]
         return distutils.version.LooseVersion('.'.join(ver))
 
     def swmm_getMassBalErr(self):
@@ -1128,11 +1131,11 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
 
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getNodeStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.NodeStats)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
@@ -1142,7 +1145,7 @@ class PySWMM(object):
             ctypes.c_int(index), ctypes.byref(object_stats))
 
         self._error_check(errcode)
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
@@ -1160,11 +1163,11 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
 
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getStorageStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.StorageStats)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
@@ -1174,7 +1177,7 @@ class PySWMM(object):
             ctypes.c_int(index), ctypes.byref(object_stats))
 
         self._error_check(errcode)
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
@@ -1192,11 +1195,11 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
 
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getOutfallStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.OutfallStats)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
@@ -1206,11 +1209,11 @@ class PySWMM(object):
             ctypes.c_int(index), ctypes.byref(object_stats))
 
         self._error_check(errcode)
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
-                #Pollutant Array
+                # Pollutant Array.
                 if attr == "totalLoad":
                     out_dict[object_stats._py_alias_ids[attr]] = {}
                     pol_stats_array = getattr(object_stats, attr)
@@ -1224,7 +1227,7 @@ class PySWMM(object):
                     out_dict[object_stats._py_alias_ids[attr]] = getattr(
                         object_stats, attr)
 
-        #Free Outfall Stats Pollutant Array
+        # Free Outfall Stats Pollutant Array.
         freeoutfallstats = self.SWMMlibobj.swmm_freeOutfallStats
         freeoutfallstats.argtypes = (swmm_stats_func_arg, )
         freeoutfallstats(object_stats)
@@ -1241,11 +1244,11 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
 
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getLinkStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.LinkStats)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
@@ -1255,11 +1258,11 @@ class PySWMM(object):
             ctypes.c_int(index), ctypes.byref(object_stats))
 
         self._error_check(errcode)
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
-                #Pollutant Array
+                # Pollutant Array
                 if attr == "timeInFlowClass":
                     out_dict[object_stats._py_alias_ids[attr]] = {}
                     stats_array = getattr(object_stats, attr)
@@ -1283,11 +1286,11 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
 
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getPumpStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.PumpStats)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
@@ -1297,7 +1300,7 @@ class PySWMM(object):
             ctypes.c_int(index), ctypes.byref(object_stats))
 
         self._error_check(errcode)
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
@@ -1318,11 +1321,11 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
 
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getSubcatchStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.SubcStats)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
@@ -1332,7 +1335,7 @@ class PySWMM(object):
             ctypes.c_int(index), ctypes.byref(object_stats))
 
         self._error_check(errcode)
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
@@ -1347,11 +1350,11 @@ class PySWMM(object):
         :return: Dictionary of Flow Routing Stats.
         :rtype: dict
         """
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getSystemRoutingStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.RoutingTotals)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (swmm_stats_func_arg, )
 
         object_stats = tka.RoutingTotals()
@@ -1359,7 +1362,7 @@ class PySWMM(object):
 
         self._error_check(errcode)
 
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
@@ -1374,11 +1377,11 @@ class PySWMM(object):
         :return: Dictionary of Runoff Routing Stats.
         :rtype: dict
         """
-        #SWMM function handle.
+        # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getSystemRunoffStats
-        #SWMM function handle argument output structure.
+        # SWMM function handle argument output structure.
         swmm_stats_func_arg = ctypes.POINTER(tka.RunoffTotals)
-        #Define argument. 
+        # Define argument.
         swmm_stats_func.argtypes = (swmm_stats_func_arg, )
 
         object_stats = tka.RunoffTotals()
@@ -1386,7 +1389,7 @@ class PySWMM(object):
 
         self._error_check(errcode)
 
-        #Copy Items to Dictionary using Alias Names.
+        # Copy Items to Dictionary using Alias Names.
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:

@@ -9,7 +9,6 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-import pyswmm.toolkitapi as tka
 
 
 class SystemStats(object):
