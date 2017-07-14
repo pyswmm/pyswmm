@@ -1,5 +1,17 @@
 # History of changes
 
+
+## Version 0.4.0 (2017-07-14)
+
+
+### Pull Requests Merged
+
+* [PR 106](https://github.com/OpenWaterAnalytics/pyswmm/pull/106) - Updatetests
+* [PR 103](https://github.com/OpenWaterAnalytics/pyswmm/pull/103) - Linux
+* [PR 97](https://github.com/OpenWaterAnalytics/pyswmm/pull/97) - Statsfix
+
+In this release 3 pull requests were closed.
+
 ## Version 0.3.4 (2017-05-08)
 
 
