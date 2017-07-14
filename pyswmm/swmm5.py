@@ -373,7 +373,7 @@ class PySWMM(object):
 
     def swmm_report(self):
         """
-        Produces SWMM Report (*.rpt) file after simulation.
+        Copies Time Series results from .out to .rpt file.
 
         Examples:
 
@@ -423,12 +423,16 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        version = str(self.SWMMlibobj.swmm_getVersion())
-        major = version[0]
-        minor = version[1]
-        build = str(int(version[2:]))
-        ver = [major, minor, build]
-        return distutils.version.StrictVersion('.'.join(ver))
+        major = ctypes.create_string_buffer(100)
+        minor = ctypes.create_string_buffer(100)
+        patch = ctypes.create_string_buffer(100)
+        self.SWMMlibobj.swmm_getVersionInfo(
+            ctypes.byref(major), ctypes.byref(minor), ctypes.byref(patch))
+        ver = [
+            major.value.decode("utf-8"), minor.value.decode("utf-8"),
+            patch.value.decode("utf-8")
+        ]
+        return distutils.version.LooseVersion('.'.join(ver))
 
     def swmm_getMassBalErr(self):
         """
@@ -1003,7 +1007,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
         self._error_check(errcode)
         if errcode == 0:
-            if self.swmm_getVersion() < distutils.version.StrictVersion(
+            if self.swmm_getVersion() < distutils.version.LooseVersion(
                     SWMM_VER_51011):
                 return datetime.strptime(
                     dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
@@ -1117,33 +1121,281 @@ class PySWMM(object):
 
         return result.value
 
-    def system_flow_routing(self, resultType):
+    def node_statistics(self, ID):
         """
-        Get Cumulative System Flow Routing Stats.
+        Get stats for a Node.
 
-        :param int resultType: Results Type based on SysRoutingStats
+        :param str ID: Node ID
+        :return: Group Stats
+        :rtype: dict
         """
-        result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSystemRoutingTotals(
-            resultType, ctypes.byref(result))
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getNodeStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.NodeStats)
+        # Define argument.
+        swmm_stats_func.argtypes = (
+            ctypes.c_int,
+            swmm_stats_func_arg, )
+
+        object_stats = tka.NodeStats()
+        errcode = swmm_stats_func(
+            ctypes.c_int(index), ctypes.byref(object_stats))
+
+        self._error_check(errcode)
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                    object_stats, attr)
+        return out_dict
+
+    def storage_statistics(self, ID):
+        """
+        Get stats for a Storage Node.
+
+        :param str ID: Node ID
+        :return: Group Stats
+        :rtype: dict
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getStorageStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.StorageStats)
+        # Define argument.
+        swmm_stats_func.argtypes = (
+            ctypes.c_int,
+            swmm_stats_func_arg, )
+
+        object_stats = tka.StorageStats()
+        errcode = swmm_stats_func(
+            ctypes.c_int(index), ctypes.byref(object_stats))
+
+        self._error_check(errcode)
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                    object_stats, attr)
+        return out_dict
+
+    def outfall_statistics(self, ID):
+        """
+        Get stats for a Outfall Node.
+
+        :param str ID: Node ID
+        :return: Group Stats
+        :rtype: dict
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getOutfallStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.OutfallStats)
+        # Define argument.
+        swmm_stats_func.argtypes = (
+            ctypes.c_int,
+            swmm_stats_func_arg, )
+
+        object_stats = tka.OutfallStats()
+        errcode = swmm_stats_func(
+            ctypes.c_int(index), ctypes.byref(object_stats))
+
+        self._error_check(errcode)
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                # Pollutant Array.
+                if attr == "totalLoad":
+                    out_dict[object_stats._py_alias_ids[attr]] = {}
+                    pol_stats_array = getattr(object_stats, attr)
+                    pollut_ids = self.getObjectIDList(
+                        tka.ObjectType.POLLUT.value)
+                    if len(pollut_ids) > 0:
+                        for ind in range(len(pollut_ids)):
+                            out_dict[object_stats._py_alias_ids[attr]][
+                                pollut_ids[ind]] = pol_stats_array[ind]
+                else:
+                    out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                        object_stats, attr)
+
+        # Free Outfall Stats Pollutant Array.
+        freeoutfallstats = self.SWMMlibobj.swmm_freeOutfallStats
+        freeoutfallstats.argtypes = (swmm_stats_func_arg, )
+        freeoutfallstats(object_stats)
+
+        return out_dict
+
+    def conduit_statistics(self, ID):
+        """
+        Get stats for a Conduits.
+
+        :param str ID: Conduit ID
+        :return: Group Stats
+        :rtype: dict
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getLinkStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.LinkStats)
+        # Define argument.
+        swmm_stats_func.argtypes = (
+            ctypes.c_int,
+            swmm_stats_func_arg, )
+
+        object_stats = tka.LinkStats()
+        errcode = swmm_stats_func(
+            ctypes.c_int(index), ctypes.byref(object_stats))
+
+        self._error_check(errcode)
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                # Pollutant Array
+                if attr == "timeInFlowClass":
+                    out_dict[object_stats._py_alias_ids[attr]] = {}
+                    stats_array = getattr(object_stats, attr)
+                    sum_array = sum([val for val in stats_array])
+                    for ind in range(7):
+                        out_dict[object_stats._py_alias_ids[attr]][
+                            ind] = stats_array[ind] / sum_array
+                else:
+                    out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                        object_stats, attr)
+
+        return out_dict
+
+    def pump_statistics(self, ID):
+        """
+        Get stats for a Pump.
+
+        :param str ID: Pump ID
+        :return: Group Stats
+        :rtype: dict
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getPumpStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.PumpStats)
+        # Define argument.
+        swmm_stats_func.argtypes = (
+            ctypes.c_int,
+            swmm_stats_func_arg, )
+
+        object_stats = tka.PumpStats()
+        errcode = swmm_stats_func(
+            ctypes.c_int(index), ctypes.byref(object_stats))
+
+        self._error_check(errcode)
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                    object_stats, attr)
+                if attr == "utilized":
+                    out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                        object_stats, attr) / object_stats.totalPeriods
+        return out_dict
+
+    def subcatch_statistics(self, ID):
+        """
+        Get stats for a Subcatchment.
+
+        :param str ID: Subcatchment ID
+        :return: Group Stats
+        :rtype: dict
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
+
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getSubcatchStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.SubcStats)
+        # Define argument.
+        swmm_stats_func.argtypes = (
+            ctypes.c_int,
+            swmm_stats_func_arg, )
+
+        object_stats = tka.SubcStats()
+        errcode = swmm_stats_func(
+            ctypes.c_int(index), ctypes.byref(object_stats))
+
+        self._error_check(errcode)
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                    object_stats, attr)
+        return out_dict
+
+    def flow_routing_stats(self):
+        """
+        Get Flow Routing System stats.
+
+        :return: Dictionary of Flow Routing Stats.
+        :rtype: dict
+        """
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getSystemRoutingStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.RoutingTotals)
+        # Define argument.
+        swmm_stats_func.argtypes = (swmm_stats_func_arg, )
+
+        object_stats = tka.RoutingTotals()
+        errcode = swmm_stats_func(ctypes.byref(object_stats))
 
         self._error_check(errcode)
 
-        return result.value
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                    object_stats, attr)
+        return out_dict
 
-    def system_runoff_routing(self, resultType):
+    def runoff_routing_stats(self):
         """
-        Get Cumulative System Runoff Routing Stats.
+        Get Runoff Routing System stats.
 
-        :param int resultType: Results Type based on SysRunoffStats
+        :return: Dictionary of Runoff Routing Stats.
+        :rtype: dict
         """
-        result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getSystemRunoffTotals(
-            resultType, ctypes.byref(result))
+        # SWMM function handle.
+        swmm_stats_func = self.SWMMlibobj.swmm_getSystemRunoffStats
+        # SWMM function handle argument output structure.
+        swmm_stats_func_arg = ctypes.POINTER(tka.RunoffTotals)
+        # Define argument.
+        swmm_stats_func.argtypes = (swmm_stats_func_arg, )
+
+        object_stats = tka.RunoffTotals()
+        errcode = swmm_stats_func(ctypes.byref(object_stats))
 
         self._error_check(errcode)
 
-        return result.value
+        # Copy Items to Dictionary using Alias Names.
+        out_dict = {}
+        for attr in dir(object_stats):
+            if "_" not in attr:
+                out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                    object_stats, attr)
+        return out_dict
 
     # --- Active Simulation Parameter "Setters"
     # -------------------------------------------------------------------------
@@ -1153,7 +1405,7 @@ class PySWMM(object):
 
         :param str ID: Link ID
         :param float targetSetting: New target setting which will be applied
-        at the start of the next routing step
+        at the start of the next routing step.
 
         Examples:
 
@@ -1231,6 +1483,9 @@ if __name__ == '__main__':
     print("Simulation Units")
     print(test.getSimUnit(tka.SimulationUnits.FlowUnits.value))
 
+    print("Simulation Engine Version")
+    print(test.swmm_getVersion())
+
     print("Simulation Allow Ponding Option Selection")
     print(
         test.getSimAnalysisSetting(tka.SimAnalysisSettings.AllowPonding.value),
@@ -1275,4 +1530,15 @@ if __name__ == '__main__':
             test.getSubcatchParam(idd, tka.SubcParams.area.value),
             test.getSubcatchOutConnection(idd), )
 
+    test.swmm_start(False)
+    i = 0
+    while True:
+        if i % 1000 == 0:
+            print("test {}".format(test.flow_routing_stats()))
+        eltime = test.swmm_step()
+        i += 1
+        if eltime == 0:
+            break
+
+    test.swmm_end()
     test.swmm_close()

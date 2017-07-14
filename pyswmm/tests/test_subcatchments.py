@@ -9,7 +9,7 @@
 # Local imports
 from pyswmm import Simulation, Subcatchments
 # from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm.tests.data import MODEL_FULL_FEATURES_PATH, MODEL_WEIR_SETTING_PATH
 
 
 def test_subcatchments_1():
@@ -35,3 +35,11 @@ def test_subcatchments_2():
             print(subcatchment.curb_length)
             subcatchment.curb_length = 10
             print(subcatchment.curb_length)
+
+
+def test_nodes_3():
+    with Simulation(MODEL_FULL_FEATURES_PATH) as sim:
+        S2 = Subcatchments(sim)["S2"]  #Subcatchment
+
+        for step in sim:
+            print(S2.statistics)

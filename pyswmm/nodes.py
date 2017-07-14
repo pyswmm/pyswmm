@@ -92,7 +92,14 @@ class Nodes(object):
 
     def __getitem__(self, nodeid):
         if self.__contains__(nodeid):
-            return Node(self._model, nodeid)
+            nd = Node(self._model, nodeid)
+            _nd = nd
+            if nd.is_outfall():
+                _nd.__class__ = Outfall
+            elif nd.is_storage():
+                _nd.__class__ = Storage
+            return _nd
+
         else:
             raise PYSWMMException("Node ID Does not Exist")
 
@@ -671,3 +678,124 @@ class Node(object):
         >>>
         """
         self._model.setNodeInflow(self._nodeid, inflowrate)
+
+    @property
+    def statistics(self):
+        """
+        Node Statistics. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +-------------------------+
+        | Average Depth           |
+        +-------------------------+
+        | Max Depth               |
+        +-------------------------+
+        | Max Depth Date          |
+        +-------------------------+
+        | Max Report Depth        |
+        +-------------------------+
+        | Flooding Volume         |
+        +-------------------------+
+        | Flooding Duration       |
+        +-------------------------+
+        | Surcharge Duration      |
+        +-------------------------+
+        | Courant Crit Duration   |
+        +-------------------------+
+        | Lateral Infow Volume    |
+        +-------------------------+
+        | Peak Lateral Inflowrate |
+        +-------------------------+
+        | Peak Total Inflow       |
+        +-------------------------+
+        | Peak Flooding Rate      |
+        +-------------------------+
+        | Max Ponded Volume       |
+        +-------------------------+
+        | Max Inflow Date         |
+        +-------------------------+
+        | Max Flooding Date       |
+        +-------------------------+
+
+        :return: Group of Stats
+        :rtype: dict
+        """
+        return self._model.node_statistics(self.nodeid)
+
+
+class Outfall(Node):
+    """
+    Outfall Object: Subclass of Node Object.
+    """
+
+    def __init__(self):
+        super(Outfall, self).__init__()
+
+    @property
+    def outfall_statistics(self):
+        """
+        Outfall Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +---------------------+
+        | Average Inflow Rate |
+        +---------------------+
+        | Max Inflow Rate     |
+        +---------------------+
+        | Pollutant Loading   |
+        +---------------------+
+        | Total Periods       |
+        +---------------------+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        return self._model.outfall_statistics(self.nodeid)
+
+    @property
+    def cumulative_inflow(self):
+        """
+        Get Cumulative Outfall Loading.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Cumulative Volume
+        :rtype: float
+        """
+        stats = self._model.outfall_statistics(self.nodeid)
+        return stats["average_flowrate"] * stats["total_periods"]
+
+
+class Storage(Node):
+    """
+    Storage Object: Subclass of Node Object.
+    """
+
+    def __init__(self):
+        super(Storage, self).__init__()
+
+    @property
+    def storage_statistics(self):
+        """
+        Storage Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +-----------------------+
+        | Initial Stored Volume |
+        +-----------------------+
+        | Average Stored Volume |
+        +-----------------------+
+        | Max Stored Volume     |
+        +-----------------------+
+        | Max Outflow Rate      |
+        +-----------------------+
+        | Evaporated Volume     |
+        +-----------------------+
+        | Exfiltration Volume   |
+        +-----------------------+
+
+        :return: Group of Stats
+        :rtype: list
+        """
+        return self._model.storage_statistics(self.nodeid)

@@ -6,6 +6,6 @@ links module
 ============
 
 .. automodule:: pyswmm.links
-    :members: Links, Link
+    :members: Links, Link, Conduit, Pump
     :undoc-members:
     :show-inheritance:

@@ -87,7 +87,13 @@ class Links(object):
 
     def __getitem__(self, linkid):
         if self.__contains__(linkid):
-            return Link(self._model, linkid)
+            ln = Link(self._model, linkid)
+            _ln = ln
+            if ln.is_conduit():
+                _ln.__class__ = Conduit
+            elif ln.is_pump():
+                _ln.__class__ = Pump
+            return _ln
         else:
             raise PYSWMMException("Link ID Does not Exist")
 
@@ -850,3 +856,104 @@ class Link(object):
         return 0.
         """
         return self._model.setLinkSetting(self._linkid, setting)
+
+
+class Conduit(Link):
+    """
+    Conduit Object: Subclass of Link Object.
+    """
+
+    def __init__(self):
+        super(Conduit, self).__init__()
+
+    @property
+    def conduit_statistics(self):
+        """
+        Conduit Flow Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +---------------------------+
+        | Max Flow Rate             |
+        +---------------------------+
+        | Max Flow Date             |
+        +---------------------------+
+        | Max Velocity              |
+        +---------------------------+
+        | Max Depth                 |
+        +---------------------------+
+        | Time in Normal Flow       |
+        +---------------------------+
+        | Time in Inlet Control     |
+        +---------------------------+
+        | Time Surcharged           |
+        +---------------------------+
+        | Time Upstream Full        |
+        +---------------------------+
+        | Time Downstream Full      |
+        +---------------------------+
+        | Time Full Flow            |
+        +---------------------------+
+        | Time Capacity Limited     |
+        +---------------------------+
+        | Time in Flow Class (dict) |
+        +---------------------------+
+        | Time Courant Critical     |
+        +---------------------------+
+        | Flow Turns                |
+        +---------------------------+
+        | Flow Turn Signs           |
+        +---------------------------+
+
+        Time in Flow Class: (Fraction of Total Time)
+        +-----+--------+----------+----------+----------+---------+-----------+
+        | 0   | 1      | 2        | 3        | 4        | 5       | 6         |
+        +-----+--------+----------+----------+----------+---------+-----------+
+        | Dry | Up Dry | Down Dry | Sub Crit | Sup Crit | Up Crit | Down Crit |
+        +-----+--------+----------+----------+----------+---------+-----------+
+
+        :return: Group of Stats
+        :rtype: dict
+        """
+        return self._model.conduit_statistics(self.linkid)
+
+
+class Pump(Link):
+    """
+    Pump Object: Subclass of Link Object.
+    """
+
+    def __init__(self):
+        super(Pump, self).__init__()
+
+    @property
+    def pump_statistics(self):
+        """
+        Pump Stats. The stats returned are rolling/cumulative.
+        Indeces are as follows:
+
+        +--------------------------+
+        | Fraction of Time Pump On |
+        +--------------------------+
+        | Min Flow Rate            |
+        +--------------------------+
+        | Average Flow Rate        |
+        +--------------------------+
+        | Max Flow Rate            |
+        +--------------------------+
+        | Total Volume Pumped      |
+        +--------------------------+
+        | Energy Consumed          |
+        +--------------------------+
+        | Off Curve Low            |
+        +--------------------------+
+        | Off Curve High           |
+        +--------------------------+
+        | Total Periods            |
+        +--------------------------+
+        | Number of Start Ups      |
+        +--------------------------+
+
+        :return: Group of Stats
+        :rtype: dict
+        """
+        return self._model.pump_statistics(self.linkid)
