@@ -1,0 +1,25 @@
+*******
+Authors
+*******
+
+Maintainers
+===========
+
+- Bryant E. McDonnell 
+- Gonzalo Peña-Castellanos 
+
+
+Authors with Copyrighted Contributions
+======================================
+
+- Bryant E. McDonnell 
+- James Westover 
+- Gonzalo Peña-Castellanos 
+- Stephen Roberts 
+- Abhiram Mullapudi
+
+
+Authors with Contributions in the Public Domain
+===============================================
+
+- Michael Tryby 

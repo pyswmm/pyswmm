@@ -17,21 +17,21 @@ You can also get pyswmm from the Python Package Index manually
 at http://pypi.python.org/pypi/pyswmm
 To use pip, you need to have `setuptools <https://pypi.python.org/pypi/setuptools>`_ installed.
 
-Installing with conda
-=====================
+.. Installing with conda
+.. =====================
 
-If you are using Ananconda/Miniconda distribution of Python then you can
-update/install PySWMM to the latest version with
+.. If you are using Ananconda/Miniconda distribution of Python then you can
+.. update/install PySWMM to the latest version with
 
-::
+.. ::
 
-    conda install pyswmm
+..    conda install pyswmm
 
-or to update an existing installation
+.. or to update an existing installation
 
-::
+.. ::
 
-    conda update pyswmm
+..     conda update pyswmm
 
 	
 Requirements
