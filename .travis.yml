@@ -29,7 +29,7 @@ install:
   # Install swmm from latest develop packages
   - conda install -n test libswmm -c owa -q --no-pin
   - if [ "${TRAVIS_PYTHON_VERSION}" = "2.7" ]; then
-        - conda install -n test enum34 -q --no-pin
+        - conda install -n test enum34 -q --no-pin;
     fi
   # Install this package
   - source activate test
