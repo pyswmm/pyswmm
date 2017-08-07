@@ -23,7 +23,7 @@ import warnings
 import six
 
 # Local imports
-from pyswmm.lib import DLL_SELECTION
+from pyswmm.lib import LIB_SWMM
 import pyswmm.toolkitapi as tka
 
 # Local variables
@@ -102,38 +102,59 @@ class PySWMM(object):
     >>> swmm_model.swmm_close()
     """
 
-    def __init__(self, inpfile='', rptfile=None, binfile=None):
+    def __init__(self, inpfile='', rptfile=None, binfile=None,
+                 library_path=None):
         """
         Initialize the PySWMM object class.
 
-        :param str inpfile: Name of SWMM input file (default '')
-        :param str rptfile: Report file to generate (default None)
-        :param str binfile: Optional binary output file (default None)
+        :param str inpfile: Name of SWMM input file (default '').
+        :param str rptfile: Report file to generate (default None).
+        :param str binfile: Optional binary output file (default None).
+        :param str library_path: Optional dll/so/dylib with custom swmm engine.
+
+        If no library_path is provided, the bundled libraries are used.
         """
         self.fileLoaded = False
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
+        self.library_path = library_path
+        self.SWMMlibobj = None
 
+        self._load_library()
+
+    def _load_library(self):
+        """Load swmm library."""
+        lib_path = None
         if os.name == 'nt':
-            # Windows Support
-            self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
+            loader = ctypes.WinDLL
+            conda_lib_path = os.path.join(sys.prefix, 'Library', 'lib',
+                                          'swmm5.dll')
+        elif sys.platform == 'darwin':
+            loader = ctypes.cdll.LoadLibrary
+            # loader = ctypes.CDLL
+            conda_lib_path = os.path.join(sys.prefix, 'lib', 'libswmm5.dylib')
+        elif sys.platform.startswith('linux'):
+            loader = ctypes.CDLL
+            conda_lib_path = os.path.join(sys.prefix, 'lib', 'libswmm5.so')
+        else:
+            raise Exception("Operating System not Supported")
 
-        # Mac Osx Support
-        if sys.platform == 'darwin':
-            # Try to load conda library first
-            path = os.path.join(sys.prefix, 'lib', 'libswmm5.dylib')
-            if os.path.isfile(path):
-                DLL_SELECTION.dll_loc = path
+        if self.library_path:
+            if os.path.isfile(self.library_path):
+                lib_path = self.library_path
+            else:
+                raise Exception("Library Not Found")
 
-            self.SWMMlibobj = ctypes.cdll.LoadLibrary(DLL_SELECTION())
+        if lib_path is None:
+            if os.path.isfile(conda_lib_path):
+                lib_path = conda_lib_path
+            elif os.path.isfile(LIB_SWMM):
+                lib_path = LIB_SWMM
+            else:
+                raise Exception("Library Not Found")
 
-        # Linux Support
-        if sys.platform.startswith('linux'):
-            path = os.path.join(sys.prefix, 'lib', 'libswmm5.so')
-            if os.path.isfile(path):
-                DLL_SELECTION.dll_loc = path
-            self.SWMMlibobj = ctypes.CDLL(DLL_SELECTION())
+        self.SWMMlibobj = loader(lib_path)
 
     def _error_message(self, errcode):
         """
@@ -146,7 +167,6 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
-        print(_errmsg.value.decode("utf-8"))
         return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
