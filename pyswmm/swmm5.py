@@ -119,8 +119,13 @@ class PySWMM(object):
             # Windows Support
             self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
 
+        # Mac Osx Support
         if sys.platform == 'darwin':
-            # Mac Osx Support
+            # Try to load conda library first
+            path = os.path.join(sys.prefix, 'lib', 'libswmm5.dylib')
+            if os.path.isfile(path):
+                DLL_SELECTION.dll_loc = path
+
             self.SWMMlibobj = ctypes.cdll.LoadLibrary(DLL_SELECTION())
 
         if sys.platform.startswith('linux'):
