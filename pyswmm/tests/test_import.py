@@ -14,7 +14,6 @@ import sys
 # from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pyswmm
 
-
 #def test_use_1():
 #    if sys.platform == 'darwin':
 #        pyswmm.lib.use("swmm5.so")
@@ -23,16 +22,12 @@ import pyswmm
 #    else:
 #        pyswmm.lib.use("swmm5.dll")
 
-
 #    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-
 
 #def test_use_2():
 #    pyswmm.lib.use("swmm5")
 
-
 #    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-
 
 #def test_use_3():
 #    try:

@@ -24,8 +24,8 @@ if os.name == 'nt':
     if MACHINE_BITS == 64:
         LIB_SWMM = os.path.join(HERE, 'windows', 'swmm5.dll')
     elif MACHINE_BITS == 32:
-        LIB_SWMM = os.path.join(HERE, 'windows', 'swmm5.dll')    
+        LIB_SWMM = os.path.join(HERE, 'windows', 'swmm5.dll')
 elif sys.platform == 'darwin':
     LIB_SWMM = os.path.join(HERE, 'macos', 'swmm5.so')
 elif sys.platform.startswith('linux'):
-    LIB_SWMM = os.path.join(HERE, 'linux', 'swmm5.so')    
+    LIB_SWMM = os.path.join(HERE, 'linux', 'swmm5.so')

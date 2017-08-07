@@ -7,6 +7,7 @@
 # -----------------------------------------------------------------------------
 
 # Standard library imports
+# yapf: disable
 import sys
 
 # Local imports
@@ -14,6 +15,8 @@ from pyswmm import Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pyswmm
 
+
+# yapf: enable
 
 #def test_engine_version():
 #    if sys.platform == 'darwin':

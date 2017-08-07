@@ -102,8 +102,7 @@ class PySWMM(object):
     >>> swmm_model.swmm_close()
     """
 
-    def __init__(self, inpfile='', rptfile=None, binfile=None,
-                 library=None):
+    def __init__(self, inpfile='', rptfile=None, binfile=None, library=None):
         """
         Initialize the PySWMM object class.
 
