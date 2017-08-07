@@ -5,7 +5,9 @@ matrix:
     - os: osx
       language: generic
       env: TRAVIS_PYTHON_VERSION=2.7
-
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION=3.5
     - os: osx
       language: generic
       env: TRAVIS_PYTHON_VERSION=3.6
@@ -25,7 +27,7 @@ install:
   - conda config --add pkgs_dirs ~/condacache/pkgs
   - conda install --file requirements-test.txt -c spyder-ide
   # Install swmm from latest develop packages
-  - conda install -n test libswmm -c owa-q --no-pin
+  - conda install -n test libswmm -c owa -q --no-pin
   - if [ "${TRAVIS_PYTHON_VERSION}" = "2.7" ]; then
         - conda install -n test enum34 -q --no-pin
     fi
