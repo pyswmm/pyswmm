@@ -9,14 +9,6 @@ matrix:
     - os: osx
       language: generic
       env: TRAVIS_PYTHON_VERSION=3.6
- 
-    - os: linux
-      dist: trusty
-      env: TRAVIS_PYTHON_VERSION=2.7
-
-    - os: linux
-      dist: trusty
-      env: TRAVIS_PYTHON_VERSION=3.6
 
 cache:
   directories:
@@ -31,13 +23,14 @@ install:
   # Install dependencies. This include test and lint dependencies
   - conda update -n root conda -q --no-pin
   - conda config --add pkgs_dirs ~/condacache/pkgs
-  - conda install -n test pytest six -q --no-pin
+  - conda install --file requirements-test.txt -c spyder-ide
   # Install swmm from latest develop packages
   - conda install -n test libswmm -c owa-q --no-pin
   - if [ "${TRAVIS_PYTHON_VERSION}" = "2.7" ]; then
         - conda install -n test enum34 -q --no-pin
     fi
   # Install this package
+  - source activate test
   - python setup.py develop
 
 script:

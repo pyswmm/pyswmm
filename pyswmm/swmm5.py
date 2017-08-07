@@ -128,8 +128,11 @@ class PySWMM(object):
 
             self.SWMMlibobj = ctypes.cdll.LoadLibrary(DLL_SELECTION())
 
+        # Linux Support
         if sys.platform.startswith('linux'):
-            # Linux Support
+            path = os.path.join(sys.prefix, 'lib', 'libswmm5.so')
+            if os.path.isfile(path):
+                DLL_SELECTION.dll_loc = path
             self.SWMMlibobj = ctypes.CDLL(DLL_SELECTION())
 
     def _error_message(self, errcode):
