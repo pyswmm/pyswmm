@@ -4,33 +4,41 @@ matrix:
   include:
     - os: osx
       language: generic
-      sudo: false
-      python: "2.7"
+      env: TRAVIS_PYTHON_VERSION=2.7
 
     - os: osx
       language: generic
-      sudo: false
-      python: "3.6"
+      env: TRAVIS_PYTHON_VERSION=3.6
  
     - os: linux
       dist: trusty
-      sudo: false
-      python: "2.7"
+      env: TRAVIS_PYTHON_VERSION=2.7
 
     - os: linux
       dist: trusty
-      sudo: false
-      python: "3.6"
+      env: TRAVIS_PYTHON_VERSION=3.6
 
-# install dependencies
-before_install:
-    - if test ${TRAVIS_OS_NAME} = "osx"; then
-        brew update;
-        brew install gcc;
-      fi
-install: 
-  - pip install -r requirements-travis.txt
+cache:
+  directories:
+    - $HOME/condacache/pkgs
+    - $HOME/.cache/pip
+
+install:
+  # Use Astropy ci helpers for initial setup
+  - git clone git://github.com/astropy/ci-helpers.git
+  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+  - source activate test
+  # Install dependencies. This include test and lint dependencies
+  - conda update -n root conda -q --no-pin
+  - conda config --add pkgs_dirs ~/condacache/pkgs
+  - conda install -n test pytest six -q --no-pin
+  # Install swmm from latest develop packages
+  - conda install -n test libswmm -c owa-q --no-pin
+  - if [ "${TRAVIS_PYTHON_VERSION}" = "2.7" ]; then
+        - conda install -n test enum34 -q --no-pin
+    fi
+  # Install this package
+  - python setup.py develop
 
 script:
   - py.test pyswmm
-
