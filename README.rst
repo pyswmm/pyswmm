@@ -12,7 +12,7 @@ PySWMM Wiki
 
 Build status
 ------------
-|appveyor status| |circleci status| |travisci status| |quantified| |scrutinizer|
+|appveyor status| |circleci status| |travisci status| |scrutinizer|
 
 Project information
 -------------------
@@ -39,9 +39,6 @@ Project information
 .. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
    :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status	
-.. |quantified| image:: https://www.quantifiedcode.com/api/v1/project/8f76319eee384957bd1b83325774e52c/badge.svg
-   :target: https://www.quantifiedcode.com/app/project/8f76319eee384957bd1b83325774e52c
-   :alt: Code issues
    
 	  
 YouTube Examples
