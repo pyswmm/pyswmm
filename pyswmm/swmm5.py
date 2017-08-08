@@ -217,7 +217,8 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        self.SWMMlibobj.swmm_run(ctypes.c_char_p(six.b(inpfile)),
+        self.SWMMlibobj.swmm_run(
+            ctypes.c_char_p(six.b(inpfile)),
             ctypes.c_char_p(six.b(rptfile)), ctypes.c_char_p(six.b(binfile)))
 
     def swmm_open(self, inpfile=None, rptfile=None, binfile=None):
