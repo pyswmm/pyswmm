@@ -6,7 +6,7 @@ matrix:
 branches:
   only:
     - master 
-    - dev-0.4.1
+    - /dev-.*/
 
 environment:
   global:
