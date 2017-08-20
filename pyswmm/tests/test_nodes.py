@@ -122,3 +122,15 @@ def test_outfalls_8():
         if ind % 1000 == 0:
             print(outfall.outfall_statistics)
     sim.close()
+
+
+def test_nodes_9():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        J1 = Nodes(sim)["J1"]
+
+        def init_function():
+            J1.initial_depth = 15
+
+        sim.initial_conditions(init_function)
+        for step in sim:
+            pass
