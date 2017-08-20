@@ -88,7 +88,7 @@ class Simulation(object):
     def start(self):
         """Start Simulation"""
         if not self._isStarted:
-            #Set Model Initial Conditions
+            # Set Model Initial Conditions
             if self._initial_conditions:
                 self._initial_conditions()
             self._model.swmm_start(True)
@@ -115,10 +115,10 @@ class Simulation(object):
 
     def __exit__(self, *a):
         """close"""
-        if self._isStarted == True:
+        if self._isStarted:
             self._model.swmm_end()
             self._isStarted = False
-        if self._isOpen == True:
+        if self._isOpen:
             self._model.swmm_close()
             self._isOpen = False
 
@@ -127,7 +127,7 @@ class Simulation(object):
         Intial Conditions for Hydraulics and Hydrology can be set
         from within the api by setting a function to the
         initial_conditions property.
-        
+
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
@@ -141,9 +141,9 @@ class Simulation(object):
         ...     for step in sim:
         ...         pass
         ...     sim.report()
-        
+
         """
-        if type(init_conditions) == types.FunctionType:
+        if hasattr(init_conditions, '__call__'):
             self._initial_conditions = init_conditions
         else:
             error_msg = 'Requires Type Function, not {}'.format(
