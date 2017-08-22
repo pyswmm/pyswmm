@@ -8,7 +8,7 @@
 """Base class for a SWMM Simulation."""
 
 # Local imports
-from pyswmm.swmm5 import PySWMM
+from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
 
 
@@ -55,8 +55,10 @@ class Simulation(object):
     def __init__(self, inputfile, reportfile=None, outputfile=None):
         self._model = PySWMM(inputfile, reportfile, outputfile)
         self._model.swmm_open()
+        self._isOpen = True
         self._advance_seconds = None
         self._isStarted = False
+        self._initial_conditions = None
 
     def __enter__(self):
         """
@@ -83,6 +85,9 @@ class Simulation(object):
     def start(self):
         """Start Simulation"""
         if not self._isStarted:
+            # Set Model Initial Conditions
+            if self._initial_conditions:
+                self._initial_conditions()
             self._model.swmm_start(True)
             self._isStarted = True
 
@@ -99,6 +104,7 @@ class Simulation(object):
 
         if time <= 0.0:
             self._model.swmm_end()
+            self._isStarted = False
             raise StopIteration
         return self._model
 
@@ -106,8 +112,40 @@ class Simulation(object):
 
     def __exit__(self, *a):
         """close"""
-        self._model.swmm_end()
-        self._model.swmm_close()
+        if self._isStarted:
+            self._model.swmm_end()
+            self._isStarted = False
+        if self._isOpen:
+            self._model.swmm_close()
+            self._isOpen = False
+
+    def initial_conditions(self, init_conditions):
+        """
+        Intial Conditions for Hydraulics and Hydrology can be set
+        from within the api by setting a function to the
+        initial_conditions property.
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
+        ...     nodeJ1 = Nodes(sim)["J1"]
+        ...
+        ...     def init_conditions():
+        ...         nodeJ1.initial_depth = 4
+        ...
+        ...     sim.initial_conditions(init_conditions)
+        ...
+        ...     for step in sim:
+        ...         pass
+        ...     sim.report()
+
+        """
+        if hasattr(init_conditions, '__call__'):
+            self._initial_conditions = init_conditions
+        else:
+            error_msg = 'Requires Type Function, not {}'.format(
+                type(init_conditions))
+            raise (PYSWMMException(error_msg))
 
     def step_advance(self, advance_seconds):
         """
