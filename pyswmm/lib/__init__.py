@@ -28,6 +28,6 @@ if os.name == 'nt':
     VC = VC_MAP[PYVER]
     LIB_SWMM = os.path.join(HERE, 'windows', MACHINE_BITS, VC, 'swmm5.dll')
 elif sys.platform == 'darwin':
-    LIB_SWMM = os.path.join(HERE, 'osx', MACHINE_BITS, 'swmm5.dylib')
+    LIB_SWMM = os.path.join(HERE, 'osx', MACHINE_BITS, 'libswmm5.dylib')
 elif sys.platform.startswith('linux'):
-    LIB_SWMM = os.path.join(HERE, 'linux', MACHINE_BITS, 'swmm5.so')
+    LIB_SWMM = os.path.join(HERE, 'linux', MACHINE_BITS, 'libswmm5.so')
