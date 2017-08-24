@@ -6,14 +6,9 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 
-# yapf: disable
-
 # Local imports
 from pyswmm import Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-
-
-# yapf: enable
 
 
 def test_runoff_error():
