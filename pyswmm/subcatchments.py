@@ -579,4 +579,4 @@ class Subcatchment(object):
         :return: Group of Stats
         :rtype: dict
         """
-        self._model.subcatch_statistics(self.subcatchmentid)
+        return self._model.subcatch_statistics(self.subcatchmentid)
