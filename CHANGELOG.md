@@ -1,5 +1,17 @@
 # History of changes
 
+
+## Version 0.4.2 (2017-08-24)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 119](https://github.com/OpenWaterAnalytics/pyswmm/issues/119) - Update SWMM Library
+* [Issue 115](https://github.com/OpenWaterAnalytics/pyswmm/issues/115) - execute() method
+
+In this release 2 issues were closed.
+
 ## Version 0.4.1 (2017-08-09)
 
 
