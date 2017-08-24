@@ -5,44 +5,20 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
-
-# Standard library imports
-import sys
+"""Test imports."""
 
 # Local imports
-# from pyswmm import Simulation
-# from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-import pyswmm
+from pyswmm import Simulation
+from pyswmm.lib import LIB_SWMM
+from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
-def test_use_1():
-    if sys.platform == 'darwin':
-        pyswmm.lib.use("swmm5.so")
-    elif sys.platform.startswith('linux'):
-        pyswmm.lib.use("swmm5.so")
-    else:
-        pyswmm.lib.use("swmm5.dll")
+def test_library_by_path():
+    Simulation(MODEL_WEIR_SETTING_PATH, library=LIB_SWMM)
 
 
-#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-
-
-def test_use_2():
-    pyswmm.lib.use("swmm5")
-
-
-#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-
-
-def test_use_3():
+def test_library_not_found():
     try:
-        pyswmm.lib.use("fakedll.dll")
-    except:
-        pass
-
-
-def test_use_4():
-    try:
-        pyswmm.lib.use("fakedll")
+        Simulation(MODEL_WEIR_SETTING_PATH, library='fakelib')
     except:
         pass
