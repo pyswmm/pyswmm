@@ -144,8 +144,8 @@ class PySWMM(object):
         if library:
             if '.' not in library and os.sep not in library:
                 # Look in current working directory.
-                lib_path = os.path.join(os.getcwd(), libprefix + library +
-                                        extension)
+                lib_path = os.path.join(os.getcwd(),
+                                        libprefix + library + extension)
             else:
                 lib_path = library
 
