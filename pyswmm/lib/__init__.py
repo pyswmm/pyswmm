@@ -12,7 +12,7 @@ for selecting the SWMM5 engine. """
 import os
 import sys
 
-MACHINE_BITS = 8 * tuple.__itemsize__
+MACHINE_BITS = str(8 * tuple.__itemsize__)
 PYVER = '{0}.{1}'.format(sys.version_info[0], sys.version_info[1])
 HERE = os.path.abspath(os.path.dirname(__file__))
 VC_MAP = {
