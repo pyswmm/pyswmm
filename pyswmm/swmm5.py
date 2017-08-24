@@ -109,11 +109,7 @@ class PySWMM(object):
         :param str inpfile: Name of SWMM input file (default '').
         :param str rptfile: Report file to generate (default None).
         :param str binfile: Optional binary output file (default None).
-        :param str library_path: Optional dll/so/dylib with custom swmm engine.
-
-        If no library is provided, the bundled libraries are used. `library`
-        is the name (including extension) of the compiled library if located
-        in the same folder as the script, otherwise it must be a full path.
+        :param str library: Path to custom SWMM engine library (default None).
         """
         self.fileLoaded = False
         self.inpfile = inpfile
@@ -127,25 +123,30 @@ class PySWMM(object):
         """Load swmm library."""
         lib_path = None
         if os.name == 'nt':
+            extension = 'dll'
             loader = ctypes.WinDLL
             conda_lib_path = os.path.join(sys.prefix, 'Library', 'lib',
                                           'swmm5.dll')
         elif sys.platform == 'darwin':
+            extension = 'dylib'
             loader = ctypes.cdll.LoadLibrary
             conda_lib_path = os.path.join(sys.prefix, 'lib', 'libswmm5.dylib')
         elif sys.platform.startswith('linux'):
+            extension = 'so'
             loader = ctypes.CDLL
             conda_lib_path = os.path.join(sys.prefix, 'lib', 'libswmm5.so')
         else:
-            raise Exception("Operating System not Supported")
+            raise Exception("Operating system not supported")
 
         if library:
-            # Look for the library in current working directory
-            library = os.path.abspath(library)
+            if '.' not in library:
+                raise Exception("SWMM custom library must be a full path "
+                                "with `.{}` extension.".format(extension))
+
             if os.path.isfile(library):
                 lib_path = library
             else:
-                raise Exception("Library Not Found")
+                raise Exception("SWMM library not found")
 
         if lib_path is None:
             if os.path.isfile(conda_lib_path):
@@ -153,7 +154,7 @@ class PySWMM(object):
             elif os.path.isfile(LIB_SWMM):
                 lib_path = LIB_SWMM
             else:
-                raise Exception("Library Not Found")
+                raise Exception("SWMM library not found")
 
         self.SWMMlibobj = loader(lib_path)
         self.library = lib_path

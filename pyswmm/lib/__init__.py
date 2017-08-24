@@ -12,20 +12,22 @@ for selecting the SWMM5 engine. """
 import os
 import sys
 
-# Machine Architechture
 MACHINE_BITS = 8 * tuple.__itemsize__
-
-# Local Path
+PYVER = '{0}.{1}'.format(sys.version_info[0], sys.version_info[1])
 HERE = os.path.abspath(os.path.dirname(__file__))
+VC_MAP = {
+    '2.7': 'vc9',
+    '3.4': 'vc10',
+    '3.5': 'vc14',
+    '3.6': 'vc14',
+}
 
 # Library path
 LIB_SWMM = ''
 if os.name == 'nt':
-    if MACHINE_BITS == 64:
-        LIB_SWMM = os.path.join(HERE, 'windows', 'swmm5.dll')
-    elif MACHINE_BITS == 32:
-        LIB_SWMM = os.path.join(HERE, 'windows', 'swmm5.dll')
+    VC = VC_MAP[PYVER]
+    LIB_SWMM = os.path.join(HERE, 'windows', MACHINE_BITS, VC, 'swmm5.dll')
 elif sys.platform == 'darwin':
-    LIB_SWMM = os.path.join(HERE, 'macos', 'swmm5.so')
+    LIB_SWMM = os.path.join(HERE, 'osx', MACHINE_BITS, 'swmm5.dylib')
 elif sys.platform.startswith('linux'):
-    LIB_SWMM = os.path.join(HERE, 'linux', 'swmm5.so')
+    LIB_SWMM = os.path.join(HERE, 'linux', MACHINE_BITS, 'swmm5.so')

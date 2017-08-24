@@ -6,30 +6,14 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 
-# Standard library imports
 # yapf: disable
-import sys
 
 # Local imports
 from pyswmm import Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-import pyswmm
 
 
 # yapf: enable
-
-#def test_engine_version():
-#    if sys.platform == 'darwin':
-#        pyswmm.lib.use("swmm5.so")
-#    elif sys.platform.startswith('linux'):
-#        pyswmm.lib.use("swmm5.so")
-#    else:
-#        pyswmm.lib.use("swmm5.dll")
-#
-#    print(sys.platform)
-#
-#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-#    print(sim.engine_version)
 
 
 def test_runoff_error():
