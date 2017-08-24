@@ -33,17 +33,18 @@ install:
   - "powershell ci-helpers/appveyor/install-miniconda.ps1"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "activate test"
-  - "conda install --file requirements-test.txt -c spyder-ide"
+  - "%CMD_IN_ENV% conda install --file requirements-test.txt -c spyder-ide"
   - IF "%PYTHON_VERSION%" == "2.7" conda install enum34
   # Install swmm from latest develop packages
-  - "conda install -n test libswmm -c owa -q --no-pin"
-  - "python setup.py develop"
+  - "%CMD_IN_ENV% conda install -n test libswmm -c owa -q --no-pin"
+  - "%CMD_IN_ENV% python setup.py develop"
 
 # Not a .NET project, we build in the install step instead
 build: false
 
 test_script:
-  - ciocheck setup.py --disable-tests
-  - ciocheck pyswmm --disable-tests
-  - pytest pyswmm
+  - "%CMD_IN_ENV% ciocheck setup.py --disable-tests"
+  - "%CMD_IN_ENV% ciocheck pyswmm --disable-tests"
+  - "%CMD_IN_ENV% conda remove -n test pytest-xdist -y -q"
+  - "%CMD_IN_ENV% pytest pyswmm"
 #  - coveralls --disable-tests
