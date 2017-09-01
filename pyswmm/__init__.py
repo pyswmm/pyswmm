@@ -14,7 +14,11 @@ from pyswmm.simulation import Simulation
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 
+<<<<<<< 6ab0cf7b52d19b00e06f12cfc6545b23b0819093
 VERSION_INFO = (0, 4, 3, 'dev0')
+=======
+VERSION_INFO = (0, 5, 0, 'dev0')
+>>>>>>> ciocheck
 __version__ = '.'.join(map(str, VERSION_INFO))
 __swmm_version__ = '5.2.0.dev1'
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
