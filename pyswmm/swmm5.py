@@ -190,15 +190,8 @@ class PySWMM(object):
             self.swmm_run()
             sys.stdout.write("\n... Run Complete")
         except:
-            PYSWMMException("Run Failed")
-        finally:
-            try:
-                self.swmm_close()
-                sys.stdout.write("\n... Closed")
-                sys.stdout.write("\n\n... SWMM completed.\n")
-            except:
-                PYSWMMException("SWMM Close Failed")
-                sys.stdout.write("\n\n... SWMM completed. There are errors.\n")
+            PYSWMMException("SWMM Close Failed")
+            sys.stdout.write("\n\n... SWMM completed. There are errors.\n")
 
     def swmm_run(self, inpfile=None, rptfile=None, binfile=None):
         """# TODO:."""
