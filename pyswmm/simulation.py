@@ -103,8 +103,8 @@ class Simulation(object):
             time = self._model.swmm_stride(self._advance_seconds)
 
         if time <= 0.0:
-            self._model.swmm_end()
-            self._isStarted = False
+            #self._model.swmm_end()
+            #self._isStarted = False
             raise StopIteration
         return self._model
 

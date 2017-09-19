@@ -108,7 +108,7 @@ class Nodes(object):
 
     def __next__(self):
         if self._cuindex < self._nNodes:
-            nodeobject = Node(self._model, self._nodeid)
+            nodeobject = self.__getitem__(self._nodeid)
             self._cuindex += 1  # Next Iteration
             return nodeobject
         else:
@@ -763,8 +763,8 @@ class Outfall(Node):
         :return: Cumulative Volume
         :rtype: float
         """
-        stats = self._model.outfall_statistics(self.nodeid)
-        return stats["average_flowrate"] * stats["total_periods"]
+        value = self._model.node_inflow(self.nodeid)
+        return value
 
 
 class Storage(Node):
