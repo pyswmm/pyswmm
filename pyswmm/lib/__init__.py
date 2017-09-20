@@ -36,9 +36,9 @@ def _platform():
 if os.name == 'nt':
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
 elif sys.platform == 'darwin':
-    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
+    LIB_SWMM = os.path.join(HERE, _platform(), 'libswmm5.dylib').replace('\\', '/')
 elif sys.platform.startswith('linux'):
-    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
+    LIB_SWMM = os.path.join(HERE, _platform(), 'libswmm5.so').replace('\\', '/')
 else:
     LIB_SWMM = ''
 
@@ -102,8 +102,8 @@ def use(arg):
             raise (Exception("Library Not Found"))
 
     elif sys.platform == 'darwin':
-        if not arg.endswith('.so'):
-            arg = arg + ".so"
+        if not arg.endswith('.dylib'):
+            arg = arg + ".dylib"
         if os.path.isfile(
                 os.path.join(HERE, _platform(), arg).replace('\\', '/')):
             DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
