@@ -18,7 +18,7 @@ VERSION_INFO = (0, 4, 3, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
 __swmm_version__ = '5.2.0.dev1'
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
-__copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell'
+__copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell (PySWMM Developers)'
 __licence__ = 'BSD2'
 __all__ = [
     Link, Links, Node, Nodes, Subcatchment, Subcatchments, Simulation,

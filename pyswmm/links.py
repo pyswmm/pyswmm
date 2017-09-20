@@ -102,7 +102,7 @@ class Links(object):
 
     def __next__(self):
         if self._cuindex < self._nLinks:
-            linkobject = Link(self._model, self._linkid)
+            linkobject = self.__getitem__(self._linkid)
             self._cuindex += 1  # Next Iteration
             return linkobject
         else:

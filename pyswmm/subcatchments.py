@@ -105,8 +105,7 @@ class Subcatchments(object):
 
     def __next__(self):
         if self._cuindex < self._nSubcatchments:
-            subcatchmentobject = Subcatchment(self._model,
-                                              self._subcatchmentid)
+            subcatchmentobject = self.__getitem__(self._subcatchmentid)
             self._cuindex += 1  # Next Iteration
             return subcatchmentobject
         else:

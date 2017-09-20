@@ -147,6 +147,7 @@ class PySWMM(object):
 
         :param int errcode: SWMM error code index
         """
+
         if errcode != 0 and errcode <= 103:
             raise SWMMException(errcode, self._error_message(errcode))
 
@@ -1145,6 +1146,21 @@ class PySWMM(object):
                 out_dict[object_stats._py_alias_ids[attr]] = getattr(
                     object_stats, attr)
         return out_dict
+
+    def node_inflow(self, ID):
+        """
+        Get total inflow volume for a Node.
+
+        :param str ID: Node ID
+        :return: Total Volume
+        :rtype: float
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+        result = ctypes.c_double()
+        errcode = self.SWMMlibobj.swmm_getNodeTotalInflow(index,
+                                                          ctypes.byref(result))
+        self._error_check(errcode)
+        return result.value
 
     def storage_statistics(self, ID):
         """

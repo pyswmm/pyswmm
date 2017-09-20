@@ -121,6 +121,7 @@ def test_outfalls_8():
     for ind, step in enumerate(sim):
         if ind % 1000 == 0:
             print(outfall.outfall_statistics)
+            print(outfall.cumulative_inflow)
     sim.close()
 
 
