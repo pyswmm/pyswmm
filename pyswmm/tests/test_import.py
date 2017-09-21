@@ -17,9 +17,9 @@ import pyswmm
 
 def test_use_1():
     if sys.platform == 'darwin':
-        pyswmm.lib.use("swmm5.so")
+        pyswmm.lib.use("libswmm5.dylib")
     elif sys.platform.startswith('linux'):
-        pyswmm.lib.use("swmm5.so")
+        pyswmm.lib.use("libswmm5.so")
     else:
         pyswmm.lib.use("swmm5.dll")
 
@@ -28,7 +28,12 @@ def test_use_1():
 
 
 def test_use_2():
-    pyswmm.lib.use("swmm5")
+    if sys.platform == 'darwin':
+        pyswmm.lib.use("libswmm5")
+    elif sys.platform.startswith('linux'):
+        pyswmm.lib.use("libswmm5")
+    else:
+        pyswmm.lib.use("swmm5")
 
 
 #    sim = Simulation(MODEL_WEIR_SETTING_PATH)
