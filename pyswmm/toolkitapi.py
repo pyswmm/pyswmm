@@ -282,6 +282,13 @@ class SubcStats(ctypes.Structure):
         "maxFlow": "peak_runoff_rate"
     }
 
+    
+class SubcBuildup(ctypes.Structure):
+    _fields_ = [("subcatchBuildup", PollutArray)]
+    _py_alias_ids = {
+        "subcatchBuildup": "subcatchment_surface_buildup"
+    }
+
 
 class RoutingTotals(ctypes.Structure):
     _fields_ = [("dwInflow", ctypes.c_double), ("wwInflow", ctypes.c_double),
