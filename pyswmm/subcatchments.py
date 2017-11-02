@@ -574,19 +574,10 @@ class Subcatchment(object):
         +---------------------+
         | Peak Runoff Rate    |
         +---------------------+
+        | Pollutant Buildup   |
+        +---------------------+
 
         :return: Group of Stats
         :rtype: dict
         """
         return self._model.subcatch_statistics(self.subcatchmentid)
-    
-    @property
-    def buildup(self):
-        """
-        Subcatchment surface buildup.
-        Number of values present depends on number of pollutants present.
-        
-        :return: Group of subcatchment surface buildup values/counts.
-        :rtype: dict
-        """
-        return self._model.subcatch_buildup(self.subcatchmentid)

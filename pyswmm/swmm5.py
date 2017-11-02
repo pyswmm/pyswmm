@@ -1348,57 +1348,25 @@ class PySWMM(object):
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
-                out_dict[object_stats._py_alias_ids[attr]] = getattr(
-                    object_stats, attr)
-        return out_dict
-
-    def subcatch_buildup(self, ID):
-        """
-        Get surface buildup for a Subcatchment.
-
-        :param str ID: Subcatchment ID
-        :return: Subcatchment surface buildup.
-        :rtype: dict
-        """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-        
-        # SWMM function handle.
-        swmm_subcbuildup_func = self.SWMMlibobj.swmm_getSubcatchBuildup
-        # SWMM function handle argument output structure.
-        swmm_subcbuildup_func_arg = ctypes.POINTER(tka.SubcBuildup)
-        # Define argument.
-        swmm_subcbuildup_func.argtypes = (
-            ctypes.c_int,
-            swmm_subcbuildup_func_arg, )
-        
-        object_buildup = tka.SubcBuildup()
-        errcode = swmm_subcbuildup_func(
-            ctypes.c_int(index), ctypes.byref(object_buildup))
-        
-        self._error_check(errcode)
-        # Copy Items to Dictionary using Alias Names.
-        out_dict = {}
-        for attr in dir(object_buildup): 
-            if "_" not in attr:
                 # Pollutant Array.
-                if attr == "subcatchBuildup":
-                    out_dict[object_buildup._py_alias_ids[attr]] = {}
-                    buildup_array = getattr(object_buildup, attr)
+                if attr == "surfaceBuildup":
+                    out_dict[object_stats._py_alias_ids[attr]] = {}
+                    buildup_array = getattr(object_stats, attr)
                     pollut_ids = self.getObjectIDList(
                         tka.ObjectType.POLLUT.value)                    
                     if len(pollut_ids) > 0:
                         for ind in range(len(pollut_ids)):
-                            out_dict[object_buildup._py_alias_ids[attr]][
+                            out_dict[object_stats._py_alias_ids[attr]][
                                 pollut_ids[ind]] = buildup_array[ind]
                 else:
-                    out_dict[object_buildup._py_alias_ids[attr]] = getattr(
-                        object_buildup, attr)
-        
-        # Free Subcatchment Buildup Pollutant Array.
-        freesubcatchbuildup = self.SWMMlibobj.swmm_freeSubcatchBuildup
-        freesubcatchbuildup.argtypes = (swmm_subcbuildup_func_arg, )
-        freesubcatchbuildup(object_buildup)
-
+                    out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                        object_stats, attr)                
+                
+        # Free Subcatchment Stats Pollutant Array.
+        freesubcatchstats = self.SWMMlibobj.swmm_freeSubcatchStats
+        freesubcatchstats.argtypes = (swmm_stats_func_arg, )
+        freesubcatchstats(object_stats)
+                
         return out_dict
 
     def flow_routing_stats(self):
