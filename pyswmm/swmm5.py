@@ -1444,7 +1444,7 @@ class PySWMM(object):
         """
         Set Node Inflow rate.
 
-        The flow rate should be in the user defined units. The value is help
+        The flow rate should be in the user defined units. The value is held
         constant in the model until it is redefined by the toolkit API.
 
         :param str ID: Node ID
@@ -1471,6 +1471,39 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         q = ctypes.c_double(flowrate)
         errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
+        self._error_check(errcode)
+
+    def setOutfallStage(self, ID, stage):
+        """
+        Set Outfall Stage (head).
+
+        The level should be in the user defined units. The value is held
+        constant in the model until it is redefined by the toolkit API.
+
+        :param str ID: Node ID
+        :param float stage: New flow rate in the user-defined flow units
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_start()
+        >>> i = 0
+        >>> while(True):
+        ...     if i == 80:
+        ...         swmm_model.setOutfallStage('J1',4)
+        ...     time = swmm_model.swmm_step()
+        ...     i+=1
+        ...     if (time <= 0.0): break
+        ...
+        >>>
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+        q = ctypes.c_double(stage)
+        errcode = self.SWMMlibobj.swmm_setOutfallStage(index, q)
         self._error_check(errcode)
 
 
