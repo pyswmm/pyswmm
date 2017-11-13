@@ -1353,20 +1353,20 @@ class PySWMM(object):
                     out_dict[object_stats._py_alias_ids[attr]] = {}
                     buildup_array = getattr(object_stats, attr)
                     pollut_ids = self.getObjectIDList(
-                        tka.ObjectType.POLLUT.value)                    
+                        tka.ObjectType.POLLUT.value)
                     if len(pollut_ids) > 0:
                         for ind in range(len(pollut_ids)):
                             out_dict[object_stats._py_alias_ids[attr]][
                                 pollut_ids[ind]] = buildup_array[ind]
                 else:
                     out_dict[object_stats._py_alias_ids[attr]] = getattr(
-                        object_stats, attr)                
-                
+                        object_stats, attr)
+
         # Free Subcatchment Stats Pollutant Array.
         freesubcatchstats = self.SWMMlibobj.swmm_freeSubcatchStats
         freesubcatchstats.argtypes = (swmm_stats_func_arg, )
         freesubcatchstats(object_stats)
-                
+
         return out_dict
 
     def flow_routing_stats(self):
