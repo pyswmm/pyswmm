@@ -686,35 +686,35 @@ class Node(object):
         Indeces are as follows:
 
         +-------------------------+
-        | Average Depth           |
+        | average_depth           |
         +-------------------------+
-        | Max Depth               |
+        | max_depth               |
         +-------------------------+
-        | Max Depth Date          |
+        | max_depth_date          |
         +-------------------------+
-        | Max Report Depth        |
+        | max_report_depth        |
         +-------------------------+
-        | Flooding Volume         |
+        | flooding_volume         |
         +-------------------------+
-        | Flooding Duration       |
+        | flooding_duration       |
         +-------------------------+
-        | Surcharge Duration      |
+        | surcharge_duration      |
         +-------------------------+
-        | Courant Crit Duration   |
+        | courant_crit_duration   |
         +-------------------------+
-        | Lateral Infow Volume    |
+        | lateral_inflow_vol      |
         +-------------------------+
-        | Peak Lateral Inflowrate |
+        | peak_lateral_inflowrate |
         +-------------------------+
-        | Peak Total Inflow       |
+        | peak_total_inflow       |
         +-------------------------+
-        | Peak Flooding Rate      |
+        | peak_flooding_rate      |
         +-------------------------+
-        | Max Ponded Volume       |
+        | max_ponded_volume       |
         +-------------------------+
-        | Max Inflow Date         |
+        | max_inflow_date         |
         +-------------------------+
-        | Max Flooding Date       |
+        | max_flooding_date       |
         +-------------------------+
 
         :return: Group of Stats
@@ -737,15 +737,15 @@ class Outfall(Node):
         Outfall Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------------+
-        | Average Inflow Rate |
-        +---------------------+
-        | Max Inflow Rate     |
-        +---------------------+
-        | Pollutant Loading   |
-        +---------------------+
-        | Total Periods       |
-        +---------------------+
+        +-------------------+
+        | average_flowrate  |
+        +-------------------+
+        | peak_flowrate     |
+        +-------------------+
+        | pollutant_loading |
+        +-------------------+
+        | total_periods     |
+        +-------------------+
 
         :return: Group of Stats
         :rtype: list
@@ -805,19 +805,21 @@ class Storage(Node):
         Storage Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +-----------------------+
-        | Initial Stored Volume |
-        +-----------------------+
-        | Average Stored Volume |
-        +-----------------------+
-        | Max Stored Volume     |
-        +-----------------------+
-        | Max Outflow Rate      |
-        +-----------------------+
-        | Evaporated Volume     |
-        +-----------------------+
-        | Exfiltration Volume   |
-        +-----------------------+
+        +----------------+
+        | initial_volume |
+        +----------------+
+        | average_volume |
+        +----------------+
+        | max_volume     |
+        +----------------+
+        | peak_flowrate  |
+        +----------------+
+        | evap_loss      |
+        +----------------+
+        | exfil_loss     |
+        +----------------+
+        | max_vol_date   |
+        +----------------+
 
         :return: Group of Stats
         :rtype: list
