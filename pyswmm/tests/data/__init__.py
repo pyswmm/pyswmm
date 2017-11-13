@@ -19,6 +19,7 @@ MODEL_TOOLKIT_UNITS_PATH = os.path.join(DATA_PATH, 'model_toolkit_units.inp')
 MODEL_WEIR_SETTING_PATH = os.path.join(DATA_PATH, 'model_weir_setting.inp')
 MODEL_FULL_FEATURES_PATH = os.path.join(DATA_PATH, 'model_full_features.inp')
 MODEL_STORAGE_PUMP = os.path.join(DATA_PATH, 'model_storage_pump.inp')
+MODEL_POLLUTANTS_PATH = os.path.join(DATA_PATH, 'model_pollutants.inp')
 # Images
 IMAGE_NODE_INFLOWS_PATH = os.path.join(DATA_PATH, 'node_inflows.PNG')
 IMAGE_WEIR_SETTING_PATH = os.path.join(DATA_PATH, 'weir_setting.PNG')
