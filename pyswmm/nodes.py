@@ -766,6 +766,30 @@ class Outfall(Node):
         value = self._model.node_inflow(self.nodeid)
         return value
 
+    def outfall_stage(self, stage):
+        """
+        Generate and Set an Outfall Stage (head).
+
+        The value is held constant in the model until it is redefined.
+        Using the function overrides the mechanism within SWMM that would
+        internerally set the outfall stage.  This does not
+        introduce any continuity errors since all flows is counted as
+        an inflow.
+
+        :param float stage: Outfall Stage (Head)
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Nodes
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     j1 = Nodes(sim)["J1"]
+        ...     for step in sim:
+        ...         j1.outfall_stage(9)
+        >>>
+        """
+        self._model.setOutfallStage(self._nodeid, stage)
+
 
 class Storage(Node):
     """
