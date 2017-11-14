@@ -9,7 +9,8 @@
 # Local imports
 from pyswmm import Node, Nodes, Simulation
 from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import (MODEL_FULL_FEATURES_PATH, MODEL_STORAGE_PUMP,
+from pyswmm.tests.data import (MODEL_FULL_FEATURES_PATH,
+                               MODEL_NODE_INFLOWS_PATH, MODEL_STORAGE_PUMP,
                                MODEL_WEIR_SETTING_PATH)
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka
@@ -121,6 +122,7 @@ def test_outfalls_8():
     for ind, step in enumerate(sim):
         if ind % 1000 == 0:
             print(outfall.outfall_statistics)
+            print(outfall.cumulative_inflow)
     sim.close()
 
 
@@ -134,3 +136,28 @@ def test_nodes_9():
         sim.initial_conditions(init_function)
         for step in sim:
             pass
+
+
+def test_nodes_10():
+    with Simulation(MODEL_NODE_INFLOWS_PATH) as sim:
+        J1 = Nodes(sim)["J1"]
+        outfall = Nodes(sim)["J3"]
+
+        J1.generated_inflow(4)
+        #Below Invert test
+        outfall.outfall_stage(0)
+        for ind, step in enumerate(sim):
+            if ind == 1000:
+                assert outfall.head >= outfall.invert_elevation
+            if ind == 5000:
+                outfall.outfall_stage(7)
+            if ind == 5001:
+                assert outfall.head <= 7.00001
+                assert outfall.head >= 6.99999
+
+            if ind == 50000:
+                outfall.outfall_stage(13.5)
+
+            if ind == 50001:
+                assert outfall.head <= 13.50001
+                assert outfall.head >= 13.49999

@@ -105,8 +105,7 @@ class Subcatchments(object):
 
     def __next__(self):
         if self._cuindex < self._nSubcatchments:
-            subcatchmentobject = Subcatchment(self._model,
-                                              self._subcatchmentid)
+            subcatchmentobject = self.__getitem__(self._subcatchmentid)
             self._cuindex += 1  # Next Iteration
             return subcatchmentobject
         else:
@@ -562,19 +561,21 @@ class Subcatchment(object):
         Subcatchment Flow Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------------+
-        | Precipitation Depth |
-        +---------------------+
-        | Runon Volume        |
-        +---------------------+
-        | Evaporation Volume  |
-        +---------------------+
-        | Infiltration Depth  |
-        +---------------------+
-        | Runoff Volume       |
-        +---------------------+
-        | Peak Runoff Rate    |
-        +---------------------+
+        +-------------------+
+        | precipitation     |
+        +-------------------+
+        | runon             |
+        +-------------------+
+        | evaporation       |
+        +-------------------+
+        | infiltration      |
+        +-------------------+
+        | runoff            |
+        +-------------------+
+        | peak_runoff_rate  |
+        +-------------------+
+        | pollutant_buildup |
+        +-------------------+
 
         :return: Group of Stats
         :rtype: dict

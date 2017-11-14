@@ -108,7 +108,7 @@ class Nodes(object):
 
     def __next__(self):
         if self._cuindex < self._nNodes:
-            nodeobject = Node(self._model, self._nodeid)
+            nodeobject = self.__getitem__(self._nodeid)
             self._cuindex += 1  # Next Iteration
             return nodeobject
         else:
@@ -686,35 +686,35 @@ class Node(object):
         Indeces are as follows:
 
         +-------------------------+
-        | Average Depth           |
+        | average_depth           |
         +-------------------------+
-        | Max Depth               |
+        | max_depth               |
         +-------------------------+
-        | Max Depth Date          |
+        | max_depth_date          |
         +-------------------------+
-        | Max Report Depth        |
+        | max_report_depth        |
         +-------------------------+
-        | Flooding Volume         |
+        | flooding_volume         |
         +-------------------------+
-        | Flooding Duration       |
+        | flooding_duration       |
         +-------------------------+
-        | Surcharge Duration      |
+        | surcharge_duration      |
         +-------------------------+
-        | Courant Crit Duration   |
+        | courant_crit_duration   |
         +-------------------------+
-        | Lateral Infow Volume    |
+        | lateral_inflow_vol      |
         +-------------------------+
-        | Peak Lateral Inflowrate |
+        | peak_lateral_inflowrate |
         +-------------------------+
-        | Peak Total Inflow       |
+        | peak_total_inflow       |
         +-------------------------+
-        | Peak Flooding Rate      |
+        | peak_flooding_rate      |
         +-------------------------+
-        | Max Ponded Volume       |
+        | max_ponded_volume       |
         +-------------------------+
-        | Max Inflow Date         |
+        | max_inflow_date         |
         +-------------------------+
-        | Max Flooding Date       |
+        | max_flooding_date       |
         +-------------------------+
 
         :return: Group of Stats
@@ -737,15 +737,15 @@ class Outfall(Node):
         Outfall Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------------+
-        | Average Inflow Rate |
-        +---------------------+
-        | Max Inflow Rate     |
-        +---------------------+
-        | Pollutant Loading   |
-        +---------------------+
-        | Total Periods       |
-        +---------------------+
+        +-------------------+
+        | average_flowrate  |
+        +-------------------+
+        | peak_flowrate     |
+        +-------------------+
+        | pollutant_loading |
+        +-------------------+
+        | total_periods     |
+        +-------------------+
 
         :return: Group of Stats
         :rtype: list
@@ -763,8 +763,32 @@ class Outfall(Node):
         :return: Cumulative Volume
         :rtype: float
         """
-        stats = self._model.outfall_statistics(self.nodeid)
-        return stats["average_flowrate"] * stats["total_periods"]
+        value = self._model.node_inflow(self.nodeid)
+        return value
+
+    def outfall_stage(self, stage):
+        """
+        Generate and Set an Outfall Stage (head).
+
+        The value is held constant in the model until it is redefined.
+        Using the function overrides the mechanism within SWMM that would
+        internerally set the outfall stage.  This does not
+        introduce any continuity errors since all flows is counted as
+        an inflow.
+
+        :param float stage: Outfall Stage (Head)
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Nodes
+        >>>
+        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        ...     j1 = Nodes(sim)["J1"]
+        ...     for step in sim:
+        ...         j1.outfall_stage(9)
+        >>>
+        """
+        self._model.setOutfallStage(self._nodeid, stage)
 
 
 class Storage(Node):
@@ -781,19 +805,21 @@ class Storage(Node):
         Storage Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +-----------------------+
-        | Initial Stored Volume |
-        +-----------------------+
-        | Average Stored Volume |
-        +-----------------------+
-        | Max Stored Volume     |
-        +-----------------------+
-        | Max Outflow Rate      |
-        +-----------------------+
-        | Evaporated Volume     |
-        +-----------------------+
-        | Exfiltration Volume   |
-        +-----------------------+
+        +----------------+
+        | initial_volume |
+        +----------------+
+        | average_volume |
+        +----------------+
+        | max_volume     |
+        +----------------+
+        | peak_flowrate  |
+        +----------------+
+        | evap_loss      |
+        +----------------+
+        | exfil_loss     |
+        +----------------+
+        | max_vol_date   |
+        +----------------+
 
         :return: Group of Stats
         :rtype: list

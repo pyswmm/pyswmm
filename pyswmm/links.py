@@ -102,7 +102,7 @@ class Links(object):
 
     def __next__(self):
         if self._cuindex < self._nLinks:
-            linkobject = Link(self._model, self._linkid)
+            linkobject = self.__getitem__(self._linkid)
             self._cuindex += 1  # Next Iteration
             return linkobject
         else:
@@ -872,39 +872,40 @@ class Conduit(Link):
         Conduit Flow Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +---------------------------+
-        | Max Flow Rate             |
-        +---------------------------+
-        | Max Flow Date             |
-        +---------------------------+
-        | Max Velocity              |
-        +---------------------------+
-        | Max Depth                 |
-        +---------------------------+
-        | Time in Normal Flow       |
-        +---------------------------+
-        | Time in Inlet Control     |
-        +---------------------------+
-        | Time Surcharged           |
-        +---------------------------+
-        | Time Upstream Full        |
-        +---------------------------+
-        | Time Downstream Full      |
-        +---------------------------+
-        | Time Full Flow            |
-        +---------------------------+
-        | Time Capacity Limited     |
-        +---------------------------+
-        | Time in Flow Class (dict) |
-        +---------------------------+
-        | Time Courant Critical     |
-        +---------------------------+
-        | Flow Turns                |
-        +---------------------------+
-        | Flow Turn Signs           |
-        +---------------------------+
+        +-----------------------+
+        | peak_flow             |
+        +-----------------------+
+        | peak_flow_date        |
+        +-----------------------+
+        | peak_velocity         |
+        +-----------------------+
+        | peak_depth            |
+        +-----------------------+
+        | time_normal_flow      |
+        +-----------------------+
+        | time_inlet_control    |
+        +-----------------------+
+        | time_surcharged       |
+        +-----------------------+
+        | time_full_upstream    |
+        +-----------------------+
+        | time_full_downstream  |
+        +-----------------------+
+        | time_full_flow        |
+        +-----------------------+
+        | time_capacity_limited |
+        +-----------------------+
+        | time_in_flow_class    |
+        +-----------------------+
+        | time_courant_crit     |
+        +-----------------------+
+        | flow_turns            |
+        +-----------------------+
+        | flow_turn_sign        |
+        +-----------------------+
 
         Time in Flow Class: (Fraction of Total Time)
+
         +-----+--------+----------+----------+----------+---------+-----------+
         | 0   | 1      | 2        | 3        | 4        | 5       | 6         |
         +-----+--------+----------+----------+----------+---------+-----------+
@@ -931,27 +932,27 @@ class Pump(Link):
         Pump Stats. The stats returned are rolling/cumulative.
         Indeces are as follows:
 
-        +--------------------------+
-        | Fraction of Time Pump On |
-        +--------------------------+
-        | Min Flow Rate            |
-        +--------------------------+
-        | Average Flow Rate        |
-        +--------------------------+
-        | Max Flow Rate            |
-        +--------------------------+
-        | Total Volume Pumped      |
-        +--------------------------+
-        | Energy Consumed          |
-        +--------------------------+
-        | Off Curve Low            |
-        +--------------------------+
-        | Off Curve High           |
-        +--------------------------+
-        | Total Periods            |
-        +--------------------------+
-        | Number of Start Ups      |
-        +--------------------------+
+        +------------------+
+        | percent_utilized |
+        +------------------+
+        | min_flowrate     |
+        +------------------+
+        | average_flowrate |
+        +------------------+
+        | max_flowrate     |
+        +------------------+
+        | total_volume     |
+        +------------------+
+        | energy_consumed  |
+        +------------------+
+        | off_curve_low    |
+        +------------------+
+        | off_curve_high   |
+        +------------------+
+        | number_startups  |
+        +------------------+
+        | total_periods    |
+        +------------------+
 
         :return: Group of Stats
         :rtype: dict

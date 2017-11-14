@@ -147,6 +147,7 @@ class PySWMM(object):
 
         :param int errcode: SWMM error code index
         """
+
         if errcode != 0 and errcode <= 103:
             raise SWMMException(errcode, self._error_message(errcode))
 
@@ -1146,6 +1147,21 @@ class PySWMM(object):
                     object_stats, attr)
         return out_dict
 
+    def node_inflow(self, ID):
+        """
+        Get total inflow volume for a Node.
+
+        :param str ID: Node ID
+        :return: Total Volume
+        :rtype: float
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+        result = ctypes.c_double()
+        errcode = self.SWMMlibobj.swmm_getNodeTotalInflow(index,
+                                                          ctypes.byref(result))
+        self._error_check(errcode)
+        return result.value
+
     def storage_statistics(self, ID):
         """
         Get stats for a Storage Node.
@@ -1332,8 +1348,25 @@ class PySWMM(object):
         out_dict = {}
         for attr in dir(object_stats):
             if "_" not in attr:
-                out_dict[object_stats._py_alias_ids[attr]] = getattr(
-                    object_stats, attr)
+                # Pollutant Array.
+                if attr == "surfaceBuildup":
+                    out_dict[object_stats._py_alias_ids[attr]] = {}
+                    buildup_array = getattr(object_stats, attr)
+                    pollut_ids = self.getObjectIDList(
+                        tka.ObjectType.POLLUT.value)
+                    if len(pollut_ids) > 0:
+                        for ind in range(len(pollut_ids)):
+                            out_dict[object_stats._py_alias_ids[attr]][
+                                pollut_ids[ind]] = buildup_array[ind]
+                else:
+                    out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                        object_stats, attr)
+
+        # Free Subcatchment Stats Pollutant Array.
+        freesubcatchstats = self.SWMMlibobj.swmm_freeSubcatchStats
+        freesubcatchstats.argtypes = (swmm_stats_func_arg, )
+        freesubcatchstats(object_stats)
+
         return out_dict
 
     def flow_routing_stats(self):
@@ -1428,7 +1461,7 @@ class PySWMM(object):
         """
         Set Node Inflow rate.
 
-        The flow rate should be in the user defined units. The value is help
+        The flow rate should be in the user defined units. The value is held
         constant in the model until it is redefined by the toolkit API.
 
         :param str ID: Node ID
@@ -1455,6 +1488,39 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         q = ctypes.c_double(flowrate)
         errcode = self.SWMMlibobj.swmm_setNodeInflow(index, q)
+        self._error_check(errcode)
+
+    def setOutfallStage(self, ID, stage):
+        """
+        Set Outfall Stage (head).
+
+        The level should be in the user defined units. The value is held
+        constant in the model until it is redefined by the toolkit API.
+
+        :param str ID: Node ID
+        :param float stage: New flow rate in the user-defined flow units
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_start()
+        >>> i = 0
+        >>> while(True):
+        ...     if i == 80:
+        ...         swmm_model.setOutfallStage('J1',4)
+        ...     time = swmm_model.swmm_step()
+        ...     i+=1
+        ...     if (time <= 0.0): break
+        ...
+        >>>
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+        q = ctypes.c_double(stage)
+        errcode = self.SWMMlibobj.swmm_setOutfallStage(index, q)
         self._error_check(errcode)
 
 
