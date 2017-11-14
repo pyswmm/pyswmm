@@ -4,7 +4,7 @@ PySWMM is distributed with the BSD-2 license.
 
 ::
 
-   Copyright (C) 2014-, PySWMM Developers
+   Copyright (C) 2014-, See AUTHORS
    Bryant E. McDonnell <bemcdonnell@gmail.com>
    All rights reserved.
 

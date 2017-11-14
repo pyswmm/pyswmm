@@ -18,6 +18,7 @@ Authors with Copyrighted Contributions
 - Gonzalo Peña-Castellanos 
 - Stephen Roberts 
 - Abhiram Mullapudi
+- Katherine Ratliff
 
 
 Authors with Contributions in the Public Domain
