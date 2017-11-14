@@ -6,7 +6,8 @@ Maintainers
 ===========
 
 - Bryant E. McDonnell 
-- Gonzalo Peña-Castellanos 
+- Gonzalo Peña-Castellanos
+- Katherine Ratliff
 
 
 Authors with Copyrighted Contributions
