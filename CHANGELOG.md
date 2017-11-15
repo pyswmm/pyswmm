@@ -1,6 +1,24 @@
 # History of changes
 
 
+## Version 0.4.4 (2017-11-14)
+
+### Issues Closed
+
+#### New Features
+
+* [Issue 127](https://github.com/OpenWaterAnalytics/pyswmm/issues/127) - Set Outfall Stage  ([PR 128](https://github.com/OpenWaterAnalytics/pyswmm/pull/128))
+* [Issue 125](https://github.com/OpenWaterAnalytics/pyswmm/issues/125) - pollutant buildup addition to subcatchment stats
+
+In this release 2 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 129](https://github.com/OpenWaterAnalytics/pyswmm/pull/129) - Add subcatchment surface buildup to subcatchment statistics
+* [PR 128](https://github.com/OpenWaterAnalytics/pyswmm/pull/128) - Set bc ([127](https://github.com/OpenWaterAnalytics/pyswmm/issues/127))
+
+In this release 2 pull requests were closed.
+
 ## Version 0.4.2 (2017-08-24)
 
 ### Issues Closed
