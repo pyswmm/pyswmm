@@ -56,11 +56,7 @@ manipulation, and study of the structure, dynamics, and function of complex netw
 With PySWMM you can load and manipulate USEPA Stormwater Management Models. 
 With the development of PySWMM, control algorithms can now be developed exclusively 
 in Python which allows the use of functions and objects as well as storing and 
-tracking hydraulic trends for control actions.  Enabling complex controls rules 
-opens the door to faster prototyping for basin-wide coordinated control frameworks 
-such as agent-based modeling or market-based optimization. PySWMM more easily 
-facilitates the implementation of machine learning techniques such as a support 
-vector machine to be used as forecasting tools. 
+tracking hydraulic trends for control actions.
 
 Who uses PySWMM?
 ----------------
