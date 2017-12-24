@@ -1,16 +1,12 @@
 [TITLE]
-;;Project Title/Notes
+
 
 [OPTIONS]
-;;Option             Value
+;;Options            Value
+;;------------------ ------------
 FLOW_UNITS           CFS
 INFILTRATION         HORTON
 FLOW_ROUTING         DYNWAVE
-LINK_OFFSETS         DEPTH
-MIN_SLOPE            0
-ALLOW_PONDING        NO
-SKIP_STEADY_STATE    NO
-
 START_DATE           11/01/2015
 START_TIME           14:00:00
 REPORT_START_DATE    11/01/2015
@@ -23,14 +19,17 @@ DRY_DAYS             0
 REPORT_STEP          00:01:00
 WET_STEP             00:05:00
 DRY_STEP             00:05:00
-ROUTING_STEP         0:00:01 
-
+ROUTING_STEP         1
+ALLOW_PONDING        NO
 INERTIAL_DAMPING     NONE
-NORMAL_FLOW_LIMITED  BOTH
-FORCE_MAIN_EQUATION  H-W
 VARIABLE_STEP        0.75
 LENGTHENING_STEP     0
 MIN_SURFAREA         12.557
+NORMAL_FLOW_LIMITED  BOTH
+SKIP_STEADY_STATE    NO
+FORCE_MAIN_EQUATION  H-W
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
 MAX_TRIALS           8
 HEAD_TOLERANCE       0.005
 SYS_FLOW_TOL         5
@@ -39,20 +38,22 @@ MINIMUM_STEP         0.5
 THREADS              8
 
 [EVAPORATION]
-;;Data Source    Parameters
-;;-------------- ----------------
-CONSTANT         0.0
-DRY_ONLY         NO
+;;Type          Parameters
+;;------------- ----------
+CONSTANT     0.0
+DRY_ONLY     NO
 
 [RAINGAGES]
-;;Name           Format    Interval SCF      Source    
-;;-------------- --------- ------ ------ ----------
-SCS_24h_Type_I_1in INTENSITY 0:15     1.0      TIMESERIES SCS_24h_Type_I_1in
+;;                 Rain      Time   Snow   Data      
+;;Name             Type      Intrvl Catch  Source    
+;;---------------- --------- ------ ------ ----------
+SCS_24h_Type_I_1in INTENSITY 0:15   1.0    TIMESERIES SCS_24h_Type_I_1in
 
 [SUBCATCHMENTS]
-;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
-;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
-S1               SCS_24h_Type_I_1in J2               0.1288   25       500      0.5      0                        
+;;                                                 Total    Pcnt.             Pcnt.    Curb     Snow    
+;;Name           Raingage         Outlet           Area     Imperv   Width    Slope    Length   Pack    
+;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- --------
+S1               SCS_24h_Type_I_1in J2             0.1288   25       500      0.5      0                        
 
 [SUBAREAS]
 ;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
@@ -65,53 +66,64 @@ S1               0.01       0.1        0.05       0.05       25         OUTLET
 S1               3          0.5        4          7          0         
 
 [JUNCTIONS]
-;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
+;;               Invert     Max.       Init.      Surcharge  Ponded    
+;;Name           Elev.      Depth      Depth      Depth      Area      
 ;;-------------- ---------- ---------- ---------- ---------- ----------
 J1               20.728     15         0          0          0         
 J2               13.392     15         0          0          0         
 
 [OUTFALLS]
-;;Name           Elevation  Type       Stage Data       Gated    Route To        
-;;-------------- ---------- ---------- ---------------- -------- ----------------
-J3               6.547      FREE                        NO                       
+;;               Invert     Outfall      Stage/Table      Tide
+;;Name           Elev.      Type         Time Series      Gate Route To        
+;;-------------- ---------- ------------ ---------------- ---- ----------------
+J3               6.547      FREE                          NO                   
 
 [STORAGE]
-;;Name           Elev.    MaxDepth   InitDepth  Shape      Curve Name/Params            N/A      Fevap    Psi      Ksat     IMD     
-;;-------------- -------- ---------- ----------- ---------- ---------------------------- -------- --------          -------- --------
-SU1              0        5          0          FUNCTIONAL 1000      0         0        0        0       
+;;               Invert   Max.     Init.    Storage    Curve                      Ponded   Evap.   
+;;Name           Elev.    Depth    Depth    Curve      Params                     Area     Frac.    Infiltration parameters
+;;-------------- -------- -------- -------- ---------- -------- -------- -------- -------- -------- -----------------------
+SU1              0        5        0        FUNCTIONAL 1000     0        0        0        0       
 
 [CONDUITS]
-;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
+;;               Inlet            Outlet                      Manning    Inlet      Outlet     Init.      Max.      
+;;Name           Node             Node             Length     N          Offset     Offset     Flow       Flow      
 ;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
 C1:C2            J1               J2               244.63     0.01       0          0          0          0         
 C2               J2               J3               228.28     0.01       0          0          0          0         
 
 [PUMPS]
-;;Name           From Node        To Node          Pump Curve       Status   Sartup Shutoff 
+;;               Inlet            Outlet           Pump             Init.  Startup  Shutoff 
+;;Name           Node             Node             Curve            Status Depth    Depth   
 ;;-------------- ---------------- ---------------- ---------------- ------ -------- --------
-P1               J2               SU1              Curve1           ON       0        0       
+P1               J2               SU1              Curve1           ON     0        0       
 
 [XSECTIONS]
-;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
-;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
+;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels   
+;;-------------- ------------ ---------------- ---------- ---------- ---------- ----------
 C1:C2            CIRCULAR     1                0          0          0          1                    
 C2               CIRCULAR     1.5              0          0          0          1                    
 
+[LOSSES]
+;;Link           Inlet      Outlet     Average    Flap Gate  SeepageRate
+;;-------------- ---------- ---------- ---------- ---------- ----------
+
 [POLLUTANTS]
-;;Name           Units  Crain      Cgw        Crdii      Kdecay     SnowOnly   Co-Pollutant     Co-Frac    Cdwf       Cinit     
-;;-------------- ------ ---------- ---------- ---------- ---------- ---------- ---------------- ---------- ---------- ----------
-test             MG/L   0          0          0          0          NO         *                0.0        0          0         
+;;               Mass   Rain       GW         I&I        Decay      Snow  Co-Pollut.       Co-Pollut. DWF        Init.
+;;Name           Units  Concen.    Concen.    Concen.    Coeff.     Only  Name             Fraction   Concen.    Concen.
+;;-------------- ------ ---------- ---------- ---------- ---------- ----- ---------------- ---------- ---------- ----------
+test             MG/L   0          0          0          0          NO    *                0.0        0          0         
 
 [LOADINGS]
-;;Subcatchment   Pollutant        Buildup   
+;;Subcatchment   Pollutant        Loading   
 ;;-------------- ---------------- ----------
 
 [INFLOWS]
-;;Node           Constituent      Time Series      Type     Mfactor  Sfactor  Baseline Pattern
+;;                                                 Param    Units    Scale    Baseline Baseline
+;;Node           Parameter        Time Series      Type     Factor   Factor   Value    Pattern
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
-J1               FLOW             ""               FLOW     1.0      1        20      
-J1               test             ""               CONCEN   1.0      1        15      
-J2               FLOW             ""               FLOW     1.0      1        0       
+J1               FLOW             ""               FLOW     1.0      1        20               
+J1               test             ""               CONCEN   1.0      1        15               
+J2               FLOW             ""               FLOW     1.0      1        0                
 
 [CURVES]
 ;;Name           Type       X-Value    Y-Value   
@@ -222,7 +234,6 @@ SCS_24h_Type_I_1in            23:45      0.0185
 SCS_24h_Type_I_1in            24:00      0         
 
 [REPORT]
-;;Reporting Options
 INPUT      NO
 CONTROLS   YES
 SUBCATCHMENTS ALL
@@ -232,31 +243,30 @@ LINKS ALL
 [TAGS]
 
 [MAP]
-DIMENSIONS -22.953 -139.020 482.011 55.240
-Units      Feet
+DIMENSIONS       -22.9529         -139.02          482.0109         55.24           
+UNITS            Feet
 
 [COORDINATES]
-;;Node           X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-J1               0.000              0.000             
-J2               238.750            -53.332           
-J3               459.058            -113.145          
-SU1              208.321            -130.190          
+;;Node           X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
+J1               0                0               
+J2               238.75           -53.332         
+J3               459.058          -113.145        
+SU1              208.321          -130.19         
 
 [VERTICES]
-;;Link           X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
+;;Link           X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
 
-[Polygons]
-;;Subcatchment   X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-S1               353.516            46.410            
-S1               400.419            8.888             
-S1               267.459            -14.360           
-S1               240.541            26.425            
-S1               353.516            46.410            
+[POLYGONS]
+;;Subcatchment   X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
+S1               353.516          46.41           
+S1               400.419          8.888           
+S1               267.459          -14.36          
+S1               240.541          26.425          
+S1               353.516          46.41           
 
 [SYMBOLS]
-;;Gage           X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-
+;;Gage           X-Coord          Y-Coord         
+;;-------------- ---------------- ----------------
