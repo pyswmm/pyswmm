@@ -4,7 +4,7 @@
 [OPTIONS]
 ;;Options            Value
 ;;------------------ ------------
-FLOW_UNITS           CFS
+FLOW_UNITS           MGD
 INFILTRATION         HORTON
 FLOW_ROUTING         DYNWAVE
 START_DATE           11/01/2015
@@ -121,7 +121,7 @@ test             MG/L   0          0          0          0          NO    *     
 ;;                                                 Param    Units    Scale    Baseline Baseline
 ;;Node           Parameter        Time Series      Type     Factor   Factor   Value    Pattern
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
-J1               FLOW             ""               FLOW     1.0      1        20               
+J1               FLOW             ""               FLOW     1.0      1        12.9264          
 J1               test             ""               CONCEN   1.0      1        15               
 J2               FLOW             ""               FLOW     1.0      1        0                
 
