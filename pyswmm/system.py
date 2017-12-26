@@ -21,7 +21,7 @@ class SystemStats(object):
 
     >>> from pyswmm import Simulation, SystemFlowRouting
     >>>
-    >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     system_routing = SystemStats(sim)
     ...
     ...     for step in simulation:
