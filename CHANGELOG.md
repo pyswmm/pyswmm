@@ -1,5 +1,19 @@
 # History of changes
 
+## Version 0.4.5 (2017-12-27)
+
+### Issues Closed
+
+#### New Features
+
+* [Issue 90](https://github.com/OpenWaterAnalytics/pyswmm/issues/90) - Add test *.inp files to distribution
+
+#### Bugs fixed
+
+* [Issue 139](https://github.com/OpenWaterAnalytics/pyswmm/issues/139) - Update SWMM5 Lib Windows - Linking Issue
+* [Issue 136](https://github.com/OpenWaterAnalytics/pyswmm/issues/136) - broken doctests
+
+In this release 3 issues were closed.
 
 ## Version 0.4.4 (2017-11-14)
 
