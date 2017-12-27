@@ -25,7 +25,7 @@ class Simulation(object):
 
     >>> from pyswmm import Simulation
     >>>
-    >>> sim = Simulation('./TestModel1_weirSetting.inp')
+    >>> sim = Simulation('tests/data/TestModel1_weirSetting.inp')
     >>> for step in sim:
     ...     pass
     >>>
@@ -37,7 +37,7 @@ class Simulation(object):
 
     >>> from pyswmm import Simulation
     >>>
-    >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     for step in sim:
     ...         pass
     ...     sim.report()
@@ -48,7 +48,7 @@ class Simulation(object):
 
     >>> from pyswmm import Simulation
     >>>
-    >>> sim = Simulation('./TestModel1_weirSetting.inp')
+    >>> sim = Simulation('tests/data/TestModel1_weirSetting.inp')
     >>> sim.execute()
     """
 
@@ -66,7 +66,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     for step in sim:
         ...         print(sim.current_time)
         ...     sim.report()
@@ -158,7 +158,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     sim.step_advance(300)
         ...     for step in sim:
         ...         print(step.current_time)
@@ -180,7 +180,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     for step in sim:
         ...         pass
         ...     sim.report()
@@ -291,7 +291,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     print sim.start_time
         ...     sim.start_time = datetime(2015,5,10,15,15,1)
         >>>
@@ -314,7 +314,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     print sim.end_time
         ...     sim.end_time = datetime(2016,5,10,15,15,1)
         >>>
@@ -337,7 +337,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     print sim.report_start
         ...     sim.report_start = datetime(2015,5,10,15,15,1)
         >>>
@@ -364,7 +364,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     print sim.flow_units
         >>>
         >>> CFS
@@ -382,7 +382,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     print sim.system_units
         >>>
         >>> US
@@ -400,7 +400,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     for step in sim:
         ...         print(sim.current_time)
         ...     sim.report()
@@ -423,7 +423,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     for step in sim:
         ...         print(sim.percent_complete)
         ...     sim.report()

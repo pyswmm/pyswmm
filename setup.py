@@ -53,7 +53,7 @@ setup(
     author='Bryant E. McDonnell (EmNet LLC)',
     author_email='bemcdonnell@gmail.com',
     install_requires=REQUIREMENTS,
-    packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
+    packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
         '': [
             'lib/windows/swmm5.dll', 'lib/macos/swmm5.so', 'LICENSE.txt',

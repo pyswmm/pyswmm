@@ -11,7 +11,7 @@ from pyswmm import Node, Nodes, Simulation
 from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import (MODEL_FULL_FEATURES_PATH,
                                MODEL_NODE_INFLOWS_PATH, MODEL_STORAGE_PUMP,
-                               MODEL_WEIR_SETTING_PATH, MODEL_STORAGE_PUMP_MGD)
+                               MODEL_STORAGE_PUMP_MGD, MODEL_WEIR_SETTING_PATH)
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka
 

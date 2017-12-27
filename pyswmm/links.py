@@ -22,7 +22,7 @@ class Links(object):
 
     >>> from pyswmm import Simulation, Links
     >>>
-    >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     for link in Links(sim):
     ...         print link
     ...         print link.linkid
@@ -127,7 +127,7 @@ class Link(object):
 
     >>> from pyswmm import Simulation, Links
     >>>
-    >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     c1c2 = Links(sim)["C1:C2"]
     ...     print c1c2.flow
     ...     for step in simulation:
@@ -157,7 +157,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.linkid
         >>> "C1"
@@ -175,7 +175,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.is_conduit()
         >>> True
@@ -193,7 +193,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.is_pump()
         >>> False
@@ -211,7 +211,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.is_orifice()
         >>> False
@@ -229,7 +229,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.is_weir()
         >>> False
@@ -247,7 +247,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.is_outlet()
         >>> False
@@ -266,7 +266,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.connections
         >>> ("C1","C2")
@@ -285,7 +285,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.inlet_node
         >>> C1
@@ -304,7 +304,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.outlet_node
         >>> C2
@@ -323,7 +323,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.inlet_offset
         >>> 0.1
@@ -332,7 +332,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.inlet_offset
         ...     c1c2.inlet_offset = 0.2
@@ -359,7 +359,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.outlet_offset
         >>> 0.1
@@ -368,7 +368,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.outlet_offset
         ...     c1c2.outlet_offset = 0.2
@@ -395,7 +395,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.initial_flow
         >>> 0
@@ -404,7 +404,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.initial_flow
         ...     c1c2.initial_flow = 0.2
@@ -431,7 +431,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.flow_limit
         >>> 0
@@ -440,7 +440,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.flow_limit
         ...     c1c2.flow_limit = 0.2
@@ -467,7 +467,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.inlet_head_loss
         >>> 0
@@ -476,7 +476,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.inlet_head_loss
         ...     c1c2.inlet_head_loss = 0.2
@@ -505,7 +505,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.outlet_head_loss
         >>> 0
@@ -514,7 +514,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.outlet_head_loss
         ...     c1c2.outlet_head_loss = 0.2
@@ -543,7 +543,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.average_head_loss
         >>> 0
@@ -552,7 +552,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.average_head_loss
         ...     c1c2.average_head_loss = 0.2
@@ -581,7 +581,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.seepage_rate
         >>> 0
@@ -590,7 +590,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print c1c2.seepage_rate
         ...     c1c2.seepagerate = 0.2
@@ -622,7 +622,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.flow
@@ -650,7 +650,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.depth
@@ -678,7 +678,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.volume
@@ -706,7 +706,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.froude
@@ -734,7 +734,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.ups_xsection_area
@@ -762,7 +762,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.ds_xsection_area
@@ -790,7 +790,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.current_setting
@@ -818,7 +818,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.target_setting
@@ -832,7 +832,7 @@ class Link(object):
 
         >>> from pyswmm import Simulation, Links
         >>>
-        >>> with Simulation('../test/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     for step in sim:
         ...         print c1c2.target_setting
