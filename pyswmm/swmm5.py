@@ -190,7 +190,7 @@ class PySWMM(object):
         try:
             self.swmm_run()
             sys.stdout.write("\n... Run Complete")
-        except:
+        except PYSWMMException:
             sys.stdout.write("\n\n... SWMM completed. There are errors.\n")
             raise (PYSWMMException("SWMM Close Failed"))
 

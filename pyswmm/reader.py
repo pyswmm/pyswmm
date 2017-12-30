@@ -48,7 +48,7 @@ class SWMMBinReader(object):
             # when platform detection is enabled, dllname can be changed
             dllLoc = get_pkgpath() + '/lib/windows/' + dllname
             self.swmmdll = ctypes.CDLL(dllLoc)
-        except:
+        except Exception:
             raise (Exception('Failed to Open Linked Library'))
 
         # Initializing DLL Function List

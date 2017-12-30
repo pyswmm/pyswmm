@@ -145,9 +145,9 @@ class Simulation(object):
         for callback in callback_group:
             try:
                 callback()
-            except:
+            except PYSWMMException:
                 error_msg = "Callback Failed"
-                raise (PYSWMMException(error_msg))
+                raise PYSWMMException((error_msg))
 
     def initial_conditions(self, init_conditions):
         """
