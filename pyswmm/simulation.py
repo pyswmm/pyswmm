@@ -58,7 +58,6 @@ class Simulation(object):
         self._isOpen = True
         self._advance_seconds = None
         self._isStarted = False
-        self._initial_conditions = None
 
     def __enter__(self):
         """
@@ -86,8 +85,12 @@ class Simulation(object):
         """Start Simulation"""
         if not self._isStarted:
             # Set Model Initial Conditions
-            if self._initial_conditions:
+            # (This Will be Deprecated with Time)
+            if hasattr(self, "_initial_conditions"):
                 self._initial_conditions()
+            # Execute Hooks Before Simulation
+            if self.before_start:
+                self._execute_callbacks(self.before_start)
             self._model.swmm_start(True)
             self._isStarted = True
 
@@ -117,6 +120,24 @@ class Simulation(object):
             self._model.swmm_close()
             self._isOpen = False
 
+    @staticmethod
+    def _is_callback(callable_object):
+        """Checks if arugment is a function/method."""
+        if not callable(callable_object):
+            error_msg = 'Requires Type Function, not {}'.format(
+                type(callable_object))
+            raise (PYSWMMException(error_msg))
+        else:
+            return True
+
+    def _execute_callbacks(self, callback_group):
+        """Runs the callback (Single or List of Callbacks)."""
+        if isinstance(callback_group, (list)):
+            for callback in callback_group:
+                callback()
+        else:
+            callable_group()
+
     def initial_conditions(self, init_conditions):
         """
         Intial Conditions for Hydraulics and Hydrology can be set
@@ -131,20 +152,63 @@ class Simulation(object):
         ...     def init_conditions():
         ...         nodeJ1.initial_depth = 4
         ...
-        ...     sim.initial_conditions(init_conditions)
+        ...     sim.initial_conditions = init_conditions
         ...
         ...     for step in sim:
         ...         pass
         ...     sim.report()
 
         """
-        if hasattr(init_conditions, '__call__'):
+        if self._is_callback(init_conditions):
             self._initial_conditions = init_conditions
-        else:
-            error_msg = 'Requires Type Function, not {}'.format(
-                type(init_conditions))
-            raise (PYSWMMException(error_msg))
 
+    @property
+    def before_start(self):
+        if hasattr(self, '_before_start'):
+            return self._before_start
+
+    @before_start.setter
+    def before_start(self, callable_object):
+        """
+        Add callback function/method/object to execute before
+        the simlation starts. The function 
+
+        >>> from pyswmm import Simulation
+        >>>
+        >>> def test_callback():
+        ...     print("CALLBACK - Executed")
+        >>>
+        >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
+        ...
+        ...     sim.before_start(test_callback) #<- pass function handle.
+        ...     print("Waiting to Start")
+        ...     for ind, step in enumerate(sim):
+        ...         print("Step {}".format(ind))
+        ...     print("Complete!")
+        ... print("Closed")
+        >>>
+        >>> "Waiting to Start"
+        >>> "CALLBACK - Executed"
+        >>> "Step 0"
+        >>> "Step 1"
+        >>> ...
+        >>> "Complete!"
+        >>> "Closed"
+        """
+        if self._is_callback(callable_object):
+            if not self.before_start:
+                self._before_start = []
+            self._before_start.append(callable_object)
+
+    def before_step(self, func):
+        pass
+    def after_step(self, func):
+        pass
+    def after_end(self, func):
+        pass
+    def after_close(self, func):
+        pass
+    
     def step_advance(self, advance_seconds):
         """
         Advances the model by X number of seconds instead of

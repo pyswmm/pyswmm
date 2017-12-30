@@ -11,7 +11,7 @@ from random import randint
 import sys
 
 # Local imports
-from pyswmm import Links, Simulation
+from pyswmm import Nodes, Links, Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
@@ -61,3 +61,32 @@ def test_simulation_iter():
             if c1c2.flow > 9.19:
                 c1c2.target_setting = 0.9
         sim.report()
+
+
+def test_nodes_9():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        J1 = Nodes(sim)["J1"]
+
+        def init_function():
+            J1.initial_depth = 15
+
+        sim.initial_conditions(init_function)
+        for ind, step in enumerate(sim):
+            if ind == 0:
+                assert J1.depth > 14
+
+def test_nodes_callback_1():
+    LIST = []
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        LIST.append("OPENED")
+        def callback_test():
+            LIST.append("CALLED")
+
+        _test2 = callback_test
+        sim.before_start = callback_test
+        sim.before_start = _test2
+        for ind, step in enumerate(sim):
+            pass
+
+        assert LIST == ["OPENED", "CALLED", "CALLED"]
+        print(LIST)
