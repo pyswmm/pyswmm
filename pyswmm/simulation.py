@@ -7,10 +7,6 @@
 # -----------------------------------------------------------------------------
 """Base class for a SWMM Simulation."""
 
-# Standard library imports
-#Standard library imports
-import warnings
-
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
