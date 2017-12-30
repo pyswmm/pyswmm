@@ -49,7 +49,7 @@ class SWMMBinReader(object):
             dllLoc = get_pkgpath() + '/lib/windows/' + dllname
             self.swmmdll = ctypes.CDLL(dllLoc)
         except:
-            raise Exception('Failed to Open Linked Library')
+            raise (Exception('Failed to Open Linked Library'))
 
         # Initializing DLL Function List
         # Initialize Pointer to smoapi

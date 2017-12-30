@@ -142,15 +142,12 @@ class Simulation(object):
 
     def _execute_callbacks(self, callback_group):
         """Runs the callback (Single or List of Callbacks)."""
-        if isinstance(callback_group, (list)):
-            for callback in callback_group:
-                try:
-                    callback()
-                except:
-                    error_msg = "Callback Failed"
-                    raise (PYSWMMException())
-        else:
-            callable_group()
+        for callback in callback_group:
+            try:
+                callback()
+            except:
+                error_msg = "Callback Failed"
+                raise (PYSWMMException(error_msg))
 
     def initial_conditions(self, init_conditions):
         """
