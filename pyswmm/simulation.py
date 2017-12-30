@@ -138,7 +138,7 @@ class Simulation(object):
     def _is_callback(callable_object):
         """Checks if arugment is a function/method."""
         if not callable(callable_object):
-            error_msg = 'Requires Type Function, not {}'.format(
+            error_msg = 'Requires Callable Object, not {}'.format(
                 type(callable_object))
             raise (PYSWMMException(error_msg))
         else:
@@ -170,7 +170,7 @@ class Simulation(object):
         ...     def init_conditions():
         ...         nodeJ1.initial_depth = 4
         ...
-        ...     sim.initial_conditions = init_conditions
+        ...     sim.initial_conditions(init_conditions)
         ...
         ...     for step in sim:
         ...         pass
