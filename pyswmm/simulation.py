@@ -7,6 +7,10 @@
 # -----------------------------------------------------------------------------
 """Base class for a SWMM Simulation."""
 
+# Standard library imports
+#Standard library imports
+import warnings
+
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
@@ -88,9 +92,9 @@ class Simulation(object):
             # (This Will be Deprecated with Time)
             if hasattr(self, "_initial_conditions"):
                 self._initial_conditions()
-            # Execute Hooks Before Simulation
-            if self.before_start:
-                self._execute_callbacks(self.before_start)
+            # Execute Callback Hooks Before Simulation
+            if self.before_start():
+                self._execute_callbacks(self.before_start())
             self._model.swmm_start(True)
             self._isStarted = True
 
@@ -98,13 +102,17 @@ class Simulation(object):
         """Next"""
         # Start Simulation
         self.start()
-
+        # Execute Callback Hooks Before Simulation Step
+        if self.before_step():
+            self._execute_callbacks(self.before_step())
         # Simulation Step Amount
         if self._advance_seconds is None:
             time = self._model.swmm_step()
         else:
             time = self._model.swmm_stride(self._advance_seconds)
-
+        # Execute Callback Hooks After Simulation Step
+        if self.after_step():
+            self._execute_callbacks(self.after_step())
         if time <= 0.0:
             raise StopIteration
         return self._model
@@ -116,9 +124,15 @@ class Simulation(object):
         if self._isStarted:
             self._model.swmm_end()
             self._isStarted = False
+            # Execute Callback Hooks After Simulation End
+            if self.after_end():
+                self._execute_callbacks(self.after_end())
         if self._isOpen:
             self._model.swmm_close()
             self._isOpen = False
+            # Execute Callback Hooks After Simulation Closes
+            if self.after_close():
+                self._execute_callbacks(self.after_close())
 
     @staticmethod
     def _is_callback(callable_object):
@@ -134,7 +148,11 @@ class Simulation(object):
         """Runs the callback (Single or List of Callbacks)."""
         if isinstance(callback_group, (list)):
             for callback in callback_group:
-                callback()
+                try:
+                    callback()
+                except:
+                    error_msg = "Callback Failed"
+                    raise (PYSWMMException())
         else:
             callable_group()
 
@@ -162,16 +180,21 @@ class Simulation(object):
         if self._is_callback(init_conditions):
             self._initial_conditions = init_conditions
 
-    @property
     def before_start(self):
+        """Get Before Start Callbacks.
+
+        :return: List of Callbacks
+        :rtype: list
+        """
         if hasattr(self, '_before_start'):
             return self._before_start
 
-    @before_start.setter
-    def before_start(self, callable_object):
+    def add_before_start(self, callback):
         """
         Add callback function/method/object to execute before
-        the simlation starts. The function 
+        the simlation starts. Needs to be callable.
+
+        :param func callback: Callable Object
 
         >>> from pyswmm import Simulation
         >>>
@@ -195,20 +218,103 @@ class Simulation(object):
         >>> "Complete!"
         >>> "Closed"
         """
-        if self._is_callback(callable_object):
-            if not self.before_start:
+        if self._is_callback(callback):
+            if not self.before_start():
                 self._before_start = []
-            self._before_start.append(callable_object)
+            self._before_start.append(callback)
 
-    def before_step(self, func):
-        pass
-    def after_step(self, func):
-        pass
-    def after_end(self, func):
-        pass
-    def after_close(self, func):
-        pass
-    
+    def before_step(self):
+        """Get Before Step Callbacks.
+
+        :return: List of Callbacks
+        :rtype: list
+        """
+        if hasattr(self, '_before_step'):
+            return self._before_step
+
+    def add_before_step(self, callback):
+        """
+        Add callback function/method/object to execute before
+        a simlation step. Needs to be callable.
+
+        :param func callback: Callable Object
+
+        (See self.add_before_start() for more details)
+        """
+        if self._is_callback(callback):
+            if not self.before_step():
+                self._before_step = []
+            self._before_step.append(callback)
+
+    def after_step(self):
+        """Get After Step Callbacks.
+
+        :return: List of Callbacks
+        :rtype: list
+        """
+        if hasattr(self, '_after_step'):
+            return self._after_step
+
+    def add_after_step(self, callback):
+        """
+        Add callback function/method/object to execute after
+        a simlation step. Needs to be callable.
+
+        :param func callback: Callable Object
+
+        (See self.add_before_start() for more details)
+        """
+        if self._is_callback(callback):
+            if not self.after_step():
+                self._after_step = []
+            self._after_step.append(callback)
+
+    def after_end(self):
+        """Get After End Callbacks.
+
+        :return: List of Callbacks
+        :rtype: list
+        """
+        if hasattr(self, '_after_end'):
+            return self._after_end
+
+    def add_after_end(self, callback):
+        """
+        Add callback function/method/object to execute after
+        the simulation ends. Needs to be callable.
+
+        :param func callback: Callable Object
+
+        (See self.add_before_start() for more details)
+        """
+        if self._is_callback(callback):
+            if not self.after_end():
+                self._after_end = []
+            self._after_end.append(callback)
+
+    def after_close(self):
+        """Get After Close Callbacks.
+
+        :return: List of Callbacks
+        :rtype: list
+        """
+        if hasattr(self, '_after_close'):
+            return self._after_close
+
+    def add_after_close(self, callback):
+        """
+        Add callback function/method/object to execute after
+        the simulation is closed. Needs to be callable.
+
+        :param func callback: Callable Object
+
+        (See self.add_before_start() for more details)
+        """
+        if self._is_callback(callback):
+            if not self.after_close():
+                self._after_close = []
+            self._after_close.append(callback)
+
     def step_advance(self, advance_seconds):
         """
         Advances the model by X number of seconds instead of
