@@ -58,6 +58,13 @@ class Simulation(object):
         self._isOpen = True
         self._advance_seconds = None
         self._isStarted = False
+        self._callbacks = {
+            "before_start": [],
+            "before_step": [],
+            "after_step": [],
+            "after_end": [],
+            "after_close": []
+        }
 
     def __enter__(self):
         """
@@ -179,8 +186,7 @@ class Simulation(object):
         :return: List of Callbacks
         :rtype: list
         """
-        if hasattr(self, '_before_start'):
-            return self._before_start
+        return self._callbacks["before_start"]
 
     def add_before_start(self, callback):
         """
@@ -212,9 +218,7 @@ class Simulation(object):
         >>> "Closed"
         """
         if self._is_callback(callback):
-            if not self.before_start():
-                self._before_start = []
-            self._before_start.append(callback)
+            self._callbacks["before_start"].append(callback)
 
     def before_step(self):
         """Get Before Step Callbacks.
@@ -222,8 +226,7 @@ class Simulation(object):
         :return: List of Callbacks
         :rtype: list
         """
-        if hasattr(self, '_before_step'):
-            return self._before_step
+        return self._callbacks["before_step"]
 
     def add_before_step(self, callback):
         """
@@ -235,9 +238,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            if not self.before_step():
-                self._before_step = []
-            self._before_step.append(callback)
+            self._callbacks["before_step"].append(callback)
 
     def after_step(self):
         """Get After Step Callbacks.
@@ -245,8 +246,7 @@ class Simulation(object):
         :return: List of Callbacks
         :rtype: list
         """
-        if hasattr(self, '_after_step'):
-            return self._after_step
+        return self._callbacks["after_step"]
 
     def add_after_step(self, callback):
         """
@@ -258,9 +258,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            if not self.after_step():
-                self._after_step = []
-            self._after_step.append(callback)
+            self._callbacks["after_step"].append(callback)
 
     def after_end(self):
         """Get After End Callbacks.
@@ -268,8 +266,7 @@ class Simulation(object):
         :return: List of Callbacks
         :rtype: list
         """
-        if hasattr(self, '_after_end'):
-            return self._after_end
+        return self._callbacks["after_end"]
 
     def add_after_end(self, callback):
         """
@@ -281,9 +278,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            if not self.after_end():
-                self._after_end = []
-            self._after_end.append(callback)
+            self._callbacks["after_end"].append(callback)
 
     def after_close(self):
         """Get After Close Callbacks.
@@ -291,8 +286,7 @@ class Simulation(object):
         :return: List of Callbacks
         :rtype: list
         """
-        if hasattr(self, '_after_close'):
-            return self._after_close
+        return self._callbacks["after_close"]
 
     def add_after_close(self, callback):
         """
@@ -304,9 +298,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            if not self.after_close():
-                self._after_close = []
-            self._after_close.append(callback)
+            self._callbacks["after_close"].append(callback)
 
     def step_advance(self, advance_seconds):
         """
