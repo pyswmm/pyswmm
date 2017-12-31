@@ -18,6 +18,14 @@ class Simulation(object):
 
     The model object provides several options to run a simulation.
 
+    Initialize the Simulation class.
+
+    :param str inpfile: Name of SWMM input file (default '')
+    :param str rptfile: Report file to generate (default None)
+    :param str binfile: Optional binary output file (default None)
+    :param str swmm_lib_path: User-specified SWMM library path. Uses default
+                              if not provided (default None).
+        
     Examples:
 
     Intialize a simulation and iterate through a simulation. This
@@ -52,8 +60,12 @@ class Simulation(object):
     >>> sim.execute()
     """
 
-    def __init__(self, inputfile, reportfile=None, outputfile=None):
-        self._model = PySWMM(inputfile, reportfile, outputfile)
+    def __init__(self,
+                 inputfile,
+                 reportfile=None,
+                 outputfile=None,
+                 swmm_lib_path=None):
+        self._model = PySWMM(inputfile, reportfile, outputfile, swmm_lib_path)
         self._model.swmm_open()
         self._isOpen = True
         self._advance_seconds = None

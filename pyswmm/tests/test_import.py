@@ -7,11 +7,12 @@
 # -----------------------------------------------------------------------------
 
 # Standard library imports
+import os
 import sys
 
 # Local imports
-# from pyswmm import Simulation
-# from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm import Simulation
+from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH, WIN_SWMM_LIB_PATH
 import pyswmm
 
 
@@ -24,14 +25,8 @@ def test_use_1():
         pyswmm.lib.use("swmm5.dll")
 
 
-#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
-
-
 def test_use_2():
     pyswmm.lib.use("swmm5")
-
-
-#    sim = Simulation(MODEL_WEIR_SETTING_PATH)
 
 
 def test_use_3():
@@ -46,3 +41,15 @@ def test_use_4():
         pyswmm.lib.use("fakedll")
     except:
         pass
+
+
+def test_lib_5():
+    """Testing SWMM Path as argument to Simulation Object. 
+
+    On Windows for now."""
+    if os.name == 'nt':
+        print(WIN_SWMM_LIB_PATH)
+        with Simulation(
+                MODEL_WEIR_SETTING_PATH,
+                swmm_lib_path=WIN_SWMM_LIB_PATH) as sim:
+            sim.execute()

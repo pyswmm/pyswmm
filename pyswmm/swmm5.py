@@ -102,30 +102,39 @@ class PySWMM(object):
     >>> swmm_model.swmm_close()
     """
 
-    def __init__(self, inpfile='', rptfile=None, binfile=None):
+    def __init__(self,
+                 inpfile='',
+                 rptfile=None,
+                 binfile=None,
+                 swmm_lib_path=None):
         """
         Initialize the PySWMM object class.
 
         :param str inpfile: Name of SWMM input file (default '')
         :param str rptfile: Report file to generate (default None)
         :param str binfile: Optional binary output file (default None)
+        :param str swmm_lib_path: User-specified SWMM library path. Uses default
+                                  if not provided (default None).
         """
         self.fileLoaded = False
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
 
+        if not swmm_lib_path:
+            swmm_lib_path = DLL_SELECTION()
+
         if os.name == 'nt':
             # Windows Support
-            self.SWMMlibobj = ctypes.WinDLL(DLL_SELECTION())
+            self.SWMMlibobj = ctypes.WinDLL(swmm_lib_path)
 
         if sys.platform == 'darwin':
             # Mac Osx Support
-            self.SWMMlibobj = ctypes.cdll.LoadLibrary(DLL_SELECTION())
+            self.SWMMlibobj = ctypes.cdll.LoadLibrary(swmm_lib_path)
 
         if sys.platform.startswith('linux'):
             # Linux Support
-            self.SWMMlibobj = ctypes.CDLL(DLL_SELECTION())
+            self.SWMMlibobj = ctypes.CDLL(swmm_lib_path)
 
     def _error_message(self, errcode):
         """
