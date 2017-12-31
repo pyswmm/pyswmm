@@ -25,7 +25,7 @@ class Simulation(object):
     :param str binfile: Optional binary output file (default None)
     :param str swmm_lib_path: User-specified SWMM library path. Uses default
                               if not provided (default None).
-        
+
     Examples:
 
     Intialize a simulation and iterate through a simulation. This

@@ -113,8 +113,8 @@ class PySWMM(object):
         :param str inpfile: Name of SWMM input file (default '')
         :param str rptfile: Report file to generate (default None)
         :param str binfile: Optional binary output file (default None)
-        :param str swmm_lib_path: User-specified SWMM library path. Uses default
-                                  if not provided (default None).
+        :param str swmm_lib_path: User-specified SWMM library path.
+                                  Uses default if not provided (default None).
         """
         self.fileLoaded = False
         self.inpfile = inpfile
