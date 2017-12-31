@@ -59,11 +59,11 @@ class Simulation(object):
         self._advance_seconds = None
         self._isStarted = False
         self._callbacks = {
-            "before_start": [],
-            "before_step": [],
-            "after_step": [],
-            "after_end": [],
-            "after_close": []
+            "before_start": None,
+            "before_step": None,
+            "after_step": None,
+            "after_end": None,
+            "after_close": None
         }
 
     def __enter__(self):
@@ -97,7 +97,7 @@ class Simulation(object):
                 self._initial_conditions()
             # Execute Callback Hooks Before Simulation
             if self.before_start():
-                self._execute_callbacks(self.before_start())
+                self._execute_callback(self.before_start())
             self._model.swmm_start(True)
             self._isStarted = True
 
@@ -107,7 +107,7 @@ class Simulation(object):
         self.start()
         # Execute Callback Hooks Before Simulation Step
         if self.before_step():
-            self._execute_callbacks(self.before_step())
+            self._execute_callback(self.before_step())
         # Simulation Step Amount
         if self._advance_seconds is None:
             time = self._model.swmm_step()
@@ -115,7 +115,7 @@ class Simulation(object):
             time = self._model.swmm_stride(self._advance_seconds)
         # Execute Callback Hooks After Simulation Step
         if self.after_step():
-            self._execute_callbacks(self.after_step())
+            self._execute_callback(self.after_step())
         if time <= 0.0:
             raise StopIteration
         return self._model
@@ -129,13 +129,13 @@ class Simulation(object):
             self._isStarted = False
             # Execute Callback Hooks After Simulation End
             if self.after_end():
-                self._execute_callbacks(self.after_end())
+                self._execute_callback(self.after_end())
         if self._isOpen:
             self._model.swmm_close()
             self._isOpen = False
             # Execute Callback Hooks After Simulation Closes
             if self.after_close():
-                self._execute_callbacks(self.after_close())
+                self._execute_callback(self.after_close())
 
     @staticmethod
     def _is_callback(callable_object):
@@ -147,14 +147,13 @@ class Simulation(object):
         else:
             return True
 
-    def _execute_callbacks(self, callback_group):
-        """Runs the callback (Single or List of Callbacks)."""
-        for callback in callback_group:
-            try:
-                callback()
-            except PYSWMMException:
-                error_msg = "Callback Failed"
-                raise PYSWMMException((error_msg))
+    def _execute_callback(self, callback):
+        """Runs the callback."""
+        try:
+            callback()
+        except PYSWMMException:
+            error_msg = "Callback Failed"
+            raise PYSWMMException((error_msg))
 
     def initial_conditions(self, init_conditions):
         """
@@ -218,7 +217,7 @@ class Simulation(object):
         >>> "Closed"
         """
         if self._is_callback(callback):
-            self._callbacks["before_start"].append(callback)
+            self._callbacks["before_start"] = callback
 
     def before_step(self):
         """Get Before Step Callbacks.
@@ -238,7 +237,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            self._callbacks["before_step"].append(callback)
+            self._callbacks["before_step"] = callback
 
     def after_step(self):
         """Get After Step Callbacks.
@@ -258,7 +257,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            self._callbacks["after_step"].append(callback)
+            self._callbacks["after_step"] = callback
 
     def after_end(self):
         """Get After End Callbacks.
@@ -278,7 +277,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            self._callbacks["after_end"].append(callback)
+            self._callbacks["after_end"] = callback
 
     def after_close(self):
         """Get After Close Callbacks.
@@ -298,7 +297,7 @@ class Simulation(object):
         (See self.add_before_start() for more details)
         """
         if self._is_callback(callback):
-            self._callbacks["after_close"].append(callback)
+            self._callbacks["after_close"] = callback
 
     def step_advance(self, advance_seconds):
         """

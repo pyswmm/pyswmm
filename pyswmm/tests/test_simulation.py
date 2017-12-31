@@ -63,7 +63,7 @@ def test_simulation_iter():
         sim.report()
 
 
-def test_nodes_9():
+def test_simulation_9():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         J1 = Nodes(sim)["J1"]
 
@@ -76,7 +76,7 @@ def test_nodes_9():
                 assert J1.depth > 14
 
 
-def test_nodes_callback_1():
+def test_simulation_callback_1():
     LIST = []
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         LIST.append("OPENED")
@@ -84,63 +84,38 @@ def test_nodes_callback_1():
         def before_start1():
             LIST.append("before_start1")
 
-        def before_start2():
-            LIST.append("before_start2")
-
         sim.add_before_start(before_start1)
-        sim.add_before_start(before_start2)
 
         def before_step1():
             if "before_step1" not in LIST:
                 LIST.append("before_step1")
 
-        def before_step2():
-            if "before_step2" not in LIST:
-                LIST.append("before_step2")
-
         sim.add_before_step(before_step1)
-        sim.add_before_step(before_step2)
 
         def after_step1():
             if "after_step1" not in LIST:
                 LIST.append("after_step1")
 
-        def after_step2():
-            if "after_step2" not in LIST:
-                LIST.append("after_step2")
-
         sim.add_after_step(after_step1)
-        sim.add_after_step(after_step2)
 
         def after_end1():
             if "after_end1" not in LIST:
                 LIST.append("after_end1")
 
-        def after_end2():
-            if "after_end2" not in LIST:
-                LIST.append("after_end2")
-
         sim.add_after_end(after_end1)
-        sim.add_after_end(after_end2)
 
         def after_close1():
             if "after_close1" not in LIST:
                 LIST.append("after_close1")
 
-        def after_close2():
-            if "after_close2" not in LIST:
-                LIST.append("after_close2")
-
         sim.add_after_close(after_close1)
-        sim.add_after_close(after_close2)
 
         for ind, step in enumerate(sim):
             if ind == 0:
                 LIST.append("SIM_STEP")
 
     assert LIST == [
-        "OPENED", "before_start1", "before_start2", "before_step1",
-        "before_step2", "after_step1", "after_step2", "SIM_STEP", "after_end1",
-        "after_end2", "after_close1", "after_close2"
+        "OPENED", "before_start1", "before_step1", "after_step1", "SIM_STEP",
+        "after_end1", "after_close1"
     ]
     print(LIST)
