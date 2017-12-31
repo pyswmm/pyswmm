@@ -96,8 +96,7 @@ class Simulation(object):
             if hasattr(self, "_initial_conditions"):
                 self._initial_conditions()
             # Execute Callback Hooks Before Simulation
-            if self.before_start():
-                self._execute_callback(self.before_start())
+            self._execute_callback(self.before_start())
             self._model.swmm_start(True)
             self._isStarted = True
 
@@ -106,16 +105,14 @@ class Simulation(object):
         # Start Simulation
         self.start()
         # Execute Callback Hooks Before Simulation Step
-        if self.before_step():
-            self._execute_callback(self.before_step())
+        self._execute_callback(self.before_step())
         # Simulation Step Amount
         if self._advance_seconds is None:
             time = self._model.swmm_step()
         else:
             time = self._model.swmm_stride(self._advance_seconds)
         # Execute Callback Hooks After Simulation Step
-        if self.after_step():
-            self._execute_callback(self.after_step())
+        self._execute_callback(self.after_step())
         if time <= 0.0:
             raise StopIteration
         return self._model
@@ -128,14 +125,12 @@ class Simulation(object):
             self._model.swmm_end()
             self._isStarted = False
             # Execute Callback Hooks After Simulation End
-            if self.after_end():
-                self._execute_callback(self.after_end())
+            self._execute_callback(self.after_end())
         if self._isOpen:
             self._model.swmm_close()
             self._isOpen = False
             # Execute Callback Hooks After Simulation Closes
-            if self.after_close():
-                self._execute_callback(self.after_close())
+            self._execute_callback(self.after_close())
 
     @staticmethod
     def _is_callback(callable_object):
@@ -149,11 +144,12 @@ class Simulation(object):
 
     def _execute_callback(self, callback):
         """Runs the callback."""
-        try:
-            callback()
-        except PYSWMMException:
-            error_msg = "Callback Failed"
-            raise PYSWMMException((error_msg))
+        if callback:
+            try:
+                callback()
+            except PYSWMMException:
+                error_msg = "Callback Failed"
+                raise PYSWMMException((error_msg))
 
     def initial_conditions(self, init_conditions):
         """
