@@ -1,5 +1,26 @@
 # History of changes
 
+## Version 0.4.6 (2018-01-02)
+
+### Issues Closed
+
+#### New Features
+
+* [Issue 140](https://github.com/OpenWaterAnalytics/pyswmm/issues/140) - Add simulation function hook for callbacks
+
+#### Bugs fixed
+
+* [Issue 143](https://github.com/OpenWaterAnalytics/pyswmm/issues/143) - Remove bare exceptions
+
+In this release 2 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 144](https://github.com/OpenWaterAnalytics/pyswmm/pull/144) - Added swmm_lib_path argument to Simulation and PySWMM class
+* [PR 142](https://github.com/OpenWaterAnalytics/pyswmm/pull/142) - Added Hooks for Callbacks
+
+In this release 2 pull requests were closed.
+
 ## Version 0.4.5 (2017-12-27)
 
 ### Issues Closed
