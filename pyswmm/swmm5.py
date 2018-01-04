@@ -254,12 +254,14 @@ class PySWMM(object):
                 rptfile = self.rptfile
             else:
                 rptfile = self.inpfile.replace('.inp', '.rpt')
+                self.rptfile = rptfile
 
         if binfile is None:
             if self.binfile != '' and self.binfile is not None:
                 binfile = self.binfile
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
+                self.binfile = binfile
 
         errcode = self.SWMMlibobj.swmm_open(
             ctypes.c_char_p(six.b(inpfile)),
