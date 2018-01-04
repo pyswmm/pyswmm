@@ -74,6 +74,7 @@ class Simulation(object):
             "before_start": None,
             "before_step": None,
             "after_step": None,
+            "before_end": None,
             "after_end": None,
             "after_close": None
         }
@@ -126,6 +127,7 @@ class Simulation(object):
         # Execute Callback Hooks After Simulation Step
         self._execute_callback(self.after_step())
         if time <= 0.0:
+            self._execute_callback(self.before_end())
             raise StopIteration
         return self._model
 
@@ -188,10 +190,9 @@ class Simulation(object):
             self._initial_conditions = init_conditions
 
     def before_start(self):
-        """Get Before Start Callbacks.
+        """Get Before Start Callback.
 
-        :return: List of Callbacks
-        :rtype: list
+        :return: Callbacks
         """
         return self._callbacks["before_start"]
 
@@ -228,10 +229,9 @@ class Simulation(object):
             self._callbacks["before_start"] = callback
 
     def before_step(self):
-        """Get Before Step Callbacks.
+        """Get Before Step Callback.
 
-        :return: List of Callbacks
-        :rtype: list
+        :return: Callbacks
         """
         return self._callbacks["before_step"]
 
@@ -248,10 +248,9 @@ class Simulation(object):
             self._callbacks["before_step"] = callback
 
     def after_step(self):
-        """Get After Step Callbacks.
+        """Get After Step Callback.
 
-        :return: List of Callbacks
-        :rtype: list
+        :return: Callbacks
         """
         return self._callbacks["after_step"]
 
@@ -267,11 +266,29 @@ class Simulation(object):
         if self._is_callback(callback):
             self._callbacks["after_step"] = callback
 
-    def after_end(self):
-        """Get After End Callbacks.
+    def before_end(self):
+        """Get Before End Callback.
 
-        :return: List of Callbacks
-        :rtype: list
+        :return: Callbacks
+        """
+        return self._callbacks["before_end"]
+
+    def add_before_end(self, callback):
+        """
+        Add callback function/method/object to execute after
+        the simulation ends. Needs to be callable.
+
+        :param func callback: Callable Object
+
+        (See self.add_before_start() for more details)
+        """
+        if self._is_callback(callback):
+            self._callbacks["before_end"] = callback
+
+    def after_end(self):
+        """Get After End Callback.
+
+        :return: Callbacks
         """
         return self._callbacks["after_end"]
 
@@ -288,10 +305,9 @@ class Simulation(object):
             self._callbacks["after_end"] = callback
 
     def after_close(self):
-        """Get After Close Callbacks.
+        """Get After Close Callback.
 
-        :return: List of Callbacks
-        :rtype: list
+        :return: Callbacks
         """
         return self._callbacks["after_close"]
 
