@@ -1,5 +1,21 @@
 # History of changes
 
+## Version 0.4.7 (2018-01-08)
+
+### Issues Closed
+
+#### New Features
+
+* [Issue 147](https://github.com/OpenWaterAnalytics/pyswmm/issues/147) - Add before_end simulation hook.
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 148](https://github.com/OpenWaterAnalytics/pyswmm/pull/148) - Added additional callback hook for Before_End
+
+In this release 1 pull request was closed.
+
 ## Version 0.4.6 (2018-01-02)
 
 ### Issues Closed
