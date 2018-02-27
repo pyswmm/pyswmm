@@ -144,7 +144,29 @@ class SubcResults(Enum):
     newRunoff = 4  # Current Runoff
     newSnowDepth = 5  # Current Snow Depth
 
+class LidUParams(Enum):
+    unitArea        = 0  # double
+    fullWidth       = 1  # double
+    botWidth        = 2  # double
+    initSat         = 3  # double
+    fromImperv      = 4  # double
 
+class LidUResults(Enum):
+    inflow          = 0  # double
+    evap            = 1  # double
+    infil           = 2  # double
+    surfFlow        = 3  # double
+    drainFlow       = 4  # double
+    initVol         = 5  # double
+    finalVol        = 6  # double
+    
+class LidUOptions(Enum):
+    index           = 0  # int
+    number          = 1  # int
+    toPerv          = 2  # int
+    drainSub        = 3  # int
+    drainNode       = 4  # int
+    
 class NodeStats(ctypes.Structure):
     _fields_ = [
         ("avgDepth", ctypes.c_double), ("maxDepth", ctypes.c_double),
