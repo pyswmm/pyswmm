@@ -144,12 +144,14 @@ class SubcResults(Enum):
     newRunoff = 4  # Current Runoff
     newSnowDepth = 5  # Current Snow Depth
 
+
 class LidUParams(Enum):
     unitArea        = 0  # double
     fullWidth       = 1  # double
     botWidth        = 2  # double
     initSat         = 3  # double
     fromImperv      = 4  # double
+
 
 class LidUResults(Enum):
     inflow          = 0  # double
@@ -159,13 +161,60 @@ class LidUResults(Enum):
     drainFlow       = 4  # double
     initVol         = 5  # double
     finalVol        = 6  # double
-    
+    surfDepth       = 7  # double
+    paveDepth       = 8  # double
+    soilMoist       = 9  # double
+    storDepth       = 10 # double
+    dryTime         = 11 # double 
+    oldDrainFlow    = 12 # double
+    newDrainFlow    = 13 # double
+
+ 
 class LidUOptions(Enum):
     index           = 0  # int
     number          = 1  # int
     toPerv          = 2  # int
     drainSub        = 3  # int
     drainNode       = 4  # int
+
+
+class LidLayers(Enum):
+    surface         = 0 # int
+    soil            = 1 # int
+    storage         = 2 # int
+    pavement        = 3 # int
+    drain           = 4 # int
+    drainMat        = 5 # int
+
+
+class LidControls(Enum):
+    surface         = 0 # int
+    soil            = 1 # int
+    storage         = 2 # int
+    pavement        = 3 # int
+    drain           = 4 # int
+
+
+class LidLayersProperty(Enum):
+    thickness       = 0 # double
+    voidFrac        = 1 # double
+    roughness       = 2 # double
+    surfSlope       = 3 # double
+    sideSlope       = 4 # double
+    alpha           = 5 # double
+    porosity        = 6 # double
+    fieldCap        = 7 # double
+    wiltPoint       = 8 # double
+    suction         = 9 # double
+    kSat            = 10 # double
+    kSlope          = 11 # double
+    clogFactor      = 12 # double
+    impervFrac      = 13 # double
+    coeff           = 14 # double
+    expon           = 15 # double
+    offset          = 16 # double
+    delay           = 17 # double
+
     
 class NodeStats(ctypes.Structure):
     _fields_ = [

@@ -889,6 +889,37 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_setLinkParam(index, parameter, _val)
         self._error_check(errcode)
 
+    def getLidCParam(self, ID, layer, parameter):
+        """
+        Get Node Parameter.
+
+        :param str ID: Node ID
+        :param int parameter: Paramter (toolkitapi.NodeParams member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.getNodeParam('J2',NodeParams.invertElev )
+        >>> 13.392
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
+        param = ctypes.c_double()
+        if not isinstance(layer, int):
+            layer = layer.value
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_getLidCParam(index,
+                                                    layer,
+                                                    parameter,
+                                                    ctypes.byref(param))
+        self._error_check(errcode)
+        return param.value
+
     def getLidUParam(self, subcatchID, lidIndex, parameter):
         """
         Get LidUnit Parameter
@@ -1083,12 +1114,52 @@ class PySWMM(object):
                 return datetime.strptime(
                     dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
 
+    def getLidUFluxRates(self, subcatchID, lidIndex, layerIndex):
+        """
+        Get Lid Unit Layer Flux Rates Result.
+
+        :param str subcatchID: Subcatchment ID
+        :param int lidIndex: Lid unit Index
+        :param int layerIndex: Paramter (toolkitapi.LidLayers member variable)
+        :return: Paramater Value
+        :rtype: double
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_start()
+        >>> while(True):
+        ...     time = swmm_model.swmm_step()
+        ...     print swmm_model.getLidUFluxRates('J1', 0, LidLayers.surface)
+        ...     if (time <= 0.0): break
+        ...
+        >>> 1.2
+        >>> 1.5
+        >>> 1.9
+        >>> 1.2
+        >>>
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        result = ctypes.c_double()
+        if not isinstance(layerIndex, int):
+            layerIndex = layerIndex.value
+        errcode = self.SWMMlibobj.swmm_getLidUFluxRates(index,
+                                                        lidIndex,
+                                                        layerIndex,
+                                                        ctypes.byref(result))
+        self._error_check(errcode)
+        return result.value
+
     def getLidUResult(self, subcatchID, lidIndex, resultType):
         """
         Get Lid Result.
 
-        :param str subcatchID: subcatchment ID
-        :param int lidID: Lid unit Index
+        :param str subcatchID: Subcatchment ID
+        :param int lidIndex: Lid unit Index
         :param int resultType: Paramter (toolkitapi.LidUResults member variable)
         :return: Paramater Value
         :rtype: double
