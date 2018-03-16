@@ -21,5 +21,6 @@ MODEL_FULL_FEATURES_PATH = os.path.join(DATA_PATH, 'model_full_features.inp')
 MODEL_STORAGE_PUMP = os.path.join(DATA_PATH, 'model_storage_pump.inp')
 MODEL_STORAGE_PUMP_MGD = os.path.join(DATA_PATH, 'model_storage_pump_MGD.inp')
 MODEL_POLLUTANTS_PATH = os.path.join(DATA_PATH, 'model_pollutants.inp')
+MODEL_RAIN = os.path.join(DATA_PATH, 'model_rain.inp')
 WIN_SWMM_LIB_PATH = os.path.join(DATA_PATH, '..\\..\\lib\\windows',
                                  'swmm5.dll')

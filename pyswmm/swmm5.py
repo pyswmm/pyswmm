@@ -982,6 +982,70 @@ class PySWMM(object):
                                       outindex.value)
 
         return (TYPELoadSurface.value, LoadID)
+    # =======================================================
+    # Rainfall API
+
+    def getGagePrecip(self, ID):
+        """
+        Get precipitation from gage 
+
+        This function returns the rainfall, show and total precipitation
+        associated with the gage
+
+        :param str ID: Gage ID
+        :return: (rainfall, snowfall, total precipitation)
+        :rtype: tuple
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.getGagePrecip('Gage1')
+        >>> 0.0 0.0 0.0
+        >>> swmm_model.swmm_close()
+
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
+
+        rain = ctypes.c_double()
+        snow = ctypes.c_double()
+        total = ctypes.c_double()
+
+        errcode = self.SWMMlibobj.swmm_getGagePrecip(index,
+                ctypes.byref(rain),
+                ctypes.byref(snow),
+                ctypes.byref(total))
+
+        self._error_check(errcode)
+
+        return rain.value, snow.value, total.value 
+
+    def setGagePrecip(self, ID, value):
+        """
+        Set precipitation to gage 
+
+        This function sets the rainfall intensity to the gage
+
+        :param str ID: Gage ID
+        :param float valve: rainfall intensity 
+        :return: errcode
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.SetGagePrecip('Gage1', 10.0)
+        >>> swmm_model.swmm_close()
+
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
+
+        _val = ctypes.c_double(value)
+
+        errcode = self.SWMMlibobj.swmm_setGagePrecip(index, _val)
+
+        self._error_check(errcode)
+
 
     # --- Active Simulation Result "Getters"
     # -------------------------------------------------------------------------
