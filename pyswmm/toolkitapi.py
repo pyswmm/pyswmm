@@ -88,7 +88,7 @@ class NodeResults(Enum):
     newDepth = 5  # Current water depth
     newHead = 6  # Current water head
     newLatFlow = 7  # Current Lateral Inflow
-
+    newQual = 8  # Current quality state
 
 class NodeType(Enum):
     junction = 0  # Junction Type
