@@ -487,7 +487,10 @@ class Node(object):
         """
         return self._model.getNodeResult(self._nodeid,
                                          NodeResults.outflow.value)
-
+    @property    
+    def pollut_conc(self):
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.newQual.value)
     @property
     def losses(self):
         """
