@@ -486,11 +486,12 @@ class Node(object):
         >>> 1.2
         """
         return self._model.getNodeResult(self._nodeid,
+    
                                          NodeResults.outflow.value)
-    @property    
-    def pollut_conc(self):
-        return self._model.getNodeResult(self._nodeid,
-                                         NodeResults.newQual.value)
+
+
+
+
     @property
     def losses(self):
         """
@@ -658,6 +659,10 @@ class Node(object):
         """
         return self._model.getNodeResult(self._nodeid,
                                          NodeResults.newLatFlow.value)
+    @property    
+    def pollut_conc(self):
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.newQual.value)
 
     def generated_inflow(self, inflowrate):
         """

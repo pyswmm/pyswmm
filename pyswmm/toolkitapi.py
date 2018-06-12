@@ -51,7 +51,7 @@ class SimulationParameters(Enum):
     LatFlowTol = 13  # Tolerance for steady nodal inflow
 
 
-class ObjectType(Enum):
+class ObjectType(Enum):             #line 40 of enum.h of swmm source file
     GAGE = 0  # rain gage
     SUBCATCH = 1  # subcatchment
     NODE = 2  # conveyance system node
@@ -79,7 +79,7 @@ class NodeParams(Enum):
     initDepth = 4  # double
 
 
-class NodeResults(Enum):
+class NodeResults(Enum): ###############################################################################################
     totalinflow = 0  # Total Inflow
     outflow = 1  # Total Outflow
     losses = 2  # Losses (evap + exfiltration loss)
@@ -88,9 +88,12 @@ class NodeResults(Enum):
     newDepth = 5  # Current water depth
     newHead = 6  # Current water head
     newLatFlow = 7  # Current Lateral Inflow
-    newQual = 8  # Current quality state
+    newQual = 8  # current quality state
+ 
 
-class NodeType(Enum):
+
+    
+class NodeType(Enum):                   #lime 63 of enum.h
     junction = 0  # Junction Type
     outfall = 1  # Outfall Type
     storage = 2  # Storage Type
@@ -189,7 +192,7 @@ class StorageStats(ctypes.Structure):
         "maxFlow": "peak_flowrate",
         "evapLosses": "evap_loss",
         "exfilLosses": "exfil_loss",
-        "maxVolDate": "max_vol_date"
+        "maxVolDate": "max_vol_date",
     }
 
 
