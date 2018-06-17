@@ -153,7 +153,7 @@ class LidUParams(Enum):
     fromImperv      = 4  # double
 
 
-class LidUResults(Enum):
+class LidResults(Enum):
     inflow          = 0  # double
     evap            = 1  # double
     infil           = 2  # double
@@ -168,6 +168,8 @@ class LidUResults(Enum):
     dryTime         = 11 # double 
     oldDrainFlow    = 12 # double
     newDrainFlow    = 13 # double
+    pervArea        = 14 # double
+    flowToPerv      = 15 # double
 
  
 class LidUOptions(Enum):
@@ -185,14 +187,6 @@ class LidLayers(Enum):
     pavement        = 3 # int
     drain           = 4 # int
     drainMat        = 5 # int
-
-
-class LidControls(Enum):
-    surface         = 0 # int
-    soil            = 1 # int
-    storage         = 2 # int
-    pavement        = 3 # int
-    drain           = 4 # int
 
 
 class LidLayersProperty(Enum):

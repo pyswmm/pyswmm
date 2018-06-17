@@ -888,13 +888,58 @@ class PySWMM(object):
             parameter = parameter.value
         errcode = self.SWMMlibobj.swmm_setLinkParam(index, parameter, _val)
         self._error_check(errcode)
+        
+    def getLidCOverflow(self, ID):
+        """
+        Get Lid Control Parameter.
+
+        :param str ID: Lid Control ID
+        :rtype: Bool
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.getLidCOverflow('J2')
+        >>> True
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
+        param = ctypes.c_char()
+        errcode = self.SWMMlibobj.swmm_getLidCOverflow(index,
+                                                       ctypes.byref(param))
+        self._error_check(errcode)
+        if param.value == (0).to_bytes(1, byteorder='big'): return False
+        else: return True
+
+    def setLidCOverflow(self, ID, value):
+        """
+        Set Lid Control Parameter.
+
+        :param str ID: Lid Control ID
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.setLidCOverflow('J2', False)
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        _val = ctypes.c_char(value)
+        index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
+        errcode = self.SWMMlibobj.swmm_setLidCOverflow(index,
+                                                       _val)
+        self._error_check(errcode)
 
     def getLidCParam(self, ID, layer, parameter):
         """
-        Get Node Parameter.
+        Get LidControl Parameter.
 
-        :param str ID: Node ID
-        :param int parameter: Paramter (toolkitapi.NodeParams member variable)
+        :param str ID: Lid Control ID
+        :param int layer: Layer (toolkitapi.LidLayers member variable)
+        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
         :return: Paramater Value
         :rtype: float
 
@@ -902,8 +947,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.getNodeParam('J2',NodeParams.invertElev )
-        >>> 13.392
+        >>> swmm_model.getLidCParam('J2', LidLayer.surface, LidLayersProperty.thickness)
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -920,6 +964,58 @@ class PySWMM(object):
         self._error_check(errcode)
         return param.value
 
+    def setLidCParam(self, ID, layer, parameter, value):
+        """
+        Set Lid Control Parameter.
+
+        :param str ID: Lid Control ID
+        :param int layer: Layer (toolkitapi.LidLayers member variable)
+        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.setLidCParam('J2', LidLayer.surface, LidLayersProperty.thickness, 110)
+
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
+        _val = ctypes.c_double(value)
+        if not isinstance(layer, int):
+            layer = layer.value
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setLidCParam(index,
+                                                    layer,
+                                                    parameter,
+                                                    _val)
+        self._error_check(errcode)
+
+    def getLidUCount(self, ID):
+        """
+        Get Number of Lid Units Defined for Subcatchment.
+
+        :param str ID: Subcatchment ID
+        :rtype: int
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.getLidUCount('J2')
+        >>> 2
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
+        param = ctypes.c_int()
+        errcode = self.SWMMlibobj.swmm_getLidUCount(index,
+                                                    ctypes.byref(param))
+        self._error_check(errcode)
+        return param.value
+        
     def getLidUParam(self, subcatchID, lidIndex, parameter):
         """
         Get LidUnit Parameter
@@ -928,7 +1024,7 @@ class PySWMM(object):
         :param int lidID: Lid unit Index
         :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
         :return: Paramater Value
-        :rtype: double
+        :rtype: float
 
         Examples:
 
@@ -950,6 +1046,32 @@ class PySWMM(object):
         self._error_check(errcode)
         return param.value
 
+    def setLidUParam(self, subcatchID, lidIndex, parameter, value):
+        """
+        Set LidUnit Parameter
+
+        :param str subcatchID: Subcatchment ID
+        :param int lidID: Lid unit Index
+        :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.setLidUParam('S2', 0, LidUParams.unitarea, 10)
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        _val = ctypes.c_double(value)
+        param = ctypes.c_double()
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setLidUParam(index,
+                                                    lidIndex,
+                                                    parameter,
+                                                    _val)
+        
     def getLidUOption(self, subcatchID, lidIndex, parameter):
         """
         Get LidUnit Option
@@ -979,6 +1101,32 @@ class PySWMM(object):
                                                      ctypes.byref(param))
         self._error_check(errcode)
         return param.value
+
+    def setLidUOption(self, subcatchID, lidIndex, parameter, value):
+        """
+        Set LidUnit Option
+
+        :param str subcatchID: Subcatchment ID
+        :param int lidID: Lid unit Index
+        :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.setLidUOption('S2', 0, LidUParams.index, 0)
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        _val = ctypes.c_int(value)
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setLidUOption(index,
+                                                     lidIndex,
+                                                     parameter,
+                                                     _val)
+        self._error_check(errcode)
     
     def getSubcatchParam(self, ID, parameter):
         """
@@ -1122,8 +1270,7 @@ class PySWMM(object):
         :param int lidIndex: Lid unit Index
         :param int layerIndex: Paramter (toolkitapi.LidLayers member variable)
         :return: Paramater Value
-        :rtype: double
-
+        :rtype: float
         Examples:
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
@@ -1162,7 +1309,7 @@ class PySWMM(object):
         :param int lidIndex: Lid unit Index
         :param int resultType: Paramter (toolkitapi.LidUResults member variable)
         :return: Paramater Value
-        :rtype: double
+        :rtype: float
 
         Examples:
 
@@ -1189,6 +1336,44 @@ class PySWMM(object):
             resultType = resultType.value
         errcode = self.SWMMlibobj.swmm_getLidUResult(index,
                                                      lidIndex,
+                                                     resultType,
+                                                     ctypes.byref(result))
+        self._error_check(errcode)
+        return result.value
+
+    def getLidGResult(self, subcatchID, resultType):
+        """
+        Get Lid Group Result.
+
+        :param str subcatchID: Subcatchment ID
+        :param int resultType: Paramter (toolkitapi.LidUResults member variable)
+        :return: Paramater Value
+        :rtype: float
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.swmm_start()
+        >>> while(True):
+        ...     time = swmm_model.swmm_step()
+        ...     print swmm_model.getLidGResult('J1', LidUResults.flowToPerv)
+        ...     if (time <= 0.0): break
+        ...
+        >>> 1.2
+        >>> 1.5
+        >>> 1.9
+        >>> 1.2
+        >>>
+        >>> swmm_model.swmm_end()
+        >>> swmm_model.swmm_report()
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        result = ctypes.c_double()
+        if not isinstance(resultType, int):
+            resultType = resultType.value
+        errcode = self.SWMMlibobj.swmm_getLidGResult(index,
                                                      resultType,
                                                      ctypes.byref(result))
         self._error_check(errcode)
