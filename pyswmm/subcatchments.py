@@ -574,8 +574,6 @@ class Subcatchment(object):
         +-------------------+
         | peak_runoff_rate  |
         +-------------------+
-        | pollutant_buildup |
-        +-------------------+
 
         :return: Group of Stats
         :rtype: dict

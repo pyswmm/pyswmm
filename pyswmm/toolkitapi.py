@@ -272,8 +272,7 @@ class PumpStats(ctypes.Structure):
 class SubcStats(ctypes.Structure):
     _fields_ = [("precip", ctypes.c_double), ("runon", ctypes.c_double),
                 ("evap", ctypes.c_double), ("infil", ctypes.c_double),
-                ("runoff", ctypes.c_double), ("maxFlow", ctypes.c_double),
-                ("surfaceBuildup", PollutArray)]
+                ("runoff", ctypes.c_double), ("maxFlow", ctypes.c_double)]
     _py_alias_ids = {
         "precip": "precipitation",
         "runon": "runon",
@@ -281,7 +280,6 @@ class SubcStats(ctypes.Structure):
         "infil": "infiltration",
         "runoff": "runoff",
         "maxFlow": "peak_runoff_rate",
-        "surfaceBuildup": "pollutant_buildup"
     }
 
 
