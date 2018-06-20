@@ -145,6 +145,11 @@ class SubcResults(Enum):
     newSnowDepth = 5  # Current Snow Depth
 
 
+class SubcPollut(Enum):
+    buildup = 0  # Subcatchment Surface Buildup
+    concPonded = 1  # Ponded Pollutant Concentration
+
+
 class NodeStats(ctypes.Structure):
     _fields_ = [
         ("avgDepth", ctypes.c_double), ("maxDepth", ctypes.c_double),

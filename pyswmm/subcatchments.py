@@ -9,7 +9,8 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults
+from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults, SubcPollut
+import pdb
 
 
 class Subcatchments(object):
@@ -554,6 +555,19 @@ class Subcatchment(object):
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.newSnowDepth.value)
+    
+    @property
+    def buildup(self):
+        # BUILD A DICT TO RETURN
+        return self._model.getSubcatchPollut(self._subcatchmentid,
+                                             SubcPollut.buildup.value)
+
+                                             
+    @property
+    def concPonded(self):
+        # BUILD A DICT TO RETURN
+        return self._model.getSubcatchPollut(self._subcatchmentid,
+                                             SubcPollut.concPonded.value)
 
     @property
     def statistics(self):
