@@ -95,7 +95,7 @@ class Links(object):
                 _ln.__class__ = Pump
             return _ln
         else:
-            raise PYSWMMException("Link ID Does not Exist")
+            raise PYSWMMException("Link ID: {} Does not Exist".format(linkid))
 
     def __iter__(self):
         return self
