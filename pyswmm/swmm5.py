@@ -1130,10 +1130,17 @@ class PySWMM(object):
         return result.value
     
     def getSubcatchPollut(self, ID, resultType):
+        """
+        Get pollutant results from a Subcatchment.
+
+        :param str ID: Subcatchment ID
+        :param int Parameter: Parameter (toolkitapi.SubcPollut member variable)
+        :return: Pollutant Values
+        :rtype: list
+        """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
                 
-        pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
-        # if no pollut_ids, return an error message?
+        pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)        
         result_array = ctypes.c_double * len(pollut_ids)
         result = result_array()
         pollut_values = []
@@ -1144,6 +1151,7 @@ class PySWMM(object):
 
         self._error_check(errcode)
         
+        # WHAT TO DO ABOUT FREEING RESULTS?
         #freeresultarray = self.SWMMlibobj.freeArray
         #freeresultarray.argtypes = (result_array, )
         #freeresultarray(result)
