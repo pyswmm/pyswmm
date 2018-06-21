@@ -18,7 +18,6 @@ import distutils.version
 import os
 import sys
 import warnings
-import pdb
 
 # Third party imports
 import six
@@ -1131,12 +1130,11 @@ class PySWMM(object):
         return result.value
     
     def getSubcatchPollut(self, ID, resultType):
-        #pdb.set_trace()
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-        
+                
         pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
         # if no pollut_ids, return an error message?
-        result_array = (ctypes.c_double * len(pollut_ids))
+        result_array = ctypes.c_double * len(pollut_ids)
         result = result_array()
         pollut_values = []
         errcode = self.SWMMlibobj.swmm_getSubcatchPollut(index, resultType,
@@ -1145,6 +1143,10 @@ class PySWMM(object):
             pollut_values.append(result[ind])
 
         self._error_check(errcode)
+        
+        #freeresultarray = self.SWMMlibobj.freeArray
+        #freeresultarray.argtypes = (result_array, )
+        #freeresultarray(result)
 
         return pollut_values        
 
