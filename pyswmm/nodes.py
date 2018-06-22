@@ -661,6 +661,11 @@ class Node(object):
                                          NodeResults.newLatFlow.value)
     @property    
     def pollut_conc(self):
+        """
+        Get Node Pollutant Concentration
+        Works for One Pollutant Only
+        
+        """
         return self._model.getNodeResult(self._nodeid,
                                          NodeResults.newQual.value)
 
