@@ -9,7 +9,8 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults
+from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults, SubcPollut
+import pdb
 
 
 class Subcatchments(object):
@@ -554,7 +555,77 @@ class Subcatchment(object):
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.newSnowDepth.value)
+    
+    @property
+    def buildup(self):
+        """
+        Get Pollutant Results for Surface Buildup on a Subcatchment.
 
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Subcatchment Surface Buildup Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Subcatchments
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     s1 = Subcatchments(sim)["S1"]
+        ...     for step in sim:
+        ...         print(s1.buildup)
+        >>> {'test-pollutant': 8.0}
+        >>> {'test-pollutant': 8.0}
+        >>> {'test-pollutant': 7.998}
+        >>> {'test-pollutant': 7.991}
+        >>> {'test-pollutant': 7.981}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        buildup_array = self._model.getSubcatchPollut(self._subcatchmentid,
+                                                      SubcPollut.buildup.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = buildup_array[ind]
+
+        return out_dict
+
+                                             
+    @property
+    def concPonded(self):
+        """
+        Get Pollutant Results for Concentration of Pollutant in Ponded Water
+        on a Subcatchment.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Subcatchment Ponded Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Subcatchments
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     s1 = Subcatchments(sim)["S1"]
+        ...     for step in sim:
+        ...         print(s1.concPonded)
+        >>> {'test-pollut1': 0.0, 'test-pollut2': 0.0}
+        >>> {'test-pollut1': 0.0, 'test-pollut2': 0.0}
+        >>> {'test-pollut1': 0.0, 'test-pollut2': 0.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        cPonded_array = self._model.getSubcatchPollut(self._subcatchmentid,
+                                                      SubcPollut.concPonded.value)
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = cPonded_array[ind]
+
+        return out_dict
+
+        
     @property
     def statistics(self):
         """
@@ -573,8 +644,6 @@ class Subcatchment(object):
         | runoff            |
         +-------------------+
         | peak_runoff_rate  |
-        +-------------------+
-        | pollutant_buildup |
         +-------------------+
 
         :return: Group of Stats
