@@ -19,12 +19,12 @@ class SystemStats(object):
 
     Examples:
 
-    >>> from pyswmm import Simulation, SystemFlowRouting
+    >>> from pyswmm import Simulation, SystemStats
     >>>
     >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     system_routing = SystemStats(sim)
     ...
-    ...     for step in simulation:
+    ...     for step in sim:
     ...         print system_routing.routing_stats
     ...         print system_routing.runoff_stats
     """
