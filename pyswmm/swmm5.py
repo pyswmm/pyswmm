@@ -18,6 +18,7 @@ import distutils.version
 import os
 import sys
 import warnings
+import pdb
 
 # Third party imports
 import six
@@ -1141,7 +1142,7 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
                 
         pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)        
-        result_array = ctypes.c_double * len(pollut_ids)
+        result_array = ctypes.POINTER(ctypes.c_double) # * len(pollut_ids)?
         result = result_array()
         pollut_values = []
         errcode = self.SWMMlibobj.swmm_getSubcatchPollut(index, resultType,
@@ -1155,7 +1156,12 @@ class PySWMM(object):
         #freeresultarray = self.SWMMlibobj.freeArray
         #freeresultarray.argtypes = (result_array, )
         #freeresultarray(result)
-
+        
+        # Lines below suggested by Bryant:
+        freeresultarray = self.SWMMlibobj.freeArray
+        freeresultarray.argtypes(ctypes.POINTER(ctypes.c_void_p),)
+        freeresultarray(ctypes.byref(ctypes.cast(result, ctypes.c_void_p)))
+        
         return pollut_values        
 
     def node_statistics(self, ID):
