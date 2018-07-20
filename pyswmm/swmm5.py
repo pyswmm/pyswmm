@@ -18,7 +18,6 @@ import distutils.version
 import os
 import sys
 import warnings
-import pdb
 
 # Third party imports
 import six
