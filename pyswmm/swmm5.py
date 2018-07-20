@@ -1139,9 +1139,9 @@ class PySWMM(object):
         :rtype: list
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-                
+  
         pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)        
-        result_array = ctypes.c_double * len(pollut_ids)
+        result_array = ctypes.POINTER(ctypes.c_double)
         result = result_array()
         pollut_values = []
         errcode = self.SWMMlibobj.swmm_getSubcatchPollut(index, resultType,
@@ -1150,11 +1150,9 @@ class PySWMM(object):
             pollut_values.append(result[ind])
 
         self._error_check(errcode)
-        
-        # WHAT TO DO ABOUT FREEING RESULTS?
-        #freeresultarray = self.SWMMlibobj.freeArray
-        #freeresultarray.argtypes = (result_array, )
-        #freeresultarray(result)
+
+        freeresultarray = self.SWMMlibobj.freeArray
+        freeresultarray(ctypes.byref(result))
 
         return pollut_values        
 
