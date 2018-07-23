@@ -101,7 +101,7 @@ class Nodes(object):
             return _nd
 
         else:
-            raise PYSWMMException("Node ID Does not Exist")
+            raise PYSWMMException("Node ID: {} Does not Exist".format(nodeid))
 
     def __iter__(self):
         return self
