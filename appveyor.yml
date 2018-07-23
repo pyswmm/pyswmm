@@ -16,5 +16,5 @@ build: false
 test_script:
 #  - ciocheck setup.py --disable-tests
 #  - ciocheck pyswmm --disable-tests
-  - pytest pyswmm
+  - "%PYTHON%\\Scripts\\pytest pyswmm"
 #  - coveralls --disable-tests
