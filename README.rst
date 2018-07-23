@@ -18,7 +18,7 @@ Project information
 -------------------
 |docs| |license| |pypi version|
 
-.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/jjxpum62nf8ajcar/branch/master?svg=true
+.. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/gm3ci07gmkoyaeol/branch/master?svg=true
    :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
    :alt: Appveyor build status
 .. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
