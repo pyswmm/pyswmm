@@ -1139,7 +1139,7 @@ class PySWMM(object):
         :rtype: list
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-  
+
         pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)        
         result = ctypes.POINTER(ctypes.c_double * len(pollut_ids))()
         pollut_values = []
@@ -1155,7 +1155,7 @@ class PySWMM(object):
         freeresultarray = self.SWMMlibobj.freeArray
         freeresultarray(ctypes.byref(result))
 
-        return pollut_values        
+        return pollut_values
 
     def node_statistics(self, ID):
         """

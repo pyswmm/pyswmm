@@ -9,8 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import ObjectType, SubcParams, SubcResults, SubcPollut
-import pdb
+from pyswmm.toolkitapi import ObjectType, SubcParams, SubcPollut, SubcResults
 
 
 class Subcatchments(object):
@@ -555,7 +554,7 @@ class Subcatchment(object):
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.newSnowDepth.value)
-    
+
     @property
     def buildup(self):
         """
@@ -591,7 +590,6 @@ class Subcatchment(object):
 
         return out_dict
 
-                                             
     @property
     def concPonded(self):
         """
@@ -618,14 +616,13 @@ class Subcatchment(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        cPonded_array = self._model.getSubcatchPollut(self._subcatchmentid,
-                                                      SubcPollut.concPonded.value)
+        cPonded_array = self._model.getSubcatchPollut(
+            self._subcatchmentid, SubcPollut.concPonded.value)
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = cPonded_array[ind]
 
         return out_dict
 
-        
     @property
     def statistics(self):
         """

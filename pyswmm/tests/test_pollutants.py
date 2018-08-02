@@ -22,7 +22,7 @@ def test_pollutants_1():
             print(S1.buildup)
             print(S2.buildup)
             print(S3.buildup)
-            
+
             print(S1.concPonded)
             print(S2.concPonded)
             print(S3.concPonded)
@@ -30,7 +30,7 @@ def test_pollutants_1():
         assert S1.buildup['test-pollutant'] == 25.000
         assert S2.buildup['test-pollutant'] == 25.000
         assert S3.buildup['test-pollutant'] == 25.000
-        
-        assert S1.concPonded['test-pollutant'] == 0.0
-        assert S2.concPonded['test-pollutant'] == 0.0
-        assert S3.concPonded['test-pollutant'] == 0.0
+
+        assert 9.99999 <= S1.concPonded['test-pollutant'] <= 10.00001
+        assert 9.99999 <= S2.concPonded['test-pollutant'] <= 10.00001
+        assert 9.99999 <= S3.concPonded['test-pollutant'] <= 10.00001
