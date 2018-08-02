@@ -1141,13 +1141,14 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
   
         pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)        
-        result_array = ctypes.POINTER(ctypes.c_double)
-        result = result_array()
+        result = ctypes.POINTER(ctypes.c_double * len(pollut_ids))()
         pollut_values = []
         errcode = self.SWMMlibobj.swmm_getSubcatchPollut(index, resultType,
                                                          ctypes.byref(result))
+
         for ind in range(len(pollut_ids)):
-            pollut_values.append(result[ind])
+            value = ctypes.cast(result, ctypes.POINTER(ctypes.c_double))[ind]
+            pollut_values.append(value)
 
         self._error_check(errcode)
 
