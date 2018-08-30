@@ -8,7 +8,7 @@
 
 # Local imports
 from pyswmm import Simulation, SystemStats
-from pyswmm.swmm5 import PySWMM
+from pyswmm.swmm5 import PySWMM, SWMMException
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
@@ -17,7 +17,10 @@ def test_system_flow_routing():
         stats = SystemStats(sim)
 
         print("\n\n\System\n")
-        print(stats.routing_stats)
+        try:
+            print(stats.routing_stats)
+        except SWMMException:  # Swallow 'Simulation not running' exception
+            pass
 
         sim.step_advance(1200)
         for ind, step in enumerate(sim):
