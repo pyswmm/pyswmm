@@ -32,7 +32,10 @@ def test_system_runoff_routing():
         stats = SystemStats(sim)
 
         print("\n\nRunoff Routing\n\n")
-        print(stats.runoff_stats)
+        try:
+            print(stats.runoff_stats)
+        except SWMMException:  # Swallow 'Simulation not running' exception
+            pass
 
         sim.step_advance(1200)
         for ind, step in enumerate(sim):
