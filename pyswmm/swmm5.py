@@ -1371,8 +1371,6 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
         result = ctypes.c_double()
-        if not isinstance(resultType, int):
-            resultType = resultType.value
         errcode = self.SWMMlibobj.swmm_getLidGResult(index,
                                                      resultType,
                                                      ctypes.byref(result))

@@ -1,6 +1,8 @@
   # Local imports
 from pyswmm.swmm5 import PYSWMMException
+from pyswmm import LidControls
 from pyswmm.toolkitapi import ObjectType, LidUParams, LidUOptions, LidResults
+
 
 class LidGroups(object):
     """
@@ -72,7 +74,10 @@ class LidGroup(object):
         self._subcatchmentid = subcatchmentid
         self._cuindex = 0
         self._nLidUnits = model.getLidUCount(subcatchmentid)
-        
+
+    def __str__(self):
+        return self._subcatchmentid
+    
     def __len__(self):
         """
         Return number of defined LidUnit per LidGroup.
@@ -174,9 +179,18 @@ class LidUnit(object):
         self._model = model
         self._subcatchmentid = subcatchmentid
         self._lidid = lidid
-        
+    
     # --- Get Parameters
     # -------------------------------------------------------------------------
+    @property
+    def subcatchment(self):
+        return self._subcatchmentid
+
+    @property
+    def lidcontrol(self):
+        return self._model.getObjectId(ObjectType.LID.value,
+                                       self._lidid)
+            
     @property
     def unitArea(self):
         """
@@ -463,7 +477,7 @@ class LidUnit(object):
         """
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
-                                         LidResults.drainFlow.value)
+                                         LidResults.initVol.value)
     @property
     def finalVol(self):
         """
@@ -474,7 +488,7 @@ class LidUnit(object):
         """
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
-                                         LidResults.drainFlow.value)
+                                         LidResults.finalVol.value)
     @property
     def surfDepth(self):
         """
@@ -552,6 +566,7 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.newDrainFlow.value)
+
     def fluxRate(self, layerIndex):
         """
         Get lid net inflow - outflow from previous time step for each lid layer

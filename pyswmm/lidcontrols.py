@@ -72,6 +72,8 @@ class LidControl(object):
         self._model = model
         self._lidcontrolid = lidcontrolid
 
+    def __str__(self):
+        return self._lidcontrolid
     # --- Get Parameters
     # -------------------------------------------------------------------------
     @property
