@@ -413,7 +413,7 @@ class LidUnit(object):
 
         return 
     @property
-    def inflow(self):
+    def total_inflow(self):
         """
         Get lid water balance total inflow 
 
@@ -424,7 +424,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.inflow.value)
     @property
-    def evap(self):
+    def total_evap(self):
         """
         Get lid water balance total evaporation
 
@@ -435,7 +435,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.evap.value)
     @property
-    def infil(self):
+    def total_infil(self):
         """
         Get lid water balance total infiltration
 
@@ -446,7 +446,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.infil.value)
     @property
-    def surfFlow(self):
+    def total_surfFlow(self):
         """
         Get lid water balance total surface runoff
 
@@ -457,7 +457,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.surfFlow.value)
     @property
-    def drainFlow(self):
+    def total_drainFlow(self):
         """
         Get lid water balance total underdrain flow
 
@@ -490,7 +490,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.finalVol.value)
     @property
-    def surfDepth(self):
+    def total_surfDepth(self):
         """
         Get lid depth of ponded water on surface layer
 
@@ -501,7 +501,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.surfDepth.value)
     @property
-    def paveDepth(self):
+    def total_paveDepth(self):
         """
         Get lid depth of water in poroous pavement layer
 
@@ -523,7 +523,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.soilMoist.value)
     @property
-    def storDepth(self):
+    def total_storDepth(self):
         """
         Get lid depth of water in storage layer
 
@@ -566,7 +566,160 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.newDrainFlow.value)
+    @property
+    def evap(self):
+        """
+        Get lid current evaporation rate
 
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.evapRate.value)
+    @property
+    def nativeInfil(self):
+        """
+        Get lid native infilration rate limit 
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.nativeInfil.value)
+    @property
+    def surface_inflow(self):
+        """
+        Get lid precip. + runon to LID unit
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.surfInflow.value)
+    @property
+    def surface_infil(self):
+        """
+        Get lid infiltration rate from surface layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.surfInfil.value)
+    @property
+    def surface_evap(self):
+        """
+        Get lid evaporation rate from surface layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.surfEvap.value)
+    @property
+    def surface_outflow(self):
+        """
+        Get lid outflow from surface layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.surfOutflow.value)
+    @property
+    def pavement_evap(self):
+        """
+        Get lid evaporation from pavement layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.paveEvap.value)
+    @property
+    def pavement_perc(self):
+        """
+        Get lid percolation from pavement layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.pavePerc.value)
+    @property
+    def soil_evap(self):
+        """
+        Get lid evaporation from soil layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.soilEvap.value)
+    @property
+    def soil_perc(self):
+        """
+        Get lid percolation from soil layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.soilPerc.value)
+    @property
+    def storage_inflow(self):
+        """
+        Get lid inflow rate to storage rate
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.storInflow.value)
+    @property
+    def storage_exfil(self):
+        """
+        Get lid exfiltration rate from storage layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.storExfil.value)
+    @property
+    def storage_evap(self):
+        """
+        Get lid evaporation rate from storage layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.storEvap.value)
+    @property
+    def storage_drain(self):
+        """
+        Get lid drain rate from storage layer
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUResult(self._subcatchmentid,
+                                         self._lidid,
+                                         LidResults.storDrain.value)
     def fluxRate(self, layerIndex):
         """
         Get lid net inflow - outflow from previous time step for each lid layer

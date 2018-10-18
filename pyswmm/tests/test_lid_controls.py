@@ -56,17 +56,17 @@ def test_lid_unit_params():
         print(first_unit.number)
         print(first_unit.drainSub)
         print(first_unit.drainNode)
-        print(first_unit.inflow)
-        print(first_unit.evap)
-        print(first_unit.infil)
-        print(first_unit.surfFlow)
-        print(first_unit.drainFlow)
+        print(first_unit.total_inflow)
+        print(first_unit.total_evap)
+        print(first_unit.total_infil)
+        print(first_unit.total_surfFlow)
+        print(first_unit.total_drainFlow)
         print(first_unit.initVol)
         print(first_unit.finalVol)
-        print(first_unit.surfDepth)
-        print(first_unit.paveDepth)
+        print(first_unit.total_surfDepth)
+        print(first_unit.total_paveDepth)
         print(first_unit.soilMoist)
-        print(first_unit.storDepth)
+        print(first_unit.total_storDepth)
         print(first_unit.dryTime)
         print(first_unit.oldDrainFlow)
         print(first_unit.newDrainFlow)
@@ -115,4 +115,30 @@ def test_lid_control_params():
         print(LID.drainmat_roughness)
         print(LID.drainmat_alpha)
 
-test_lid_control_params()
+def test_lid_detailed_report():
+    with Simulation(MODEL_LIDS_PATH) as sim:
+
+        subLIDs = LidGroups(sim)
+
+        sub_2_lids = subLIDs["2"]
+
+        # first one defined in .inp
+        first_LID_unit_on_sub_2 = sub_2_lids[0]
+        # second one defined in .inp
+        second_LID_unit_on_sub_2 = sub_2_lids[1]
+
+        assert(first_LID_unit_on_sub_2.number == 4)
+        assert(second_LID_unit_on_sub_2.number == 1)
+        
+        sim.step_advance(900)
+        for step in sim:
+            print(sim.current_time)
+            print(first_LID_unit_on_sub_2.surface_inflow)
+            print(first_LID_unit_on_sub_2.surface_evap)
+            print(first_LID_unit_on_sub_2.surface_infil)
+            print(first_LID_unit_on_sub_2.pavement_perc)
+            print(first_LID_unit_on_sub_2.soil_perc)
+            print(first_LID_unit_on_sub_2.storage_exfil)
+            print(first_LID_unit_on_sub_2.surface_outflow)
+            print(first_LID_unit_on_sub_2.storage_drain)
+    

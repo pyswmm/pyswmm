@@ -170,8 +170,21 @@ class LidResults(Enum):
     newDrainFlow    = 13 # double
     pervArea        = 14 # double
     flowToPerv      = 15 # double
-
- 
+    evapRate        = 16 # double
+    nativeInfil     = 17 # double
+    surfInflow      = 18 # double
+    surfInfil       = 19 # double
+    surfEvap        = 20 # double
+    surfOutflow     = 21 # double
+    paveEvap        = 22 # double
+    pavePerc        = 23 # double
+    soilEvap        = 24 # double
+    soilPerc        = 25 # double
+    storInflow   = 26 # double
+    storExfil    = 27 # double
+    storEvap     = 28 # double
+    storDrain    = 29 # double
+    
 class LidUOptions(Enum):
     index           = 0  # int
     number          = 1  # int

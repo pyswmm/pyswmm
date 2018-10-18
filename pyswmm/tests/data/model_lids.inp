@@ -21,7 +21,7 @@ END_TIME             12:00:00
 SWEEP_START          1/1
 SWEEP_END            12/31
 DRY_DAYS             5
-REPORT_STEP          01:00:00
+REPORT_STEP          00:05:00
 WET_STEP             00:15:00
 DRY_STEP             01:00:00
 ROUTING_STEP         0:01:00 
@@ -104,7 +104,7 @@ Green_LID        DRAINMAT   3          0.5        0.1
 [LID_USAGE]
 ;;Subcatchment   LID Process      Number  Area       Width      InitSat    FromImp    ToPerv     RptFile                  DrainTo         
 ;;-------------- ---------------- ------- ---------- ---------- ---------- ---------- ---------- ------------------------ ----------------
-2                LID              4       10000      20         0          50         1         
+2                LID              4       10000      20         0          50         1          "LID_detailed.txt"
 2                LID              1       10000      10         0          10         1         
 
 [JUNCTIONS]
@@ -348,3 +348,4 @@ Units      None
 ;;Gage           X-Coord            Y-Coord           
 ;;-------------- ------------------ ------------------
 RG1              10084.210          8210.530          
+
