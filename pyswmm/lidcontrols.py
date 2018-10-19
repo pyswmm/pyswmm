@@ -60,9 +60,10 @@ class LidControls(object):
     @property
     def _lidcontrolid(self):
         """Lid Control ID."""
-        return self._model.getObjectId(ObjectType.LID.value,
+        name = self._model.getObjectId(ObjectType.LID.value,
                                        self._cuindex)
-
+        return name
+    
 class LidControl(object):
     def __init__(self, model, lidcontrolid):
         if not model.fileLoaded:
