@@ -19,7 +19,7 @@ Project information
 |docs| |license| |pypi version|
 
 .. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/gm3ci07gmkoyaeol/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
+   :target: https://ci.appveyor.com/project/bemcdonnell/pyswmm
    :alt: Appveyor build status
 .. |travisci status| image:: https://travis-ci.org/OpenWaterAnalytics/pyswmm.svg?branch=master
    :target: https://travis-ci.org/OpenWaterAnalytics/pyswmm
