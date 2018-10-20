@@ -1,4 +1,4 @@
-PYSWMM 
+PYSWMM
 ======
 
 *Python Wrapper for Stormwater Management Model (SWMM5)*
@@ -7,12 +7,12 @@ Documentation
 	http://pyswmm.readthedocs.io/en/latest/
 Development
 	https://github.com/OpenWaterAnalytics/pyswmm/
-PySWMM Wiki 
+PySWMM Wiki
 	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
 
 Build status
 ------------
-|appveyor status| |circleci status| |travisci status| |scrutinizer|
+|appveyor status| |travisci status|
 
 Project information
 -------------------
@@ -21,15 +21,9 @@ Project information
 .. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/gm3ci07gmkoyaeol/branch/master?svg=true
    :target: https://ci.appveyor.com/project/OpenWaterAnalytics/pyswmm
    :alt: Appveyor build status
-.. |circleci status| image:: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master.svg?style=shield
-   :target: https://circleci.com/gh/OpenWaterAnalytics/pyswmm/tree/master
-   :alt: Circle-CI build status
 .. |travisci status| image:: https://travis-ci.org/OpenWaterAnalytics/pyswmm.svg?branch=master
    :target: https://travis-ci.org/OpenWaterAnalytics/pyswmm
    :alt: Travis-CI build status
-.. |scrutinizer| image:: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/badges/quality-score.png?b=master
-   :target: https://scrutinizer-ci.com/g/OpenWaterAnalytics/pyswmm/?branch=master
-   :alt: Scrutinizer Code Quality
 .. |license| image:: https://img.shields.io/pypi/l/pyswmm.svg
    :target: LICENSE.txt
    :alt: License
@@ -38,9 +32,9 @@ Project information
    :alt: Latest PyPI version
 .. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
    :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status	
-   
-	  
+   :alt: Documentation Status
+
+
 YouTube Examples
 ----------------
 Stream Results and Adjust Weir Setting
@@ -50,20 +44,20 @@ Stream Results and Adjust Weir Setting
 Overview
 --------
 
-PySWMM is a Python language software package for the creation, 
-manipulation, and study of the structure, dynamics, and function of complex networks.  
+PySWMM is a Python language software package for the creation,
+manipulation, and study of the structure, dynamics, and function of complex networks.
 
-With PySWMM you can load and manipulate USEPA Stormwater Management Models. 
-With the development of PySWMM, control algorithms can now be developed exclusively 
-in Python which allows the use of functions and objects as well as storing and 
+With PySWMM you can load and manipulate USEPA Stormwater Management Models.
+With the development of PySWMM, control algorithms can now be developed exclusively
+in Python which allows the use of functions and objects as well as storing and
 tracking hydraulic trends for control actions.
 
 Who uses PySWMM?
 ----------------
 
-PySWMM is used by engineers, modelers, and researchers who want to streamline 
-stormwater modeling optimization, controls, and post-processing results. 
-  
+PySWMM is used by engineers, modelers, and researchers who want to streamline
+stormwater modeling optimization, controls, and post-processing results.
+
 Goals
 -----
 PySWMM is intended to provide
@@ -72,18 +66,18 @@ PySWMM is intended to provide
    dynamics within USEPA SWMM5,
 
 -  a standard programming interface and graph implementation that is suitable
-   for many applications, 
+   for many applications,
 
 -  a rapid development environment for collaborative, multidisciplinary
    projects,
 
--  an interface to USEPA SWMM5, 
+-  an interface to USEPA SWMM5,
 
 -  development and implementation of control logic outside of native EPA-SWMM Controls,
 
 -  methods for users to establish their own node inflows,
 
--  a coding interface to binary output files, 
+-  a coding interface to binary output files,
 
 -  new modeling possibilities for the SWMM5 Community.
 
@@ -96,7 +90,7 @@ https://pypi.python.org/pypi/pyswmm/
 ::
 
 	$ pip install pyswmm
-	
+
 To get the git version do
 
 ::
@@ -115,35 +109,33 @@ Intialize using with statement.  This automatically cleans up
 after a simulation
 
 >>> from pyswmm import Simulation
->>>       
+>>>
 >>> with Simulation('model.inp') as sim:
 ...     for ind in sim:
 ...         pass
-...     sim.report()
 
 
 Initialize the simulation and execute.  This style does not allow
 the user to interact with the simulation.  However, this approach
-tends to be the fastest. 
+tends to be the fastest.
 
 >>> from pyswmm import Simulation
->>>   
->>> sim = Simulation('model.inp')        
->>> sim.execute()	
+>>>
+>>> sim = Simulation('model.inp')
+>>> sim.execute()
 
 
 Intialize a simulation and iterate through a simulation. This
 approach requires some clean up.
 
 >>> from pyswmm import Simulation
->>>    
+>>>
 >>> sim = Simulation('model.inp')
 >>> for ind in sim:
 ...     pass
->>>     
->>> sim.report()
->>> sim.close()	
-	
+>>>
+>>> sim.close()
+
 Bugs
 ----
 
@@ -176,5 +168,3 @@ Acknowledgements
 
 - Tim Cera
 - Assela Pathirana
-
-
