@@ -12,8 +12,6 @@ def test_list_lid_controls():
                 assert(str(control) == 'LID')
             if i == 1:
                 assert(str(control) == 'Green_LID')
-        sim.report()
-
 
 def test_list_lid_groups():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -33,7 +31,7 @@ def test_list_lid_groups():
             if i == 7:
                 assert('subcatchment {} has {} lid units'.format(group,
                                                             len(group)) == 'subcatchment 8 has 0 lid units')
-        sim.report()
+        #sim.report()
 
 def test_list_lid_units():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -45,8 +43,6 @@ def test_list_lid_units():
             if i == 1:
                 assert(lid_unit.subcatchment == '2')
                 assert(lid_unit.lidcontrol == 'Green_LID')
-            
-        sim.report()
         
 def test_lid_group_params():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -64,9 +60,7 @@ def test_lid_group_params():
 def test_lid_unit_params():
     with Simulation(MODEL_LIDS_PATH) as sim:
         sub_2_lid_units = LidGroups(sim)["2"]
-
         first_unit = sub_2_lid_units[0]
-        # verify the parameters here
         assert(first_unit.unitArea == 10000)
         assert(first_unit.fullWidth == 20)
         assert(round(first_unit.botWidth, 4) == 0)
@@ -76,21 +70,24 @@ def test_lid_unit_params():
         assert(first_unit.number == 4)
         assert(first_unit.drainSub == -1)
         assert(first_unit.drainNode == 1)
-        assert(round(first_unit.total_inflow, 4) == 8.9917)
-        assert(first_unit.total_evap == 0)
-        assert(round(first_unit.total_infil, 4) == 0.0142)
-        assert(first_unit.total_surfFlow == 0)
-        assert(round(first_unit.total_drainFlow, 4) == 3.4058)
-        assert(first_unit.initVol == 3)
-        assert(round(first_unit.finalVol, 4) == 8.5717)
-        assert(first_unit.total_surfDepth == 0)
-        assert(first_unit.total_paveDepth == 0)
-        assert(round(first_unit.soilMoist, 4) == 0.2)
-        assert(round(first_unit.total_storDepth, 4) == 6.0003)
-        assert(first_unit.dryTime == 21600)
-        assert(first_unit.oldDrainFlow == 0)
-        assert(first_unit.newDrainFlow == 0)
-        assert(first_unit.fluxRate(0) == 0)
+
+        for i, step in enumerate(sim):
+            if i == 2145:
+                assert(round(first_unit.total_inflow, 4) == 8.9917)
+                assert(first_unit.total_evap == 0)
+                assert(round(first_unit.total_infil, 4) == 0.0142)
+                assert(first_unit.total_surfFlow == 0)
+                assert(round(first_unit.total_drainFlow, 4) == 3.4058)
+                assert(first_unit.initVol == 3)
+                assert(round(first_unit.finalVol, 4) == 8.5717)
+                assert(first_unit.total_surfDepth == 0)
+                assert(first_unit.total_paveDepth == 0)
+                assert(round(first_unit.soilMoist, 4) == 0.2)
+                assert(round(first_unit.total_storDepth, 4) == 6.0003)
+                assert(first_unit.dryTime == 21600)
+                assert(first_unit.oldDrainFlow == 0)
+                assert(first_unit.newDrainFlow == 0)
+                assert(first_unit.fluxRate(0) == 0)
 
 def test_lid_control_params():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -157,3 +154,11 @@ def test_lid_detailed_report():
                 assert(round(first_LID_unit_on_sub_2.storage_exfil, 4) == 0)
                 assert(round(first_LID_unit_on_sub_2.surface_outflow, 4) == 0)
                 assert(round(first_LID_unit_on_sub_2.storage_drain, 4) == 0)
+
+test_list_lid_controls()
+test_list_lid_groups()
+test_list_lid_units()
+test_lid_group_params()
+test_lid_unit_params()
+test_lid_control_params()
+test_lid_detailed_report()
