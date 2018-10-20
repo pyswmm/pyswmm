@@ -48,7 +48,6 @@ def test_simulation_4():
 def test_simulation_iter():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         c1c2 = Links(sim)["C1:C2"]
-        print(c1c2.flow)
 
         sim.step_advance(300)
         for ind, step in enumerate(sim):
