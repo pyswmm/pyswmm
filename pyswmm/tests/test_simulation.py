@@ -23,7 +23,6 @@ def test_simulation_1():
         print(sim.current_time)
         sim.step_advance(randint(300, 900))
 
-    sim.report()
     sim.close()
 
 
@@ -32,7 +31,6 @@ def test_simulation_2():
         for ind, step in enumerate(sim):
             print(sim.current_time)
             sim.step_advance(randint(300, 900))
-        sim.report()
 
 
 def test_simulation_3():
@@ -45,7 +43,6 @@ def test_simulation_4():
         for ind, step in enumerate(sim):
             print(sim.percent_complete)
             sim.step_advance(randint(300, 900))
-        sim.report()
 
 
 def test_simulation_iter():
@@ -58,7 +55,6 @@ def test_simulation_iter():
             print(c1c2.flow, c1c2.target_setting)
             if c1c2.flow > 9.19:
                 c1c2.target_setting = 0.9
-        sim.report()
 
 
 def test_simulation_9():
