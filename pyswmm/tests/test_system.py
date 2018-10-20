@@ -6,9 +6,11 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 
+import pytest
+
 # Local imports
 from pyswmm import Simulation, SystemStats
-from pyswmm.swmm5 import PySWMM
+from pyswmm.swmm5 import PySWMM, SWMMException
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
@@ -17,7 +19,8 @@ def test_system_flow_routing():
         stats = SystemStats(sim)
 
         print("\n\n\System\n")
-        print(stats.routing_stats)
+        with pytest.raises(SWMMException):
+            print(stats.routing_stats)
 
         sim.step_advance(1200)
         for ind, step in enumerate(sim):
@@ -29,7 +32,8 @@ def test_system_runoff_routing():
         stats = SystemStats(sim)
 
         print("\n\nRunoff Routing\n\n")
-        print(stats.runoff_stats)
+        with pytest.raises(SWMMException):
+            print(stats.runoff_stats)
 
         sim.step_advance(1200)
         for ind, step in enumerate(sim):
