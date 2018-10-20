@@ -7,6 +7,7 @@
 # -----------------------------------------------------------------------------
 
 # Standard library imports
+import pytest
 from random import randint
 import sys
 
@@ -54,10 +55,7 @@ def test_simulation_4():
 def test_simulation_iter():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         c1c2 = Links(sim)["C1:C2"]
-        try:
-            print(c1c2.flow)
-        except SWMMException:  # Swallow 'Simulation not running' exception
-            pass
+        print(c1c2.flow)
 
         sim.step_advance(300)
         for ind, step in enumerate(sim):

@@ -6,6 +6,8 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 
+import pytest
+
 # Local imports
 from pyswmm import Simulation, SystemStats
 from pyswmm.swmm5 import PySWMM, SWMMException
@@ -17,10 +19,8 @@ def test_system_flow_routing():
         stats = SystemStats(sim)
 
         print("\n\n\System\n")
-        try:
+        with pytest.raises(SWMMException):
             print(stats.routing_stats)
-        except SWMMException:  # Swallow 'Simulation not running' exception
-            pass
 
         sim.step_advance(1200)
         for ind, step in enumerate(sim):
@@ -32,10 +32,8 @@ def test_system_runoff_routing():
         stats = SystemStats(sim)
 
         print("\n\nRunoff Routing\n\n")
-        try:
+        with pytest.raises(SWMMException):
             print(stats.runoff_stats)
-        except SWMMException:  # Swallow 'Simulation not running' exception
-            pass
 
         sim.step_advance(1200)
         for ind, step in enumerate(sim):
