@@ -26,7 +26,7 @@ Project information
    :alt: Travis-CI build status
 .. |downloads| image:: https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month
    :target: https://pypi.python.org/pypi/pyswmm/
-	 :alt: PyPI Monthly Downloads
+   :alt: PyPI Monthly Downloads
 .. |license| image:: https://img.shields.io/pypi/l/pyswmm.svg
    :target: LICENSE.txt
    :alt: License
