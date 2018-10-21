@@ -63,7 +63,6 @@ def test_lid_unit_params():
         first_unit = sub_2_lid_units[0]
         assert(first_unit.unitArea == 10000)
         assert(first_unit.fullWidth == 20)
-        assert(round(first_unit.botWidth, 4) == 0)
         assert(first_unit.initSat == 0)
         assert(first_unit.fromImperv == 50)
         assert(first_unit.index == 0)
@@ -155,10 +154,3 @@ def test_lid_detailed_report():
                 assert(round(first_LID_unit_on_sub_2.surface_outflow, 4) == 0)
                 assert(round(first_LID_unit_on_sub_2.storage_drain, 4) == 0)
 
-test_list_lid_controls()
-test_list_lid_groups()
-test_list_lid_units()
-test_lid_group_params()
-test_lid_unit_params()
-test_lid_control_params()
-test_lid_detailed_report()

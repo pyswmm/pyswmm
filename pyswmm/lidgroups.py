@@ -228,24 +228,6 @@ class LidUnit(object):
                                         LidUParams.fullWidth.value,
                                         param)
     @property
-    def botWidth(self):
-        """
-        Get lid unit bottom width.
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUParam(self._subcatchmentid,
-                                        self._lidid,
-                                        LidUParams.botWidth.value)
-    @botWidth.setter
-    def botWidth(self, param):
-        """Set lid unit bottom width."""
-        return self._model.setLidUParam(self._subcatchmentid,
-                                        self._lidid,
-                                        LidUParams.botWidth.value,
-                                        param)
-    @property
     def initSat(self):
         """
         Get lid initial saturation of soil and storage layers.
