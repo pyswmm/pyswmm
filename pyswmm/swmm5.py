@@ -660,7 +660,9 @@ class PySWMM(object):
     def getObjectIDIndex(self, objecttype, ID):
         """Get Object ID Index. Mostly used as an internal function."""
         C_ID = ctypes.c_char_p(six.b(ID))
-        index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
+        index = ctypes.c_int()
+        errcode = self.SWMMlibobj.swmm_project_findObject(objecttype, C_ID, ctypes.byref(index))
+        index = index.value
         if index != -1:
             return index
         else:
@@ -669,7 +671,9 @@ class PySWMM(object):
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
         C_ID = ctypes.c_char_p(six.b(ID))
-        index = self.SWMMlibobj.project_findObject(objecttype, C_ID)
+        index = ctypes.c_int()
+        errcode = self.SWMMlibobj.swmm_project_findObject(objecttype, C_ID, ctypes.byref(index))
+        index = index.value
         if index != -1:
             return True
         else:
