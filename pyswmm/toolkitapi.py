@@ -151,6 +151,7 @@ class LidUParams(Enum):
     botWidth        = 2  # double
     initSat         = 3  # double
     fromImperv      = 4  # double
+    fromPerv        = 5  # double
 
 
 class LidResults(Enum):
@@ -180,10 +181,10 @@ class LidResults(Enum):
     pavePerc        = 23 # double
     soilEvap        = 24 # double
     soilPerc        = 25 # double
-    storInflow   = 26 # double
-    storExfil    = 27 # double
-    storEvap     = 28 # double
-    storDrain    = 29 # double
+    storInflow      = 26 # double
+    storExfil       = 27 # double
+    storEvap        = 28 # double
+    storDrain       = 29 # double
     
 class LidUOptions(Enum):
     index           = 0  # int
@@ -221,7 +222,11 @@ class LidLayersProperty(Enum):
     expon           = 15 # double
     offset          = 16 # double
     delay           = 17 # double
-
+    hOpen           = 18 # double
+    hClose          = 19 # double
+    qCurve          = 20 # integer
+    regenDays       = 21 # double
+    regenDegree     = 22 # double
     
 class NodeStats(ctypes.Structure):
     _fields_ = [

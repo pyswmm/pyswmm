@@ -2,6 +2,7 @@
 from pyswmm.swmm5 import PYSWMMException
 from pyswmm import LidControls
 from pyswmm.toolkitapi import ObjectType, LidUParams, LidUOptions, LidResults
+from pyswmm.lidunits import Surface, Pavement, Soil, Storage, WaterBalance
 
 
 class LidGroups(object):
@@ -118,10 +119,8 @@ class LidGroup(object):
 
     next = __next__  # Python 2
 
-    # --- Get Parameters
-    # -------------------------------------------------------------------------
     @property
-    def pervArea(self):
+    def pervious_area(self):
         """
         Get lid group amount of pervious area
 
@@ -131,7 +130,7 @@ class LidGroup(object):
         return self._model.getLidGResult(self._subcatchmentid,
                                          LidResults.pervArea.value)
     @property
-    def flowToPerv(self):
+    def flow_to_pervious(self):
         """
         Get lid group total flow sent to pervious area
 
@@ -142,9 +141,9 @@ class LidGroup(object):
                                          LidResults.flowToPerv.value)
 
     @property
-    def oldDrainFlow(self):
+    def old_drain_flow(self):
         """
-        Get lid group total drain flow in previous period
+        Get lid group total drain flow in pervious period
 
         :return: Parameter Value
         :rtype: double
@@ -152,7 +151,7 @@ class LidGroup(object):
         return self._model.getLidGResult(self._subcatchmentid,
                                          LidResults.oldDrainFlow.value)
     @property
-    def newDrainFlow(self):
+    def new_drain_flow(self):
         """
         Get lid group total drain flow in current period
 
@@ -161,6 +160,7 @@ class LidGroup(object):
         """
         return self._model.getLidGResult(self._subcatchmentid,
                                          LidResults.newDrainFlow.value)
+    
 class LidUnit(object):
     """
     Lid Unit Methods.
@@ -174,25 +174,28 @@ class LidUnit(object):
     def __init__(self, model, subcatchmentid, lidid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
-        # add an error for undefined lid unit
-        
         self._model = model
         self._subcatchmentid = subcatchmentid
         self._lidid = lidid
-    
-    # --- Get Parameters
-    # -------------------------------------------------------------------------
+
+        self.surface = Surface(model, self)
+        self.pavement = Pavement(model, self)
+        self.soil = Soil(model, self)
+        self.storage = Storage(model, self)
+        self.water_balance = WaterBalance(model, self)
+
     @property
     def subcatchment(self):
         return self._subcatchmentid
 
     @property
-    def lidcontrol(self):
+    def lid_control(self):
+        index = self.index
         return self._model.getObjectId(ObjectType.LID.value,
-                                       self._lidid)
+                                       index)
             
     @property
-    def unitArea(self):
+    def unit_area(self):
         """
         Get lid unit area.
 
@@ -202,15 +205,15 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.unitArea.value)
-    @unitArea.setter
-    def unitArea(self, param):
+    @unit_area.setter
+    def unit_area(self, param):
         """Set lid unit area"""
         return self._model.setLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.unitArea.value,
                                         param)
     @property
-    def fullWidth(self):
+    def full_width(self):
         """
         Get lid unit full top width.
 
@@ -220,15 +223,15 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fullWidth.value)
-    @fullWidth.setter
-    def fullWidth(self, param):
+    @full_width.setter
+    def full_width(self, param):
         """Set lid unit full top width."""
         return self._model.setLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fullWidth.value,
                                         param)
     @property
-    def initSat(self):
+    def initial_saturation(self):
         """
         Get lid initial saturation of soil and storage layers.
 
@@ -238,15 +241,15 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.initSat.value)
-    @initSat.setter
-    def initSat(self, param):
+    @initial_saturation.setter
+    def initial_saturation(self, param):
         """Set lid initial saturation of soil and storage layers."""
         return self._model.setLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.initSat.value,
                                         param)
     @property
-    def fromImperv(self):
+    def from_impervious(self):
         """
         Get lid fraction of impervious area runoff treated
 
@@ -256,12 +259,30 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fromImperv.value)
-    @fromImperv.setter
-    def fromImperv(self, param):
+    @from_impervious.setter
+    def from_impervious(self, param):
         """Set lid fraction of impervious area runoff treated"""
         return self._model.setLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fromImperv.value,
+                                        param)
+    @property
+    def from_pervious(self):
+        """
+        Get lid fraction of pervious area runoff treated
+
+        :return: Parameter Value
+        :rtype: double
+        """
+        return self._model.getLidUParam(self._subcatchmentid,
+                                        self._lidid,
+                                        LidUParams.fromPerv.value)
+    @ from_pervious.setter
+    def from_pervious(self, param):
+        """Set lid fraction of pervious area runoff treated"""
+        return self._model.setLidUParam(self._subcatchmentid,
+                                        self._lidid,
+                                        LidUParams.fromPerv.value,
                                         param)
     @property
     def index(self):
@@ -308,7 +329,7 @@ class LidUnit(object):
                                          LidUOptions.number.value,
                                          param)
     @property
-    def toPerv(self):
+    def to_pervious(self):
         """
         Get lid to pervious area (1 if outflow sent to pervious area)
                                  (0 if not)
@@ -319,8 +340,8 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.toPerv.value)
-    @toPerv.setter
-    def toPerv(self, param):
+    @to_pervious.setter
+    def to_pervious(self, param):
         """
         Set lid to pervious area (1 if outflow sent to pervious area)
                                  (0 if not)
@@ -330,7 +351,7 @@ class LidUnit(object):
                                          LidUOptions.toPerv.value,
                                          param)
     @property
-    def drainSub(self):
+    def drain_subcatchment(self):
         """
         Get lid drain to subcatchment index
         Negative if no recieving subcatchment
@@ -341,8 +362,8 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.drainSub.value)
-    @drainSub.setter
-    def drainSub(self, param):
+    @drain_subcatchment.setter
+    def drain_subcatchment(self, param):
         """Set lid drain to subcatchment index"""
         if isinstance(param, str) and self._model.ObjectIDexist(ObjectType.SUBCATCH.value, param):
             subIndex = self._model.getObjectIDIndex(ObjectType.SUBCATCH.value, param)    
@@ -362,7 +383,7 @@ class LidUnit(object):
                                   -1)
         
     @property
-    def drainNode(self):
+    def drain_node(self):
         """
         Get lid drain to node index
         Negative if no recieving node
@@ -373,8 +394,8 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.drainNode.value)
-    @drainNode.setter
-    def drainNode(self, param):
+    @drain_node.setter
+    def drain_node(self, param):
         """Set lid drain to node index"""
         if isinstance(param, str) and self._model.ObjectIDexist(ObjectType.NODE.value, param):
             nodeIndex = self._model.getObjectIDIndex(ObjectType.NODE.value, param)    
@@ -392,131 +413,8 @@ class LidUnit(object):
                                   self._lidid,
                                   LidUOptions.drainSub.value,
                                   -1)
-
-        return 
     @property
-    def total_inflow(self):
-        """
-        Get lid water balance total inflow 
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.inflow.value)
-    @property
-    def total_evap(self):
-        """
-        Get lid water balance total evaporation
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.evap.value)
-    @property
-    def total_infil(self):
-        """
-        Get lid water balance total infiltration
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.infil.value)
-    @property
-    def total_surfFlow(self):
-        """
-        Get lid water balance total surface runoff
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfFlow.value)
-    @property
-    def total_drainFlow(self):
-        """
-        Get lid water balance total underdrain flow
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.drainFlow.value)
-    @property
-    def initVol(self):
-        """
-        Get lid water balance initial stored volume
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.initVol.value)
-    @property
-    def finalVol(self):
-        """
-        Get lid water balance final stored volume 
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.finalVol.value)
-    @property
-    def total_surfDepth(self):
-        """
-        Get lid depth of ponded water on surface layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfDepth.value)
-    @property
-    def total_paveDepth(self):
-        """
-        Get lid depth of water in poroous pavement layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.paveDepth.value)
-    @property
-    def soilMoist(self):
-        """
-        Get lid moisture content of biocell soil layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.soilMoist.value)
-    @property
-    def total_storDepth(self):
-        """
-        Get lid depth of water in storage layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storDepth.value)
-    @property
-    def dryTime(self):
+    def dry_time(self):
         """
         Get lid time since last rainfall (sec)
 
@@ -527,9 +425,9 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.dryTime.value)
     @property
-    def oldDrainFlow(self):
+    def old_drain_flow(self):
         """
-        Get lid previous drain flow
+        Get lid pervious drain flow
 
         :return: Parameter Value
         :rtype: double
@@ -538,7 +436,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.oldDrainFlow.value)
     @property
-    def newDrainFlow(self):
+    def new_drain_flow(self):
         """
         Get lid current drain flow
 
@@ -549,7 +447,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.newDrainFlow.value)
     @property
-    def evap(self):
+    def evaporation(self):
         """
         Get lid current evaporation rate
 
@@ -560,7 +458,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidResults.evapRate.value)
     @property
-    def nativeInfil(self):
+    def native_infiltration(self):
         """
         Get lid native infilration rate limit 
 
@@ -570,146 +468,3 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.nativeInfil.value)
-    @property
-    def surface_inflow(self):
-        """
-        Get lid precip. + runon to LID unit
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfInflow.value)
-    @property
-    def surface_infil(self):
-        """
-        Get lid infiltration rate from surface layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfInfil.value)
-    @property
-    def surface_evap(self):
-        """
-        Get lid evaporation rate from surface layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfEvap.value)
-    @property
-    def surface_outflow(self):
-        """
-        Get lid outflow from surface layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfOutflow.value)
-    @property
-    def pavement_evap(self):
-        """
-        Get lid evaporation from pavement layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.paveEvap.value)
-    @property
-    def pavement_perc(self):
-        """
-        Get lid percolation from pavement layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.pavePerc.value)
-    @property
-    def soil_evap(self):
-        """
-        Get lid evaporation from soil layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.soilEvap.value)
-    @property
-    def soil_perc(self):
-        """
-        Get lid percolation from soil layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.soilPerc.value)
-    @property
-    def storage_inflow(self):
-        """
-        Get lid inflow rate to storage rate
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storInflow.value)
-    @property
-    def storage_exfil(self):
-        """
-        Get lid exfiltration rate from storage layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storExfil.value)
-    @property
-    def storage_evap(self):
-        """
-        Get lid evaporation rate from storage layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storEvap.value)
-    @property
-    def storage_drain(self):
-        """
-        Get lid drain rate from storage layer
-
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storDrain.value)
-    def fluxRate(self, layerIndex):
-        """
-        Get lid net inflow - outflow from previous time step for each lid layer
-        ONLY FOR for surface, soil, storage, pave 
-        :param int layerIndex: layer type (toolkitapi.LidLayers member variable)
-        :return: Parameter Value
-        :rtype: double
-        """
-        return self._model.getLidUFluxRates(self._subcatchmentid,
-                                            self._lidid,
-                                            layerIndex)

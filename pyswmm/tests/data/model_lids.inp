@@ -25,6 +25,7 @@ REPORT_STEP          00:05:00
 WET_STEP             00:15:00
 DRY_STEP             01:00:00
 ROUTING_STEP         0:01:00 
+RULE_STEP            00:00:00
 
 INERTIAL_DAMPING     PARTIAL
 NORMAL_FLOW_LIMITED  BOTH
@@ -91,10 +92,10 @@ RG1              INTENSITY 1:00     1.0      TIMESERIES TS1
 ;;-------------- ---------- ----------
 LID              PP
 LID              SURFACE    10         0.5        0.013      1.0        5         
-LID              PAVEMENT   20         0.15       0.5        100        8         
+LID              PAVEMENT   20         0.15       0.5        100        8          0          0         
 LID              SOIL       30         0.5        0.2        0.1        5          10.0       3.5       
 LID              STORAGE    40         0.75       0.5        0.2       
-LID              DRAIN      0.5        0.5        6          6         
+LID              DRAIN      0.5        0.5        6          6          10         1                    
 
 Green_LID        GR
 Green_LID        SURFACE    10         0.2        0.1        1.0        5         
@@ -102,10 +103,11 @@ Green_LID        SOIL       45         0.5        0.2        0.1        0.5     
 Green_LID        DRAINMAT   3          0.5        0.1       
 
 [LID_USAGE]
-;;Subcatchment   LID Process      Number  Area       Width      InitSat    FromImp    ToPerv     RptFile                  DrainTo         
-;;-------------- ---------------- ------- ---------- ---------- ---------- ---------- ---------- ------------------------ ----------------
-2                LID              4       10000      20         0          50         1          "LID_detailed.txt"
-2                LID              1       10000      10         0          10         1         
+;;Subcatchment   LID Process      Number  Area       Width      InitSat    FromImp    ToPerv     RptFile                  DrainTo          FromPerv  
+;;-------------- ---------------- ------- ---------- ---------- ---------- ---------- ---------- ------------------------ ---------------- ----------
+2                LID              4       10000      20         0          50         0          *                        *                0               
+2                LID              1       10000      10         0          10         0          *                        *                0               
+2                Green_LID        1       1000       100        0          0          0          *                        *                10              
 
 [JUNCTIONS]
 ;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
@@ -228,8 +230,6 @@ TS1                         30:00      0.0
 
 [REPORT]
 ;;Reporting Options
-INPUT      NO
-CONTROLS   NO
 SUBCATCHMENTS ALL
 NODES ALL
 LINKS ALL
