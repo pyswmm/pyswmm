@@ -220,7 +220,8 @@ def test_outfalls_8_mgd():
     assert(stats['peak_flowrate'] > 4.33)
     assert(stats['peak_flowrate'] < 4.34)
     assert(outfall_cuinflow >= 1395293)
-    assert(outfall_cuinflow <= 1395299)
+    assert(outfall_cuinflow >= 1395299 and
+           outfall_cuinflow <= 1395350)
 
 
 
