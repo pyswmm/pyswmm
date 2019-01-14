@@ -18,6 +18,7 @@ import distutils.version
 import os
 import sys
 import warnings
+import struct
 
 # Third party imports
 import six
@@ -911,7 +912,7 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getLidCOverflow(index,
                                                        ctypes.byref(param))
         self._error_check(errcode)
-        if param.value == (0).to_bytes(1, byteorder='big'): return False
+        if param.value == struct.pack('B', 0): return False
         else: return True
 
     def setLidCOverflow(self, ID, value):

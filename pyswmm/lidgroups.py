@@ -1,4 +1,10 @@
-  # Local imports
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2018 Jennifer Wu
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
 from pyswmm.swmm5 import PYSWMMException
 from pyswmm import LidControls
 from pyswmm.toolkitapi import ObjectType, LidUParams, LidUOptions, LidResults

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2018 Jennifer Wu
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
 from pyswmm.toolkitapi import LidLayers, LidLayersProperty
 
 class Surface(object):
