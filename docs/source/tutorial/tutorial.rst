@@ -93,7 +93,7 @@ you can then initialize a :py:class:`pyswmm.nodes.Node`
 Links
 -----
 
-For interacting with nodes a :py:class:`pyswmm.links.Links` object must be initialized. 
+For interacting with links a :py:class:`pyswmm.links.Links` object must be initialized. 
 See the following example. Once the ``Links`` object is initialized,
 you can then initialize a :py:class:`pyswmm.links.Link`
 
