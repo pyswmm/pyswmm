@@ -155,16 +155,13 @@ class PySWMM(object):
 
     def _error_check(self, errcode):
         """
-        Checks SWMM Error Message and raises Exception or warning.
+        Checks SWMM Error Message and raises Exception.
 
         :param int errcode: SWMM error code index
         """
 
-        if errcode != 0 and errcode <= 103:
+        if errcode != 0:
             raise SWMMException(errcode, self._error_message(errcode))
-
-        if errcode != 0 and errcode > 103:
-            warnings.warn(self._error_message(errcode))
 
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):
         """

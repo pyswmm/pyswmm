@@ -24,13 +24,6 @@ def test_error_rpt_out():
 #    swmmobject.swmm_close()
 
 
-def test_warning():
-    swmmobject = PySWMM(*get_model_files(MODEL_WEIR_SETTING_PATH))
-    swmmobject.swmm_open()
-    swmmobject.getLinkResult('C2', 0)
-    swmmobject.swmm_close()
-
-
 def test_pyswmm_exception():
     swmmobject = PySWMM(*get_model_files(MODEL_WEIR_SETTING_PATH))
     with pytest.raises(PYSWMMException):

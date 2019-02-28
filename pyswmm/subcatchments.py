@@ -134,7 +134,7 @@ class Subcatchment(object):
     >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     s1 = Subcatchments(sim)["S1"]
     ...     print s1.rainfall
-    ...     for step in simulation:
+    ...     for step in sim:
     ...         print s1.rainfall
     ... 0.04
     """
