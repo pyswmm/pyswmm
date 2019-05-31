@@ -19,6 +19,7 @@ Authors with Copyrighted Contributions
 - Stephen Roberts 
 - Abhiram Mullapudi
 - Katherine Ratliff
+- Jiada Li
 
 
 Authors with Contributions in the Public Domain
