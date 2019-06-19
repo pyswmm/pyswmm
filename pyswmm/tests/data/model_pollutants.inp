@@ -103,7 +103,7 @@ C4               CIRCULAR     1.5              0          0          0          
 [POLLUTANTS]
 ;;Name           Units  Crain      Cgw        Crdii      Kdecay     SnowOnly   Co-Pollutant     Co-Frac    Cdwf       Cinit     
 ;;-------------- ------ ---------- ---------- ---------- ---------- ---------- ---------------- ---------- ---------- ----------
-test-pollutant   MG/L   0.0        0.0        0.0        0.0        NO         *                0.0        0.0        0.0       
+test-pollutant   MG/L   10.0       0.0        0.0        0.0        NO         *                0.0        0.0        0.0       
 
 [LANDUSES]
 ;;               Sweeping   Fraction   Last      
