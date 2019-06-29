@@ -19,6 +19,7 @@ class LidControls(object):
     def __init__(self, model):
         if not model._model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
+        self._sim = model
         self._model = model._model
         self._cuindex = 0
         self._nlidcontrols = self._model.getProjectSize(ObjectType.LID.value)
@@ -47,7 +48,7 @@ class LidControls(object):
 
     def __getitem__(self, lidcontrolid):
         if self.__contains__(lidcontrolid):
-            return LidControl(self._model, lidcontrolid)
+            return LidControl(self._sim, self._model, lidcontrolid)
         else:
             raise PYSWMMException("Lid Control ID Does not Exist")
 
@@ -72,20 +73,21 @@ class LidControls(object):
 
 
 class LidControl(object):
-    def __init__(self, model, lidcontrolid):
+    def __init__(self, sim, model, lidcontrolid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
         if lidcontrolid not in model.getObjectIDList(ObjectType.LID.value):
             raise PYSWMMException("ID Not valid")
+        self._sim = sim
         self._model = model
         self._lidcontrolid = lidcontrolid
 
-        self.surface = Surface(model, self)
-        self.soil = Soil(model, self)
-        self.storage = Storage(model, self)
-        self.pavement = Pavement(model, self)
-        self.drain = Drain(model, self)
-        self.drain_mat = DrainMat(model, self)
+        self.surface = Surface(sim, model, self)
+        self.soil = Soil(sim, model, self)
+        self.storage = Storage(sim, model, self)
+        self.pavement = Pavement(sim, model, self)
+        self.drain = Drain(sim, model, self)
+        self.drain_mat = DrainMat(sim, model, self)
 
     def __str__(self):
         return self._lidcontrolid
