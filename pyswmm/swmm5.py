@@ -28,7 +28,7 @@ from pyswmm.lib import DLL_SELECTION
 import pyswmm.toolkitapi as tka
 
 # Local variables
-SWMM_VER_51011 = '5.1.11'
+SWMM_VER_51011 = '5.1.13'
 
 
 class SWMMException(Exception):
@@ -512,10 +512,16 @@ class PySWMM(object):
                                              datetime(2009, 10, 1, 12,30))
         >>>
         """
-        dtme = ctypes.create_string_buffer(
-            six.b(newDateTime.strftime("%m/%d/%Y %H:%M:%S")))
+        _year = newDateTime.year
+        _month = newDateTime.month
+        _day = newDateTime.day
+        _hours = newDateTime.hour
+        _minutes = newDateTime.minute
+        _seconds = newDateTime.second
         errcode = self.SWMMlibobj.swmm_setSimulationDateTime(
-            ctypes.c_int(timeType), dtme)
+            ctypes.c_int(timeType), ctypes.c_int(_year), ctypes.c_int(_month),
+            ctypes.c_int(_day), ctypes.c_int(_hours), ctypes.c_int(_minutes),
+            ctypes.c_int(_seconds))
         self._error_check(errcode)
 
     def getSimUnit(self, unittype):
@@ -966,9 +972,9 @@ class PySWMM(object):
         self._error_check(errcode)
         return param.value
 
-    def setLidCParam(self, ID, layer, parameter, value):
+    def setLidCParam(self, sim_start, ID, layer, parameter, value):
         """
-        Set Lid Control Parameter.
+        Set Lid Control Parameter Before/During Model Simulation.
 
         :param str ID: Lid Control ID
         :param int layer: Layer (toolkitapi.LidLayers member variable)
@@ -989,12 +995,48 @@ class PySWMM(object):
             layer = layer.value
         if not isinstance(parameter, int):
             parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_setLidCParam(index,
-                                                    layer,
-                                                    parameter,
-                                                    _val)
+
+        if not sim_start:
+            errcode = self.SWMMlibobj.swmm_setLidCParamBeforeSimulation(index,
+                                                                        layer,
+                                                                        parameter,
+                                                                        _val)
+        else:
+            errcode = self.SWMMlibobj.swmm_setLidCParamDuringSimulation(index,
+                                                                        layer,
+                                                                        parameter,
+                                                                        _val)
+
         self._error_check(errcode)
 
+    def setLidCParamDuringimulation(self, ID, layer, parameter, value):
+        """
+        Set Lid Control Parameter During Model Simulation.
+
+        :param str ID: Lid Control ID
+        :param int layer: Layer (toolkitapi.LidLayers member variable)
+        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.setLidCParam('J2', LidLayer.surface, LidLayersProperty.thickness, 110)
+
+        >>>
+        >>> swmm_model.swmm_close()
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
+        _val = ctypes.c_double(value)
+        if not isinstance(layer, int):
+            layer = layer.value
+        if not isinstance(parameter, int):
+            parameter = parameter.value
+        errcode = self.SWMMlibobj.swmm_setLidCParamDuringSimulation(index,
+                                                                    layer,
+                                                                    parameter,
+                                                                    _val)
+        
     def getLidUCount(self, ID):
         """
         Get Number of Lid Units Defined for Subcatchment.
@@ -1252,17 +1294,22 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        dtme = ctypes.create_string_buffer(61)
-        errcode = self.SWMMlibobj.swmm_getCurrentDateTimeStr(dtme)
+        _year = ctypes.c_int()
+        _month = ctypes.c_int()
+        _day = ctypes.c_int()
+        _hours = ctypes.c_int()
+        _minutes = ctypes.c_int()
+        _seconds = ctypes.c_int()
+        errcode = self.SWMMlibobj.swmm_getCurrentDateTime(ctypes.byref(_year),
+                                                          ctypes.byref(_month),
+                                                          ctypes.byref(_day),
+                                                          ctypes.byref(_hours),
+                                                          ctypes.byref(_minutes),
+                                                          ctypes.byref(_seconds))
         self._error_check(errcode)
         if errcode == 0:
-            if self.swmm_getVersion() < distutils.version.LooseVersion(
-                    SWMM_VER_51011):
-                return datetime.strptime(
-                    dtme.value.decode("utf-8"), "%b-%d-%Y %H:%M:%S")
-            else:
-                return datetime.strptime(
-                    dtme.value.decode("utf-8"), "%m/%d/%Y %H:%M:%S")
+            return datetime(_year.value, _month.value, _day.value, _hours.value,
+                            _minutes.value, _seconds.value)
 
     def getLidUFluxRates(self, subcatchID, lidIndex, layerIndex):
         """
