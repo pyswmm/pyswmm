@@ -383,10 +383,6 @@ class LidUnit(object):
                                   self._lidid,
                                   LidUOptions.drainSub.value,
                                   subIndex)
-        self._model.setLidUOption(self._subcatchmentid,
-                                  self._lidid,
-                                  LidUOptions.drainNode.value,
-                                  -1)
         
     @property
     def drain_node(self):
@@ -415,10 +411,7 @@ class LidUnit(object):
                                   self._lidid,
                                   LidUOptions.drainNode.value,
                                   nodeIndex)
-        self._model.setLidUOption(self._subcatchmentid,
-                                  self._lidid,
-                                  LidUOptions.drainSub.value,
-                                  -1)
+        
     @property
     def dry_time(self):
         """
