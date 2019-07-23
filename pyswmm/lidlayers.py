@@ -8,8 +8,7 @@
 from pyswmm.toolkitapi import LidLayers, LidLayersProperty
 
 class Surface(object):
-    def __init__(self, sim, model, lidcontrol):
-        self._sim = sim
+    def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
         self._lidcontrolid = lidcontrol._lidcontrolid
@@ -28,8 +27,7 @@ class Surface(object):
     @thickness.setter
     def thickness(self, param):
         """Set lid control surface layer thickness"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.surface.value,
                                         LidLayersProperty.thickness.value,
                                         param)      
@@ -47,8 +45,7 @@ class Surface(object):
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control surface layer available fraction of storage volume"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.surface.value,
                                         LidLayersProperty.voidFrac.value,
                                         param)   
@@ -66,8 +63,7 @@ class Surface(object):
     @roughness.setter
     def roughness(self, param):
         """Set lid control surface layer surface Mannings n"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.surface.value,
                                         LidLayersProperty.roughness.value,
                                         param)    
@@ -85,8 +81,7 @@ class Surface(object):
     @slope.setter
     def slope(self, param):
         """Set lid control surface layer land surface slope (fraction)"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.surface.value,
                                         LidLayersProperty.surfSlope.value,
                                         param)
@@ -104,8 +99,7 @@ class Surface(object):
     @side_slope.setter
     def side_slope(self, param):
         """Set lid control surface layer swale side slope (run/rise)"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.surface.value,
                                         LidLayersProperty.sideSlope.value,
                                         param)   
@@ -123,8 +117,7 @@ class Surface(object):
 
 
 class Soil(object):
-    def __init__(self, sim,  model, lidcontrol):
-        self._sim = sim
+    def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
         self._lidcontrolid = lidcontrol._lidcontrolid
@@ -143,8 +136,7 @@ class Soil(object):
     @thickness.setter
     def thickness(self, param):
         """Set lid control soil layer thickness """
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.thickness.value,
                                         param)   
@@ -162,8 +154,7 @@ class Soil(object):
     @porosity.setter
     def porosity(self, param):
         """Set lid control soil layer void volume / total volume"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.porosity.value,
                                         param)
@@ -181,8 +172,7 @@ class Soil(object):
     @field_capacity.setter
     def field_capacity(self, param):
         """Set lid control soil layer field capacity"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.fieldCap.value,
                                         param)    
@@ -200,8 +190,7 @@ class Soil(object):
     @wilting_point.setter
     def wilting_point(self, param):
         """Set lid control soil layer wilting point"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.wiltPoint.value,
                                         param)    
@@ -219,8 +208,7 @@ class Soil(object):
     @k_saturated.setter
     def k_saturated(self, param):
         """Set lid control soil layer saturated hydraulic conductivity"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.kSat.value,
                                         param)
@@ -238,8 +226,7 @@ class Soil(object):
     @k_slope.setter
     def k_slope(self, param):
         """Set lid control soil layer slope of log(k) v. moisture content curve"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.kSlope.value,
                                         param)
@@ -257,16 +244,14 @@ class Soil(object):
     @suction_head.setter
     def suction_head(self, param):
         """Set lid control soil layer suction head at wetting front"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.soil.value,
                                         LidLayersProperty.suction.value,
                                         param)    
 
 
 class Storage(object):
-    def __init__(self, sim, model, lidcontrol):
-        self._sim = sim
+    def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
         self._lidcontrolid = lidcontrol._lidcontrolid
@@ -285,8 +270,7 @@ class Storage(object):
     @thickness.setter
     def thickness(self, param):
         """Set lid control storage layer thickness"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.storage.value,
                                         LidLayersProperty.thickness.value,
                                         param)
@@ -304,8 +288,7 @@ class Storage(object):
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control storage layer void volume / total volume"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.storage.value,
                                         LidLayersProperty.voidFrac.value,
                                         param)
@@ -323,8 +306,7 @@ class Storage(object):
     @k_saturated.setter
     def k_saturated(self, param):
         """Set lid control storage layer saturated hydraulic conductivity"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.storage.value,
                                         LidLayersProperty.kSat.value,
                                         param)
@@ -342,16 +324,14 @@ class Storage(object):
     @clog_factor.setter
     def clog_factor(self, param):
         """Set lid control storage layer clogging factor"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.storage.value,
                                         LidLayersProperty.clogFactor.value,
                                         param)
 
 
 class Pavement(object):
-    def __init__(self, sim, model, lidcontrol):
-        self._sim = sim
+    def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
         self._lidcontrolid = lidcontrol._lidcontrolid
@@ -370,8 +350,7 @@ class Pavement(object):
     @thickness.setter
     def thickness(self, param):
         """Get lid control pavement layer thickness"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.pavement.value,
                                         LidLayersProperty.thickness.value,
                                         param)
@@ -389,8 +368,7 @@ class Pavement(object):
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control pavement layer void volume / total volume"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.pavement.value,
                                         LidLayersProperty.voidFrac.value,
                                         param)
@@ -408,8 +386,7 @@ class Pavement(object):
     @impervious_fraction.setter
     def impervious_fraction(self, param):
         """Set lid control pavement layer impervious area fraction"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.pavement.value,
                                         LidLayersProperty.impervFrac.value,
                                         param)
@@ -427,8 +404,7 @@ class Pavement(object):
     @k_saturated.setter
     def k_saturated(self, param):
         """Get lid control pavement layer permeability """
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.pavement.value,
                                         LidLayersProperty.kSat.value,
                                         param)
@@ -465,8 +441,7 @@ class Pavement(object):
     @regeneration.setter
     def regeneration(self, param):
         """Get lid control pavement layer clogging regeneration interval (days)"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.pavement.value,
                                         LidLayersProperty.regenDays.value,
                                         param)
@@ -484,16 +459,14 @@ class Pavement(object):
     @regeneration_degree.setter
     def regeneration_degree(self, param):
         """Get lid control pavement layer clogging regeneration degree"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.pavement.value,
                                         LidLayersProperty.regenDegree.value,
                                         param)
 
     
 class Drain(object):
-    def __init__(self, sim, model, lidcontrol):
-        self._sim = sim
+    def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
         self._lidcontrolid = lidcontrol._lidcontrolid
@@ -512,8 +485,7 @@ class Drain(object):
     @coefficient.setter
     def coefficient(self, param):
         """Set lid control drain layer underdrain flow coefficient"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drain.value,
                                         LidLayersProperty.coeff.value,
                                         param)
@@ -531,8 +503,7 @@ class Drain(object):
     @exponent.setter
     def exponent(self, param):
         """Set lid control drain layer underdrain head exponent"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drain.value,
                                         LidLayersProperty.expon.value,
                                         param)
@@ -550,8 +521,7 @@ class Drain(object):
     @offset.setter
     def offset(self, param):
         """Set lid control drain layer offset height of underdrain"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drain.value,
                                         LidLayersProperty.offset.value,
                                         param)
@@ -569,8 +539,7 @@ class Drain(object):
     @delay.setter
     def delay(self, param):
         """Set lid control drain layer rain barrel drain delay time (sec)"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drain.value,
                                         LidLayersProperty.delay.value,
                                         param)
@@ -589,8 +558,7 @@ class Drain(object):
     @open_head.setter
     def open_head(self, param):
         """Set lid control drain layer head when drain opens (ft)"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drain.value,
                                         LidLayersProperty.hOpen.value,
                                         param)
@@ -608,16 +576,14 @@ class Drain(object):
     @close_head.setter
     def close_head(self, param):
         """Set lid control drain layer drain closes (ft)"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drain.value,
                                         LidLayersProperty.hClose.value,
                                         param)
 
 
 class DrainMat(object):
-    def __init__(self, sim, model, lidcontrol):
-        self._sim = sim
+    def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
         self._lidcontrolid = lidcontrol._lidcontrolid
@@ -636,8 +602,7 @@ class DrainMat(object):
     @thickness.setter
     def thickness(self, param):
         """Set lid control drainmat layer thickness"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drainMat.value,
                                         LidLayersProperty.thickness.value,
                                         param)
@@ -655,8 +620,7 @@ class DrainMat(object):
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control drainmat layer void volume / total volume"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drainMat.value,
                                         LidLayersProperty.voidFrac.value,
                                         param)
@@ -674,8 +638,7 @@ class DrainMat(object):
     @roughness.setter
     def roughness(self, param):
         """Set lid control drainmat layer Mannings n for green roof drainage mats"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
+        return self._model.setLidCParam(self._lidcontrolid,
                                         LidLayers.drainMat.value,
                                         LidLayersProperty.roughness.value,
                                         param)

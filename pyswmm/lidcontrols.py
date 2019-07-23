@@ -82,12 +82,12 @@ class LidControl(object):
         self._model = model
         self._lidcontrolid = lidcontrolid
 
-        self.surface = Surface(sim, model, self)
-        self.soil = Soil(sim, model, self)
-        self.storage = Storage(sim, model, self)
-        self.pavement = Pavement(sim, model, self)
-        self.drain = Drain(sim, model, self)
-        self.drain_mat = DrainMat(sim, model, self)
+        self.surface = Surface(model, self)
+        self.soil = Soil(model, self)
+        self.storage = Storage(model, self)
+        self.pavement = Pavement(model, self)
+        self.drain = Drain(model, self)
+        self.drain_mat = DrainMat(model, self)
 
     def __str__(self):
         return self._lidcontrolid

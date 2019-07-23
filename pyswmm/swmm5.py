@@ -972,7 +972,7 @@ class PySWMM(object):
         self._error_check(errcode)
         return param.value
 
-    def setLidCParam(self, sim_start, ID, layer, parameter, value):
+    def setLidCParam(self, ID, layer, parameter, value):
         """
         Set Lid Control Parameter Before/During Model Simulation.
 
@@ -995,47 +995,8 @@ class PySWMM(object):
             layer = layer.value
         if not isinstance(parameter, int):
             parameter = parameter.value
-
-        if not sim_start:
-            errcode = self.SWMMlibobj.swmm_setLidCParamBeforeSimulation(index,
-                                                                        layer,
-                                                                        parameter,
-                                                                        _val)
-        else:
-            errcode = self.SWMMlibobj.swmm_setLidCParamDuringSimulation(index,
-                                                                        layer,
-                                                                        parameter,
-                                                                        _val)
-
+        errcode = self.SWMMlibobj.swmm_setLidCParam(index, layer, parameter, _val)
         self._error_check(errcode)
-
-    def setLidCParamDuringimulation(self, ID, layer, parameter, value):
-        """
-        Set Lid Control Parameter During Model Simulation.
-
-        :param str ID: Lid Control ID
-        :param int layer: Layer (toolkitapi.LidLayers member variable)
-        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
-
-        Examples:
-
-        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
-        >>> swmm_model.swmm_open()
-        >>> swmm_model.setLidCParam('J2', LidLayer.surface, LidLayersProperty.thickness, 110)
-
-        >>>
-        >>> swmm_model.swmm_close()
-        """
-        index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
-        _val = ctypes.c_double(value)
-        if not isinstance(layer, int):
-            layer = layer.value
-        if not isinstance(parameter, int):
-            parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_setLidCParamDuringSimulation(index,
-                                                                    layer,
-                                                                    parameter,
-                                                                    _val)
         
     def getLidUCount(self, ID):
         """
