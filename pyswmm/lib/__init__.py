@@ -38,7 +38,7 @@ if os.name == 'nt':
     LIB_OMP = os.path.join(HERE, _platform())
     os.environ['PATH'] = LIB_OMP + os.pathsep + os.environ['PATH']
 elif sys.platform == 'darwin':
-    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
+    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dylib').replace('\\', '/')
 elif sys.platform.startswith('linux'):
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
 else:
