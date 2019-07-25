@@ -49,7 +49,5 @@ def test_lib_5():
     On Windows for now."""
     if os.name == 'nt':
         print(WIN_SWMM_LIB_PATH)
-        with Simulation(
-                MODEL_WEIR_SETTING_PATH,
-                swmm_lib_path=WIN_SWMM_LIB_PATH) as sim:
-            sim.execute()
+        sim = Simulation(MODEL_WEIR_SETTING_PATH, swmm_lib_path=WIN_SWMM_LIB_PATH) 
+        sim.execute()
