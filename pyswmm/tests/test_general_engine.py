@@ -27,7 +27,7 @@ def test_engine_version():
             pyswmm.lib.use("swmm5.dll")
 
     print(sys.platform)
-
+    print(sys.maxsize)
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     print(sim.engine_version)
 
