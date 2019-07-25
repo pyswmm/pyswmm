@@ -21,7 +21,10 @@ def test_engine_version():
     elif sys.platform.startswith('linux'):
         pyswmm.lib.use("swmm5.so")
     else:
-        pyswmm.lib.use("swmm5.dll")
+        if sys.maxsize > 2**32:
+            pyswmm.lib.use("swmm-x64.dll")
+        else:
+            pyswmm.lib.use("swmm5.dll")
 
     print(sys.platform)
 
