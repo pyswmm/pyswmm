@@ -35,7 +35,7 @@ def _platform():
 
 # Library paths
 if os.name == 'nt':
-    if platform.architecture{}[0].upper() == '64BIT':
+    if platform.architecture()[0].upper() == '64BIT':
         LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5-x64.dll').replace('\\', '/')
     else:
         LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
