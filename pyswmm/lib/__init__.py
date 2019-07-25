@@ -104,8 +104,8 @@ def use(arg):
             raise (Exception("Library Not Found"))
 
     elif sys.platform == 'darwin':
-        if not arg.endswith('.so'):
-            arg = arg + ".so"
+        if not arg.endswith('.dylib'):
+            arg = arg + ".dylib"
         if os.path.isfile(
                 os.path.join(HERE, _platform(), arg).replace('\\', '/')):
             DLL_SELECTION.dll_loc = os.path.join(HERE, _platform(),
