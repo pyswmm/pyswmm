@@ -18,7 +18,7 @@ import pyswmm
 
 def test_use_1():
     if sys.platform == 'darwin':
-        pyswmm.lib.use("swmm5.so")
+        pyswmm.lib.use("swmm5.dylib")
     elif sys.platform.startswith('linux'):
         pyswmm.lib.use("swmm5.so")
     else:
