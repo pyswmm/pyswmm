@@ -125,7 +125,7 @@ class PySWMM(object):
         self.rptfile = rptfile
         self.binfile = binfile
 
-        if not swmm_lib_path:
+        if swmm_lib_path is None:
             swmm_lib_path = DLL_SELECTION()
         
         if os.name == 'nt':
