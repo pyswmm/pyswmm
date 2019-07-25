@@ -5,12 +5,10 @@ matrix:
     - os: osx
       language: generic
       sudo: false
-      python: "2.7"
-
-    - os: osx
-      language: generic
-      sudo: false
       python: "3.6"
+      
+    - os: linux
+      python: 3.6
  
    # - os: linux
    #   dist: trusty
