@@ -2,10 +2,11 @@
 
 environment:
   matrix:
-    - PYTHON: "C:\\Python27"
     - PYTHON: "C:\\Python36"
+    - PYTHON: "C:\\Python36-x64"
     - PYTHON: "C:\\Python37"
-
+    - PYTHON: "C:\\Python37-x64"
+    
 install:
   - "%PYTHON%\\python setup.py develop"
   - "%PYTHON%\\python.exe -m pip install -r %APPVEYOR_BUILD_FOLDER%\\requirements.txt"
