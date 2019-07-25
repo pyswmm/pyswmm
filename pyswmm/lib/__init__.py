@@ -11,6 +11,7 @@ for selecting the SWMM5 engine. """
 # Standard library imports
 import os
 import sys
+import platform
 
 # Machine Architechture
 MACHINE_BITS = 8 * tuple.__itemsize__
@@ -34,7 +35,7 @@ def _platform():
 
 # Library paths
 if os.name == 'nt':
-    if sys.maxsize > 2**32:
+    if platform.architecture{}[0].upper() == '64BIT':
         LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5-x64.dll').replace('\\', '/')
     else:
         LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
