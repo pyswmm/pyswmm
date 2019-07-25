@@ -16,10 +16,10 @@ from pyswmm.simulation import Simulation
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 
-VERSION_INFO = (0, 4, 10, 'dev0')
+VERSION_INFO = (0, 5, 0, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
-__swmm_version__ = '5.2.0.dev3'
-__swmm_sha__ = 'f4341ebff0a5c46f44c3baaa3b26c4f91bbd5a5c'
+__swmm_version__ = '5.2.0.dev5'
+__swmm_sha__ = 'a8382270dd5f49f8da88ae2c9bca8f3b5e39da7e'
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
 __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell (See AUTHORS)'
 __licence__ = 'BSD2'
