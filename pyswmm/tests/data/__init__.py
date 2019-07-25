@@ -9,7 +9,7 @@
 
 # Standard library imports
 import os
-
+import sys 
 DATA_PATH = os.path.abspath(os.path.dirname(__file__))
 
 # Test models paths
@@ -22,5 +22,9 @@ MODEL_STORAGE_PUMP = os.path.join(DATA_PATH, 'model_storage_pump.inp')
 MODEL_STORAGE_PUMP_MGD = os.path.join(DATA_PATH, 'model_storage_pump_MGD.inp')
 MODEL_POLLUTANTS_PATH = os.path.join(DATA_PATH, 'model_pollutants.inp')
 MODEL_LIDS_PATH = os.path.join(DATA_PATH, 'model_lids.inp')
-WIN_SWMM_LIB_PATH = os.path.join(DATA_PATH, '..\\..\\lib\\windows',
-                                 'swmm5.dll')
+if sys.maxsize > 2**32:
+    WIN_SWMM_LIB_PATH = os.path.join(DATA_PATH, '..\\..\\lib\\windows',
+                                     'swmm5-x64.dll')
+else:
+    WIN_SWMM_LIB_PATH = os.path.join(DATA_PATH, '..\\..\\lib\\windows',
+                                     'swmm5.dll')
