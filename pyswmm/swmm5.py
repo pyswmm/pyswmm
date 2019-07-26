@@ -1776,8 +1776,11 @@ class PySWMM(object):
                 out_dict[object_stats._py_alias_ids[attr]] = getattr(
                     object_stats, attr)
                 if attr == "utilized":
-                    out_dict[object_stats._py_alias_ids[attr]] = getattr(
-                        object_stats, attr) / object_stats.totalPeriods
+                    if object_stats.totalPeriods:
+                        out_dict[object_stats._py_alias_ids[attr]] = getattr(
+                            object_stats, attr) / object_stats.totalPeriods
+                    else:
+                        out_dict[object_stats._py_alias_ids[attr]] = 0
         return out_dict
 
     def subcatch_statistics(self, ID):
