@@ -5,24 +5,24 @@ Authors
 Maintainers
 ===========
 
-- Bryant E. McDonnell 
-- Gonzalo Peña-Castellanos
+- Bryant E. McDonnell
 - Katherine Ratliff
+- Jennifer Wu
 
 
 Authors with Copyrighted Contributions
 ======================================
 
-- Bryant E. McDonnell 
-- James Westover 
-- Gonzalo Peña-Castellanos 
-- Stephen Roberts 
-- Abhiram Mullapudi
+- Bryant E. McDonnell
 - Katherine Ratliff
+- Jennifer Wu
+- Gonzalo Peña-Castellanos
+- Stephen Roberts
+- Abhiram Mullapudi
 - Jiada Li
 
 
 Authors with Contributions in the Public Domain
 ===============================================
 
-- Michael Tryby 
+- Michael Tryby
