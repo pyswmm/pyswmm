@@ -250,10 +250,10 @@ using the LidGroup object.
 	>>> with Simulation('/testmodel.inp') as sim:
 	... 	lid_on_sub = LidGroups(sim)["subcatch_id"]
 	... 	for lid in lid_on_sub:
-    ... 		print(lid)
-    ... 	print(lid_on_sub[0])
-    ... 	for step in sim:
-    ... 		print(lid_on_sub.old_drain_flow)
+	... 		print(lid)
+	... 	print(lid_on_sub[0])
+	... 	for step in sim:
+	... 		print(lid_on_sub.old_drain_flow)
     
 
 Lid Units
@@ -270,11 +270,11 @@ using the LidGroup object.
 	>>> with Simulation('/testmodel.inp') as sim:
 	... 	lid_on_sub = LidGroups(sim)["subcatch_id"]
 	... 	for lid in lid_on_sub:
-    ... 		print(lid)
-    ... 	print(lid_on_sub[0])
-    ... 	for step in sim:
-    ... 		print(lid_on_sub.WaterBalance.inflow)
-    ... 		print(lid_on_sub.WaterBalance.evaporation)
+	... 		print(lid)
+	... 	print(lid_on_sub[0])
+	... 	for step in sim:
+	... 		print(lid_on_sub.WaterBalance.inflow)
+	... 		print(lid_on_sub.WaterBalance.evaporation)
     
 All LidUnits parameters can be accessed before and during model simulations. 
 All LidUnits parameters can be set before model simulation. Only some LidUnits parameters can be set 
