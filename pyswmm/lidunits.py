@@ -65,7 +65,7 @@ class Surface(object):
                                          LidResults.surfInfil.value)
 
     @property
-    def evporation(self):
+    def evaporation(self):
         """
         Get lid evaporation rate from surface layer
 
@@ -203,7 +203,7 @@ class Storage(object):
                                          LidResults.storExfil.value)
 
     @property
-    def evporation(self):
+    def evaporation(self):
         """
         Get lid evaporation rate from storage layer
 
