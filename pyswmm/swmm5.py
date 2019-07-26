@@ -151,7 +151,7 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
-        #print(_errmsg.value.decode("utf-8"))
+        # print(_errmsg.value.decode("utf-8"))
         return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
@@ -668,7 +668,8 @@ class PySWMM(object):
         """Get Object ID Index. Mostly used as an internal function."""
         C_ID = ctypes.c_char_p(six.b(ID))
         index = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_project_findObject(objecttype, C_ID, ctypes.byref(index))
+        errcode = self.SWMMlibobj.swmm_project_findObject(
+            objecttype, C_ID, ctypes.byref(index))
         self._error_check(errcode)
         index = index.value
         return index
@@ -677,7 +678,8 @@ class PySWMM(object):
         """Check if Object ID Exists. Mostly used as an internal function."""
         C_ID = ctypes.c_char_p(six.b(ID))
         index = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_project_findObject(objecttype, C_ID, ctypes.byref(index))
+        errcode = self.SWMMlibobj.swmm_project_findObject(
+            objecttype, C_ID, ctypes.byref(index))
         index = index.value
         if index != -1:
             return True
@@ -894,7 +896,7 @@ class PySWMM(object):
             parameter = parameter.value
         errcode = self.SWMMlibobj.swmm_setLinkParam(index, parameter, _val)
         self._error_check(errcode)
-        
+
     def getLidCOverflow(self, ID):
         """
         Get Lid Control Parameter.
@@ -916,8 +918,10 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_getLidCOverflow(index,
                                                        ctypes.byref(param))
         self._error_check(errcode)
-        if param.value == struct.pack('B', 0): return False
-        else: return True
+        if param.value == struct.pack('B', 0):
+            return False
+        else:
+            return True
 
     def setLidCOverflow(self, ID, value):
         """
@@ -993,9 +997,10 @@ class PySWMM(object):
             layer = layer.value
         if not isinstance(parameter, int):
             parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_setLidCParam(index, layer, parameter, _val)
+        errcode = self.SWMMlibobj.swmm_setLidCParam(
+            index, layer, parameter, _val)
         self._error_check(errcode)
-        
+
     def getLidUCount(self, ID):
         """
         Get Number of Lid Units Defined for Subcatchment.
@@ -1018,7 +1023,7 @@ class PySWMM(object):
                                                     ctypes.byref(param))
         self._error_check(errcode)
         return param.value
-        
+
     def getLidUParam(self, subcatchID, lidIndex, parameter):
         """
         Get LidUnit Parameter
@@ -1038,7 +1043,8 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         param = ctypes.c_double()
         if not isinstance(parameter, int):
             parameter = parameter.value
@@ -1065,7 +1071,8 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         _val = ctypes.c_double(value)
         param = ctypes.c_double()
         if not isinstance(parameter, int):
@@ -1075,7 +1082,7 @@ class PySWMM(object):
                                                     parameter,
                                                     _val)
         self._error_check(errcode)
-        
+
     def getLidUOption(self, subcatchID, lidIndex, parameter):
         """
         Get LidUnit Option
@@ -1095,7 +1102,8 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         param = ctypes.c_int()
         if not isinstance(parameter, int):
             parameter = parameter.value
@@ -1122,7 +1130,8 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         _val = ctypes.c_int(value)
         if not isinstance(parameter, int):
             parameter = parameter.value
@@ -1131,7 +1140,7 @@ class PySWMM(object):
                                                      parameter,
                                                      _val)
         self._error_check(errcode)
-    
+
     def getSubcatchParam(self, ID, parameter):
         """
         Get Subcatchment Parameter
@@ -1230,7 +1239,7 @@ class PySWMM(object):
 
     def getGagePrecip(self, ID):
         """
-        Get precipitation from gage 
+        Get precipitation from gage
 
         This function returns the rainfall, show and total precipitation
         associated with the gage
@@ -1255,7 +1264,7 @@ class PySWMM(object):
         precip_values = []
 
         errcode = self.SWMMlibobj.swmm_getGagePrecip(index,
-                ctypes.byref(result))
+                                                     ctypes.byref(result))
 
         for ind in range(3):
             value = ctypes.cast(result, ctypes.POINTER(ctypes.c_double))[ind]
@@ -1306,7 +1315,8 @@ class PySWMM(object):
                                                           ctypes.byref(_month),
                                                           ctypes.byref(_day),
                                                           ctypes.byref(_hours),
-                                                          ctypes.byref(_minutes),
+                                                          ctypes.byref(
+                                                              _minutes),
                                                           ctypes.byref(_seconds))
         self._error_check(errcode)
         if errcode == 0:
@@ -1341,7 +1351,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         result = ctypes.c_double()
         if not isinstance(layerIndex, int):
             layerIndex = layerIndex.value
@@ -1381,7 +1392,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         result = ctypes.c_double()
         if not isinstance(resultType, int):
             resultType = resultType.value
@@ -1420,14 +1432,15 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         result = ctypes.c_double()
         errcode = self.SWMMlibobj.swmm_getLidGResult(index,
                                                      resultType,
                                                      ctypes.byref(result))
         self._error_check(errcode)
         return result.value
-    
+
     def getNodeResult(self, ID, resultType):
         """
         Get Node Result.
@@ -1533,7 +1546,7 @@ class PySWMM(object):
         self._error_check(errcode)
 
         return result.value
-    
+
     def getSubcatchPollut(self, ID, resultType):
         """
         Get pollutant results from a Subcatchment.
@@ -1545,7 +1558,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
 
-        pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)        
+        pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
         result = ctypes.POINTER(ctypes.c_double * len(pollut_ids))()
         pollut_values = []
         errcode = self.SWMMlibobj.swmm_getSubcatchPollut(index, resultType,
@@ -1798,7 +1811,6 @@ class PySWMM(object):
                 out_dict[object_stats._py_alias_ids[attr]] = getattr(
                     object_stats, attr)
 
-
         return out_dict
 
     def flow_routing_stats(self):
@@ -1957,12 +1969,12 @@ class PySWMM(object):
 
     def setGagePrecip(self, ID, value):
         """
-        Set precipitation to gage 
+        Set precipitation to gage
 
         This function sets the rainfall intensity to the gage
 
         :param str ID: Gage ID
-        :param float valve: rainfall intensity 
+        :param float valve: rainfall intensity
         :return: errcode
 
         Examples:
@@ -1977,6 +1989,7 @@ class PySWMM(object):
         val = ctypes.c_double(value)
         errcode = self.SWMMlibobj.swmm_setGagePrecip(index, val)
         self._error_check(errcode)
+
 
 if __name__ == '__main__':
     test = PySWMM(

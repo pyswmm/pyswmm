@@ -1,6 +1,7 @@
 from pyswmm import Simulation, RainGages, SystemStats
 from pyswmm.tests.data import MODEL_RAIN
 
+
 def test_api_rainfall():
     with Simulation(MODEL_RAIN) as sim:
         check = 0
@@ -9,8 +10,8 @@ def test_api_rainfall():
         for ind, step in enumerate(sim):
             sim._model.setGagePrecip("Gage1", 10.00)
             x = sim._model.getGagePrecip("Gage1")
-    
-            if  round(x[0],2) == 10.0:
+
+            if round(x[0], 2) == 10.0:
                 check += 1
     assert(check == 718)
 
@@ -19,7 +20,7 @@ def test_rainfall():
     with Simulation(MODEL_RAIN) as sim:
         rg = RainGages(sim)["Gage1"]
         assert(rg.raingageid == "Gage1")
-        
+
         sim.step_advance(3600)
         for ind, step in enumerate(sim):
             if ind > 0 and ind < 5:
@@ -29,11 +30,11 @@ def test_rainfall():
 
             if ind == 5:
                 rg.total_precip = 10
-            
+
             if ind >= 6:
                 assert(int(rg.total_precip) == 10)
                 assert(int(rg.rainfall) == 10)
-                assert(int(rg.snowfall) == 0)                
-        
+                assert(int(rg.snowfall) == 0)
+
         stats = SystemStats(sim)
         assert(int(stats.runoff_stats['rainfall']) == 65)

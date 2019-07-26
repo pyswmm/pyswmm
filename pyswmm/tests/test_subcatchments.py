@@ -39,7 +39,7 @@ def test_subcatchments_2():
 
 def test_nodes_3():
     with Simulation(MODEL_FULL_FEATURES_PATH) as sim:
-        S2 = Subcatchments(sim)["S2"]  #Subcatchment
+        S2 = Subcatchments(sim)["S2"]  # Subcatchment
 
         for step in sim:
             print(S2.statistics)

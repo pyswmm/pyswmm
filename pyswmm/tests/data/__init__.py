@@ -9,7 +9,7 @@
 
 # Standard library imports
 import os
-import sys 
+import sys
 DATA_PATH = os.path.abspath(os.path.dirname(__file__))
 
 # Test models paths

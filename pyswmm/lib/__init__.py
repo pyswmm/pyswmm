@@ -32,11 +32,22 @@ def _platform():
 # Library paths
 if os.name == 'nt':
     if sys.maxsize > 2**32:
-        LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5-x64.dll').replace('\\', '/')
+        LIB_SWMM = os.path.join(
+            HERE, _platform(), 'swmm5-x64.dll').replace('\\', '/')
     else:
-        LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dll').replace('\\', '/')
+        LIB_SWMM = os.path.join(
+            HERE,
+            _platform(),
+            'swmm5.dll').replace(
+            '\\',
+            '/')
 elif sys.platform == 'darwin':
-    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.dylib').replace('\\', '/')
+    LIB_SWMM = os.path.join(
+        HERE,
+        _platform(),
+        'swmm5.dylib').replace(
+        '\\',
+        '/')
 elif sys.platform.startswith('linux'):
     LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
 else:

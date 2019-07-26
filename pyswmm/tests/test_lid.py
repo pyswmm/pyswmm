@@ -3,8 +3,9 @@ from pyswmm import Simulation
 from pyswmm import LidControls, LidGroups, LidUnit
 from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_LIDS_PATH
-from pytest import approx 
-UT_PRECISION = 1 #%
+from pytest import approx
+UT_PRECISION = 1  # %
+
 
 def test_list_lid_controls():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -20,19 +21,20 @@ def test_list_lid_groups():
         for i, group in enumerate(LidGroups(sim)):
             if i == 0:
                 assert('subcatchment {} has {} lid units'.format(group,
-                                                            len(group)) == 'subcatchment 1 has 0 lid units')
+                                                                 len(group)) == 'subcatchment 1 has 0 lid units')
             if i == 1:
                 assert('subcatchment {} has {} lid units'.format(group,
-                                                            len(group)) == 'subcatchment 2 has 3 lid units')
+                                                                 len(group)) == 'subcatchment 2 has 3 lid units')
             if i == 2:
                 assert('subcatchment {} has {} lid units'.format(group,
-                                                            len(group)) == 'subcatchment 3 has 0 lid units')
+                                                                 len(group)) == 'subcatchment 3 has 0 lid units')
             if i == 3:
                 assert('subcatchment {} has {} lid units'.format(group,
-                                                            len(group)) == 'subcatchment 4 has 0 lid units')
+                                                                 len(group)) == 'subcatchment 4 has 0 lid units')
             if i == 7:
                 assert('subcatchment {} has {} lid units'.format(group,
-                                                            len(group)) == 'subcatchment 8 has 0 lid units')
+                                                                 len(group)) == 'subcatchment 8 has 0 lid units')
+
 
 def test_list_lid_units():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -48,18 +50,29 @@ def test_list_lid_units():
                 assert(lid_unit.subcatchment == '2')
                 assert(lid_unit.lid_control == 'Green_LID')
 
+
 def test_lid_group_params():
     with Simulation(MODEL_LIDS_PATH) as sim:
         sub_2_lid_units = LidGroups(sim)["2"]
         sim.step_advance(900)
         for i, step in enumerate(sim):
             if i == 115:
-                assert(sim.current_time.strftime('%Y-%m-%d %H:%M:%S') == '1998-01-02 05:00:00')
-                assert(sub_2_lid_units.pervious_area == approx(50000, rel=UT_PRECISION))
-                assert(sub_2_lid_units.flow_to_pervious == approx(0, rel=UT_PRECISION))
-                assert(sub_2_lid_units.old_drain_flow == approx(0.0008, rel=UT_PRECISION))
-                assert(sub_2_lid_units.new_drain_flow == approx(0.0008, rel=UT_PRECISION))
-                
+                assert(sim.current_time.strftime(
+                    '%Y-%m-%d %H:%M:%S') == '1998-01-02 05:00:00')
+                assert(
+                    sub_2_lid_units.pervious_area == approx(
+                        50000, rel=UT_PRECISION))
+                assert(
+                    sub_2_lid_units.flow_to_pervious == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    sub_2_lid_units.old_drain_flow == approx(
+                        0.0008, rel=UT_PRECISION))
+                assert(
+                    sub_2_lid_units.new_drain_flow == approx(
+                        0.0008, rel=UT_PRECISION))
+
+
 def test_lid_unit_params():
     with Simulation(MODEL_LIDS_PATH) as sim:
         sub_2_lid_units = LidGroups(sim)["2"]
@@ -75,21 +88,46 @@ def test_lid_unit_params():
 
         for i, step in enumerate(sim):
             if i == 2145:
-                assert(first_unit.water_balance.inflow == approx(8.9, rel=UT_PRECISION))
-                assert(first_unit.water_balance.evaporation == approx(0, rel=UT_PRECISION))
-                assert(first_unit.water_balance.infiltration == approx(0.014, rel=UT_PRECISION))
-                assert(first_unit.water_balance.surface_flow == approx(0, rel=UT_PRECISION))
-                assert(first_unit.water_balance.drain_flow == approx(3.35, rel=UT_PRECISION))
-                assert(first_unit.water_balance.initial_volume == approx(3, rel=UT_PRECISION))
-                assert(first_unit.water_balance.final_volume == approx(8.5, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.inflow == approx(
+                        8.9, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.evaporation == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.infiltration == approx(
+                        0.014, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.surface_flow == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.drain_flow == approx(
+                        3.35, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.initial_volume == approx(
+                        3, rel=UT_PRECISION))
+                assert(
+                    first_unit.water_balance.final_volume == approx(
+                        8.5, rel=UT_PRECISION))
                 assert(first_unit.surface.depth == approx(0, rel=UT_PRECISION))
-                assert(first_unit.pavement.depth == approx(0, rel=UT_PRECISION))
-                assert(first_unit.soil.moisture == approx(0.2, rel=UT_PRECISION))
+                assert(
+                    first_unit.pavement.depth == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    first_unit.soil.moisture == approx(
+                        0.2, rel=UT_PRECISION))
                 assert(first_unit.storage.depth == approx(6, rel=UT_PRECISION))
                 assert(first_unit.dry_time == approx(21600, rel=UT_PRECISION))
-                assert(first_unit.old_drain_flow == approx(0.0005, rel=UT_PRECISION))
-                assert(first_unit.new_drain_flow == approx(0.0005, rel=UT_PRECISION))
-                assert(first_unit.surface.flux_rate == approx(0, rel=UT_PRECISION))
+                assert(
+                    first_unit.old_drain_flow == approx(
+                        0.0005, rel=UT_PRECISION))
+                assert(
+                    first_unit.new_drain_flow == approx(
+                        0.0005, rel=UT_PRECISION))
+                assert(
+                    first_unit.surface.flux_rate == approx(
+                        0, rel=UT_PRECISION))
+
 
 def test_lid_control_params():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -116,7 +154,8 @@ def test_lid_control_params():
         assert(LID.storage.clog_factor == approx(0.2, rel=UT_PRECISION))
         assert(LID.pavement.thickness == approx(20, rel=UT_PRECISION))
         assert(LID.pavement.void_fraction == approx(0.15, rel=UT_PRECISION))
-        assert(LID.pavement.impervious_fraction == approx(0.5, rel=UT_PRECISION))
+        assert(LID.pavement.impervious_fraction ==
+               approx(0.5, rel=UT_PRECISION))
         assert(LID.pavement.k_saturated == approx(100, rel=UT_PRECISION))
         assert(LID.pavement.clog_factor == approx(8, rel=UT_PRECISION))
         assert(LID.drain.coefficient == approx(0.5, rel=UT_PRECISION))
@@ -128,6 +167,7 @@ def test_lid_control_params():
         assert(LID.drain_mat.void_fraction == approx(0, rel=UT_PRECISION))
         assert(LID.drain_mat.roughness == approx(0, rel=UT_PRECISION))
         assert(LID.drain_mat.alpha == approx(0, rel=UT_PRECISION))
+
 
 def test_lid_detailed_report():
     with Simulation(MODEL_LIDS_PATH) as sim:
@@ -143,16 +183,33 @@ def test_lid_detailed_report():
 
         assert(first_LID_unit_on_sub_2.number == 4)
         assert(second_LID_unit_on_sub_2.number == 1)
-        
+
         sim.step_advance(900)
         for i, step in enumerate(sim):
             if i == 20:
-                assert(sim.current_time.strftime('%Y-%m-%d %H:%M:%S') == '1998-01-01 05:15:00')
-                assert(first_LID_unit_on_sub_2.surface.inflow == approx(0.47, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.evaporation == approx(0, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.surface.infiltration == approx(0.47, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.pavement.percolation == approx(0.47, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.soil.percolation == approx(0.615, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.storage.exfiltration == approx(0, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.surface.outflow == approx(0, rel=UT_PRECISION))
-                assert(first_LID_unit_on_sub_2.storage.drain == approx(0, rel=UT_PRECISION))
+                assert(sim.current_time.strftime(
+                    '%Y-%m-%d %H:%M:%S') == '1998-01-01 05:15:00')
+                assert(
+                    first_LID_unit_on_sub_2.surface.inflow == approx(
+                        0.47, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.evaporation == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.surface.infiltration == approx(
+                        0.47, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.pavement.percolation == approx(
+                        0.47, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.soil.percolation == approx(
+                        0.615, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.storage.exfiltration == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.surface.outflow == approx(
+                        0, rel=UT_PRECISION))
+                assert(
+                    first_LID_unit_on_sub_2.storage.drain == approx(
+                        0, rel=UT_PRECISION))

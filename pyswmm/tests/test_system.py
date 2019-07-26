@@ -18,7 +18,7 @@ def test_system_flow_routing():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         stats = SystemStats(sim)
 
-        print("\n\n\System\n")
+        print(r"\n\n\System\n")
         with pytest.raises(SWMMException):
             print(stats.routing_stats)
 

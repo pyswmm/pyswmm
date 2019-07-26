@@ -95,7 +95,8 @@ class RainGages(object):
             rg = RainGage(self._model, raingageid)
             return rg
         else:
-            raise PYSWMMException("Raingage ID: {} Does not Exist".format(raingageid))
+            raise PYSWMMException(
+                "Raingage ID: {} Does not Exist".format(raingageid))
 
     def __iter__(self):
         return self
@@ -195,7 +196,8 @@ class RainGage(object):
         >>> 1.0
         >>> 0.2
         """
-        return self._model.getGagePrecip(self._raingageid)[RainGageResults.total_precip.value]
+        return self._model.getGagePrecip(self._raingageid)[
+            RainGageResults.total_precip.value]
 
     @total_precip.setter
     def total_precip(self, param):
@@ -219,7 +221,8 @@ class RainGage(object):
         ...     print(rg1.rainfall)
         >>> 1.0
         """
-        return self._model.getGagePrecip(self._raingageid)[RainGageResults.rainfall.value]
+        return self._model.getGagePrecip(self._raingageid)[
+            RainGageResults.rainfall.value]
 
     @property
     def snowfall(self):
@@ -238,4 +241,5 @@ class RainGage(object):
         ...     print(rg1.snowfall)
         >>> 0.0
         """
-        return self._model.getGagePrecip(self._raingageid)[RainGageResults.snowfall.value]
+        return self._model.getGagePrecip(self._raingageid)[
+            RainGageResults.snowfall.value]

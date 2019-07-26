@@ -9,13 +9,14 @@ from pyswmm.swmm5 import PYSWMMException
 from pyswmm.toolkitapi import ObjectType
 from pyswmm.lidlayers import Surface, Soil, Storage, Pavement, Drain, DrainMat
 
+
 class LidControls(object):
     """
     Lid Control Iterator Methods.
-    
+
     :param object model: Open Model Instance
     """
-    
+
     def __init__(self, model):
         if not model._model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
@@ -91,7 +92,7 @@ class LidControl(object):
 
     def __str__(self):
         return self._lidcontrolid
-    
+
     @property
     def can_overflow(self):
         """
@@ -101,4 +102,3 @@ class LidControl(object):
         :rtype: char
         """
         return self._model.getLidCOverflow(self._lidcontrolid)
-    

@@ -23,7 +23,8 @@ class LidGroups(object):
             raise PYSWMMException("SWMM Model Not Open")
         self._model = model._model
         self._cuindex = 0
-        self._nLidGroups = self._model.getProjectSize(ObjectType.SUBCATCH.value)
+        self._nLidGroups = self._model.getProjectSize(
+            ObjectType.SUBCATCH.value)
 
     def __len__(self):
         """
@@ -44,7 +45,8 @@ class LidGroups(object):
         :return: ID Exists
         :rtype: bool
         """
-        return self._model.ObjectIDexist(ObjectType.SUBCATCH.value, subcatchmentid)
+        return self._model.ObjectIDexist(
+            ObjectType.SUBCATCH.value, subcatchmentid)
 
     def __getitem__(self, subcatchmentid):
         if self.__contains__(subcatchmentid):
@@ -68,14 +70,16 @@ class LidGroups(object):
     @property
     def _subcatchmentid(self):
         """Subcatchment ID."""
-        return self._model.getObjectId(ObjectType.SUBCATCH.value, self._cuindex)
+        return self._model.getObjectId(
+            ObjectType.SUBCATCH.value, self._cuindex)
 
 
 class LidGroup(object):
     def __init__(self, model, subcatchmentid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
-        if subcatchmentid not in model.getObjectIDList(ObjectType.SUBCATCH.value):
+        if subcatchmentid not in model.getObjectIDList(
+                ObjectType.SUBCATCH.value):
             raise PYSWMMException("Subcatchment ID Does not Exist")
         self._model = model
         self._subcatchmentid = subcatchmentid
@@ -84,7 +88,7 @@ class LidGroup(object):
 
     def __str__(self):
         return self._subcatchmentid
-    
+
     def __len__(self):
         """
         Return number of defined LidUnit per LidGroup.
@@ -135,6 +139,7 @@ class LidGroup(object):
         """
         return self._model.getLidGResult(self._subcatchmentid,
                                          LidResults.pervArea.value)
+
     @property
     def flow_to_pervious(self):
         """
@@ -156,6 +161,7 @@ class LidGroup(object):
         """
         return self._model.getLidGResult(self._subcatchmentid,
                                          LidResults.oldDrainFlow.value)
+
     @property
     def new_drain_flow(self):
         """
@@ -166,7 +172,8 @@ class LidGroup(object):
         """
         return self._model.getLidGResult(self._subcatchmentid,
                                          LidResults.newDrainFlow.value)
-    
+
+
 class LidUnit(object):
     """
     Lid Unit Methods.
@@ -174,7 +181,7 @@ class LidUnit(object):
     :param object model: Open Model Instance
     :param str subcatchmentid: Subcatchment ID
     :param str lidid: Lid unit ID
-    
+
     """
 
     def __init__(self, model, subcatchmentid, lidid):
@@ -199,7 +206,7 @@ class LidUnit(object):
         index = self.index
         return self._model.getObjectId(ObjectType.LID.value,
                                        index)
-            
+
     @property
     def unit_area(self):
         """
@@ -211,6 +218,7 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.unitArea.value)
+
     @unit_area.setter
     def unit_area(self, param):
         """Set lid unit area"""
@@ -218,6 +226,7 @@ class LidUnit(object):
                                         self._lidid,
                                         LidUParams.unitArea.value,
                                         param)
+
     @property
     def full_width(self):
         """
@@ -229,6 +238,7 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fullWidth.value)
+
     @full_width.setter
     def full_width(self, param):
         """Set lid unit full top width."""
@@ -236,6 +246,7 @@ class LidUnit(object):
                                         self._lidid,
                                         LidUParams.fullWidth.value,
                                         param)
+
     @property
     def initial_saturation(self):
         """
@@ -247,6 +258,7 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.initSat.value)
+
     @initial_saturation.setter
     def initial_saturation(self, param):
         """Set lid initial saturation of soil and storage layers."""
@@ -254,6 +266,7 @@ class LidUnit(object):
                                         self._lidid,
                                         LidUParams.initSat.value,
                                         param)
+
     @property
     def from_impervious(self):
         """
@@ -265,6 +278,7 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fromImperv.value)
+
     @from_impervious.setter
     def from_impervious(self, param):
         """Set lid fraction of impervious area runoff treated"""
@@ -272,6 +286,7 @@ class LidUnit(object):
                                         self._lidid,
                                         LidUParams.fromImperv.value,
                                         param)
+
     @property
     def from_pervious(self):
         """
@@ -283,6 +298,7 @@ class LidUnit(object):
         return self._model.getLidUParam(self._subcatchmentid,
                                         self._lidid,
                                         LidUParams.fromPerv.value)
+
     @ from_pervious.setter
     def from_pervious(self, param):
         """Set lid fraction of pervious area runoff treated"""
@@ -290,10 +306,11 @@ class LidUnit(object):
                                         self._lidid,
                                         LidUParams.fromPerv.value,
                                         param)
+
     @property
     def index(self):
         """
-        Get lid control index 
+        Get lid control index
 
         :return: Parameter Value
         :rtype: int
@@ -301,11 +318,14 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.index.value)
+
     @index.setter
     def index(self, param):
         """Set lid control index """
-        if isinstance(param, str) and self._model.ObjectIDexist(ObjectType.LID.value, param):
-            controlIndex = self._model.getObjectIDIndex(ObjectType.LID.value, param)    
+        if isinstance(param, str) and self._model.ObjectIDexist(
+                ObjectType.LID.value, param):
+            controlIndex = self._model.getObjectIDIndex(
+                ObjectType.LID.value, param)
         elif isinstance(param, int) and param >= 0 and param < self._model.getProjectSize(ObjectType.LID.value):
             controlIndex = param
         else:
@@ -316,6 +336,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidUOptions.index.value,
                                          controlIndex)
+
     @property
     def number(self):
         """
@@ -327,6 +348,7 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.number.value)
+
     @number.setter
     def number(self, param):
         """Set lid number of replicate units"""
@@ -334,18 +356,20 @@ class LidUnit(object):
                                          self._lidid,
                                          LidUOptions.number.value,
                                          param)
+
     @property
     def to_pervious(self):
         """
         Get lid to pervious area (1 if outflow sent to pervious area)
                                  (0 if not)
-                                 
+
         :return: Parameter Value
         :rtype: int
         """
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.toPerv.value)
+
     @to_pervious.setter
     def to_pervious(self, param):
         """
@@ -356,6 +380,7 @@ class LidUnit(object):
                                          self._lidid,
                                          LidUOptions.toPerv.value,
                                          param)
+
     @property
     def drain_subcatchment(self):
         """
@@ -368,11 +393,14 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.drainSub.value)
+
     @drain_subcatchment.setter
     def drain_subcatchment(self, param):
         """Set lid drain to subcatchment index"""
-        if isinstance(param, str) and self._model.ObjectIDexist(ObjectType.SUBCATCH.value, param):
-            subIndex = self._model.getObjectIDIndex(ObjectType.SUBCATCH.value, param)    
+        if isinstance(param, str) and self._model.ObjectIDexist(
+                ObjectType.SUBCATCH.value, param):
+            subIndex = self._model.getObjectIDIndex(
+                ObjectType.SUBCATCH.value, param)
         elif isinstance(param, int) and param >= -1 and param < self._model.getProjectSize(ObjectType.SUBCATCH.value):
             subIndex = param
         else:
@@ -383,7 +411,7 @@ class LidUnit(object):
                                   self._lidid,
                                   LidUOptions.drainSub.value,
                                   subIndex)
-        
+
     @property
     def drain_node(self):
         """
@@ -396,11 +424,14 @@ class LidUnit(object):
         return self._model.getLidUOption(self._subcatchmentid,
                                          self._lidid,
                                          LidUOptions.drainNode.value)
+
     @drain_node.setter
     def drain_node(self, param):
         """Set lid drain to node index"""
-        if isinstance(param, str) and self._model.ObjectIDexist(ObjectType.NODE.value, param):
-            nodeIndex = self._model.getObjectIDIndex(ObjectType.NODE.value, param)    
+        if isinstance(param, str) and self._model.ObjectIDexist(
+                ObjectType.NODE.value, param):
+            nodeIndex = self._model.getObjectIDIndex(
+                ObjectType.NODE.value, param)
         elif isinstance(param, int) and param >= -1 and param < self._model.getProjectSize(ObjectType.NODE.value):
             nodeIndex = param
         else:
@@ -411,7 +442,7 @@ class LidUnit(object):
                                   self._lidid,
                                   LidUOptions.drainNode.value,
                                   nodeIndex)
-        
+
     @property
     def dry_time(self):
         """
@@ -423,6 +454,7 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.dryTime.value)
+
     @property
     def old_drain_flow(self):
         """
@@ -434,6 +466,7 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.oldDrainFlow.value)
+
     @property
     def new_drain_flow(self):
         """
@@ -445,6 +478,7 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.newDrainFlow.value)
+
     @property
     def evaporation(self):
         """
@@ -456,10 +490,11 @@ class LidUnit(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.evapRate.value)
+
     @property
     def native_infiltration(self):
         """
-        Get lid native infilration rate limit 
+        Get lid native infilration rate limit
 
         :return: Parameter Value
         :rtype: double

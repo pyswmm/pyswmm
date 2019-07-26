@@ -14,8 +14,9 @@ from pyswmm.tests.data import (MODEL_FULL_FEATURES_PATH,
                                MODEL_STORAGE_PUMP_MGD, MODEL_WEIR_SETTING_PATH)
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka
-from pytest import approx 
-UT_PRECISION = 1 #%
+from pytest import approx
+UT_PRECISION = 1  # %
+
 
 def test_nodes_1():
     ''' pytest pyswmm/tests/test_nodes.py -k `test_nodes_1` '''
@@ -103,22 +104,29 @@ def test_nodes_6():
 
     for ind, step in enumerate(sim):
         pass
-    
-    assert(J5.statistics['peak_total_inflow'] == approx(0.478, rel=UT_PRECISION))
+
+    assert(J5.statistics['peak_total_inflow']
+           == approx(0.478, rel=UT_PRECISION))
     assert(J5.statistics['average_depth'] == approx(0.00017, rel=UT_PRECISION))
-    assert(J5.statistics['surcharge_duration'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['surcharge_duration']
+           == approx(0.0, rel=UT_PRECISION))
     assert(J5.statistics['max_ponded_volume'] == approx(0.0, rel=UT_PRECISION))
-    assert(J5.statistics['courant_crit_duration'] == approx(0.0, rel=UT_PRECISION))
-    assert(J5.statistics['peak_lateral_inflowrate'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['courant_crit_duration']
+           == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['peak_lateral_inflowrate']
+           == approx(0.0, rel=UT_PRECISION))
     assert(J5.statistics['flooding_duration'] == approx(0.0, rel=UT_PRECISION))
-    assert(J5.statistics['peak_flooding_rate'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['peak_flooding_rate']
+           == approx(0.0, rel=UT_PRECISION))
     assert(J5.statistics['lateral_infow_vol'] == approx(0.0, rel=UT_PRECISION))
-    assert(J5.statistics['max_flooding_date'] == approx(42309, rel=UT_PRECISION))
+    assert(J5.statistics['max_flooding_date']
+           == approx(42309, rel=UT_PRECISION))
     assert(J5.statistics['max_depth_date'] == approx(42309, rel=UT_PRECISION))
     assert(J5.statistics['max_inflow_date'] == approx(42309, rel=UT_PRECISION))
     assert(J5.statistics['max_depth'] == approx(0.0292, rel=UT_PRECISION))
     assert(J5.statistics['flooding_volume'] == approx(0.0, rel=UT_PRECISION))
-    assert(J5.statistics['max_report_depth'] == approx(0.0286, rel=UT_PRECISION))
+    assert(J5.statistics['max_report_depth']
+           == approx(0.0286, rel=UT_PRECISION))
     sim.close()
 
 
@@ -145,33 +153,33 @@ def test_storage_7():
     stats = STOR1.statistics
     assert(stats['peak_total_inflow'] == approx(2.9, rel=UT_PRECISION))
     assert(stats['peak_total_inflow'] == approx(3.1, rel=UT_PRECISION))
-    
+
     assert(stats['average_depth'] == approx(4.9, rel=UT_PRECISION))
     assert(stats['average_depth'] == approx(5, rel=UT_PRECISION))
 
     assert(stats['flooding_duration'] == approx(57, rel=UT_PRECISION))
     assert(stats['flooding_duration'] == approx(58, rel=UT_PRECISION))
-    
+
     assert(stats['peak_flooding_rate'] == approx(2.9, rel=UT_PRECISION))
     assert(stats['peak_flooding_rate'] == approx(3.1, rel=UT_PRECISION))
-    
+
     assert(stats['lateral_infow_vol'] == approx(0.0, rel=UT_PRECISION))
-    
+
     assert(stats['max_flooding_date'] == approx(42309, rel=UT_PRECISION))
     assert(stats['max_flooding_date'] == approx(42310, rel=UT_PRECISION))
-    
+
     assert(stats['max_depth_date'] == approx(42309, rel=UT_PRECISION))
     assert(stats['max_depth_date'] == approx(42310, rel=UT_PRECISION))
-    
+
     assert(stats['max_inflow_date'] == approx(42309, rel=UT_PRECISION))
     assert(stats['max_inflow_date'] == approx(42310, rel=UT_PRECISION))
 
     assert(stats['max_depth'] == approx(4.99, rel=UT_PRECISION))
     assert(stats['max_depth'] == approx(5.01, rel=UT_PRECISION))
-    
+
     assert(stats['flooding_volume'] == approx(621390, rel=UT_PRECISION))
     assert(stats['flooding_volume'] == approx(621393, rel=UT_PRECISION))
-    
+
     assert(stats['max_report_depth'] == approx(4.99, rel=UT_PRECISION))
     assert(stats['max_report_depth'] == approx(5.01, rel=UT_PRECISION))
 
@@ -190,16 +198,18 @@ def test_outfalls_8():
     stats = outfall.outfall_statistics
     outfall_cuinflow = outfall.cumulative_inflow
     sim.close()
-    assert(stats['total_periods'] ==  approx(208796, rel=UT_PRECISION))
-    assert(stats['pollutant_loading']['test'] == approx(1756, rel=UT_PRECISION))
-    assert(stats['pollutant_loading']['test'] == approx(1756.2, rel=UT_PRECISION))
+    assert(stats['total_periods'] == approx(208796, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test']
+           == approx(1756, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test']
+           == approx(1756.2, rel=UT_PRECISION))
     assert(stats['average_flowrate'] == approx(8.9, rel=UT_PRECISION))
     assert(stats['average_flowrate'] == approx(9.0, rel=UT_PRECISION))
     assert(stats['peak_flowrate'] == approx(9.0, rel=UT_PRECISION))
     assert(stats['peak_flowrate'] == approx(9.1, rel=UT_PRECISION))
     assert(outfall_cuinflow == approx(1876800, rel=UT_PRECISION))
     assert(outfall_cuinflow == approx(1876900, rel=UT_PRECISION))
-    
+
 
 def test_outfalls_8_mgd():
     ''' pytest pyswmm/tests/test_nodes.py -k `test_outfalls_8_mgd` '''
@@ -212,10 +222,12 @@ def test_outfalls_8_mgd():
     stats = outfall.outfall_statistics
     outfall_cuinflow = outfall.cumulative_inflow
     sim.close()
-    
+
     assert(stats['total_periods'] == approx(208796, rel=UT_PRECISION))
-    assert(stats['pollutant_loading']['test'] == approx(1305.25, rel=UT_PRECISION))
-    assert(stats['pollutant_loading']['test'] == approx(1305.75, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test']
+           == approx(1305.25, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test']
+           == approx(1305.75, rel=UT_PRECISION))
     assert(stats['average_flowrate'] == approx(4.3, rel=UT_PRECISION))
     assert(stats['average_flowrate'] == approx(4.32, rel=UT_PRECISION))
     assert(stats['peak_flowrate'] == approx(4.33, rel=UT_PRECISION))
@@ -225,14 +237,13 @@ def test_outfalls_8_mgd():
            outfall_cuinflow == approx(1395350, rel=UT_PRECISION))
 
 
-
 def test_nodes_10():
     with Simulation(MODEL_NODE_INFLOWS_PATH) as sim:
         J1 = Nodes(sim)["J1"]
         outfall = Nodes(sim)["J3"]
 
         J1.generated_inflow(4)
-        #Below Invert test
+        # Below Invert test
         outfall.outfall_stage(0)
         for ind, step in enumerate(sim):
             if ind == 1000:

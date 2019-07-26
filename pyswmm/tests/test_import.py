@@ -16,6 +16,7 @@ from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH, WIN_SWMM_LIB_PATH
 import pyswmm
 import pytest
 
+
 def test_use_1():
     if sys.platform == 'darwin':
         pyswmm.lib.use('swmm5.dylib')
@@ -42,14 +43,16 @@ def test_use_4():
     with pytest.raises(Exception) as e:
         pyswmm.lib.use('fakedll')
     assert str(e.value) == 'Library Not Found'
-    
+
 
 def test_lib_5():
-    """Testing SWMM Path as argument to Simulation Object. 
+    """Testing SWMM Path as argument to Simulation Object.
 
     On Windows for now."""
     if os.name == 'nt':
         print(WIN_SWMM_LIB_PATH)
-        sim = Simulation(MODEL_WEIR_SETTING_PATH, swmm_lib_path=WIN_SWMM_LIB_PATH) 
+        sim = Simulation(
+            MODEL_WEIR_SETTING_PATH,
+            swmm_lib_path=WIN_SWMM_LIB_PATH)
         sim.execute()
         pyswmm.lib.use(WIN_SWMM_LIB_PATH)

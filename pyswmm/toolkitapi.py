@@ -151,93 +151,96 @@ class SubcPollut(Enum):
 
 
 class LidUParams(Enum):
-    unitArea        = 0  # double
-    fullWidth       = 1  # double
-    botWidth        = 2  # double
-    initSat         = 3  # double
-    fromImperv      = 4  # double
-    fromPerv        = 5  # double
+    unitArea = 0  # double
+    fullWidth = 1  # double
+    botWidth = 2  # double
+    initSat = 3  # double
+    fromImperv = 4  # double
+    fromPerv = 5  # double
 
 
 class LidResults(Enum):
-    inflow          = 0  # double
-    evap            = 1  # double
-    infil           = 2  # double
-    surfFlow        = 3  # double
-    drainFlow       = 4  # double
-    initVol         = 5  # double
-    finalVol        = 6  # double
-    surfDepth       = 7  # double
-    paveDepth       = 8  # double
-    soilMoist       = 9  # double
-    storDepth       = 10 # double
-    dryTime         = 11 # double 
-    oldDrainFlow    = 12 # double
-    newDrainFlow    = 13 # double
-    pervArea        = 14 # double
-    flowToPerv      = 15 # double
-    evapRate        = 16 # double
-    nativeInfil     = 17 # double
-    surfInflow      = 18 # double
-    surfInfil       = 19 # double
-    surfEvap        = 20 # double
-    surfOutflow     = 21 # double
-    paveEvap        = 22 # double
-    pavePerc        = 23 # double
-    soilEvap        = 24 # double
-    soilPerc        = 25 # double
-    storInflow      = 26 # double
-    storExfil       = 27 # double
-    storEvap        = 28 # double
-    storDrain       = 29 # double
-    
+    inflow = 0  # double
+    evap = 1  # double
+    infil = 2  # double
+    surfFlow = 3  # double
+    drainFlow = 4  # double
+    initVol = 5  # double
+    finalVol = 6  # double
+    surfDepth = 7  # double
+    paveDepth = 8  # double
+    soilMoist = 9  # double
+    storDepth = 10  # double
+    dryTime = 11  # double
+    oldDrainFlow = 12  # double
+    newDrainFlow = 13  # double
+    pervArea = 14  # double
+    flowToPerv = 15  # double
+    evapRate = 16  # double
+    nativeInfil = 17  # double
+    surfInflow = 18  # double
+    surfInfil = 19  # double
+    surfEvap = 20  # double
+    surfOutflow = 21  # double
+    paveEvap = 22  # double
+    pavePerc = 23  # double
+    soilEvap = 24  # double
+    soilPerc = 25  # double
+    storInflow = 26  # double
+    storExfil = 27  # double
+    storEvap = 28  # double
+    storDrain = 29  # double
+
+
 class LidUOptions(Enum):
-    index           = 0  # int
-    number          = 1  # int
-    toPerv          = 2  # int
-    drainSub        = 3  # int
-    drainNode       = 4  # int
+    index = 0  # int
+    number = 1  # int
+    toPerv = 2  # int
+    drainSub = 3  # int
+    drainNode = 4  # int
 
 
 class LidLayers(Enum):
-    surface         = 0 # int
-    soil            = 1 # int
-    storage         = 2 # int
-    pavement        = 3 # int
-    drain           = 4 # int
-    drainMat        = 5 # int
+    surface = 0  # int
+    soil = 1  # int
+    storage = 2  # int
+    pavement = 3  # int
+    drain = 4  # int
+    drainMat = 5  # int
 
 
 class LidLayersProperty(Enum):
-    thickness       = 0 # double
-    voidFrac        = 1 # double
-    roughness       = 2 # double
-    surfSlope       = 3 # double
-    sideSlope       = 4 # double
-    alpha           = 5 # double
-    porosity        = 6 # double
-    fieldCap        = 7 # double
-    wiltPoint       = 8 # double
-    suction         = 9 # double
-    kSat            = 10 # double
-    kSlope          = 11 # double
-    clogFactor      = 12 # double
-    impervFrac      = 13 # double
-    coeff           = 14 # double
-    expon           = 15 # double
-    offset          = 16 # double
-    delay           = 17 # double
-    hOpen           = 18 # double
-    hClose          = 19 # double
-    qCurve          = 20 # integer
-    regenDays       = 21 # double
-    regenDegree     = 22 # double
+    thickness = 0  # double
+    voidFrac = 1  # double
+    roughness = 2  # double
+    surfSlope = 3  # double
+    sideSlope = 4  # double
+    alpha = 5  # double
+    porosity = 6  # double
+    fieldCap = 7  # double
+    wiltPoint = 8  # double
+    suction = 9  # double
+    kSat = 10  # double
+    kSlope = 11  # double
+    clogFactor = 12  # double
+    impervFrac = 13  # double
+    coeff = 14  # double
+    expon = 15  # double
+    offset = 16  # double
+    delay = 17  # double
+    hOpen = 18  # double
+    hClose = 19  # double
+    qCurve = 20  # integer
+    regenDays = 21  # double
+    regenDegree = 22  # double
+
 
 class RainGageResults(Enum):
     total_precip = 0
     rainfall = 1
     snowfall = 2
-    
+
+
 class NodeStats(ctypes.Structure):
     _fields_ = [
         ("avgDepth", ctypes.c_double), ("maxDepth", ctypes.c_double),
