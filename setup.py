@@ -16,7 +16,6 @@ import sys
 from setuptools import find_packages, setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-PY2 = sys.version_info.major == 2
 
 
 def get_version(module='pyswmm'):
@@ -41,8 +40,6 @@ def get_description():
 
 REQUIREMENTS = ['six']
 
-if sys.version_info < (3, 4):
-    REQUIREMENTS.append('enum34')
 
 setup(
     name='pyswmm',
@@ -50,13 +47,13 @@ setup(
     description='Python Wrapper for SWMM5 API',
     long_description=get_description(),
     url='https://github.com/OpenWaterAnalytics/pyswmm/wiki',
-    author='Bryant E. McDonnell (EmNet LLC)',
+    author='Bryant E. McDonnell (See AUTHORS)',
     author_email='bemcdonnell@gmail.com',
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
         '': [
-            'lib/windows/swmm5.dll', 'lib/windows/swmm5-x64.dll', 'lib/linux/swmm5.so', 'lib/windows/swmm5.dylib', 'LICENSE.txt',
+            'lib/windows/swmm5.dll', 'lib/windows/swmm5-x64.dll', 'lib/linux/swmm5.so', 'lib/macos/swmm5.dylib', 'LICENSE.txt',
             'AUTHORS', 'tests/data/*.inp', 'tests/*.py'
         ]
     },
@@ -68,11 +65,10 @@ setup(
         "Topic :: Documentation :: Sphinx",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: Unix",
+        "Operating System :: Macos",
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: C",
         "Development Status :: 4 - Beta",
     ])

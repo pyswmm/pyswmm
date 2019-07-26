@@ -1,5 +1,41 @@
 # History of changes
 
+## Version 0.5.0 (2019/07/26)
+
+### Issues Closed
+
+#### New Features
+
+* [Issue 199](https://github.com/OpenWaterAnalytics/pyswmm/issues/199) - Add support to RainGage API ([PR 198](https://github.com/OpenWaterAnalytics/pyswmm/pull/198))
+* [Issue 194](https://github.com/OpenWaterAnalytics/pyswmm/issues/194) - Add LID support to pyswmm  ([PR 152](https://github.com/OpenWaterAnalytics/pyswmm/pull/152))
+
+#### Bugs fixed
+
+* [Issue 192](https://github.com/OpenWaterAnalytics/pyswmm/issues/192) - latest version of v0.4.9.dev0 seems unstable ([PR 152](https://github.com/OpenWaterAnalytics/pyswmm/pull/152))
+* [Issue 172](https://github.com/OpenWaterAnalytics/pyswmm/issues/172) - `error_check` swallows exceptions and converts them to warnings ([PR 173](https://github.com/OpenWaterAnalytics/pyswmm/pull/173))
+* [Issue 164](https://github.com/OpenWaterAnalytics/pyswmm/issues/164) - pump_statistics['max_flowrate'] gives zero division error ([PR 204](https://github.com/OpenWaterAnalytics/pyswmm/pull/204))
+* [Issue 146](https://github.com/OpenWaterAnalytics/pyswmm/issues/146) - Fix linux / osx CI
+
+In this release 6 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 204](https://github.com/OpenWaterAnalytics/pyswmm/pull/204) - Bug Fix Issue 164 ([164](https://github.com/OpenWaterAnalytics/pyswmm/issues/164))
+* [PR 203](https://github.com/OpenWaterAnalytics/pyswmm/pull/203) - Merge develop to master ([201](https://github.com/OpenWaterAnalytics/pyswmm/issues/201), [200](https://github.com/OpenWaterAnalytics/pyswmm/issues/200))
+* [PR 198](https://github.com/OpenWaterAnalytics/pyswmm/pull/198) - Merging Abhi's Raingage API work ([199](https://github.com/OpenWaterAnalytics/pyswmm/issues/199), [155](https://github.com/OpenWaterAnalytics/pyswmm/issues/155))
+* [PR 191](https://github.com/OpenWaterAnalytics/pyswmm/pull/191) - Eliminating VCOMP DLL Not Found on Windows ([186](https://github.com/OpenWaterAnalytics/pyswmm/issues/186), [153](https://github.com/OpenWaterAnalytics/pyswmm/issues/153))
+* [PR 175](https://github.com/OpenWaterAnalytics/pyswmm/pull/175) - doc update simulation to sim
+* [PR 173](https://github.com/OpenWaterAnalytics/pyswmm/pull/173) - Make _error_check throw exception for all errcodes ([172](https://github.com/OpenWaterAnalytics/pyswmm/issues/172))
+* [PR 170](https://github.com/OpenWaterAnalytics/pyswmm/pull/170) - add getters for pollutant surface buildup and ponded concentration in subcatchments
+* [PR 165](https://github.com/OpenWaterAnalytics/pyswmm/pull/165) - Simple ci ([166](https://github.com/OpenWaterAnalytics/pyswmm/issues/166))
+* [PR 163](https://github.com/OpenWaterAnalytics/pyswmm/pull/163) - Update system.py docs ([162](https://github.com/OpenWaterAnalytics/pyswmm/issues/162))
+* [PR 154](https://github.com/OpenWaterAnalytics/pyswmm/pull/154) - Updated Linux Binary ([133](https://github.com/OpenWaterAnalytics/pyswmm/issues/133))
+* [PR 152](https://github.com/OpenWaterAnalytics/pyswmm/pull/152) - LID Support ([197](https://github.com/OpenWaterAnalytics/pyswmm/issues/197), [196](https://github.com/OpenWaterAnalytics/pyswmm/issues/196), [194](https://github.com/OpenWaterAnalytics/pyswmm/issues/194), [192](https://github.com/OpenWaterAnalytics/pyswmm/issues/192))
+* [PR 151](https://github.com/OpenWaterAnalytics/pyswmm/pull/151) - Updated Node Tests with Assertion Checks ([150](https://github.com/OpenWaterAnalytics/pyswmm/issues/150))
+* [PR 109](https://github.com/OpenWaterAnalytics/pyswmm/pull/109) - Adding Code of Conduct to Project
+
+In this release 13 pull requests were closed.
+
 ## Version 0.4.7 (2018-01-08)
 
 ### Issues Closed
