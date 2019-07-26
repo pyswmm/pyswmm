@@ -29,7 +29,6 @@ def test_use_1():
 
 def test_use_2():
     pyswmm.lib.use('swmm5')
-    pyswmm.lib.use(WIN_SWMM_LIB_PATH)
 
 
 def test_use_3():
