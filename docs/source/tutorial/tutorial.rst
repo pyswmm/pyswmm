@@ -85,7 +85,6 @@ you can then initialize a :py:class:`pyswmm.nodes.Node`
 	... 	for step in sim:
 	... 		print(J1.total_inflow)
 	...
-	... 	sim.report()
 
 
 Links
@@ -114,7 +113,6 @@ you can then initialize a :py:class:`pyswmm.links.Link`
 	... 		if c1c2.flow > 10.0:
 	... 			c1c2.target_setting = 0.5
 	...
-	... 	sim.report()
 
 
 Subcatchments
@@ -140,7 +138,6 @@ you can then initialize a :py:class:`pyswmm.subcatchments.Subcatchment`
 	... 	for step in sim:
 	... 		print(SC1.runoff)
 	...
-	... 	sim.report()
 
 
 In the example above we introduce the option to change a link's settings.
@@ -183,7 +180,6 @@ comparing two depths.
 	... 		if TestDepth(J1.depth, J2.depth):
 	... 			c1c2.target_setting = 0.5
 	...
-	... 	sim.report()
 
 If an EPA-SWMM5 Model has existing control actions within, any control
 rules developed using pyswmm will have the highest priority.  All pyswmm
@@ -225,7 +221,7 @@ The layers parameters that can be accessed using PySWMM are listed in the table 
 	>>> from pyswmm import Simulation, LidControls
 	>>>
 	>>> with Simulation('/testmodel.inp') as sim:
-	... 	rain_barrel = LidControls(sim)["RG"]
+	... 	rain_barrel = LidControls(sim)["rain_barrel"]
 	... 	print(rain_barrel.drain.coefficient)
 	... 	rain_barrel.drain.coefficient = 0.60
 	... 	print(rain_barrel.drain.coefficient)    
