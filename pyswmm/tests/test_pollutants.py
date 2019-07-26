@@ -34,3 +34,4 @@ def test_pollutants_1():
         assert 9.99999 <= S1.concPonded['test-pollutant'] <= 10.00001
         assert 9.99999 <= S2.concPonded['test-pollutant'] <= 10.00001
         assert 9.99999 <= S3.concPonded['test-pollutant'] <= 10.00001
+

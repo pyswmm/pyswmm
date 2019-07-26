@@ -14,7 +14,8 @@ from pyswmm.tests.data import (MODEL_FULL_FEATURES_PATH,
                                MODEL_STORAGE_PUMP_MGD, MODEL_WEIR_SETTING_PATH)
 from pyswmm.utils.fixtures import get_model_files
 import pyswmm.toolkitapi as tka
-
+from pytest import approx 
+UT_PRECISION = 1 #%
 
 def test_nodes_1():
     ''' pytest pyswmm/tests/test_nodes.py -k `test_nodes_1` '''
@@ -88,7 +89,7 @@ def test_nodes_5():
         if ind == 7:
             J5.generated_inflow(544.0)
         if ind > 8:
-            assert (J5.lateral_inflow >= 543.9)
+            assert (J5.lateral_inflow == approx(543.9, rel=UT_PRECISION))
             if ind % 1000 == 0:
                 print(J5.lateral_inflow)
     sim.close()
@@ -103,21 +104,21 @@ def test_nodes_6():
     for ind, step in enumerate(sim):
         pass
     
-    assert(J5.statistics['peak_total_inflow'] >= 0.478)
-    assert(J5.statistics['average_depth'] >= 0.00018)
-    assert(J5.statistics['surcharge_duration'] >= 0.0)
-    assert(J5.statistics['max_ponded_volume'] >= 0.0)
-    assert(J5.statistics['courant_crit_duration'] >= 0.0)
-    assert(J5.statistics['peak_lateral_inflowrate'] >= 0.0)
-    assert(J5.statistics['flooding_duration'] >= 0.0)
-    assert(J5.statistics['peak_flooding_rate'] >= 0.0)
-    assert(J5.statistics['lateral_infow_vol'] >= 0.0)
-    assert(J5.statistics['max_flooding_date'] >= 42309)
-    assert(J5.statistics['max_depth_date'] >= 42309)
-    assert(J5.statistics['max_inflow_date'] >= 42309)
-    assert(J5.statistics['max_depth'] >= 0.0292)
-    assert(J5.statistics['flooding_volume'] >= 0.0)
-    assert(J5.statistics['max_report_depth'] >= 0.0286)
+    assert(J5.statistics['peak_total_inflow'] == approx(0.478, rel=UT_PRECISION))
+    assert(J5.statistics['average_depth'] == approx(0.00017, rel=UT_PRECISION))
+    assert(J5.statistics['surcharge_duration'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['max_ponded_volume'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['courant_crit_duration'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['peak_lateral_inflowrate'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['flooding_duration'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['peak_flooding_rate'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['lateral_infow_vol'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['max_flooding_date'] == approx(42309, rel=UT_PRECISION))
+    assert(J5.statistics['max_depth_date'] == approx(42309, rel=UT_PRECISION))
+    assert(J5.statistics['max_inflow_date'] == approx(42309, rel=UT_PRECISION))
+    assert(J5.statistics['max_depth'] == approx(0.0292, rel=UT_PRECISION))
+    assert(J5.statistics['flooding_volume'] == approx(0.0, rel=UT_PRECISION))
+    assert(J5.statistics['max_report_depth'] == approx(0.0286, rel=UT_PRECISION))
     sim.close()
 
 
@@ -131,48 +132,48 @@ def test_storage_7():
         pass
 
     stats = STOR1.storage_statistics
-    assert(stats['max_volume'] ==  5000.0)
-    assert(stats['peak_flowrate'] ==  0.0)
-    assert(stats['exfil_loss'] ==  0.0)
-    assert(stats['evap_loss'] ==  0.0)
-    assert(stats['average_volume'] >=  4979.0)
-    assert(stats['average_volume'] <=  4980.0)
-    assert(stats['max_vol_date'] >=  42309.0)
-    assert(stats['max_vol_date'] <=  42310.0)
-    assert(stats['initial_volume'] ==  0.0)
+    assert(stats['max_volume'] == approx(5000.0, rel=UT_PRECISION))
+    assert(stats['peak_flowrate'] == approx(0.0, rel=UT_PRECISION))
+    assert(stats['exfil_loss'] == approx(0.0, rel=UT_PRECISION))
+    assert(stats['evap_loss'] == approx(0.0, rel=UT_PRECISION))
+    assert(stats['average_volume'] == approx(4979.0, rel=UT_PRECISION))
+    assert(stats['average_volume'] == approx(4980.0, rel=UT_PRECISION))
+    assert(stats['max_vol_date'] == approx(42309.0, rel=UT_PRECISION))
+    assert(stats['max_vol_date'] == approx(42310.0, rel=UT_PRECISION))
+    assert(stats['initial_volume'] == approx(0.0, rel=UT_PRECISION))
 
     stats = STOR1.statistics
-    assert(stats['peak_total_inflow'] >= 2.9)
-    assert(stats['peak_total_inflow'] <= 3.1)
+    assert(stats['peak_total_inflow'] == approx(2.9, rel=UT_PRECISION))
+    assert(stats['peak_total_inflow'] == approx(3.1, rel=UT_PRECISION))
     
-    assert(stats['average_depth'] >= 4.9)
-    assert(stats['average_depth'] <= 5)
+    assert(stats['average_depth'] == approx(4.9, rel=UT_PRECISION))
+    assert(stats['average_depth'] == approx(5, rel=UT_PRECISION))
 
-    assert(stats['flooding_duration'] >= 57)
-    assert(stats['flooding_duration'] <= 58)
+    assert(stats['flooding_duration'] == approx(57, rel=UT_PRECISION))
+    assert(stats['flooding_duration'] == approx(58, rel=UT_PRECISION))
     
-    assert(stats['peak_flooding_rate'] >= 2.9)
-    assert(stats['peak_flooding_rate'] <= 3.1)
+    assert(stats['peak_flooding_rate'] == approx(2.9, rel=UT_PRECISION))
+    assert(stats['peak_flooding_rate'] == approx(3.1, rel=UT_PRECISION))
     
-    assert(stats['lateral_infow_vol'] == 0.0)
+    assert(stats['lateral_infow_vol'] == approx(0.0, rel=UT_PRECISION))
     
-    assert(stats['max_flooding_date'] >= 42309)
-    assert(stats['max_flooding_date'] <= 42310)
+    assert(stats['max_flooding_date'] == approx(42309, rel=UT_PRECISION))
+    assert(stats['max_flooding_date'] == approx(42310, rel=UT_PRECISION))
     
-    assert(stats['max_depth_date'] >= 42309)
-    assert(stats['max_depth_date'] <= 42310)
+    assert(stats['max_depth_date'] == approx(42309, rel=UT_PRECISION))
+    assert(stats['max_depth_date'] == approx(42310, rel=UT_PRECISION))
     
-    assert(stats['max_inflow_date'] >= 42309)
-    assert(stats['max_inflow_date'] <= 42310)
+    assert(stats['max_inflow_date'] == approx(42309, rel=UT_PRECISION))
+    assert(stats['max_inflow_date'] == approx(42310, rel=UT_PRECISION))
 
-    assert(stats['max_depth'] >= 4.99)
-    assert(stats['max_depth'] <= 5.01)
+    assert(stats['max_depth'] == approx(4.99, rel=UT_PRECISION))
+    assert(stats['max_depth'] == approx(5.01, rel=UT_PRECISION))
     
-    assert(stats['flooding_volume'] >= 621390)
-    assert(stats['flooding_volume'] <= 621393)
+    assert(stats['flooding_volume'] == approx(621390, rel=UT_PRECISION))
+    assert(stats['flooding_volume'] == approx(621393, rel=UT_PRECISION))
     
-    assert(stats['max_report_depth'] >= 4.99)
-    assert(stats['max_report_depth'] <= 5.01)
+    assert(stats['max_report_depth'] == approx(4.99, rel=UT_PRECISION))
+    assert(stats['max_report_depth'] == approx(5.01, rel=UT_PRECISION))
 
     print(STOR1.statistics)
     sim.close()
@@ -189,15 +190,15 @@ def test_outfalls_8():
     stats = outfall.outfall_statistics
     outfall_cuinflow = outfall.cumulative_inflow
     sim.close()
-    assert(stats['total_periods'] ==  208795)
-    assert(stats['pollutant_loading']['test'] >= 1756)
-    assert(stats['pollutant_loading']['test'] <= 1756.2)
-    assert(stats['average_flowrate'] >= 8.9)
-    assert(stats['average_flowrate'] <= 9.0)
-    assert(stats['peak_flowrate'] > 9.0)
-    assert(stats['peak_flowrate'] < 9.1)
-    assert(outfall_cuinflow >= 1876800)
-    assert(outfall_cuinflow <= 1876900)
+    assert(stats['total_periods'] ==  approx(208796, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test'] == approx(1756, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test'] == approx(1756.2, rel=UT_PRECISION))
+    assert(stats['average_flowrate'] == approx(8.9, rel=UT_PRECISION))
+    assert(stats['average_flowrate'] == approx(9.0, rel=UT_PRECISION))
+    assert(stats['peak_flowrate'] == approx(9.0, rel=UT_PRECISION))
+    assert(stats['peak_flowrate'] == approx(9.1, rel=UT_PRECISION))
+    assert(outfall_cuinflow == approx(1876800, rel=UT_PRECISION))
+    assert(outfall_cuinflow == approx(1876900, rel=UT_PRECISION))
     
 
 def test_outfalls_8_mgd():
@@ -212,15 +213,16 @@ def test_outfalls_8_mgd():
     outfall_cuinflow = outfall.cumulative_inflow
     sim.close()
     
-    assert(stats['total_periods'] ==  208795)
-    assert(stats['pollutant_loading']['test'] >= 1305.25)
-    assert(stats['pollutant_loading']['test'] <= 1305.75)
-    assert(stats['average_flowrate'] >= 4.3)
-    assert(stats['average_flowrate'] <= 4.32)
-    assert(stats['peak_flowrate'] > 4.33)
-    assert(stats['peak_flowrate'] < 4.34)
-    assert(outfall_cuinflow >= 1395293)
-    assert(outfall_cuinflow <= 1395299)
+    assert(stats['total_periods'] == approx(208796, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test'] == approx(1305.25, rel=UT_PRECISION))
+    assert(stats['pollutant_loading']['test'] == approx(1305.75, rel=UT_PRECISION))
+    assert(stats['average_flowrate'] == approx(4.3, rel=UT_PRECISION))
+    assert(stats['average_flowrate'] == approx(4.32, rel=UT_PRECISION))
+    assert(stats['peak_flowrate'] == approx(4.33, rel=UT_PRECISION))
+    assert(stats['peak_flowrate'] == approx(4.34, rel=UT_PRECISION))
+    assert(outfall_cuinflow == approx(1395293, rel=UT_PRECISION))
+    assert(outfall_cuinflow == approx(1395299, rel=UT_PRECISION) and
+           outfall_cuinflow == approx(1395350, rel=UT_PRECISION))
 
 
 
@@ -238,12 +240,12 @@ def test_nodes_10():
             if ind == 5000:
                 outfall.outfall_stage(7)
             if ind == 5001:
-                assert outfall.head <= 7.00001
-                assert outfall.head >= 6.99999
+                assert outfall.head == approx(7.00001, rel=UT_PRECISION)
+                assert outfall.head == approx(6.99999, rel=UT_PRECISION)
 
             if ind == 50000:
                 outfall.outfall_stage(13.5)
 
             if ind == 50001:
-                assert outfall.head <= 13.50001
-                assert outfall.head >= 13.49999
+                assert outfall.head == approx(13.50001, rel=UT_PRECISION)
+                assert outfall.head == approx(13.49999, rel=UT_PRECISION)
