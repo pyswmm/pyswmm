@@ -265,6 +265,7 @@ you can then interact with the lid units defined on the subcatchment. You can it
 using the LidGroup object. 
 
 .. code-block:: python
+
 	>>> from pyswmm import Simulation, LidGroups
 	>>>
 	>>> with Simulation('/testmodel.inp') as sim:
