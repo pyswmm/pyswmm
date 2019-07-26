@@ -1,5 +1,7 @@
-
-
+1platform:
+  - x86
+  - x64
+  
 environment:
   matrix:
     - PYTHON: "C:\\Python36"
