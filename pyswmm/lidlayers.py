@@ -9,6 +9,23 @@ from pyswmm.toolkitapi import LidLayers, LidLayersProperty
 
 
 class Surface(object):
+    """
+    +--------------------+--------------------+--------------------+--------------------+ 
+    | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  | 
+    +====================+====================+====================+====================+ 
+    | Surface            | thickness          | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Surface            | void_fraction      | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Surface            | roughness          | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Surface            | slope              | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Surface            | side_slope         | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Surface            | alpha              | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    """
     def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
@@ -128,6 +145,25 @@ class Surface(object):
 
 
 class Soil(object):
+    """
+    +--------------------+--------------------+--------------------+--------------------+ 
+    | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  | 
+    +====================+====================+====================+====================+ 
+    | Soil               | thickness          | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Soil               | porosity           | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Soil               | field_capacity     | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Soil               | wilting_point      | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Soil               | k_saturated        | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Soil               | k_slope            | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Soil               | suction_head       | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+ 
+    """
     def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
@@ -275,6 +311,19 @@ class Soil(object):
 
 
 class Storage(object):
+    """
+    +--------------------+--------------------+--------------------+--------------------+ 
+    | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  | 
+    +====================+====================+====================+====================+ 
+    | Storage            | thickness          | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Storage            | void_fraction      | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Storage            | k_saturated        | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Storage            | clog_factor        | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    """
     def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
@@ -362,6 +411,25 @@ class Storage(object):
 
 
 class Pavement(object):
+    """
+    +--------------------+--------------------+--------------------+--------------------+ 
+    | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  | 
+    +====================+====================+====================+====================+ 
+    | Pavement           | thickness          | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Pavement           | void_fraction      | enabled            | disabled           | 
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Pavement           | impervious_fraction| enabled            | disabled           | 
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Pavement           | k_saturated        | enabled            | disabled           | 
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Pavement           | clog_factor        | enabled            | enabled            | 
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Pavement           | regeneration       | enabled            | disabled           | 
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Pavement           | regeneration_degree| enabled            | disabled           | 
+    +--------------------+--------------------+--------------------+--------------------+  
+    """
     def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
@@ -510,6 +578,23 @@ class Pavement(object):
 
 
 class Drain(object):
+    """
+    +--------------------+--------------------+--------------------+--------------------+ 
+    | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  | 
+    +====================+====================+====================+====================+ 
+    | Drain              | coefficient        | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Drain              | exponent           | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Drain              | offset             | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Drain              | delay              | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Drain              | open_head          | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | Drain              | close_head         | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    """
     def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
@@ -637,6 +722,19 @@ class Drain(object):
 
 
 class DrainMat(object):
+    """
+    +--------------------+--------------------+--------------------+--------------------+ 
+    | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  | 
+    +====================+====================+====================+====================+ 
+    | DrainMat           | thickness          | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | DrainMat           | void_fraction      | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | DrainMat           | roughness          | enabled            | enabled            |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    | DrainMat           | alpha              | enabled            | disabled           |  
+    +--------------------+--------------------+--------------------+--------------------+  
+    """
     def __init__(self, model, lidcontrol):
         self._model = model
         self._lidcontrol = lidcontrol
