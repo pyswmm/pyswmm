@@ -21,7 +21,6 @@ def test_use_1():
         pyswmm.lib.use('swmm5.dylib')
     elif sys.platform.startswith('linux'):
         pyswmm.lib.use('swmm5.so')
-        pyswmm.lib.use(DLL_SELECTION())
     else:
         pyswmm.lib.use('swmm5.dll')
         pyswmm.lib.use(WIN_SWMM_LIB_PATH)
@@ -29,6 +28,8 @@ def test_use_1():
 
 def test_use_2():
     pyswmm.lib.use('swmm5')
+    if sys.platform = 'nt':
+        pyswmm.lib.use(WIN_SWMM_LIB_PATH)
 
 
 def test_use_3():
