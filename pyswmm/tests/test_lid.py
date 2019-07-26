@@ -13,7 +13,8 @@ def test_list_lid_controls():
                 assert(str(control) == 'LID')
             if i == 1:
                 assert(str(control) == 'Green_LID')
-           
+
+
 def test_list_lid_groups():
     with Simulation(MODEL_LIDS_PATH) as sim:
         for i, group in enumerate(LidGroups(sim)):

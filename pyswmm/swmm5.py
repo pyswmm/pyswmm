@@ -28,7 +28,7 @@ from pyswmm.lib import DLL_SELECTION
 import pyswmm.toolkitapi as tka
 
 # Local variables
-SWMM_VER_51011 = '5.1.13'
+SWMM_VER_51011 = '5.1.14'
 
 
 class SWMMException(Exception):
@@ -127,7 +127,7 @@ class PySWMM(object):
 
         if swmm_lib_path is None:
             swmm_lib_path = DLL_SELECTION()
-        
+
         if os.name == 'nt':
             # Windows Support
             self.SWMMlibobj = ctypes.WinDLL(swmm_lib_path)

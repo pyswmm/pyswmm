@@ -11,10 +11,6 @@ for selecting the SWMM5 engine. """
 # Standard library imports
 import os
 import sys
-import platform
-
-# Machine Architechture
-MACHINE_BITS = 8 * tuple.__itemsize__
 
 # Local Path
 HERE = os.path.abspath(os.path.dirname(__file__))
