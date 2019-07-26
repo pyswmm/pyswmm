@@ -151,7 +151,7 @@ class PySWMM(object):
         errcode = ctypes.c_int(errcode)
         _errmsg = ctypes.create_string_buffer(257)
         self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
-        print(_errmsg.value.decode("utf-8"))
+        #print(_errmsg.value.decode("utf-8"))
         return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
@@ -669,11 +669,9 @@ class PySWMM(object):
         C_ID = ctypes.c_char_p(six.b(ID))
         index = ctypes.c_int()
         errcode = self.SWMMlibobj.swmm_project_findObject(objecttype, C_ID, ctypes.byref(index))
+        self._error_check(errcode)
         index = index.value
-        if index != -1:
-            return index
-        else:
-            raise Exception("ID Does Not Exist")
+        return index
 
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
@@ -1076,6 +1074,7 @@ class PySWMM(object):
                                                     lidIndex,
                                                     parameter,
                                                     _val)
+        self._error_check(errcode)
         
     def getLidUOption(self, subcatchID, lidIndex, parameter):
         """
@@ -1226,6 +1225,48 @@ class PySWMM(object):
                                       outindex.value)
 
         return (TYPELoadSurface.value, LoadID)
+    # =======================================================
+    # Rainfall API
+
+    def getGagePrecip(self, ID):
+        """
+        Get precipitation from gage 
+
+        This function returns the rainfall, show and total precipitation
+        associated with the gage
+
+        :param str ID: Gage ID
+        :return: (total, rainfall, snow)
+        :rtype: tuple
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.getGagePrecip('Gage1')
+        >>> 0.0 0.0 0.0
+        >>> swmm_model.swmm_close()
+
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
+
+        result = ctypes.POINTER(ctypes.c_double * 3)()
+
+        precip_values = []
+
+        errcode = self.SWMMlibobj.swmm_getGagePrecip(index,
+                ctypes.byref(result))
+
+        for ind in range(3):
+            value = ctypes.cast(result, ctypes.POINTER(ctypes.c_double))[ind]
+            precip_values.append(value)
+
+        self._error_check(errcode)
+
+        freeresultarray = self.SWMMlibobj.freeArray
+        freeresultarray(ctypes.byref(result))
+
+        return precip_values
 
     # --- Active Simulation Result "Getters"
     # -------------------------------------------------------------------------
@@ -1914,6 +1955,28 @@ class PySWMM(object):
         errcode = self.SWMMlibobj.swmm_setOutfallStage(index, q)
         self._error_check(errcode)
 
+    def setGagePrecip(self, ID, value):
+        """
+        Set precipitation to gage 
+
+        This function sets the rainfall intensity to the gage
+
+        :param str ID: Gage ID
+        :param float valve: rainfall intensity 
+        :return: errcode
+
+        Examples:
+
+        >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
+        >>> swmm_model.swmm_open()
+        >>> swmm_model.setGagePrecip('Gage1', 10.0)
+        >>> swmm_model.swmm_close()
+
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
+        val = ctypes.c_double(value)
+        errcode = self.SWMMlibobj.swmm_setGagePrecip(index, val)
+        self._error_check(errcode)
 
 if __name__ == '__main__':
     test = PySWMM(

@@ -233,6 +233,10 @@ class LidLayersProperty(Enum):
     regenDays       = 21 # double
     regenDegree     = 22 # double
 
+class RainGageResults(Enum):
+    total_precip = 0
+    rainfall = 1
+    snowfall = 2
     
 class NodeStats(ctypes.Structure):
     _fields_ = [
