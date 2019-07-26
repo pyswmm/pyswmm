@@ -7,11 +7,10 @@
 # -----------------------------------------------------------------------------
 from pyswmm.toolkitapi import LidLayers, LidResults
 
-
 def _flux_rate(model, subcatchment, lid_index, layer):
     """
     Get lid net inflow - outflow from previous time step for each lid layer
-    ONLY FOR for surface, soil, storage, pave
+    ONLY FOR for surface, soil, storage, pave 
     :param int layerIndex: layer type (toolkitapi.LidLayers member variable)
     :return: Parameter Value
     :rtype: double
@@ -19,8 +18,7 @@ def _flux_rate(model, subcatchment, lid_index, layer):
     return model.getLidUFluxRates(subcatchment,
                                   lid_index,
                                   layer)
-
-
+    
 class Surface(object):
     def __init__(self, model, lidunit):
         self._model = model
@@ -39,7 +37,6 @@ class Surface(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.surfDepth.value)
-
     @property
     def inflow(self):
         """
@@ -51,7 +48,6 @@ class Surface(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.surfInflow.value)
-
     @property
     def infiltration(self):
         """
@@ -63,7 +59,6 @@ class Surface(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.surfInfil.value)
-
     @property
     def evaporation(self):
         """
@@ -75,7 +70,6 @@ class Surface(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.surfEvap.value)
-
     @property
     def outflow(self):
         """
@@ -87,7 +81,6 @@ class Surface(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.surfOutflow.value)
-
     @property
     def flux_rate(self):
         """
@@ -101,7 +94,7 @@ class Surface(object):
                           self._lidid,
                           LidLayers.surface.value)
 
-
+    
 class Pavement(object):
     def __init__(self, model, lidunit):
         self._model = model
@@ -120,7 +113,6 @@ class Pavement(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.paveDepth.value)
-
     @property
     def evaporation(self):
         """
@@ -132,7 +124,6 @@ class Pavement(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.paveEvap.value)
-
     @property
     def percolation(self):
         """
@@ -144,7 +135,6 @@ class Pavement(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.pavePerc.value)
-
     @property
     def flux_rate(self):
         """
@@ -157,8 +147,8 @@ class Pavement(object):
                           self._subcatchmentid,
                           self._lidid,
                           LidLayers.pavement.value)
-
-
+            
+    
 class Storage(object):
     def __init__(self, model, lidunit):
         self._model = model
@@ -177,7 +167,6 @@ class Storage(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.storDepth.value)
-
     @property
     def inflow(self):
         """
@@ -189,7 +178,6 @@ class Storage(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.storInflow.value)
-
     @property
     def exfiltration(self):
         """
@@ -201,7 +189,6 @@ class Storage(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.storExfil.value)
-
     @property
     def evaporation(self):
         """
@@ -213,7 +200,6 @@ class Storage(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.storEvap.value)
-
     @property
     def drain(self):
         """
@@ -225,7 +211,6 @@ class Storage(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.storDrain.value)
-
     @property
     def flux_rate(self):
         """
@@ -239,7 +224,7 @@ class Storage(object):
                           self._lidid,
                           LidLayers.storage.value)
 
-
+            
 class Soil(object):
     def __init__(self, model, lidunit):
         self._model = model
@@ -258,7 +243,6 @@ class Soil(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.soilMoist.value)
-
     @property
     def evaporation(self):
         """
@@ -270,7 +254,6 @@ class Soil(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.soilEvap.value)
-
     @property
     def percolation(self):
         """
@@ -282,7 +265,6 @@ class Soil(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.soilPerc.value)
-
     @property
     def flux_rate(self):
         """
@@ -296,18 +278,18 @@ class Soil(object):
                           self._lidid,
                           LidLayers.soil.value)
 
-
+    
 class WaterBalance(object):
     def __init__(self, model, lidunit):
         self._model = model
         self._lidunit = lidunit
         self._subcatchmentid = lidunit._subcatchmentid
         self._lidid = lidunit._lidid
-
+        
     @property
     def inflow(self):
         """
-        Get lid water balance total inflow
+        Get lid water balance total inflow 
 
         :return: Parameter Value
         :rtype: double
@@ -315,7 +297,6 @@ class WaterBalance(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.inflow.value)
-
     @property
     def evaporation(self):
         """
@@ -327,7 +308,6 @@ class WaterBalance(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.evap.value)
-
     @property
     def infiltration(self):
         """
@@ -339,7 +319,6 @@ class WaterBalance(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.infil.value)
-
     @property
     def surface_flow(self):
         """
@@ -351,7 +330,6 @@ class WaterBalance(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.surfFlow.value)
-
     @property
     def drain_flow(self):
         """
@@ -375,11 +353,10 @@ class WaterBalance(object):
         return self._model.getLidUResult(self._subcatchmentid,
                                          self._lidid,
                                          LidResults.initVol.value)
-
     @property
     def final_volume(self):
         """
-        Get lid water balance final stored volume
+        Get lid water balance final stored volume 
 
         :return: Parameter Value
         :rtype: double
