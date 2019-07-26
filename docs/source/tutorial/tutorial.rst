@@ -207,3 +207,75 @@ runoff or seasonality.
 	... 	j1 = Nodes(sim)["J1"]
 	... 	for step in sim:
 	... 		j1.generated_inflow(9)
+    
+    
+
+Lid Controls
+---------------------
+For interacting with lid controls a :py:class:`pyswmm.lidcontrols.LidControls`
+object must be initialized. See the following example. Once the ``LidControls`` object is initialized,
+you can then initialize a :py:class:`pyswmm.lidcontrols.LidControl`. Once the ``LidControl`` object is initialized, 
+you can then interact with the parameters defined in each layers within an Lid Control: ``Surface``, ``Soil``, 
+``Storage``, ``Pavement``, ``Drain``, ``DrainMat``. 
+
+The layers parameters that can be accessed using PySWMM are listed in the table below.
+
+.. code-block:: python
+
+	>>> from pyswmm import Simulation, LidControls
+	>>>
+	>>> with Simulation('/testmodel.inp') as sim:
+	... 	rain_barrel = LidControls(sim)["RG"]
+	... 	print(rain_barrel.drain.coefficient)
+	... 	rain_barrel.drain.coefficient = 0.60
+	... 	print(rain_barrel.drain.coefficient)    
+    
+All LidControl parameters can be accessed before and during model simulations. 
+All LidControl parameters can be set before model simulation. Only some LidControl parameters can be set 
+during model simulation.
+
+
+Lid Groups
+---------------------
+For interacting with group of lids defined on a subcatchment :py:class:`pyswmm.lidgroups.LidGroups`
+object must be initialized. See the following example. Once the ``LidGroups`` object is initialized,
+you can then initialize a :py:class:`pyswmm.lidgroups.LidGroup`. Once the ``LidGroup`` object is initialized, 
+you can then interact with the lid units defined on the subcatchment. You can iterate through the list of lid units 
+using the LidGroup object. 
+
+.. code-block:: python
+
+	>>> from pyswmm import Simulation, LidGroups
+	>>>
+	>>> with Simulation('/testmodel.inp') as sim:
+	... 	lid_on_sub = LidGroups(sim)["subcatch_id"]
+	... 	for lid in lid_on_sub:
+    ... 		print(lid)
+    ... 	print(lid_on_sub[0])
+    ... 	for step in sim:
+    ... 		print(lid_on_sub.old_drain_flow)
+    
+
+Lid Units
+---------------------
+For interacting with group of lids defined on a subcatchment :py:class:`pyswmm.lidgroups.LidGroups`
+object must be initialized. See the example above. Once the ``LidGroups`` object is initialized,
+you can then initialize a :py:class:`pyswmm.lidgroups.LidGroup`. Once the ``LidGroup`` object is initialized, 
+you can then interact with the lid units defined on the subcatchment. You can iterate through the list of lid units 
+using the LidGroup object. 
+
+.. code-block:: python
+	>>> from pyswmm import Simulation, LidGroups
+	>>>
+	>>> with Simulation('/testmodel.inp') as sim:
+	... 	lid_on_sub = LidGroups(sim)["subcatch_id"]
+	... 	for lid in lid_on_sub:
+    ... 		print(lid)
+    ... 	print(lid_on_sub[0])
+    ... 	for step in sim:
+    ... 		print(lid_on_sub.WaterBalance.inflow)
+    ... 		print(lid_on_sub.WaterBalance.evaporation)
+    
+All LidUnits parameters can be accessed before and during model simulations. 
+All LidUnits parameters can be set before model simulation. Only some LidUnits parameters can be set 
+during model simulation.
