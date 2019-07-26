@@ -2,8 +2,8 @@
 
 .. currentmodule:: pyswmm.lidlayers
 
-raingages module
-=================
+lidlayers module
+================
 
 .. automodule:: pyswmm.lidlayers
     :members:

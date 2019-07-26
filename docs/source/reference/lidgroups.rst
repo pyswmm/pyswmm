@@ -2,8 +2,8 @@
 
 .. currentmodule:: pyswmm.lidgroups
 
-raingages module
-=================
+lidgroups module
+================
 
 .. automodule:: pyswmm.lidgroups
     :members:

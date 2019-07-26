@@ -24,6 +24,5 @@ Reference
    system
    lib
    legal
-   glossary
 
 .. only:: html

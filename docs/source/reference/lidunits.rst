@@ -2,8 +2,8 @@
 
 .. currentmodule:: pyswmm.lidunits
 
-raingages module
-=================
+lidunits module
+===============
 
 .. automodule:: pyswmm.lidunits
     :members:

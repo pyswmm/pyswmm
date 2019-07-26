@@ -3,7 +3,7 @@
 .. currentmodule:: pyswmm.raingages
 
 raingages module
-=================
+================
 
 .. automodule:: pyswmm.raingages
     :members:

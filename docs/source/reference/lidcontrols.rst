@@ -2,8 +2,8 @@
 
 .. currentmodule:: pyswmm.lidcontrols
 
-raingages module
-=================
+lidcontrols module
+==================
 
 .. automodule:: pyswmm.lidcontrols
     :members:
