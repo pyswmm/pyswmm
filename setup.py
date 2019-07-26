@@ -56,7 +56,7 @@ setup(
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
         '': [
-            'lib/windows/swmm5.dll', 'lib/linux/swmm5.so', 'LICENSE.txt',
+            'lib/windows/swmm5.dll', 'lib/windows/swmm5-x64.dll', 'lib/linux/swmm5.so', 'lib/windows/swmm5.dylib', 'LICENSE.txt',
             'AUTHORS', 'tests/data/*.inp', 'tests/*.py'
         ]
     },
