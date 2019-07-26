@@ -22,9 +22,10 @@ def test_use_1():
         pyswmm.lib.use("swmm5.dylib")
     elif sys.platform.startswith('linux'):
         pyswmm.lib.use("swmm5.so")
+        pyswmm.lib.use(DLL_SELECTION())
     else:
         pyswmm.lib.use("swmm5.dll")
-    pyswmm.lib.use(DLL_SELECTION())
+        pyswmm.lib.use(DLL_SELECTION())
 
 
 def test_use_2():
@@ -37,7 +38,6 @@ def test_use_3():
         pyswmm.lib.use("fakedll.dll")
     except:
         pass
-    pyswmm.lib.use(DLL_SELECTION())
 
 
 def test_use_4():
@@ -45,7 +45,6 @@ def test_use_4():
         pyswmm.lib.use("fakedll")
     except:
         pass
-    pyswmm.lib.use(DLL_SELECTION())
 
 
 def test_lib_5():
@@ -56,4 +55,4 @@ def test_lib_5():
         print(WIN_SWMM_LIB_PATH)
         sim = Simulation(MODEL_WEIR_SETTING_PATH, swmm_lib_path=WIN_SWMM_LIB_PATH) 
         sim.execute()
-    pyswmm.lib.use(DLL_SELECTION())
+        pyswmm.lib.use(DLL_SELECTION())
