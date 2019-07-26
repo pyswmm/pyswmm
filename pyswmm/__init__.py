@@ -15,6 +15,7 @@ from pyswmm.nodes import Node, Nodes
 from pyswmm.simulation import Simulation
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
+from pyswmm.raingages import RainGages, RainGage
 
 VERSION_INFO = (0, 5, 0, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
@@ -26,5 +27,5 @@ __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell (See AUTHORS)'
 __licence__ = 'BSD2'
 __all__ = [
     Link, Links, LidControls, LidGroups, Node, Nodes, Subcatchment, Subcatchments, Simulation,
-    SystemStats
+    SystemStats, RainGages, RainGage
 ]
