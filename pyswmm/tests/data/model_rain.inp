@@ -1,0 +1,157 @@
+[TITLE]
+;;Project Title/Notes
+
+[OPTIONS]
+;;Option             Value
+FLOW_UNITS           CMS
+INFILTRATION         MODIFIED_GREEN_AMPT
+FLOW_ROUTING         KINWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        NO
+SKIP_STEADY_STATE    NO
+
+START_DATE           08/17/2017
+START_TIME           00:00:00
+REPORT_START_DATE    08/17/2017
+REPORT_START_TIME    00:00:00
+END_DATE             08/17/2017
+END_TIME             12:00:00
+SWEEP_START          01/01
+SWEEP_END            12/31
+DRY_DAYS             0
+REPORT_STEP          00:01:00
+WET_STEP             00:01:00
+DRY_STEP             00:01:00
+ROUTING_STEP         00:01:00 
+
+INERTIAL_DAMPING     PARTIAL
+NORMAL_FLOW_LIMITED  BOTH
+FORCE_MAIN_EQUATION  H-W
+VARIABLE_STEP        0.75
+LENGTHENING_STEP     0
+MIN_SURFAREA         1.14
+MAX_TRIALS           8
+HEAD_TOLERANCE       0.0015
+SYS_FLOW_TOL         5
+LAT_FLOW_TOL         5
+MINIMUM_STEP         0.5
+THREADS              1
+
+[EVAPORATION]
+;;Data Source    Parameters
+;;-------------- ----------------
+CONSTANT         0.0
+DRY_ONLY         NO
+
+[RAINGAGES]
+;;Name           Format    Interval SCF      Source    
+;;-------------- --------- ------ ------ ----------
+Gage1            INTENSITY 1:00     1.0      TIMESERIES test_rainfall   
+
+[SUBCATCHMENTS]
+;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
+;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
+S2               Gage1            J1               40       50       400      0.5      0                        
+
+[SUBAREAS]
+;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
+;;-------------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+S2               0.01       0.1        0.05       0.05       25         OUTLET    
+
+[INFILTRATION]
+;;Subcatchment   Suction    Ksat       IMD       
+;;-------------- ---------- ---------- ----------
+S2               3.5        0.5        0.25      
+
+[JUNCTIONS]
+;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
+;;-------------- ---------- ---------- ---------- ---------- ----------
+J1               100        0          0          0          0         
+
+[OUTFALLS]
+;;Name           Elevation  Type       Stage Data       Gated    Route To        
+;;-------------- ---------- ---------- ---------------- -------- ----------------
+Out1             90         FREE                        NO                       
+
+[STORAGE]
+;;Name           Elev.    MaxDepth   InitDepth  Shape      Curve Name/Params            N/A      Fevap    Psi      Ksat     IMD     
+;;-------------- -------- ---------- ----------- ---------- ---------------------------- -------- --------          -------- --------
+S1               95       30         0          FUNCTIONAL 1200      0         0        0        0       
+
+[CONDUITS]
+;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
+;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
+C2               J1               S1               400        0.01       0          0          0          0         
+C3               S1               Out1             400        0.01       0          0          0          0         
+
+[XSECTIONS]
+;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
+;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
+C2               CIRCULAR     3                0          0          0          1                    
+C3               CIRCULAR     3                0          0          0          1                    
+
+[DWF]
+;;Node           Constituent      Baseline   Patterns  
+;;-------------- ---------------- ---------- ----------
+J1               FLOW             1.0        "" ""
+
+[TIMESERIES]
+;;Name           Date       Time       Value     
+;;-------------- ---------- ---------- ----------
+test_rainfall               01:00:00   1.0         
+test_rainfall               02:00:00   1.0       
+test_rainfall               03:00:00   1.0         
+test_rainfall               04:00:00   1.0         
+test_rainfall               05:00:00   1.0         
+test_rainfall               06:00:00   1.0
+test_rainfall               07:00:00   1.0
+test_rainfall               08:00:00   1.0
+test_rainfall               09:00:00   1.0
+test_rainfall               10:00:00   1.0
+
+[REPORT]
+;;Reporting Options
+INPUT      NO
+CONTROLS   NO
+SUBCATCHMENTS ALL
+NODES ALL
+LINKS ALL
+
+[TAGS]
+
+[MAP]
+DIMENSIONS 0.000 0.000 10000.000 10000.000
+Units      None
+
+[COORDINATES]
+;;Node           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+J1               4040.097           7812.880          
+Out1             4027.947           5407.047          
+S1               4040.097           6792.224          
+
+[VERTICES]
+;;Link           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+
+[Polygons]
+;;Subcatchment   X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+S2               2797.957           9205.448          
+S2               2673.099           8955.732          
+S2               2673.099           8955.732          
+S2               2673.099           8955.732          
+S2               2673.099           8955.732          
+S2               2752.554           8422.247          
+S2               2752.554           8422.247          
+S2               2752.554           8410.897          
+S2               5692.395           8603.859          
+S2               5726.447           9273.553          
+S2               2650.397           9057.889          
+
+[SYMBOLS]
+;;Gage           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+Gage1            3104.427           9443.814          
+

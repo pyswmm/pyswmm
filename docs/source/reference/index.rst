@@ -15,10 +15,14 @@ Reference
    simulation
    nodes
    links
+   lidcontrols
+   lidgroups
+   lidlayers
+   lidunits
+   raingages
    subcatchments
    system
    lib
    legal
-   glossary
 
 .. only:: html

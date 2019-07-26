@@ -10,8 +10,9 @@
 import pytest
 
 # Local imports
-from pyswmm.swmm5 import PySWMM, PYSWMMException
-from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm import Simulation
+from pyswmm.swmm5 import PySWMM, PYSWMMException, SWMMException
+from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH, MODEL_BAD_INPUT_PATH_1
 from pyswmm.utils.fixtures import get_model_files
 
 
@@ -31,3 +32,11 @@ def test_pyswmm_exception():
         print(swmmobject.fileLoaded)
         swmmobject.swmm_open()
         swmmobject.swmm_close()
+
+
+def test_swmm_input_error_1():
+    with pytest.raises(SWMMException) as e:
+        with Simulation(MODEL_BAD_INPUT_PATH_1) as sim:
+            for step in sim:
+                pass
+    assert(str(e.value).strip() == 'ERROR 200: one or more errors in input file.')

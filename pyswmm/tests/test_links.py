@@ -54,13 +54,13 @@ def test_links_3():
 
 def test_links_4():
     with Simulation(MODEL_PUMP_SETTINGS_PATH) as sim:
-        peak_pump_rate = 20  #cfs
+        peak_pump_rate = 20  # cfs
         print("\n\n\nLINKS\n")
         c3 = Links(sim)["C3"]
 
         sim.step_advance(300)
         for ind, step in enumerate(sim):
-            #setting adjustment
+            # setting adjustment
             if ind == 15:
                 c3.target_setting = 0.9
             if ind == 20:
@@ -84,7 +84,7 @@ def test_links_4():
             if ind == 65:
                 c3.target_setting = 1.0
 
-            #Check Results
+            # Check Results
             if ind == 16:
                 assert (c3.target_setting == 0.9)
                 assert (c3.flow == 0.9 * peak_pump_rate)
@@ -122,14 +122,14 @@ def test_links_4():
 
 def test_links_5():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
-        weir_pump_rate = 5  #cfs
+        weir_pump_rate = 5  # cfs
         print("\n\n\nWEIR\n")
         c3 = Links(sim)["C3"]
 
         sim.step_advance(300)
         for ind, step in enumerate(sim):
 
-            #setting adjustment
+            # setting adjustment
             if ind == 15:
                 c3.target_setting = 0.9
             if ind == 20:
@@ -153,7 +153,7 @@ def test_links_5():
             if ind == 65:
                 c3.target_setting = 1.0
 
-            #Check Results
+            # Check Results
             if ind == 16:
                 assert (c3.target_setting == 0.9)
                 assert (c3.flow >= 0.9 * weir_pump_rate)
