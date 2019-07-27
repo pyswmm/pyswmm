@@ -65,7 +65,7 @@ setup(
         "Topic :: Documentation :: Sphinx",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: Unix",
-        "Operating System :: Macos",
+        "Operating System :: MacOS",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
