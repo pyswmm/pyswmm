@@ -17,7 +17,7 @@ from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage
 
-VERSION_INFO = (0, 5, 0)
+VERSION_INFO = (0, 6, 0, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
 __swmm_version__ = '5.2.0.dev5'
 __swmm_sha__ = 'a8382270dd5f49f8da88ae2c9bca8f3b5e39da7e'
