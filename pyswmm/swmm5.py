@@ -1511,6 +1511,34 @@ class PySWMM(object):
         self._error_check(errcode)
         return result.value
 
+    def getLinkPollut(self, ID, resultType):
+        """
+        Get water quality results from a Link.
+
+        :param str ID: Link ID
+        :param int Parameter: Parameter (toolkitapi.LinkPollut member variable)
+        :return: Pollutant Values
+        :rtype: list
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+
+        pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
+        result = ctypes.POINTER(ctypes.c_double * len(pollut_ids))()
+        pollut_values = []
+        errcode = self.SWMMlibobj.swmm_getLinkPollut(index, resultType,
+                                                     ctypes.byref(result))
+
+        for ind in range(len(pollut_ids)):
+            value = ctypes.cast(result, ctypes.POINTER(ctypes.c_double))[ind]
+            pollut_values.append(value)
+
+        self._error_check(errcode)
+
+        freeresultarray = self.SWMMlibobj.freeArray
+        freeresultarray(ctypes.byref(result))
+
+        return pollut_values
+
     def getSubcatchResult(self, ID, resultType):
         """
         Get Subcatchment Result

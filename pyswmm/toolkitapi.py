@@ -119,6 +119,11 @@ class LinkResults(Enum):
     froude = 7  # double
 
 
+class LinkPollut(Enum):
+    newQual = 0  # Current Water Quality ValueError
+    totalLoad = 1  # Total Quality Mass Loading
+
+
 class LinkType(Enum):
     conduit = 0  # Conduit Type
     pump = 1  # Pump Type

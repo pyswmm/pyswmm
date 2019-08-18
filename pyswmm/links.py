@@ -9,7 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
+from pyswmm.toolkitapi import LinkParams, LinkResults, LinkPollut, LinkType, ObjectType
 
 
 class Links(object):
@@ -856,6 +856,56 @@ class Link(object):
         return 0.
         """
         return self._model.setLinkSetting(self._linkid, setting)
+
+    @property
+    def quality(self):
+        """
+        Get Current Water Quality Values for a Link.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> UPDATE WITH EXAMPLE
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.newQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
+
+    @property
+    def totalLoad(self):
+        """
+        Get Total Pollutant Loading Values for a Link.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Total Loading Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> UPDATE WITH EXAMPLE
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        totalLoad_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.totalLoad.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = totalLoad_array[ind]
+
+        return out_dict
 
 
 class Conduit(Link):
