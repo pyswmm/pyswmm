@@ -804,8 +804,8 @@ class PySWMM(object):
         Get Node Parameter.
 
         :param str ID: Node ID
-        :param int parameter: Paramter (toolkitapi.NodeParams member variable)
-        :return: Paramater Value
+        :param int parameter: Parameter (toolkitapi.NodeParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -831,7 +831,7 @@ class PySWMM(object):
         Set Node Parameter.
 
         :param str ID: Node ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :param int Parameter: Parameter (toolkitapi.NodeParams member variable)
 
         Examples:
 
@@ -853,8 +853,8 @@ class PySWMM(object):
         Get Link Parameter.
 
         :param str ID: Link ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.NodeParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -880,7 +880,7 @@ class PySWMM(object):
         Set Link Parameter.
 
         :param str ID: Link ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :param int Parameter: Parameter (toolkitapi.NodeParams member variable)
 
         Examples:
 
@@ -949,8 +949,8 @@ class PySWMM(object):
 
         :param str ID: Lid Control ID
         :param int layer: Layer (toolkitapi.LidLayers member variable)
-        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
-        :return: Paramater Value
+        :param int parameter: Parameter (toolkitapi.LidLayersProperty member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -980,7 +980,7 @@ class PySWMM(object):
 
         :param str ID: Lid Control ID
         :param int layer: Layer (toolkitapi.LidLayers member variable)
-        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
+        :param int parameter: Parameter (toolkitapi.LidLayersProperty member variable)
 
         Examples:
 
@@ -1030,8 +1030,8 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidID: Lid unit Index
-        :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.LidUParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1061,7 +1061,7 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidID: Lid unit Index
-        :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
+        :param int Parameter: Parameter (toolkitapi.LidUParams member variable)
 
         Examples:
 
@@ -1089,8 +1089,8 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidID: Lid unit Index
-        :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.LidUParams member variable)
+        :return: Parameter Value
         :rtype: int
 
         Examples:
@@ -1120,7 +1120,7 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidID: Lid unit Index
-        :param int Parameter: Paramter (toolkitapi.LidUParams member variable)
+        :param int Parameter: Parameter (toolkitapi.LidUParams member variable)
 
         Examples:
 
@@ -1146,8 +1146,8 @@ class PySWMM(object):
         Get Subcatchment Parameter
 
         :param str ID: Subcatchment ID
-        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.SubcParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1173,7 +1173,7 @@ class PySWMM(object):
         Set Subcatchment Parameter.
 
         :param str ID: Subcatchment ID
-        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
+        :param int Parameter: Parameter (toolkitapi.SubcParams member variable)
 
         Examples:
 
@@ -1201,7 +1201,7 @@ class PySWMM(object):
         Subcatchments are ObjectType.SUBCATCH
 
         :param str ID: Subcatchment ID
-        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
+        :param int Parameter: Parameter (toolkitapi.SubcParams member variable)
         :return: (Loading Surface Type, ID)
         :rtype: tuple
 
@@ -1329,8 +1329,8 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidIndex: Lid unit Index
-        :param int layerIndex: Paramter (toolkitapi.LidLayers member variable)
-        :return: Paramater Value
+        :param int layerIndex: Parameter (toolkitapi.LidLayers member variable)
+        :return: Parameter Value
         :rtype: float
         Examples:
 
@@ -1369,8 +1369,8 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidIndex: Lid unit Index
-        :param int resultType: Paramter (toolkitapi.LidUResults member variable)
-        :return: Paramater Value
+        :param int resultType: Parameter (toolkitapi.LidUResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1409,8 +1409,8 @@ class PySWMM(object):
         Get Lid Group Result.
 
         :param str subcatchID: Subcatchment ID
-        :param int resultType: Paramter (toolkitapi.LidUResults member variable)
-        :return: Paramater Value
+        :param int resultType: Parameter (toolkitapi.LidUResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1446,8 +1446,8 @@ class PySWMM(object):
         Get Node Result.
 
         :param str ID: Node ID
-        :param int Parameter: Paramter (toolkitapi.NodeResults member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.NodeResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1481,8 +1481,8 @@ class PySWMM(object):
         Get Link Result.
 
         :param str ID: Link ID
-        :param int Parameter: Paramter (toolkitapi.LinkResults member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.LinkResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1516,8 +1516,8 @@ class PySWMM(object):
         Get Subcatchment Result
 
         :param str ID: Subcatchment ID
-        :param int Parameter: Paramter (toolkitapi.LinkResults member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.LinkResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
