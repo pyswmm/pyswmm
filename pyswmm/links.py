@@ -875,7 +875,7 @@ class Link(object):
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
         quality_array = self._model.getLinkPollut(self._linkid,
-                                                      LinkPollut.newQual.value)
+                                                      LinkPollut.linkQual.value)
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = quality_array[ind]

@@ -9,7 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import NodeParams, NodeResults, NodeType, ObjectType
+from pyswmm.toolkitapi import NodeParams, NodeResults, NodePollut, NodeType, ObjectType
 
 
 class Nodes(object):
@@ -678,6 +678,31 @@ class Node(object):
         >>>
         """
         self._model.setNodeInflow(self._nodeid, inflowrate)
+
+    @property
+    def quality(self):
+        """
+        Get Current Water Quality Values for a Node.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> UPDATE WITH EXAMPLE
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getNodePollut(self._nodeid,
+                                                      NodePollut.nodeQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
 
     @property
     def statistics(self):

@@ -1476,6 +1476,34 @@ class PySWMM(object):
         self._error_check(errcode)
         return result.value
 
+    def getNodePollut(self, ID, resultType):
+        """
+        Get water quality results from a Node.
+
+        :param str ID: Node ID
+        :param int Parameter: Parameter (toolkitapi.NodePollut member variable)
+        :return: Pollutant Values
+        :rtype: list
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+
+        pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
+        result = ctypes.POINTER(ctypes.c_double * len(pollut_ids))()
+        pollut_values = []
+        errcode = self.SWMMlibobj.swmm_getNodePollut(index, resultType,
+                                                     ctypes.byref(result))
+
+        for ind in range(len(pollut_ids)):
+            value = ctypes.cast(result, ctypes.POINTER(ctypes.c_double))[ind]
+            pollut_values.append(value)
+
+        self._error_check(errcode)
+
+        freeresultarray = self.SWMMlibobj.freeArray
+        freeresultarray(ctypes.byref(result))
+
+        return pollut_values
+
     def getLinkResult(self, ID, resultType):
         """
         Get Link Result.

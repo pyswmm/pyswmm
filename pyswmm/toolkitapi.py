@@ -90,6 +90,10 @@ class NodeResults(Enum):
     newLatFlow = 7  # Current Lateral Inflow
 
 
+class NodePollut(Enum):
+    nodeQual = 0  # Current Water Quality Value
+
+
 class NodeType(Enum):
     junction = 0  # Junction Type
     outfall = 1  # Outfall Type
@@ -120,7 +124,7 @@ class LinkResults(Enum):
 
 
 class LinkPollut(Enum):
-    newQual = 0  # Current Water Quality ValueError
+    linkQual = 0  # Current Water Quality Value
     totalLoad = 1  # Total Quality Mass Loading
 
 
