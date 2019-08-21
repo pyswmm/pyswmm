@@ -858,7 +858,7 @@ class Link(object):
         return self._model.setLinkSetting(self._linkid, setting)
 
     @property
-    def quality(self):
+    def pollut_quality(self):
         """
         Get Current Water Quality Values for a Link.
 
@@ -883,7 +883,7 @@ class Link(object):
         return out_dict
 
     @property
-    def totalLoad(self):
+    def total_loading(self):
         """
         Get Total Pollutant Loading Values for a Link.
 

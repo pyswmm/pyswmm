@@ -680,7 +680,7 @@ class Node(object):
         self._model.setNodeInflow(self._nodeid, inflowrate)
 
     @property
-    def quality(self):
+    def pollut_quality(self):
         """
         Get Current Water Quality Values for a Node.
 
