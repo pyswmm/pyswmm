@@ -157,6 +157,8 @@ class SubcResults(Enum):
 class SubcPollut(Enum):
     buildup = 0  # Subcatchment Surface Buildup
     concPonded = 1  # Ponded Pollutant Concentration
+    subcQual = 2  # Current Pollutant Runoff Quality
+    subcTotalLoad = 3  # Total Pollutant Washoff Load
 
 
 class LidUParams(Enum):
