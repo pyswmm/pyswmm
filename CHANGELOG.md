@@ -1,5 +1,13 @@
 # History of changes
 
+## Version 0.5.1 (2019/08/26)
+
+### Pull Requests Merged
+
+* [PR 208](https://github.com/OpenWaterAnalytics/pyswmm/pull/208) - update SWMM5 libraries compiled with optimizer flags ([209](https://github.com/OpenWaterAnalytics/pyswmm/issues/209))
+
+In this release 1 pull request was closed.
+
 ## Version 0.5.0 (2019/07/26)
 
 ### Issues Closed
