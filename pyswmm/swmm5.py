@@ -1796,23 +1796,23 @@ class PySWMM(object):
         # SWMM function handle.
         swmm_stats_func = self.SWMMlibobj.swmm_getSubcatchStats
         # SWMM function handle argument output structure.
-        swmm_stats_func_arg = ctypes.POINTER(tka.SubcStats)
+        swmm_stats_func_arg = ctypes.POINTER(ctypes.POINTER(tka.SubcStats))
         # Define argument.
         swmm_stats_func.argtypes = (
             ctypes.c_int,
             swmm_stats_func_arg, )
 
-        object_stats = tka.SubcStats()
+        object_ptr = ctypes.POINTER(tka.SubcStats)()
         errcode = swmm_stats_func(
-            ctypes.c_int(index), ctypes.byref(object_stats))
+            ctypes.c_int(index), ctypes.byref(object_ptr))
 
         self._error_check(errcode)
         # Copy Items to Dictionary using Alias Names.
         out_dict = {}
-        for attr in dir(object_stats):
+        for attr in dir(object_ptr.contents):
             if "_" not in attr:
-                out_dict[object_stats._py_alias_ids[attr]] = getattr(
-                    object_stats, attr)
+                out_dict[object_ptr.contents._py_alias_ids[attr]] = getattr(
+                    object_ptr.contents, attr)
 
         return out_dict
 
