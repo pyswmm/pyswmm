@@ -1,5 +1,15 @@
 # History of changes
 
+## Version 0.5.2 (2019-10-08)
+
+
+### Pull Requests Merged
+
+* [PR 212](https://github.com/OpenWaterAnalytics/pyswmm/pull/212) - change single ptr struct to double ptr struct for ctypes for subcatch ([211](https://github.com/OpenWaterAnalytics/pyswmm/issues/211))
+* [PR 208](https://github.com/OpenWaterAnalytics/pyswmm/pull/208) - update SWMM5 libraries compiled with optimizer flags ([209](https://github.com/OpenWaterAnalytics/pyswmm/issues/209))
+
+In this release 2 pull requests were closed.
+
 ## Version 0.5.1 (2019/08/26)
 
 ### Pull Requests Merged
