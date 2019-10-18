@@ -118,3 +118,12 @@ def test_simulation_callback_1():
         "before_end1", "after_end1", "after_close1"
     ]
     print(LIST)
+
+def test_simulation_terminate():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        i = 0
+        for ind, step in enumerate(sim):
+            i += 1
+            if ind == 10:
+                sim.terminate_simulation()
+        assert(i == 11)
