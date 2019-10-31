@@ -70,6 +70,7 @@ class Simulation(object):
         self._isOpen = True
         self._advance_seconds = None
         self._isStarted = False
+        self._terminate_request = False
         self._callbacks = {
             "before_start": None,
             "before_step": None,
@@ -117,6 +118,10 @@ class Simulation(object):
         """Next"""
         # Start Simulation
         self.start()
+        # Check if simulation termination request was made
+        if self._terminate_request:
+            self._execute_callback(self.before_end())
+            raise StopIteration
         # Execute Callback Hooks Before Simulation Step
         self._execute_callback(self.before_step())
         # Simulation Step Amount
@@ -349,6 +354,28 @@ class Simulation(object):
         >>> 2015-11-01 14:02:00
         """
         self._advance_seconds = advance_seconds
+
+    def terminate_simulation(self):
+        """
+        Inserts a request to stop a simulation and cleanly executing the callbacks.
+
+        Examples:
+
+        with Simulation("model") as sim:
+            nodeXYZ = Nodes(sim)["nodeZYX"]
+
+            def before_step_callback():
+                if nodeXYZ.depth > 8:
+                    sim.terminate_simulation()
+
+            # Setting Callbacks
+            sim.add_before_step(before_step_callback)
+
+            for ind, step in enumerate(sim):
+                # Now simulation will end early if the depth is > 8
+                pass
+        """
+        self._terminate_request = True
 
     def report(self):
         """
