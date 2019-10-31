@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright (c) 2014 Bryant E. McDonnell
 #
@@ -636,7 +636,15 @@ class Subcatchment(object):
 
         Examples:
 
-        >>> ADD EXAMPLES
+        >>> from pyswmm import Simulation, Subcatchments
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     s1 = Subcatchments(sim)["S1"]
+        ...     for step in sim:
+        ...         print(s1.pollut_quality)
+        >>> {'TSS': 0.0, 'Lead': 0.0}
+        >>> {'TSS': 0.0, 'Lead': 0.0}
+        >>> {'TSS': 0.0, 'Lead': 0.0}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
@@ -661,7 +669,15 @@ class Subcatchment(object):
 
         Examples:
 
-        >>> ADD EXAMPLES
+        >>> from pyswmm import Simulation, Subcatchments
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     s1 = Subcatchments(sim)["S1"]
+        ...     for step in sim:
+        ...         print(s1.runoff_total_loading)
+        >>> {'TSS': 0.01, 'Lead': 0.001}
+        >>> {'TSS': 0.02, 'Lead': 0.002}
+        >>> {'TSS': 0.03, 'Lead': 0.003}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)

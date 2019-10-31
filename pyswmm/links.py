@@ -870,7 +870,15 @@ class Link(object):
 
         Examples:
 
-        >>> UPDATE WITH EXAMPLE
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Nodes(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.pollut_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
@@ -895,7 +903,15 @@ class Link(object):
 
         Examples:
 
-        >>> UPDATE WITH EXAMPLE
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Nodes(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.total_loading)
+        >>> {'test-pollutant': 0.01}
+        >>> {'test-pollutant': 0.02}
+        >>> {'test-pollutant': 0.03}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)

@@ -692,7 +692,15 @@ class Node(object):
 
         Examples:
 
-        >>> UPDATE WITH EXAMPLE
+        >>> from pyswmm import Simulation, Nodes
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     J1 = Nodes(sim)["J1"]
+        ...     for step in sim:
+        ...         print(J1.pollut_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
