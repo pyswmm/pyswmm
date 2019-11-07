@@ -680,6 +680,20 @@ class Node(object):
         self._model.setNodeInflow(self._nodeid, inflowrate)
 
     @property
+    def cumulative_inflow(self):
+        """
+        Get Cumulative Node Loading.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Cumulative Volume
+        :rtype: float
+        """
+        value = self._model.node_inflow(self.nodeid)
+        return value
+
+    @property
     def statistics(self):
         """
         Node Statistics. The stats returned are rolling/cumulative.
@@ -751,20 +765,6 @@ class Outfall(Node):
         :rtype: list
         """
         return self._model.outfall_statistics(self.nodeid)
-
-    @property
-    def cumulative_inflow(self):
-        """
-        Get Cumulative Outfall Loading.
-
-        If Simulation is not running this method will raise a warning and
-        return 0.
-
-        :return: Cumulative Volume
-        :rtype: float
-        """
-        value = self._model.node_inflow(self.nodeid)
-        return value
 
     def outfall_stage(self, stage):
         """

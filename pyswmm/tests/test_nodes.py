@@ -216,11 +216,15 @@ def test_outfalls_8_mgd():
     sim = Simulation(MODEL_STORAGE_PUMP_MGD)
     print("\n\n\nOUTFALL\n")
     outfall = Nodes(sim)["J3"]
+    storage = Nodes(sim)["SU1"]
+    junction = Nodes(sim)["J2"]
 
     for ind, step in enumerate(sim):
         pass
     stats = outfall.outfall_statistics
     outfall_cuinflow = outfall.cumulative_inflow
+    storage_cuinflow = storage.cumulative_inflow
+    junction_cuinflow = junction.cumulative_inflow
     sim.close()
 
     assert(stats['total_periods'] == approx(208796, rel=UT_PRECISION))
@@ -235,6 +239,8 @@ def test_outfalls_8_mgd():
     assert(outfall_cuinflow == approx(1395293, rel=UT_PRECISION))
     assert(outfall_cuinflow == approx(1395299, rel=UT_PRECISION) and
            outfall_cuinflow == approx(1395350, rel=UT_PRECISION))
+    assert(storage_cuinflow == approx(969184, rel=UT_PRECISION))
+    assert(junction_cuinflow == approx(2364809, rel=UT_PRECISION))
 
 
 def test_nodes_10():
@@ -260,3 +266,19 @@ def test_nodes_10():
             if ind == 50001:
                 assert outfall.head == approx(13.50001, rel=UT_PRECISION)
                 assert outfall.head == approx(13.49999, rel=UT_PRECISION)
+
+
+def test_nodes_11():
+    ''' pytest pyswmm/tests/test_nodes.py -k `test_outfalls_8_mgd` '''
+    sim = Simulation(MODEL_STORAGE_PUMP_MGD)
+    print("\n\n\nOUTFALL\n")
+    outfall = Nodes(sim)["J3"]
+
+    for ind, step in enumerate(sim):
+        pass
+    stats = outfall.outfall_statistics
+    outfall_cuinflow = outfall.cumulative_inflow
+    sim.close()
+    assert(outfall_cuinflow == approx(1395293, rel=UT_PRECISION))
+    assert(outfall_cuinflow == approx(1395299, rel=UT_PRECISION) and
+           outfall_cuinflow == approx(1395350, rel=UT_PRECISION))

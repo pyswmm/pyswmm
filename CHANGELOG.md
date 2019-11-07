@@ -1,5 +1,14 @@
 # History of changes
 
+## Version 0.6.0 (2019-10-19)
+
+
+### Pull Requests Merged
+
+* [PR 214](https://github.com/OpenWaterAnalytics/pyswmm/pull/214) - Feat terminate sim ([213](https://github.com/OpenWaterAnalytics/pyswmm/issues/213))
+
+In this release 1 pull request was closed.
+
 ## Version 0.5.2 (2019-10-08)
 
 
