@@ -119,7 +119,6 @@ def test_simulation_callback_1():
     ]
     print(LIST)
 
-
 def test_simulation_terminate():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         i = 0

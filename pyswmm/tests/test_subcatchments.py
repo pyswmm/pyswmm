@@ -11,6 +11,7 @@ from pyswmm import Simulation, Subcatchments
 # from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_FULL_FEATURES_PATH, MODEL_WEIR_SETTING_PATH, MODEL_SUBCATCH_STATS_PATH
 from pytest import approx
+
 UT_PRECISION = 1  # %
 
 
@@ -49,37 +50,19 @@ def test_subcatchments_3():
         print(S1.statistics)
         print(S2.statistics)
 
-        assert(
-            S1.statistics['evaporation'] == approx(
-                0.00, rel=UT_PRECISION))  # ft3
-        assert(
-            S1.statistics['runoff'] == approx(
-                1244.58,
-                rel=UT_PRECISION))  # ft3
-        assert(S1.statistics['runon'] == approx(0.00, rel=UT_PRECISION))  # ft3
-        assert(S1.statistics['peak_runoff_rate'] ==
-               approx(0.12, rel=UT_PRECISION))  # cfs
-        assert(S1.statistics['infiltration'] ==
-               approx(0.00, rel=UT_PRECISION))  # ft3
-        assert(S1.statistics['precipitation'] ==
-               approx(0.12, rel=UT_PRECISION))  # in
+        assert (S1.statistics['evaporation'] == approx(0.00, rel=UT_PRECISION))  # ft3
+        assert (S1.statistics['runoff'] == approx(1244.58, rel=UT_PRECISION))  # ft3
+        assert (S1.statistics['runon'] == approx(0.00, rel=UT_PRECISION))  # ft3
+        assert (S1.statistics['peak_runoff_rate'] == approx(0.12, rel=UT_PRECISION))  # cfs
+        assert (S1.statistics['infiltration'] == approx(0.00, rel=UT_PRECISION))  # ft3
+        assert (S1.statistics['precipitation'] == approx(0.12, rel=UT_PRECISION))  # in
 
-        assert(
-            S2.statistics['evaporation'] == approx(
-                0.00, rel=UT_PRECISION))  # ft3
-        assert(
-            S2.statistics['runoff'] == approx(
-                0.00, rel=UT_PRECISION))  # ft3
-        assert(S2.statistics['runon'] == approx(
-            1207.74, rel=UT_PRECISION))  # ft3
-        assert(S2.statistics['peak_runoff_rate'] ==
-               approx(0.00, rel=UT_PRECISION))  # cfs
-        assert(
-            S2.statistics['infiltration'] == approx(
-                3476.57,
-                rel=UT_PRECISION))  # ft3
-        assert(S2.statistics['precipitation'] ==
-               approx(0.12, rel=UT_PRECISION))  # in
+        assert (S2.statistics['evaporation'] == approx(0.00, rel=UT_PRECISION))  # ft3
+        assert (S2.statistics['runoff'] == approx(0.00, rel=UT_PRECISION))  # ft3
+        assert (S2.statistics['runon'] == approx(1207.74, rel=UT_PRECISION))  # ft3
+        assert (S2.statistics['peak_runoff_rate'] == approx(0.00, rel=UT_PRECISION))  # cfs
+        assert (S2.statistics['infiltration'] == approx(3476.57, rel=UT_PRECISION))  # ft3
+        assert (S2.statistics['precipitation'] == approx(0.12, rel=UT_PRECISION))  # in
 
 
 def test_nodes_3():
