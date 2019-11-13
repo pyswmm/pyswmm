@@ -82,10 +82,10 @@ def test_pollutants_1():
         assert C3.pollut_quality['test-pollutant'] == 0.0
         assert C4.pollut_quality['test-pollutant'] == 0.0
         
-        assert 26.87362 <= C1.total_loading['test-pollutant'] <= 26.87363
-        assert 46.65007 <= C2.total_loading['test-pollutant'] <= 46.65008
-        assert 12.49876 <= C3.total_loading['test-pollutant'] <= 12.49877
-        assert 59.13821 <= C4.total_loading['test-pollutant'] <= 59.13822
+        assert 26.873 <= C1.total_loading['test-pollutant'] <= 26.874
+        assert 46.650 <= C2.total_loading['test-pollutant'] <= 46.651
+        assert 12.498 <= C3.total_loading['test-pollutant'] <= 12.499
+        assert 59.138 <= C4.total_loading['test-pollutant'] <= 59.139
 
         assert J1.pollut_quality['test-pollutant'] == 0.0
         assert J2.pollut_quality['test-pollutant'] == 0.0
