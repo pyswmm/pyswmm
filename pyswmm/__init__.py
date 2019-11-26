@@ -19,7 +19,7 @@ from pyswmm.raingages import RainGages, RainGage
 
 VERSION_INFO = (0, 6, 1, 'dev0')
 __version__ = '.'.join(map(str, VERSION_INFO))
-__swmm_version__ = '5.2.1'
+__swmm_version__ = '5.3.0'
 __swmm_sha__ = '95c43f047ebaf73a6b4cb1534644020e8492bfaa'
 __epaswmm_version_basis__ = '5.1.14.dev0'
 __author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
