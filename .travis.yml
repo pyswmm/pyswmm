@@ -25,7 +25,7 @@ before_install:
     - if test ${TRAVIS_OS_NAME} = "osx"; then
         brew update;
         brew install libomp;
-        brew install gcc;
+        brew upgrade gcc;
       fi
 install: 
   - pip install -r requirements-travis.txt
