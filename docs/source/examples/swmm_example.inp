@@ -1,0 +1,309 @@
+[TITLE]
+;;Project Title/Notes
+test-pollutant
+
+[OPTIONS]
+;;Option             Value
+FLOW_UNITS           CFS
+INFILTRATION         GREEN_AMPT
+FLOW_ROUTING         KINWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        NO
+SKIP_STEADY_STATE    NO
+
+START_DATE           11/01/2017
+START_TIME           00:00:00
+REPORT_START_DATE    11/01/2017
+REPORT_START_TIME    00:00:00
+END_DATE             11/05/2017
+END_TIME             00:00:00
+SWEEP_START          01/01
+SWEEP_END            12/30
+DRY_DAYS             0
+REPORT_STEP          01:00:00
+WET_STEP             00:01:00
+DRY_STEP             00:01:00
+ROUTING_STEP         0:01:00 
+
+INERTIAL_DAMPING     PARTIAL
+NORMAL_FLOW_LIMITED  BOTH
+FORCE_MAIN_EQUATION  H-W
+VARIABLE_STEP        0.75
+LENGTHENING_STEP     0
+MIN_SURFAREA         12.557
+MAX_TRIALS           8
+HEAD_TOLERANCE       0.005
+SYS_FLOW_TOL         5
+LAT_FLOW_TOL         5
+MINIMUM_STEP         0.5
+THREADS              1
+
+[EVAPORATION]
+;;Data Source    Parameters
+;;-------------- ----------------
+CONSTANT         0.0
+DRY_ONLY         NO
+
+[RAINGAGES]
+;;Name           Format    Interval SCF      Source    
+;;-------------- --------- ------ ------ ----------
+Gage1            INTENSITY 1:00     1.0      TIMESERIES TS1             
+
+[SUBCATCHMENTS]
+;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
+;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
+S1               Gage1            J1               1        75       100      0.5      0                        
+S2               Gage1            J2               1        50       100      0.5      0                        
+S3               Gage1            J3               1        25       100      0.5      0                        
+
+[SUBAREAS]
+;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
+;;-------------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+S1               0.01       0.1        0.05       0.05       25         OUTLET    
+S2               0.01       0.1        0.05       0.05       25         OUTLET    
+S3               0.01       0.1        0.05       0.05       25         OUTLET    
+
+[INFILTRATION]
+;;Subcatchment   Suction    Ksat       IMD       
+;;-------------- ---------- ---------- ----------
+S1               3.5        0.5        0.26      
+S2               3.5        0.5        0.26      
+S3               3.5        0.5        0.26      
+
+[JUNCTIONS]
+;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
+;;-------------- ---------- ---------- ---------- ---------- ----------
+J1               96         4          0          0          0         
+J2               90         4          0          0          0         
+J3               93         4          0          0          0         
+J4               88         4          0          0          0         
+
+[OUTFALLS]
+;;Name           Elevation  Type       Stage Data       Gated    Route To        
+;;-------------- ---------- ---------- ---------------- -------- ----------------
+Out1             85         FREE                        NO                       
+
+[CONDUITS]
+;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
+;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
+C1               J1               J2               400        0.01       0          0          0          0         
+C2               J2               J4               400        0.01       0          0          0          0         
+C3               J3               J4               400        0.01       0          0          0          0         
+C4               J4               Out1             400        0.01       0          0          0          0         
+
+[XSECTIONS]
+;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
+;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
+C1               CIRCULAR     1.0              0          0          0          1                    
+C2               CIRCULAR     1.0              0          0          0          1                    
+C3               CIRCULAR     1.0              0          0          0          1                    
+C4               CIRCULAR     1.5              0          0          0          1                    
+
+[POLLUTANTS]
+;;Name           Units  Crain      Cgw        Crdii      Kdecay     SnowOnly   Co-Pollutant     Co-Frac    Cdwf       Cinit     
+;;-------------- ------ ---------- ---------- ---------- ---------- ---------- ---------------- ---------- ---------- ----------
+test-pollutant   MG/L   10.0       0.0        0.0        0.0        NO         *                0.0        0.0        0.0       
+
+[LANDUSES]
+;;               Sweeping   Fraction   Last      
+;;Name           Interval   Available  Swept     
+;;-------------- ---------- ---------- ----------
+residential      0          0          0         
+
+[COVERAGES]
+;;Subcatchment   Land Use         Percent   
+;;-------------- ---------------- ----------
+S1               residential      100       
+S2               residential      100       
+S3               residential      100       
+
+[LOADINGS]
+;;Subcatchment   Pollutant        Buildup   
+;;-------------- ---------------- ----------
+S1               test-pollutant   10        
+S2               test-pollutant   15        
+S3               test-pollutant   20        
+
+[BUILDUP]
+;;Land Use       Pollutant        Function   Coeff1     Coeff2     Coeff3     Per Unit  
+;;-------------- ---------------- ---------- ---------- ---------- ---------- ----------
+residential      test-pollutant   POW        25         10         1          AREA      
+
+[WASHOFF]
+;;Land Use       Pollutant        Function   Coeff1     Coeff2     SweepRmvl  BmpRmvl   
+;;-------------- ---------------- ---------- ---------- ---------- ---------- ----------
+residential      test-pollutant   EMC        20         1          0.0        0.0       
+
+[TIMESERIES]
+;;Name           Date       Time       Value     
+;;-------------- ---------- ---------- ----------
+TS1              11/1/2017  0:00       0         
+TS1              11/1/2017  1:00       0         
+TS1              11/1/2017  2:00       0         
+TS1              11/1/2017  3:00       0         
+TS1              11/1/2017  4:00       0         
+TS1              11/1/2017  5:00       0         
+TS1              11/1/2017  6:00       0         
+TS1              11/1/2017  7:00       0         
+TS1              11/1/2017  8:00       0         
+TS1              11/1/2017  9:00       0         
+TS1              11/1/2017  10:00      0         
+TS1              11/1/2017  11:00      0         
+TS1              11/1/2017  12:00      0         
+TS1              11/1/2017  13:00      0         
+TS1              11/1/2017  14:00      0         
+TS1              11/1/2017  15:00      0         
+TS1              11/1/2017  16:00      0         
+TS1              11/1/2017  17:00      0         
+TS1              11/1/2017  18:00      0         
+TS1              11/1/2017  19:00      0         
+TS1              11/1/2017  20:00      0         
+TS1              11/1/2017  21:00      0         
+TS1              11/1/2017  22:00      0         
+TS1              11/1/2017  23:00      0         
+TS1              11/2/2017  0:00       1         
+TS1              11/2/2017  1:00       1         
+TS1              11/2/2017  2:00       1         
+TS1              11/2/2017  3:00       1         
+TS1              11/2/2017  4:00       1         
+TS1              11/2/2017  5:00       0         
+TS1              11/2/2017  6:00       0         
+TS1              11/2/2017  7:00       0         
+TS1              11/2/2017  8:00       0         
+TS1              11/2/2017  9:00       0         
+TS1              11/2/2017  10:00      0         
+TS1              11/2/2017  11:00      0         
+TS1              11/2/2017  12:00      0         
+TS1              11/2/2017  13:00      0         
+TS1              11/2/2017  14:00      0         
+TS1              11/2/2017  15:00      0         
+TS1              11/2/2017  16:00      0         
+TS1              11/2/2017  17:00      0         
+TS1              11/2/2017  18:00      0         
+TS1              11/2/2017  19:00      0         
+TS1              11/2/2017  20:00      0         
+TS1              11/2/2017  21:00      0         
+TS1              11/2/2017  22:00      0         
+TS1              11/2/2017  23:00      0         
+TS1              11/3/2017  0:00       0         
+TS1              11/3/2017  1:00       0         
+TS1              11/3/2017  2:00       0         
+TS1              11/3/2017  3:00       0         
+TS1              11/3/2017  4:00       0         
+TS1              11/3/2017  5:00       0         
+TS1              11/3/2017  6:00       0         
+TS1              11/3/2017  7:00       0         
+TS1              11/3/2017  8:00       0         
+TS1              11/3/2017  9:00       0         
+TS1              11/3/2017  10:00      0         
+TS1              11/3/2017  11:00      0         
+TS1              11/3/2017  12:00      0         
+TS1              11/3/2017  13:00      0         
+TS1              11/3/2017  14:00      0         
+TS1              11/3/2017  15:00      0         
+TS1              11/3/2017  16:00      0         
+TS1              11/3/2017  17:00      0         
+TS1              11/3/2017  18:00      0         
+TS1              11/3/2017  19:00      0         
+TS1              11/3/2017  20:00      0         
+TS1              11/3/2017  21:00      0         
+TS1              11/3/2017  22:00      0         
+TS1              11/3/2017  23:00      0         
+TS1              11/4/2017  0:00       0         
+TS1              11/4/2017  1:00       0         
+TS1              11/4/2017  2:00       0         
+TS1              11/4/2017  3:00       0         
+TS1              11/4/2017  4:00       0         
+TS1              11/4/2017  5:00       0         
+TS1              11/4/2017  6:00       0         
+TS1              11/4/2017  7:00       0         
+TS1              11/4/2017  8:00       0         
+TS1              11/4/2017  9:00       0         
+TS1              11/4/2017  10:00      0         
+TS1              11/4/2017  11:00      0         
+TS1              11/4/2017  12:00      0         
+TS1              11/4/2017  13:00      0         
+TS1              11/4/2017  14:00      0         
+TS1              11/4/2017  15:00      0         
+TS1              11/4/2017  16:00      0         
+TS1              11/4/2017  17:00      0         
+TS1              11/4/2017  18:00      0         
+TS1              11/4/2017  19:00      0         
+TS1              11/4/2017  20:00      0         
+TS1              11/4/2017  21:00      0         
+TS1              11/4/2017  22:00      0         
+TS1              11/4/2017  23:00      0         
+TS1              11/5/2017  0:00       0         
+TS1              11/5/2017  1:00       0         
+TS1              11/5/2017  2:00       0         
+TS1              11/5/2017  3:00       0         
+TS1              11/5/2017  4:00       0         
+TS1              11/5/2017  5:00       0         
+TS1              11/5/2017  6:00       0         
+TS1              11/5/2017  7:00       0         
+TS1              11/5/2017  8:00       0         
+TS1              11/5/2017  9:00       0         
+TS1              11/5/2017  10:00      0         
+TS1              11/5/2017  11:00      0         
+TS1              11/5/2017  12:00      0         
+TS1              11/5/2017  13:00      0         
+TS1              11/5/2017  14:00      0         
+TS1              11/5/2017  15:00      0         
+TS1              11/5/2017  16:00      0         
+TS1              11/5/2017  17:00      0         
+TS1              11/5/2017  18:00      0         
+TS1              11/5/2017  19:00      0         
+TS1              11/5/2017  20:00      0         
+TS1              11/5/2017  21:00      0         
+TS1              11/5/2017  22:00      0         
+TS1              11/5/2017  23:00      0         
+
+[REPORT]
+;;Reporting Options
+INPUT      NO
+CONTROLS   NO
+SUBCATCHMENTS ALL
+NODES ALL
+LINKS ALL
+
+[TAGS]
+
+[MAP]
+DIMENSIONS 0.000 0.000 10000.000 10000.000
+Units      None
+
+[COORDINATES]
+;;Node           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+J1               7441.430           7299.630          
+J2               7404.439           4537.608          
+J3               4963.009           6868.064          
+J4               4790.382           4488.286          
+Out1             2607.891           4512.947          
+
+[VERTICES]
+;;Link           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+
+[Polygons]
+;;Subcatchment   X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+S1               6726.264           7768.187          
+S1               6713.933           6781.751          
+S1               5641.184           6781.751          
+S1               5641.184           7829.840          
+S2               6812.577           5943.280          
+S2               6886.560           4993.835          
+S2               5665.845           4956.843          
+S2               5653.514           5992.602          
+S3               4482.121           7694.205          
+S3               4432.799           6572.133          
+S3               3384.710           6584.464          
+S3               3421.702           7731.196          
+
+[SYMBOLS]
+;;Gage           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+Gage1            5061.652           7842.170          
+

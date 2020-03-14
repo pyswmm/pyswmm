@@ -9,7 +9,7 @@
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
+from pyswmm.toolkitapi import LinkParams, LinkResults, LinkPollut, LinkType, ObjectType
 
 
 class Links(object):
@@ -856,6 +856,72 @@ class Link(object):
         return 0.
         """
         return self._model.setLinkSetting(self._linkid, setting)
+
+    @property
+    def pollut_quality(self):
+        """
+        Get Current Water Quality Values for a Link.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Nodes(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.pollut_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.linkQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
+
+    @property
+    def total_loading(self):
+        """
+        Get Total Pollutant Loading Values for a Link.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Total Loading Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Nodes(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.total_loading)
+        >>> {'test-pollutant': 0.01}
+        >>> {'test-pollutant': 0.02}
+        >>> {'test-pollutant': 0.03}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        totalLoad_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.totalLoad.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = totalLoad_array[ind]
+
+        return out_dict
 
 
 class Conduit(Link):
