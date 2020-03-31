@@ -15,17 +15,22 @@ authors:
  - name: Michael E. Tryby
    affiliation: 2
  - name: Katherine Ratliff
-   orchid: 0000-0003-1410-2756
+   orcid: 0000-0003-1410-2756
    affiliation: 2
  - name: Jennifer Jia Xin Wu
    affiliation: 1
+ - name: Abhiram Mullapudi
+   orcid: 0000-0001-8141-3621
+   affiliation: 3
 affiliations:
  - name: EmNet, a Xylem Brand
    index: 1
  - name: U.S. Environmental Protection Agency, Office of Research and Development
    index: 2
+ - name: Department of Civil and Environmental Engineering, University of Michigan
+   index: 3
    
-date: 1 January 2020
+date: 1 April 2020
 
 bibliography: paper.bib
 ---
