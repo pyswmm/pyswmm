@@ -9,6 +9,8 @@ Development
 	https://github.com/OpenWaterAnalytics/pyswmm/
 PySWMM Wiki
 	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
+Cite our Paper
+	https://doi.org/10.5281/zenodo.3751574
 
 Build status
 ------------
@@ -16,7 +18,7 @@ Build status
 
 Project information
 -------------------
-|docs| |license| |pypi version| |downloads|
+|docs| |license| |pypi version| |downloads| |cite|
 
 .. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/gm3ci07gmkoyaeol/branch/master?svg=true
    :target: https://ci.appveyor.com/project/bemcdonnell/pyswmm
@@ -36,6 +38,9 @@ Project information
 .. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
    :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+.. |cite| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3751574.svg
+   :target: https://doi.org/10.5281/zenodo.3751574
+   :alt: Cite our Preprint
 
 
 YouTube Examples

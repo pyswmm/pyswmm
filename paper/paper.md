@@ -12,10 +12,10 @@ authors:
  - name: Bryant E. McDonnell
    orcid: 0000-0002-6250-2220
    affiliation: 1
- - name: Michael E. Tryby
-   affiliation: 2
  - name: Katherine Ratliff
    orcid: 0000-0003-1410-2756
+   affiliation: 2
+ - name: Michael E. Tryby
    affiliation: 2
  - name: Jennifer Jia Xin Wu
    affiliation: 1
@@ -30,7 +30,7 @@ affiliations:
  - name: Department of Civil and Environmental Engineering, University of Michigan
    index: 3
    
-date: 1 April 2020
+date: 13 April 2020
 
 bibliography: paper.bib
 ---
