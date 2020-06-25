@@ -30,8 +30,13 @@ def _platform():
 
 
 # Library paths
+# First search in prefix then default to packaged binaries
+lib_path = os.path.join(sys.prefix, 'lib')
+has_swmm_lib = any([l for l in os.listdir(lib_path) if 'libswmm5' in l])
 if os.name == 'nt':
-    if sys.maxsize > 2**32:
+    if any([l for l in os.listdir(sys.prefix) if 'libswmm5' in l]):
+        LIB_SWMM = os.path.join(sys.prefix, 'libswmm5.dll').replace('\\', '/')
+    elif sys.maxsize > 2**32:
         LIB_SWMM = os.path.join(
             HERE, _platform(), 'swmm5-x64.dll').replace('\\', '/')
     else:
@@ -42,14 +47,20 @@ if os.name == 'nt':
             '\\',
             '/')
 elif sys.platform == 'darwin':
-    LIB_SWMM = os.path.join(
-        HERE,
-        _platform(),
-        'swmm5.dylib').replace(
-        '\\',
-        '/')
+    if has_swmm_lib:
+        LIB_SWMM = os.path.join(lib_path, 'libswmm5.dylib').replace('\\', '/')
+    else:
+        LIB_SWMM = os.path.join(
+            HERE,
+            _platform(),
+            'swmm5.dylib').replace(
+            '\\',
+            '/')
 elif sys.platform.startswith('linux'):
-    LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
+    if has_swmm_lib:
+        LIB_SWMM = os.path.join(lib_path, 'libswmm5.so').replace('\\', '/')
+    else:
+        LIB_SWMM = os.path.join(HERE, _platform(), 'swmm5.so').replace('\\', '/')
 else:
     LIB_SWMM = ''
 
