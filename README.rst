@@ -153,6 +153,11 @@ GitHub and create a pull request.  All changes are welcome, big or small, and we
 will help you make the pull request if you are new to git
 (just ask on the issue).
 
+Contributing
+------------
+Please check out our Wiki https://github.com/OpenWaterAnalytics/pyswmm/wiki
+for more information on contributing, including an Author Contribution Checklist.
+
 License
 -------
 
