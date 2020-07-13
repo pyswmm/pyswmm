@@ -192,7 +192,7 @@ Generate Node Inflows
 ---------------------
 
 Among the newest features pyswmm brings to SWMM5 modeling is the ability to
-set a nodes inflow.  This can enable the user to model different behavior such as
+set a node's inflow.  This can enable the user to model different behavior such as
 runoff or seasonality.
 
 .. code-block:: python
