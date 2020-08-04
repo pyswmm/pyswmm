@@ -1,5 +1,9 @@
 # History of changes
 
+## Version 0.6.2 (2020/08/04)
+
+Updating release version.
+
 ## Version 0.6.1 (2020/08/04)
 
 
