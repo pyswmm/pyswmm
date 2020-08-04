@@ -1,5 +1,14 @@
 # History of changes
 
+## Version 0.6.1 (2020/08/04)
+
+
+### Pull Requests Merged
+
+* [PR 217](https://github.com/OpenWaterAnalytics/pyswmm/pull/217) - add node, link water quality getters, by [@katmratliff](https://github.com/katmratliff) ([206](https://github.com/OpenWaterAnalytics/pyswmm/issues/206))
+
+In this release 1 pull request was closed.
+
 ## Version 0.6.0 (2019-10-19)
 
 
