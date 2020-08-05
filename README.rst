@@ -10,7 +10,7 @@ Development
 PySWMM Wiki
 	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
 Cite our Paper
-	https://doi.org/10.5281/zenodo.3751574
+	McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020). PySWMM: The Python Interface to Stormwater Management Model (SWMM). *Journal of Open Source Software, 5*\ (52), 2292, https://doi.org/10.21105/joss.02292
 
 Build status
 ------------
@@ -38,9 +38,9 @@ Project information
 .. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
    :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-.. |cite| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3751574.svg
-   :target: https://doi.org/10.5281/zenodo.3751574
-   :alt: Cite our Preprint
+.. |cite| image:: https://joss.theoj.org/papers/10.21105/joss.02292/status.svg
+   :target: https://doi.org/10.21105/joss.02292
+   :alt: Cite our Paper
 
 
 YouTube Examples
