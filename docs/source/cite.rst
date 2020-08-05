@@ -5,11 +5,9 @@ How to Cite
 Cite our Paper
 ==============
 
-Please acknowledge use of PySWMM by citing our preprint:
+Please acknowledge use of PySWMM by citing our paper:
 
-- McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020, April 14). PySWMM: The Python Interface to Stormwater Management Model (SWMM). Zenodo. http://doi.org/10.5281/zenodo.3751574
-
-This preprint will be submitted to `The Journal of Open Source Software <https://joss.theoj.org/>`_ when submissions are no longer suspended due to the pandemic.
+- McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020). PySWMM: The Python Interface to Stormwater Management Model (SWMM). *Journal of Open Source Software*, *5*(52), 2292, https://doi.org/10.21105/joss.02292
 
 
 Projects using PySWMM
