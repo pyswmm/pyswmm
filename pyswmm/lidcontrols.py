@@ -5,7 +5,7 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
-from pyswmm.swmm5 import PYSWMMException
+from pyswmm.error import PYSWMMException
 from pyswmm.toolkitapi import ObjectType
 from pyswmm.lidlayers import Surface, Soil, Storage, Pavement, Drain, DrainMat
 

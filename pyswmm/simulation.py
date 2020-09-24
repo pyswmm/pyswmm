@@ -6,9 +6,9 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Base class for a SWMM Simulation."""
-
+import warnings
 # Local imports
-from pyswmm.swmm5 import PySWMM, PYSWMMException
+from pyswmm.error import PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
 
 
@@ -65,7 +65,12 @@ class Simulation(object):
                  reportfile=None,
                  outputfile=None,
                  swmm_lib_path=None):
-        self._model = PySWMM(inputfile, reportfile, outputfile, swmm_lib_path)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            from pyswmm.swmm5 import PySWMM
+            self._model = PySWMM(inputfile, reportfile, outputfile, swmm_lib_path)
+            
         self._model.swmm_open()
         self._isOpen = True
         self._advance_seconds = None

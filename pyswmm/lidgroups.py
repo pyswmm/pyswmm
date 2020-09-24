@@ -5,7 +5,7 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
-from pyswmm.swmm5 import PYSWMMException
+from pyswmm.error import PYSWMMException
 from pyswmm import LidControls
 from pyswmm.toolkitapi import ObjectType, LidUParams, LidUOptions, LidResults
 from pyswmm.lidunits import Surface, Pavement, Soil, Storage, WaterBalance
