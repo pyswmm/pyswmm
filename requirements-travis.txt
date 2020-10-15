@@ -2,3 +2,4 @@
 enum34
 pytest
 matplotlib
+deprecated

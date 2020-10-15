@@ -3,5 +3,6 @@
 six
 enum34
 pytest
+deprecated
 
 # Run dependencies

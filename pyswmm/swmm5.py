@@ -27,38 +27,14 @@ import six
 from pyswmm.lib import DLL_SELECTION
 from pyswmm.error import SWMM5FutureWarning
 import pyswmm.toolkitapi as tka
+from deprecated import deprecated
+
 
 # Local variables
 SWMM_VER_51011 = '5.1.14'
 
 
-warnings.warn('the swmm5 module is deprecated in next release with swmm-toolkit module update',
-              SWMM5FutureWarning)
-
-
-class SWMMException(Exception):
-    """Custom exception class for SWMM errors."""
-
-    def __init__(self, error_code, error_message):
-        self.warning = False
-        self.args = (error_code, )
-        self.message = error_message
-
-    def __str__(self):
-        return self.message
-
-
-class PYSWMMException(Exception):
-    """Custom exception class for PySWMM errors. """
-
-    def __init__(self, error_message):
-        self.warning = False
-        self.message = error_message
-
-    def __str__(self):
-        return self.message
-
-
+@deprecated(version='0.6.3', reason="If you need direct access to SWMM API functions, please use swmm-toolkit  module instead.")
 class PySWMM(object):
     """
     Wrapper class to lead SWMM DLL object.
@@ -125,9 +101,6 @@ class PySWMM(object):
         :param str swmm_lib_path: SWMM library path (default None).
 
         """
-        warnings.warn('the swmm5 module is deprecated in next release with swmm-toolkit module update',
-                      SWMM5FutureWarning)
-
         self.fileLoaded = False
         self.inpfile = inpfile
         self.rptfile = rptfile

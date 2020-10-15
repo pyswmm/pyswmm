@@ -2,3 +2,4 @@
 ciocheck
 coveralls
 matplotlib
+deprecated
