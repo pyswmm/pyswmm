@@ -25,7 +25,7 @@ import six
 
 # Local imports
 from pyswmm.lib import DLL_SELECTION
-from pyswmm.error import SWMMException
+from pyswmm.error import PYSWMMException, SWMMException
 import pyswmm.toolkitapi as tka
 from deprecated import deprecated
 
