@@ -1,8 +1,3 @@
-class SWMM5FutureWarning(FutureWarning):
-    def __init__(self, message):
-        self.message = message
-
-
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
 

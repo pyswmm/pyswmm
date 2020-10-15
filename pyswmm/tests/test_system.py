@@ -10,7 +10,8 @@ import pytest
 
 # Local imports
 from pyswmm import Simulation, SystemStats
-from pyswmm.swmm5 import PySWMM, SWMMException
+from pyswmm.swmm5 import PySWMM
+from pyswmm.error import SWMMException
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 

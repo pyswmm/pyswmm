@@ -11,7 +11,8 @@ import pytest
 
 # Local imports
 from pyswmm import Simulation
-from pyswmm.swmm5 import PySWMM, PYSWMMException, SWMMException
+from pyswmm.swmm5 import PySWMM
+from pyswmm.error import PYSWMMException, SWMMException
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH, MODEL_BAD_INPUT_PATH_1
 from pyswmm.utils.fixtures import get_model_files
 

@@ -14,7 +14,7 @@ import sys
 # Local imports
 from pyswmm import Links, Nodes, Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-from pyswmm.swmm5 import SWMMException
+from pyswmm.error import SWMMException
 
 
 def test_simulation_1():

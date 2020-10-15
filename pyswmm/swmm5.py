@@ -25,7 +25,7 @@ import six
 
 # Local imports
 from pyswmm.lib import DLL_SELECTION
-from pyswmm.error import SWMM5FutureWarning
+from pyswmm.error import SWMMException
 import pyswmm.toolkitapi as tka
 from deprecated import deprecated
 
