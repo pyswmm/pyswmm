@@ -18,7 +18,7 @@ import distutils.version
 import os
 import sys
 import warnings
-import struct
+#import struct
 
 # Third party imports
 from swmm.toolkit import solver 
@@ -938,7 +938,7 @@ class PySWMM(object):
         # errcode = self.SWMMlibobj.swmm_getLidCOverflow(index,
         #                                                ctypes.byref(param))
         # self._error_check(errcode)
-        if param == struct.pack('B', 0):
+        if param == 0:
             return False
         else:
             return True
