@@ -126,20 +126,20 @@ class PySWMM(object):
         self.rptfile = rptfile
         self.binfile = binfile
 
-        if swmm_lib_path is None:
-            swmm_lib_path = DLL_SELECTION()
+        # if swmm_lib_path is None:
+        #     swmm_lib_path = DLL_SELECTION()
 
-        if os.name == 'nt':
-            # Windows Support
-            self.SWMMlibobj = ctypes.WinDLL(swmm_lib_path)
+        # if os.name == 'nt':
+        #     # Windows Support
+        #     self.SWMMlibobj = ctypes.WinDLL(swmm_lib_path)
 
-        if sys.platform == 'darwin':
-            # Mac Osx Support
-            self.SWMMlibobj = ctypes.cdll.LoadLibrary(swmm_lib_path)
+        # if sys.platform == 'darwin':
+        #     # Mac Osx Support
+        #     self.SWMMlibobj = ctypes.cdll.LoadLibrary(swmm_lib_path)
 
-        if sys.platform.startswith('linux'):
-            # Linux Support
-            self.SWMMlibobj = ctypes.CDLL(swmm_lib_path)
+        # if sys.platform.startswith('linux'):
+        #     # Linux Support
+        #     self.SWMMlibobj = ctypes.CDLL(swmm_lib_path)
 
     def _error_message(self, errcode):
         """
@@ -149,11 +149,12 @@ class PySWMM(object):
         :return: Error Message from SWMM
         :rtype: str
         """
-        errcode = ctypes.c_int(errcode)
-        _errmsg = ctypes.create_string_buffer(257)
-        self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
-        # print(_errmsg.value.decode("utf-8"))
-        return _errmsg.value.decode("utf-8")
+        pass
+        # errcode = ctypes.c_int(errcode)
+        # _errmsg = ctypes.create_string_buffer(257)
+        # self.SWMMlibobj.swmm_getAPIError(errcode, _errmsg)
+        # # print(_errmsg.value.decode("utf-8"))
+        # return _errmsg.value.decode("utf-8")
 
     def _error_check(self, errcode):
         """
@@ -161,9 +162,9 @@ class PySWMM(object):
 
         :param int errcode: SWMM error code index
         """
-
-        if errcode != 0:
-            raise SWMMException(errcode, self._error_message(errcode))
+        pass
+        # if errcode != 0:
+        #     raise SWMMException(errcode, self._error_message(errcode))
 
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):
         """
@@ -222,9 +223,10 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        self.SWMMlibobj.swmm_run(
-            ctypes.c_char_p(six.b(inpfile)),
-            ctypes.c_char_p(six.b(rptfile)), ctypes.c_char_p(six.b(binfile)))
+        solver.run(inpfile, rptfile, binfile)
+        # self.SWMMlibobj.swmm_run(
+        #     ctypes.c_char_p(six.b(inpfile)),
+        #     ctypes.c_char_p(six.b(rptfile)), ctypes.c_char_p(six.b(binfile)))
 
     def swmm_open(self, inpfile=None, rptfile=None, binfile=None):
         """
@@ -262,10 +264,11 @@ class PySWMM(object):
                 binfile = self.inpfile.replace('.inp', '.out')
                 self.binfile = binfile
 
-        errcode = self.SWMMlibobj.swmm_open(
-            ctypes.c_char_p(six.b(inpfile)),
-            ctypes.c_char_p(six.b(rptfile)), ctypes.c_char_p(six.b(binfile)))
-        self._error_check(errcode)
+        solver.open(inpfile, rptfile, binfile)        
+        # errcode = self.SWMMlibobj.swmm_open(
+        #     ctypes.c_char_p(six.b(inpfile)),
+        #     ctypes.c_char_p(six.b(rptfile)), ctypes.c_char_p(six.b(binfile)))
+        # self._error_check(errcode)
         self.fileLoaded = True
 
     def swmm_start(self, SaveOut2rpt=False):
@@ -288,8 +291,9 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        errcode = self.SWMMlibobj.swmm_start(ctypes.c_bool(SaveOut2rpt))
-        self._error_check(errcode)
+        solver.start(SaveOut2rpt)
+        # errcode = self.SWMMlibobj.swmm_start(ctypes.c_bool(SaveOut2rpt))
+        # self._error_check(errcode)
 
     def swmm_end(self):
         """
@@ -308,8 +312,9 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        errcode = self.SWMMlibobj.swmm_end()
-        self._error_check(errcode)
+        solver.end()
+        # errcode = self.SWMMlibobj.swmm_end()
+        # self._error_check(errcode)
 
     def swmm_step(self):
         """
@@ -328,9 +333,10 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        elapsed_time = ctypes.c_double()
-        self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
-        return elapsed_time.value
+        return solver.step()
+        # elapsed_time = ctypes.c_double()
+        # self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
+        # return elapsed_time.value
 
     def swmm_stride(self, advanceSeconds):
         """
@@ -416,9 +422,9 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-
-        errcode = self.SWMMlibobj.swmm_close()
-        self._error_check(errcode)
+        solver.close()
+        # errcode = self.SWMMlibobj.swmm_close()
+        # self._error_check(errcode)
         self.fileLoaded = False
 
     def swmm_getVersion(self):
@@ -482,23 +488,24 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        _year = ctypes.c_int()
-        _month = ctypes.c_int()
-        _day = ctypes.c_int()
-        _hours = ctypes.c_int()
-        _minutes = ctypes.c_int()
-        _seconds = ctypes.c_int()
+        return datetime(*solver.simulation_get_datetime(timeType))
+        # _year = ctypes.c_int()
+        # _month = ctypes.c_int()
+        # _day = ctypes.c_int()
+        # _hours = ctypes.c_int()
+        # _minutes = ctypes.c_int()
+        # _seconds = ctypes.c_int()
 
-        errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
-            ctypes.c_int(timeType),
-            ctypes.byref(_year),
-            ctypes.byref(_month),
-            ctypes.byref(_day),
-            ctypes.byref(_hours),
-            ctypes.byref(_minutes), ctypes.byref(_seconds))
-        self._error_check(errcode)
-        return datetime(_year.value, _month.value, _day.value, _hours.value,
-                        _minutes.value, _seconds.value)
+        # errcode = self.SWMMlibobj.swmm_getSimulationDateTime(
+        #     ctypes.c_int(timeType),
+        #     ctypes.byref(_year),
+        #     ctypes.byref(_month),
+        #     ctypes.byref(_day),
+        #     ctypes.byref(_hours),
+        #     ctypes.byref(_minutes), ctypes.byref(_seconds))
+        # self._error_check(errcode)
+        # return datetime(_year.value, _month.value, _day.value, _hours.value,
+        #                 _minutes.value, _seconds.value)
 
     def setSimulationDateTime(self, timeType, newDateTime):
         """
@@ -514,17 +521,19 @@ class PySWMM(object):
                                              datetime(2009, 10, 1, 12,30))
         >>>
         """
-        _year = newDateTime.year
-        _month = newDateTime.month
-        _day = newDateTime.day
-        _hours = newDateTime.hour
-        _minutes = newDateTime.minute
-        _seconds = newDateTime.second
-        errcode = self.SWMMlibobj.swmm_setSimulationDateTime(
-            ctypes.c_int(timeType), ctypes.c_int(_year), ctypes.c_int(_month),
-            ctypes.c_int(_day), ctypes.c_int(_hours), ctypes.c_int(_minutes),
-            ctypes.c_int(_seconds))
-        self._error_check(errcode)
+        solver.simulation_set_datetime(timeType, newDateTime.year, newDateTime.month, 
+            newDateTime.day, newDateTime.hour, newDateTime.minute, newDateTime.second)
+        # _year = newDateTime.year
+        # _month = newDateTime.month
+        # _day = newDateTime.day
+        # _hours = newDateTime.hour
+        # _minutes = newDateTime.minute
+        # _seconds = newDateTime.second
+        # errcode = self.SWMMlibobj.swmm_setSimulationDateTime(
+        #     ctypes.c_int(timeType), ctypes.c_int(_year), ctypes.c_int(_month),
+        #     ctypes.c_int(_day), ctypes.c_int(_hours), ctypes.c_int(_minutes),
+        #     ctypes.c_int(_seconds))
+        # self._error_check(errcode)
 
     def getSimUnit(self, unittype):
         """
@@ -1319,23 +1328,24 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        _year = ctypes.c_int()
-        _month = ctypes.c_int()
-        _day = ctypes.c_int()
-        _hours = ctypes.c_int()
-        _minutes = ctypes.c_int()
-        _seconds = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_getCurrentDateTime(ctypes.byref(_year),
-                                                          ctypes.byref(_month),
-                                                          ctypes.byref(_day),
-                                                          ctypes.byref(_hours),
-                                                          ctypes.byref(
-                                                              _minutes),
-                                                          ctypes.byref(_seconds))
-        self._error_check(errcode)
-        if errcode == 0:
-            return datetime(_year.value, _month.value, _day.value, _hours.value,
-                            _minutes.value, _seconds.value)
+        return datetime(*solver.simulation_get_current_datetime())
+        # _year = ctypes.c_int()
+        # _month = ctypes.c_int()
+        # _day = ctypes.c_int()
+        # _hours = ctypes.c_int()
+        # _minutes = ctypes.c_int()
+        # _seconds = ctypes.c_int()
+        # errcode = self.SWMMlibobj.swmm_getCurrentDateTime(ctypes.byref(_year),
+        #                                                   ctypes.byref(_month),
+        #                                                   ctypes.byref(_day),
+        #                                                   ctypes.byref(_hours),
+        #                                                   ctypes.byref(
+        #                                                       _minutes),
+        #                                                   ctypes.byref(_seconds))
+        # self._error_check(errcode)
+        # if errcode == 0:
+        #     return datetime(_year.value, _month.value, _day.value, _hours.value,
+        #                     _minutes.value, _seconds.value)
 
     def getLidUFluxRates(self, subcatchID, lidIndex, layerIndex):
         """
