@@ -21,6 +21,7 @@ import warnings
 import struct
 
 # Third party imports
+from swmm.toolkit import solver 
 import six
 
 # Local imports
@@ -370,9 +371,10 @@ class PySWMM(object):
         eps = advanceDays * 0.00001
 
         while self.curSimTime <= ctime + advanceDays - eps:
-            elapsed_time = ctypes.c_double()
-            self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
-            if elapsed_time.value == 0:
+            elapsed_time = solver.step()
+            #elapsed_time = ctypes.c_double()
+            #self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
+            if elapsed_time == 0:
                 return 0.0
             self.curSimTime = elapsed_time.value
         return elapsed_time.value
@@ -613,11 +615,12 @@ class PySWMM(object):
         >>> 10
         >>> swmm_model.swmm_close()
         """
-        count = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_countObjects(objecttype,
-                                                    ctypes.byref(count))
-        self._error_check(errcode)
-        return count.value
+        return solver.object_count(objecttype)
+        # count = ctypes.c_int()
+        # errcode = self.SWMMlibobj.swmm_countObjects(objecttype,
+        #                                             ctypes.byref(count))
+        # self._error_check(errcode)
+        # return count.value
 
     def getObjectId(self, objecttype, index):
         """
@@ -637,11 +640,13 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        ID = ctypes.create_string_buffer(61)
-        errcode = self.SWMMlibobj.swmm_getObjectId(objecttype, index,
-                                                   ctypes.byref(ID))
-        self._error_check(errcode)
-        return ID.value.decode("utf-8")
+        return solver.object_get_id(objecttype, index)
+
+        # ID = ctypes.create_string_buffer(61)
+        # errcode = self.SWMMlibobj.swmm_getObjectId(objecttype, index,
+        #                                            ctypes.byref(ID))
+        # self._error_check(errcode)
+        # return ID.value.decode("utf-8")
 
     def getObjectIDList(self, objecttype):
         """
@@ -666,21 +671,24 @@ class PySWMM(object):
 
     def getObjectIDIndex(self, objecttype, ID):
         """Get Object ID Index. Mostly used as an internal function."""
-        C_ID = ctypes.c_char_p(six.b(ID))
-        index = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_project_findObject(
-            objecttype, C_ID, ctypes.byref(index))
-        self._error_check(errcode)
-        index = index.value
-        return index
+        return solver.object_find(objecttype, ID)
+        # C_ID = ctypes.c_char_p(six.b(ID))
+        # index = ctypes.c_int()
+        # errcode = self.SWMMlibobj.swmm_project_findObject(
+        #     objecttype, C_ID, ctypes.byref(index))
+        # self._error_check(errcode)
+        # index = index.value
+        # return index
 
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
-        C_ID = ctypes.c_char_p(six.b(ID))
-        index = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_project_findObject(
-            objecttype, C_ID, ctypes.byref(index))
-        index = index.value
+        index = solver.object_find(objecttype, ID)
+
+        # C_ID = ctypes.c_char_p(six.b(ID))
+        # index = ctypes.c_int()
+        # errcode = self.SWMMlibobj.swmm_project_findObject(
+        #     objecttype, C_ID, ctypes.byref(index))
+        # index = index.value
         if index != -1:
             return True
         else:
@@ -914,11 +922,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
-        param = ctypes.c_char()
-        errcode = self.SWMMlibobj.swmm_getLidCOverflow(index,
-                                                       ctypes.byref(param))
-        self._error_check(errcode)
-        if param.value == struct.pack('B', 0):
+        param = solver.lid_control_get_overflow(index)
+        # param = ctypes.c_char()
+        # errcode = self.SWMMlibobj.swmm_getLidCOverflow(index,
+        #                                                ctypes.byref(param))
+        # self._error_check(errcode)
+        if param == struct.pack('B', 0):
             return False
         else:
             return True
@@ -937,11 +946,12 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        _val = ctypes.c_char(value)
+        #_val = ctypes.c_char(value)
         index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
-        errcode = self.SWMMlibobj.swmm_setLidCOverflow(index,
-                                                       _val)
-        self._error_check(errcode)
+        return solver.lid_control_get_overflow(index)
+        # errcode = self.SWMMlibobj.swmm_setLidCOverflow(index,
+        #                                                _val)
+        # self._error_check(errcode)
 
     def getLidCParam(self, ID, layer, parameter):
         """
@@ -962,17 +972,18 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         index = self.getObjectIDIndex(tka.ObjectType.LID.value, ID)
-        param = ctypes.c_double()
-        if not isinstance(layer, int):
-            layer = layer.value
-        if not isinstance(parameter, int):
-            parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_getLidCParam(index,
-                                                    layer,
-                                                    parameter,
-                                                    ctypes.byref(param))
-        self._error_check(errcode)
-        return param.value
+        return solver.lid_control_get_parameter(index, layer, parameter)
+        # param = ctypes.c_double()
+        # if not isinstance(layer, int):
+        #     layer = layer.value
+        # if not isinstance(parameter, int):
+        #     parameter = parameter.value
+        # errcode = self.SWMMlibobj.swmm_getLidCParam(index,
+        #                                             layer,
+        #                                             parameter,
+        #                                             ctypes.byref(param))
+        # self._error_check(errcode)
+        # return param.value
 
     def setLidCParam(self, ID, layer, parameter, value):
         """
@@ -1018,11 +1029,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-        param = ctypes.c_int()
-        errcode = self.SWMMlibobj.swmm_getLidUCount(index,
-                                                    ctypes.byref(param))
-        self._error_check(errcode)
-        return param.value
+        return solver.lid_usage_get_count(index)
+        # param = ctypes.c_int()
+        # errcode = self.SWMMlibobj.swmm_getLidUCount(index,
+        #                                             ctypes.byref(param))
+        # self._error_check(errcode)
+        # return param.value
 
     def getLidUParam(self, subcatchID, lidIndex, parameter):
         """
@@ -1045,15 +1057,16 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(
             tka.ObjectType.SUBCATCH.value, subcatchID)
-        param = ctypes.c_double()
-        if not isinstance(parameter, int):
-            parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_getLidUParam(index,
-                                                    lidIndex,
-                                                    parameter,
-                                                    ctypes.byref(param))
-        self._error_check(errcode)
-        return param.value
+        return solver.lid_usage_get_parameter(index, lidIndex, parameter)
+        # param = ctypes.c_double()
+        # if not isinstance(parameter, int):
+        #     parameter = parameter.value
+        # errcode = self.SWMMlibobj.swmm_getLidUParam(index,
+        #                                             lidIndex,
+        #                                             parameter,
+        #                                             ctypes.byref(param))
+        # self._error_check(errcode)
+        # return param.value
 
     def setLidUParam(self, subcatchID, lidIndex, parameter, value):
         """
@@ -1104,15 +1117,16 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(
             tka.ObjectType.SUBCATCH.value, subcatchID)
-        param = ctypes.c_int()
-        if not isinstance(parameter, int):
-            parameter = parameter.value
-        errcode = self.SWMMlibobj.swmm_getLidUOption(index,
-                                                     lidIndex,
-                                                     parameter,
-                                                     ctypes.byref(param))
-        self._error_check(errcode)
-        return param.value
+        return solver.lid_usage_get_option(index, lidIndex, parameter)
+        # param = ctypes.c_int()
+        # if not isinstance(parameter, int):
+        #     parameter = parameter.value
+        # errcode = self.SWMMlibobj.swmm_getLidUOption(index,
+        #                                              lidIndex,
+        #                                              parameter,
+        #                                              ctypes.byref(param))
+        # self._error_check(errcode)
+        # return param.value
 
     def setLidUOption(self, subcatchID, lidIndex, parameter, value):
         """
@@ -1353,15 +1367,16 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(
             tka.ObjectType.SUBCATCH.value, subcatchID)
-        result = ctypes.c_double()
-        if not isinstance(layerIndex, int):
-            layerIndex = layerIndex.value
-        errcode = self.SWMMlibobj.swmm_getLidUFluxRates(index,
-                                                        lidIndex,
-                                                        layerIndex,
-                                                        ctypes.byref(result))
-        self._error_check(errcode)
-        return result.value
+        return solver.lid_usage_get_flux_rate(index, lidIndex, layerIndex)
+        # result = ctypes.c_double()
+        # if not isinstance(layerIndex, int):
+        #     layerIndex = layerIndex.value
+        # errcode = self.SWMMlibobj.swmm_getLidUFluxRates(index,
+        #                                                 lidIndex,
+        #                                                 layerIndex,
+        #                                                 ctypes.byref(result))
+        # self._error_check(errcode)
+        # return result.value
 
     def getLidUResult(self, subcatchID, lidIndex, resultType):
         """
@@ -1394,15 +1409,16 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(
             tka.ObjectType.SUBCATCH.value, subcatchID)
-        result = ctypes.c_double()
-        if not isinstance(resultType, int):
-            resultType = resultType.value
-        errcode = self.SWMMlibobj.swmm_getLidUResult(index,
-                                                     lidIndex,
-                                                     resultType,
-                                                     ctypes.byref(result))
-        self._error_check(errcode)
-        return result.value
+        return solver.lid_usage_get_result(index, lidIndex, resultType)
+        # result = ctypes.c_double()
+        # if not isinstance(resultType, int):
+        #     resultType = resultType.value
+        # errcode = self.SWMMlibobj.swmm_getLidUResult(index,
+        #                                              lidIndex,
+        #                                              resultType,
+        #                                              ctypes.byref(result))
+        # self._error_check(errcode)
+        # return result.value
 
     def getLidGResult(self, subcatchID, resultType):
         """
@@ -1432,14 +1448,14 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(
-            tka.ObjectType.SUBCATCH.value, subcatchID)
-        result = ctypes.c_double()
-        errcode = self.SWMMlibobj.swmm_getLidGResult(index,
-                                                     resultType,
-                                                     ctypes.byref(result))
-        self._error_check(errcode)
-        return result.value
+        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        return solver.lid_group_get_result(index, resultType)
+        # result = ctypes.c_double()
+        # errcode = self.SWMMlibobj.swmm_getLidGResult(index,
+        #                                              resultType,
+        #                                              ctypes.byref(result))
+        # self._error_check(errcode)
+        # return result.value
 
     def getNodeResult(self, ID, resultType):
         """
