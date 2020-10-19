@@ -382,8 +382,8 @@ class PySWMM(object):
             #self.SWMMlibobj.swmm_step(ctypes.byref(elapsed_time))
             if elapsed_time == 0:
                 return 0.0
-            self.curSimTime = elapsed_time.value
-        return elapsed_time.value
+            self.curSimTime = elapsed_time
+        return elapsed_time
 
     def swmm_report(self):
         """
