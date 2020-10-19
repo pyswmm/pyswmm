@@ -437,16 +437,17 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        major = ctypes.create_string_buffer(100)
-        minor = ctypes.create_string_buffer(100)
-        patch = ctypes.create_string_buffer(100)
-        self.SWMMlibobj.swmm_getVersionInfo(
-            ctypes.byref(major), ctypes.byref(minor), ctypes.byref(patch))
-        ver = [
-            major.value.decode("utf-8"), minor.value.decode("utf-8"),
-            patch.value.decode("utf-8")
-        ]
-        return distutils.version.LooseVersion('.'.join(ver))
+        pass
+        # major = ctypes.create_string_buffer(100)
+        # minor = ctypes.create_string_buffer(100)
+        # patch = ctypes.create_string_buffer(100)
+        # self.SWMMlibobj.swmm_getVersionInfo(
+        #     ctypes.byref(major), ctypes.byref(minor), ctypes.byref(patch))
+        # ver = [
+        #     major.value.decode("utf-8"), minor.value.decode("utf-8"),
+        #     patch.value.decode("utf-8")
+        # ]
+        # return distutils.version.LooseVersion('.'.join(ver))
 
     def swmm_getMassBalErr(self):
         """
@@ -455,15 +456,16 @@ class PySWMM(object):
         :return: Runoff Error, Flow Routing Error, Quality Error
         :rtype: tuple
         """
-        runoffErr = ctypes.c_float()
-        flowErr = ctypes.c_float()
-        qualErr = ctypes.c_float()
+        return solver.get_mass_bal_err()
+        # runoffErr = ctypes.c_float()
+        # flowErr = ctypes.c_float()
+        # qualErr = ctypes.c_float()
 
-        errcode = self.SWMMlibobj.swmm_getMassBalErr(
-            ctypes.byref(runoffErr),
-            ctypes.byref(flowErr), ctypes.byref(qualErr))
-        self._error_check(errcode)
-        return runoffErr.value, flowErr.value, qualErr.value
+        # errcode = self.SWMMlibobj.swmm_getMassBalErr(
+        #     ctypes.byref(runoffErr),
+        #     ctypes.byref(flowErr), ctypes.byref(qualErr))
+        # self._error_check(errcode)
+        # return runoffErr.value, flowErr.value, qualErr.value
 
     # --- NETWORK API FUNCTIONS
     # -------------------------------------------------------------------------
