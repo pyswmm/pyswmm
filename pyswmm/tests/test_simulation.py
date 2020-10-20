@@ -12,6 +12,7 @@ from random import randint
 import sys
 
 # Local imports
+import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 from pyswmm.swmm5 import SWMMException
@@ -19,6 +20,14 @@ from pyswmm.swmm5 import SWMMException
 
 def test_simulation_1():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
+    print(f'system units: {sim.system_units}')
+    allow_ponding = sim._model.getSimOptionSetting(tka.SimAnalysisSettings.AllowPonding)
+    routing_step = sim._model.getSimAnalysisSetting(tka.SimulationParameters.RouteStep)
+    print(f'analysis setting: {allow_ponding}')
+    print(f'analysis param: {routing_step}')
+    assert sim.system_units == 'US'
+    assert not allow_ponding
+    assert routing_step == 1
     for ind, step in enumerate(sim):
         print(sim.current_time)
         sim.step_advance(randint(300, 900))
@@ -118,6 +127,7 @@ def test_simulation_callback_1():
         "before_end1", "after_end1", "after_close1"
     ]
     print(LIST)
+
 
 def test_simulation_terminate():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
