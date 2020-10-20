@@ -636,7 +636,7 @@ class PySWMM(object):
 
         if self._getLinkDirection(ID) == 1:
             # Return Tuple of Upstream and Downstream Node IDS
-            return us_node_id, us_node_id
+            return us_node_id, ds_node_id
         # link validations reverse the conduit direction if the slope is < 0
         elif self._getLinkDirection(ID) == -1:
             # Return Tuple of Upstream and Downstream Node IDS
