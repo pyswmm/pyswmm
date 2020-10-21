@@ -6,5 +6,5 @@ pytest
 
 # Run dependencies
 
--f https://github.com/OpenWaterAnalytics/swmm-python/releases/download/v0.5.0-dev/swmm_toolkit-0.6.0-cp37-cp37m-win_amd64.whl
+-f https://github.com/OpenWaterAnalytics/swmm-python/releases/download/v0.5.0-dev
 swmm-toolkit
