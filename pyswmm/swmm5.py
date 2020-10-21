@@ -12,9 +12,9 @@ Open Water Analytics (http://wateranalytics.org/)
 """
 
 # Standard library imports
-from datetime import datetime
-import ctypes
+import distutils.version
 import sys
+from datetime import datetime
 
 # Third party imports
 from swmm.toolkit import solver
@@ -369,8 +369,10 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        return solver.version()
+        major, minor, patch = solver.version()
+        return distutils.version.LooseVersion('.'.join([major, minor, patch]))
 
+        return
     def swmm_getMassBalErr(self):
         """
         Get Mass Balance Errors.
