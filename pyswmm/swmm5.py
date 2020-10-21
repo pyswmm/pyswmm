@@ -1230,7 +1230,10 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.node_get_stats(index)
+        py_alias_ids = tka.NodeStats()._py_alias_ids
+        statistics = solver.node_get_stats(index)
+        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
+        return swmm_stats
 
     def node_inflow(self, ID):
         """
@@ -1252,7 +1255,10 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.storage_get_stats(index)
+        py_alias_ids = tka.StorageStats()._py_alias_ids
+        statistics = solver.storage_get_stats(index)
+        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
+        return swmm_stats
 
     def outfall_statistics(self, ID):
         """
@@ -1263,7 +1269,16 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.outfall_get_stats(index)
+        py_alias_ids = tka.OutfallStats()._py_alias_ids
+        statistics = solver.outfall_get_stats(index)
+        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
+
+        if 'pollutant_loading' in swmm_stats:
+            pollut_array = swmm_stats['pollutant_loading']
+            pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
+            swmm_stats['pollutant_loading'] = {pollut: pollut_array[index] for index, pollut in enumerate(pollut_ids)}
+
+        return swmm_stats
 
     def conduit_statistics(self, ID):
         """
@@ -1274,7 +1289,10 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        return solver.link_get_stats(index)
+        py_alias_ids = tka.LinkStats()._py_alias_ids
+        statistics = solver.link_get_stats(index)
+        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
+        return swmm_stats
 
     def pump_statistics(self, ID):
         """
@@ -1285,7 +1303,10 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        return solver.pump_get_stats(index)
+        py_alias_ids = tka.PumpStats()._py_alias_ids
+        statistics = solver.pump_get_stats(index)
+        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
+        return swmm_stats
 
     def subcatch_statistics(self, ID):
         """
@@ -1296,7 +1317,10 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-        return solver.subcatch_get_stats(index)
+        py_alias_ids = tka.SubcStats()._py_alias_ids
+        statistics = solver.subcatch_get_stats(index)
+        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
+        return swmm_stats
 
     def flow_routing_stats(self):
         """

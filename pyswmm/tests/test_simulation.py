@@ -21,6 +21,7 @@ from pyswmm.swmm5 import SWMMException
 def test_simulation_1():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
     print(f'system units: {sim.system_units}')
+    print(f'swmm version: {sim._model.swmm_getVersion()}')
     allow_ponding = sim._model.getSimOptionSetting(tka.SimAnalysisSettings.AllowPonding)
     routing_step = sim._model.getSimAnalysisSetting(tka.SimulationParameters.RouteStep)
     print(f'analysis setting: {allow_ponding}')
