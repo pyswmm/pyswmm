@@ -178,7 +178,7 @@ class PySWMM(object):
             else:
                 binfile = self.inpfile.replace('.inp', '.out')
 
-        solver.run(inpfile, rptfile, binfile)
+        solver.swmm_run(inpfile, rptfile, binfile)
 
     def swmm_open(self, inpfile=None, rptfile=None, binfile=None):
         """
@@ -216,7 +216,7 @@ class PySWMM(object):
                 binfile = self.inpfile.replace('.inp', '.out')
                 self.binfile = binfile
 
-        solver.open(inpfile, rptfile, binfile)
+        solver.swmm_open(inpfile, rptfile, binfile)
         self.fileLoaded = True
 
     def swmm_start(self, SaveOut2rpt=False):
@@ -239,7 +239,7 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        solver.start(SaveOut2rpt)
+        solver.swmm_start(SaveOut2rpt)
 
     def swmm_end(self):
         """
@@ -258,7 +258,7 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        solver.end()
+        solver.swmm_end()
 
     def swmm_step(self):
         """
@@ -277,7 +277,7 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        return solver.step()
+        return solver.swmm_step()
 
     def swmm_stride(self, advanceSeconds):
         """
@@ -313,7 +313,7 @@ class PySWMM(object):
         elapsed_time = 0
 
         while self.curSimTime <= ctime + advanceDays - eps:
-            elapsed_time = solver.step()
+            elapsed_time = solver.swmm_step()
             if elapsed_time == 0:
                 return 0.0
             self.curSimTime = elapsed_time
@@ -337,7 +337,7 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        solver.report()
+        solver.swmm_report()
 
     def swmm_close(self):
         """
@@ -356,7 +356,7 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        solver.close()
+        solver.swmm_close()
         self.fileLoaded = False
 
     def swmm_getVersion(self):
@@ -369,7 +369,7 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        major, minor, patch = solver.version()
+        major, minor, patch = solver.swmm_version_info()
         return distutils.version.LooseVersion('.'.join([major, minor, patch]))
 
         return
@@ -380,7 +380,7 @@ class PySWMM(object):
         :return: Runoff Error, Flow Routing Error, Quality Error
         :rtype: tuple
         """
-        return solver.get_mass_bal_err()
+        return solver.swmm_get_mass_balance()
 
     # --- NETWORK API FUNCTIONS
     # -------------------------------------------------------------------------
@@ -468,7 +468,7 @@ class PySWMM(object):
         >>> False
         >>> swmm_model.swmm_close()
         """
-        return bool(solver.simulation_get_analysis_setting(setting_type))
+        return bool(solver.simulation_get_setting(setting_type))
 
     def getSimAnalysisSetting(self, param_type):
         """
@@ -504,7 +504,7 @@ class PySWMM(object):
         >>> 10
         >>> swmm_model.swmm_close()
         """
-        return solver.object_count(object_type)
+        return solver.project_get_count(object_type)
 
     def getObjectId(self, objecttype, index):
         """
@@ -524,7 +524,7 @@ class PySWMM(object):
         >>>
         >>> swmm_model.swmm_close()
         """
-        return solver.object_get_id(objecttype, index)
+        return solver.project_get_id(objecttype, index)
 
     def getObjectIDList(self, objecttype):
         """
@@ -549,11 +549,11 @@ class PySWMM(object):
 
     def getObjectIDIndex(self, objecttype, ID):
         """Get Object ID Index. Mostly used as an internal function."""
-        return solver.object_find(objecttype, ID)
+        return solver.project_get_index(objecttype, ID)
 
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
-        index = solver.object_find(objecttype, ID)
+        index = solver.project_get_index(objecttype, ID)
 
         if index != -1:
             return True
@@ -604,6 +604,7 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+        print('hello', solver.link_get_type(index).value)
         return solver.link_get_type(index)
 
     def getLinkConnections(self, ID):
@@ -990,7 +991,7 @@ class PySWMM(object):
 
         """
         index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
-        return solver.rain_get_precipitation(index, parameter)
+        return solver.raingage_get_precipitation(index, parameter)
 
     # --- Active Simulation Result "Getters"
     # -------------------------------------------------------------------------
@@ -1232,10 +1233,7 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        py_alias_ids = tka.NodeStats()._py_alias_ids
-        statistics = solver.node_get_stats(index)
-        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
-        return swmm_stats
+        return solver.node_get_stats(index)
 
     def node_inflow(self, ID):
         """
@@ -1257,10 +1255,7 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        py_alias_ids = tka.StorageStats()._py_alias_ids
-        statistics = solver.storage_get_stats(index)
-        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
-        return swmm_stats
+        return solver.storage_get_stats(index)
 
     def outfall_statistics(self, ID):
         """
@@ -1271,16 +1266,7 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        py_alias_ids = tka.OutfallStats()._py_alias_ids
-        statistics = solver.outfall_get_stats(index)
-        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
-
-        if 'pollutant_loading' in swmm_stats:
-            pollut_array = swmm_stats['pollutant_loading']
-            pollut_ids = self.getObjectIDList(tka.ObjectType.POLLUT.value)
-            swmm_stats['pollutant_loading'] = {pollut: pollut_array[index] for index, pollut in enumerate(pollut_ids)}
-
-        return swmm_stats
+        return solver.outfall_get_stats(index)
 
     def conduit_statistics(self, ID):
         """
@@ -1291,10 +1277,7 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        py_alias_ids = tka.LinkStats()._py_alias_ids
-        statistics = solver.link_get_stats(index)
-        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
-        return swmm_stats
+        return solver.link_get_stats(index)
 
     def pump_statistics(self, ID):
         """
@@ -1305,10 +1288,7 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        py_alias_ids = tka.PumpStats()._py_alias_ids
-        statistics = solver.pump_get_stats(index)
-        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
-        return swmm_stats
+        return solver.pump_get_stats(index)
 
     def subcatch_statistics(self, ID):
         """
@@ -1319,10 +1299,7 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-        py_alias_ids = tka.SubcStats()._py_alias_ids
-        statistics = solver.subcatch_get_stats(index)
-        swmm_stats = {py_alias_ids[attribute]: statistics[attribute] for attribute in statistics}
-        return swmm_stats
+        return solver.subcatch_get_stats(index)
 
     def flow_routing_stats(self):
         """
@@ -1331,7 +1308,7 @@ class PySWMM(object):
         :return: Dictionary of Flow Routing Stats.
         :rtype: dict
         """
-        return solver.system_get_routing_stats()
+        return solver.system_get_routing_totals()
 
     def runoff_routing_stats(self):
         """
@@ -1340,7 +1317,7 @@ class PySWMM(object):
         :return: Dictionary of Runoff Routing Stats.
         :rtype: dict
         """
-        return solver.system_get_runoff_stats()
+        return solver.system_get_runoff_totals()
 
     # --- Active Simulation Parameter "Setters"
     # -------------------------------------------------------------------------
@@ -1455,7 +1432,7 @@ class PySWMM(object):
 
         """
         index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
-        solver.rain_set_precipitation(index, value)
+        solver.raingage_set_precipitation(index, value)
 
 
 if __name__ == '__main__':

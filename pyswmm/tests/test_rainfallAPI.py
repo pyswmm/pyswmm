@@ -38,4 +38,4 @@ def test_rainfall():
                 assert(int(rg.snowfall) == 0)
 
         stats = SystemStats(sim)
-        assert(int(stats.runoff_stats['rainfall']) == 65)
+        assert(int(stats.runoff_stats.rainfall) == 65)

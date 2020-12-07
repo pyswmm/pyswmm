@@ -6,6 +6,7 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Links module for the pythonic interface to SWMM5."""
+from swmm.toolkit import toolkit_enum
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
@@ -180,7 +181,7 @@ class Link(object):
         ...     print c1c2.is_conduit()
         >>> True
         """
-        return self._model.getLinkType(self._linkid) is LinkType.conduit.value
+        return self._model.getLinkType(self._linkid) is toolkit_enum.LinkType.CONDUIT
 
     def is_pump(self):
         """
@@ -198,7 +199,7 @@ class Link(object):
         ...     print c1c2.is_pump()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.pump.value
+        return self._model.getLinkType(self._linkid) is toolkit_enum.LinkType.PUMP
 
     def is_orifice(self):
         """
@@ -216,7 +217,7 @@ class Link(object):
         ...     print c1c2.is_orifice()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.orifice.value
+        return self._model.getLinkType(self._linkid) is toolkit_enum.LinkType.ORIFICE
 
     def is_weir(self):
         """
@@ -234,7 +235,7 @@ class Link(object):
         ...     print c1c2.is_weir()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.weir.value
+        return self._model.getLinkType(self._linkid) is toolkit_enum.LinkType.WEIR
 
     def is_outlet(self):
         """
@@ -252,7 +253,7 @@ class Link(object):
         ...     print c1c2.is_outlet()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.outlet.value
+        return self._model.getLinkType(self._linkid) is toolkit_enum.LinkType.OUTLET
 
     @property
     def connections(self):
