@@ -24,7 +24,7 @@ def test_rainfall():
 
         sim.step_advance(3600)
         for ind, step in enumerate(sim):
-            if ind > 0 and ind < 5:
+            if 0 < ind < 5:
                 assert(rg.total_precip == 1)
                 assert(rg.rainfall == 1)
                 assert(rg.snowfall == 0)
@@ -38,4 +38,4 @@ def test_rainfall():
                 assert(int(rg.snowfall) == 0)
 
         stats = SystemStats(sim)
-        assert(int(stats.runoff_stats.rainfall) == 65)
+        assert(int(stats.runoff_stats['rainfall']) == 65)

@@ -1233,7 +1233,14 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.node_get_stats(index)
+        stats = solver.node_get_stats(index)
+        alias = tka.NodeStats._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def node_inflow(self, ID):
         """
@@ -1255,7 +1262,14 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.storage_get_stats(index)
+        stats = solver.storage_get_stats(index)
+        alias = tka.StorageStats._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def outfall_statistics(self, ID):
         """
@@ -1266,7 +1280,20 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.outfall_get_stats(index)
+        stats = solver.outfall_get_stats(index)
+        alias = tka.OutfallStats._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                if attr == "totalLoad":
+                    dict_stats[alias[attr]] = {}
+                    pollutants = self.getObjectIDList(tka.ObjectType.POLLUT.value)
+                    for index, pollutant in enumerate(pollutants):
+                        dict_stats[alias[attr]][pollutant] = stats.get_totalLoad(index)
+                else:
+                    dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def conduit_statistics(self, ID):
         """
@@ -1277,7 +1304,14 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        return solver.link_get_stats(index)
+        stats = solver.link_get_stats(index)
+        alias = tka.LinkStats._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def pump_statistics(self, ID):
         """
@@ -1288,7 +1322,14 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        return solver.pump_get_stats(index)
+        stats = solver.pump_get_stats(index)
+        alias = tka.PumpStats._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def subcatch_statistics(self, ID):
         """
@@ -1299,7 +1340,14 @@ class PySWMM(object):
         :rtype: dict
         """
         index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, ID)
-        return solver.subcatch_get_stats(index)
+        stats = solver.subcatch_get_stats(index)
+        alias = tka.SubcStats._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def flow_routing_stats(self):
         """
@@ -1308,7 +1356,14 @@ class PySWMM(object):
         :return: Dictionary of Flow Routing Stats.
         :rtype: dict
         """
-        return solver.system_get_routing_totals()
+        stats = solver.system_get_routing_totals()
+        alias = tka.RoutingTotals._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     def runoff_routing_stats(self):
         """
@@ -1317,7 +1372,14 @@ class PySWMM(object):
         :return: Dictionary of Runoff Routing Stats.
         :rtype: dict
         """
-        return solver.system_get_runoff_totals()
+        stats = solver.system_get_runoff_totals()
+        alias = tka.RunoffTotals._py_alias_ids
+        # Copy Items to Dictionary using Alias Names.
+        dict_stats = {}
+        for attr in dir(stats):
+            if "_" not in attr and attr in alias:
+                dict_stats[alias[attr]] = getattr(stats, attr)
+        return dict_stats
 
     # --- Active Simulation Parameter "Setters"
     # -------------------------------------------------------------------------
