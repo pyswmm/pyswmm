@@ -3,8 +3,4 @@
 six
 enum34
 pytest
-
-# Run dependencies
-
--f https://github.com/OpenWaterAnalytics/swmm-python/releases/download/v0.6.0-dev/swmm_toolkit-0.7.0-cp37-cp37m-win_amd64.whl
-swmm-toolkit
+swmm-toolkit==0.8.0
