@@ -1,6 +1,5 @@
 # Build dependencies
 #python
-six
 enum34
 pytest
 swmm-toolkit==0.8.0
