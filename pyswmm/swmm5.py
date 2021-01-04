@@ -604,7 +604,6 @@ class PySWMM(object):
         >>> swmm_model.swmm_close()
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        print('hello', solver.link_get_type(index).value)
         return solver.link_get_type(index)
 
     def getLinkConnections(self, ID):
@@ -662,8 +661,8 @@ class PySWMM(object):
         Get Node Parameter.
 
         :param str ID: Node ID
-        :param int parameter: Paramter (toolkitapi.NodeParams member variable)
-        :return: Paramater Value
+        :param int parameter: Parameter (toolkitapi.NodeParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -683,7 +682,7 @@ class PySWMM(object):
         Set Node Parameter.
 
         :param str ID: Node ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :param int Parameter: Parameter (toolkitapi.NodeParams member variable)
 
         Examples:
 
@@ -701,8 +700,8 @@ class PySWMM(object):
         Get Link Parameter.
 
         :param str ID: Link ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.NodeParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -722,7 +721,7 @@ class PySWMM(object):
         Set Link Parameter.
 
         :param str ID: Link ID
-        :param int Parameter: Paramter (toolkitapi.NodeParams member variable)
+        :param int Parameter: Parameter (toolkitapi.NodeParams member variable)
 
         Examples:
 
@@ -760,8 +759,8 @@ class PySWMM(object):
 
         :param str ID: Lid Control ID
         :param int layer: Layer (toolkitapi.LidLayers member variable)
-        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
-        :return: Paramater Value
+        :param int parameter: Parameter (toolkitapi.LidLayersProperty member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -781,7 +780,7 @@ class PySWMM(object):
 
         :param str ID: Lid Control ID
         :param int layer: Layer (toolkitapi.LidLayers member variable)
-        :param int parameter: Paramter (toolkitapi.LidLayersProperty member variable)
+        :param int parameter: Parameter (toolkitapi.LidLayersProperty member variable)
 
         Examples:
 
@@ -901,8 +900,8 @@ class PySWMM(object):
         Get Subcatchment Parameter
 
         :param str ID: Subcatchment ID
-        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
-        :return: Paramater Value
+        :param int Parameter: Parameter (toolkitapi.SubcParams member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -924,6 +923,7 @@ class PySWMM(object):
         :param str ID: Subcatchment ID
         :param int parameter: paramter (toolkitapi.SubcParams member variable)
         :param double value: value set to parameter
+
         Examples:
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
@@ -946,7 +946,7 @@ class PySWMM(object):
         Subcatchments are ObjectType.SUBCATCH
 
         :param str ID: Subcatchment ID
-        :param int Parameter: Paramter (toolkitapi.SubcParams member variable)
+        :param int Parameter: Parameter (toolkitapi.SubcParams member variable)
         :return: (Loading Surface Type, ID)
         :rtype: tuple
 
@@ -1029,8 +1029,8 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidIndex: Lid unit Index
-        :param int layerIndex: Paramter (toolkitapi.LidLayers member variable)
-        :return: Paramater Value
+        :param int layerIndex: Parameter (toolkitapi.LidLayers member variable)
+        :return: Parameter Value
         :rtype: float
         Examples:
 
@@ -1061,8 +1061,8 @@ class PySWMM(object):
 
         :param str subcatchID: Subcatchment ID
         :param int lidIndex: Lid unit Index
-        :param int resultType: Paramter (toolkitapi.LidUResults member variable)
-        :return: Paramater Value
+        :param int resultType: Parameter (toolkitapi.LidUResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1093,8 +1093,8 @@ class PySWMM(object):
         Get Lid Group Result.
 
         :param str subcatchID: Subcatchment ID
-        :param int resultType: Paramter (toolkitapi.LidUResults member variable)
-        :return: Paramater Value
+        :param int resultType: Parameter (toolkitapi.LidUResults member variable)
+        :return: Parameter Value
         :rtype: float
 
         Examples:
@@ -1150,6 +1150,17 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         return solver.node_get_result(index, result_type)
 
+    def getNodePollut(self, ID, result_type):
+        """
+        Get water quality results from a Node.
+
+        :param str ID: Node ID
+        :param int result_type: parameter (toolkitapi.NodePollut)
+        :rtype: list
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+        return solver.node_get_pollutant(index, result_type)
+
     def getLinkResult(self, ID, result_type):
         """
         Get Link Result.
@@ -1157,7 +1168,6 @@ class PySWMM(object):
         :param str ID: Link ID
         :param int result_type: parameter (toolkitapi.LinkResults member variable)
         :return: parameter value
-        :rtype: float
 
         Examples:
 
@@ -1181,6 +1191,18 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         return solver.link_get_result(index, result_type)
 
+    def getLinkPollut(self, ID, result_type):
+        """
+        Get water quality results from a Link.
+
+        :param str ID: Link ID
+        :param int result_type:  parameter (toolkitapi.LinkPollut)
+        :return: Pollutant Values
+        :rtype: list
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+        return solver.link_get_pollutant(index, result_type)
+
     def getSubcatchResult(self, ID, result_type):
         """
         Get Subcatchment Result
@@ -1188,6 +1210,7 @@ class PySWMM(object):
         :param str ID: Subcatchment ID
         :param int result_type: paramter (toolkitapi.LinkResults member variable)
         :return: paramater Value
+
         :rtype: float
 
         Examples:

@@ -19,6 +19,8 @@ PySWMM documentation
    install
    tutorial/index
    reference/index
+   examples/index
+   cite
 
 .. only:: html
 
