@@ -1,7 +1,7 @@
 # Build dependencies
 #python
+wheel
 six
 enum34
 pytest
 swmm-toolkit==0.8.0
-
