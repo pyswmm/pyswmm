@@ -6,7 +6,7 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Nodes module for the pythonic interface to SWMM5."""
-from swmm.toolkit import toolkit_enum
+from swmm.toolkit import shared_enum
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
@@ -187,7 +187,7 @@ class Node(object):
         ...     print j1.is_junction()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is toolkit_enum.NodeType.JUNCTION
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.JUNCTION
 
     def is_outfall(self):
         """
@@ -205,7 +205,7 @@ class Node(object):
         ...     print j1.is_outfall()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is toolkit_enum.NodeType.OUTFALL
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.OUTFALL
 
     def is_storage(self):
         """
@@ -223,7 +223,7 @@ class Node(object):
         ...     print j1.is_storage()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is toolkit_enum.NodeType.STORAGE
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.STORAGE
 
     def is_divider(self):
         """
@@ -241,7 +241,7 @@ class Node(object):
         ...     print j1.is_divider()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is toolkit_enum.NodeType.DIVIDER
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.DIVIDER
 
     @property
     def invert_elevation(self):
