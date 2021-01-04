@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-        with:
-          submodules: true
 
       - name: Install Python
         uses: actions/setup-python@v2
@@ -25,7 +23,6 @@ jobs:
 
       - name: Test wheel
         run: |
-          pip install pytest
           pip install --no-index --find-links=./dist pyswmm
           pytest
 
