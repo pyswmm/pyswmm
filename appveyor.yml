@@ -6,14 +6,15 @@ environment:
   matrix:
     - PYTHON: "C:\\Python36-x64"
     - PYTHON: "C:\\Python37-x64"
-    
+    - PYTHON: "C:\\Python38-x64"    
 matrix:
   exclude:
     - PYTHON: "C:\\Python36-x64"
       platform: x86
     - PYTHON: "C:\\Python37-x64"
       platform: x86
-    
+    - PYTHON: "C:\\Python38-x64"
+      platform: x86    
 install:
   - "%PYTHON%\\python setup.py develop"
   - "%PYTHON%\\python.exe -m pip install -r %APPVEYOR_BUILD_FOLDER%\\requirements.txt"
