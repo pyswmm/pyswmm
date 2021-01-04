@@ -1,0 +1,35 @@
+name: Build Wheels
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install build requirements
+        run: pip install -r requirements.txt
+
+      - name: Build wheel
+        run: pip wheel --wheel-dir=./dist ./
+
+      - name: Test wheel
+        run: |
+          pip install pytest
+          pip install --no-index --find-links=./dist pyswmm
+          pytest
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: ./dist/pyswmm-*.whl
