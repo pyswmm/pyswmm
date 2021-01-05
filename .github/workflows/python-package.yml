@@ -4,13 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-        fail-fast: false
-        matrix:
-          os: [windows-2016, ubuntu-16.04, macos-10.15]
-          py: [3.6, 3.7, 3.8]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
@@ -19,7 +13,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.py }}
+          python-version: 3.7
 
       - name: Install build requirements
         run: pip install -r requirements.txt
