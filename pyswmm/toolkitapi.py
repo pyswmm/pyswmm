@@ -279,7 +279,8 @@ class NodeStats(ctypes.Structure):
         "maxOverflow": "peak_flooding_rate",
         "maxPondedVol": "max_ponded_volume",
         "maxInflowDate": "max_inflow_date",
-        "maxOverflowDate": "max_flooding_date"
+        "maxOverflowDate": "max_flooding_date",
+        "loads": "pollutant_loading"
     }
 
 
@@ -310,7 +311,8 @@ class OutfallStats(ctypes.Structure):
         "avgFlow": "average_flowrate",
         "maxFlow": "peak_flowrate",
         "totalLoad": "pollutant_loading",
-        "totalPeriods": "total_periods"
+        "totalPeriods": "total_periods",
+        "loads": "pollutant_loading"
     }
 
 

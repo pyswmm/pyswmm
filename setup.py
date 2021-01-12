@@ -38,9 +38,6 @@ def get_description():
     return data
 
 
-REQUIREMENTS = ['six']
-
-
 setup(
     name='pyswmm',
     version=get_version(),
@@ -49,13 +46,9 @@ setup(
     url='https://github.com/OpenWaterAnalytics/pyswmm/wiki',
     author='Bryant E. McDonnell (See AUTHORS)',
     author_email='bemcdonnell@gmail.com',
-    install_requires=REQUIREMENTS,
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
-        '': [
-            'lib/windows/swmm5.dll', 'lib/windows/swmm5-x64.dll', 'lib/linux/swmm5.so', 'lib/macos/swmm5.dylib', 'LICENSE.txt',
-            'AUTHORS', 'tests/data/*.inp', 'tests/*.py'
-        ]
+        '': ['LICENSE.txt', 'AUTHORS', 'tests/data/*.inp', 'tests/*.py']
     },
     include_package_data=True,
     license="BSD2 License",

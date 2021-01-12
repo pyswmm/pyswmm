@@ -35,7 +35,7 @@ def test_pyswmm_exception():
 
 
 def test_swmm_input_error_1():
-    with pytest.raises(SWMMException) as e:
+    with pytest.raises(Exception) as e:
         with Simulation(MODEL_BAD_INPUT_PATH_1) as sim:
             for step in sim:
                 pass

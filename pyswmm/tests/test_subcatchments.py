@@ -11,6 +11,7 @@ from pyswmm import Simulation, Subcatchments
 # from pyswmm.swmm5 import PySWMM
 from pyswmm.tests.data import MODEL_FULL_FEATURES_PATH, MODEL_WEIR_SETTING_PATH, MODEL_SUBCATCH_STATS_PATH
 from pytest import approx
+
 UT_PRECISION = 1  # %
 
 
@@ -39,14 +40,13 @@ def test_subcatchments_2():
             print(subcatchment.curb_length)
 
 
-
 def test_subcatchments_3():
     with Simulation(MODEL_SUBCATCH_STATS_PATH) as sim:
         S1 = Subcatchments(sim)['S1']
         S2 = Subcatchments(sim)['S2']
         for ind, step in enumerate(sim):
             pass
-        
+
         print(S1.statistics)
         print(S2.statistics)
 
