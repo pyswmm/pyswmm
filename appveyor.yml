@@ -16,8 +16,8 @@ matrix:
     - PYTHON: "C:\\Python38-x64"
       platform: x86    
 install:
-  - "%PYTHON%\\python setup.py develop"
   - "%PYTHON%\\python.exe -m pip install -r %APPVEYOR_BUILD_FOLDER%\\requirements.txt"
+  - "%PYTHON%\\python setup.py develop"
 
 # Not a .NET project, we build in the install step instead
 build: false
