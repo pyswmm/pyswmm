@@ -1,5 +1,16 @@
 # History of changes
 
+## Version 1.0.1 (2021-01-13)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 267](https://github.com/OpenWaterAnalytics/pyswmm/issues/267) - Add swmm-toolkit package as an install_require in setup.py
+
+In this release 1 issue was closed.
+
+
 ## Version 1.0.0 (2021-01-12)
 
 ### Issues Closed
