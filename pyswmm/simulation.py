@@ -17,7 +17,7 @@ from swmm.toolkit import output, shared_enum
 
 def output_exception_handler(func):
     def inner_function(self, *args, **kwargs):
-        if not self._complete:
+        if self.sim and not self.sim._complete:
             raise IncompleteSimulation('Cannot use output functions due to incomplete simulation.')
 
     return inner_function
@@ -85,11 +85,7 @@ class Simulation(object):
         self._terminate_request = False
         self._complete = False
 
-        self.output_handle = None
-        self.output_loaded = False
-        self.output_num_period = None
-        self.output_report = None
-        self.output_start = None
+        self.output = Output(self._model.binfile, self)
 
         self._callbacks = {
             "before_start": None,
@@ -172,8 +168,8 @@ class Simulation(object):
             self._isOpen = False
             # Execute Callback Hooks After Simulation Closes
             self._execute_callback(self.after_close())
-        if self.output_handle:
-            self.output_close()
+        if not self.output.delete_handle and (self.output.loaded or self.output.handle):
+            self.output.close()
 
     @staticmethod
     def _is_callback(callable_object):
@@ -666,143 +662,159 @@ class Simulation(object):
         total_time = self.end_time - self.start_time
         return float(dt.total_seconds()) / total_time.total_seconds()
 
+
+class Output(object):
+    def __init__(self, binfile, sim=None):
+        self.sim = sim
+        self.binfile = binfile
+
+        self.handle = None
+        self.loaded = False
+        self.delete_handle = False
+        self.num_period = None
+        self.report = None
+        self.start_time = None
+
     @output_exception_handler
-    def output_open(self, binfile=None):
+    def open(self):
         """
         Open a binary file
         """
-        if binfile is None:
-            if self._model.binfile != '' and self._model.binfile is not None:
-                binfile = self._model.binfile
-            else:
-                binfile = self._model.inpfile.replace('.inp', '.out')
+        if self.handle is None:
+            self.handle = output.init()
 
-        if self.output_handle is None:
-            self.output_handle = output.init()
+        if not self.loaded:
+            self.loaded = True
+            output.open(self.handle, self.binfile)
+            self.start_time = output.get_start_date(self.handle)
+            self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
+            self.num_period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
 
-        if not self.output_loaded:
-            self.output_loaded = True
-            output.open(self.output_handle, binfile)
-            self.output_start = output.get_start_date(self.output_handle)
-            self.output_report = output.get_times(self.output_handle, shared_enum.Time.REPORT_STEP)
-            self.output_num_period = output.get_times(self.output_handle, shared_enum.Time.NUM_PERIODS)
+    def __enter__(self):
+        self.open()
+
+        return self
+
+    def __exit__(self):
+        self.close()
 
     @output_exception_handler
-    def output_close(self):
+    def close(self):
         """
         Close an opened binary file
         """
-        if self.output_handle and self.output_loaded:
-            self.output_loaded = False
-            output.close(self.output_handle)
+        if self.handle or self.loaded:
+            self.loaded = False
+            self.delete_handle = True
+            output.close(self.handle)
 
     @output_exception_handler
-    def output_project_size(self):
-        return output.get_proj_size(self.output_handle)
+    def project_size(self):
+        return output.get_proj_size(self.handle)
 
     @output_exception_handler
-    def output_unit(self):
-        return output.get_units(self.output_handle)
+    def unit(self):
+        return output.get_units(self.handle)
 
     @output_exception_handler
-    def output_version(self):
-        return output.get_version(self.output_handle)
+    def version(self):
+        return output.get_version(self.handle)
 
     @output_exception_handler
-    def output_object_name(self, object_type, index):
-        return output.get_elem_name(self.output_handle, object_type, index)
+    def object_name(self, object_type, index):
+        return output.get_elem_name(self.handle, object_type, index)
 
     @output_exception_handler
-    def output_subcatch_series(self, index, attribute, start_index=None, end_index=None):
+    def subcatch_series(self, index, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
 
         if not end_index:
-            end_index = self.output_num_period
+            end_index = self.num_period
 
-        return output.get_subcatch_series(self.output_handle, index, attribute, start_index, end_index)
+        return output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
 
     @output_exception_handler
-    def output_node_series(self, index, attribute, start_index=None, end_index=None):
+    def node_series(self, index, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
 
         if not end_index:
-            end_index = self.output_num_period
+            end_index = self.num_period
 
-        return output.get_node_series(self.output_handle, index, attribute, start_index, end_index)
+        return output.get_node_series(self.handle, index, attribute, start_index, end_index)
 
     @output_exception_handler
-    def output_link_series(self, index, attribute, start_index=None, end_index=None):
+    def link_series(self, index, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
 
         if not end_index:
-            end_index = self.output_num_period
+            end_index = self.num_period
 
-        return output.get_link_series(self.output_handle, index, attribute, start_index, end_index)
+        return output.get_link_series(self.handle, index, attribute, start_index, end_index)
 
     @output_exception_handler
-    def output_system_series(self, attribute, start_index=None, end_index=None):
+    def system_series(self, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
 
         if not end_index:
-            end_index = self.output_num_period
+            end_index = self.num_period
 
-        return output.get_system_series(self.output_handle, attribute, start_index, end_index)
-
-    @output_exception_handler
-    def output_subcatch_attribute(self, attribute, time_index=0):
-        if not time_index:
-            time_index = 0
-
-        return output.get_subcatch_attribute(self.output_handle, time_index, attribute)
+        return output.get_system_series(self.handle, attribute, start_index, end_index)
 
     @output_exception_handler
-    def output_node_attribute(self, attribute, time_index=0):
+    def subcatch_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_node_attribute(self.output_handle, time_index, attribute)
+        return output.get_subcatch_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
-    def output_link_attribute(self, attribute, time_index=0):
+    def node_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_link_attribute(self.output_handle, time_index, attribute)
+        return output.get_node_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
-    def output_system_attribute(self, attribute, time_index=0):
+    def link_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_system_attribute(self.output_handle, time_index, attribute)
+        return output.get_link_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
-    def output_subcatch_result(self, index, time_index=0):
+    def system_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_subcatch_result(self.output_handle, time_index, index)
+        return output.get_system_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
-    def output_node_result(self, index, time_index=0):
+    def subcatch_result(self, index, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_node_result(self.output_handle, time_index, index)
+        return output.get_subcatch_result(self.handle, time_index, index)
 
     @output_exception_handler
-    def output_link_result(self, index, time_index=0):
+    def node_result(self, index, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_link_result(self.output_handle, time_index, index)
+        return output.get_node_result(self.handle, time_index, index)
 
-    def output_system_result(self, index, time_index=0):
+    @output_exception_handler
+    def link_result(self, index, time_index=0):
         if not time_index:
             time_index = 0
 
-        return output.get_system_result(self.output_handle, time_index, index)
+        return output.get_link_result(self.handle, time_index, index)
+
+    def system_result(self, index, time_index=0):
+        if not time_index:
+            time_index = 0
+
+        return output.get_system_result(self.handle, time_index, index)

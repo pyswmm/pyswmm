@@ -139,7 +139,8 @@ def test_simulation_terminate():
                 sim.terminate_simulation()
         assert(i == 11)
 
-# TODO: THINK ABOUT THIS
+
 def test_simulation_openclose_output():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
-        pass
+        for step in sim:
+            pass
