@@ -17,7 +17,7 @@ import sys
 from datetime import datetime
 
 # Third party imports
-from swmm.toolkit import solver
+from swmm.toolkit import output, solver, shared_enum
 
 # Local imports
 import pyswmm.toolkitapi as tka
@@ -119,6 +119,7 @@ class PySWMM(object):
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
+
         self.curSimTime = 0.0
 
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):

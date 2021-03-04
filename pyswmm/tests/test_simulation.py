@@ -138,3 +138,8 @@ def test_simulation_terminate():
             if ind == 10:
                 sim.terminate_simulation()
         assert(i == 11)
+
+# TODO: THINK ABOUT THIS
+def test_simulation_openclose_output():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        pass
