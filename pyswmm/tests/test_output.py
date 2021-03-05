@@ -9,8 +9,8 @@ def test_simulation_output_with():
 
     with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as out:
         assert len(out.subcatchments) == 3
-        assert len(out.nodes) == 4
-        assert len(out.links) == 3
+        assert len(out.nodes) == 5
+        assert len(out.links) == 4
         assert len(out.pollutants) == 0
 
         # access with output methods
@@ -25,7 +25,7 @@ def test_simulation_output():
     out = Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out'))
     out.open()
     assert len(out.subcatchments) == 3
-    assert len(out.nodes) == 4
-    assert len(out.links) == 3
+    assert len(out.nodes) == 5
+    assert len(out.links) == 4
     assert len(out.pollutants) == 0
     out.close()
