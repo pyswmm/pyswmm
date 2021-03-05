@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2021 Jennifer Wu
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
 from datetime import timedelta
 
 # Third party imports
@@ -17,6 +24,14 @@ def output_open_handler(func):
 
 class Output(object):
     def __init__(self, binfile):
+        """
+        Base class for a SWMM Output binary file.
+
+        The output object provides several options to process timeseries within output binary file.
+
+        Initialize the Output class.
+        :param binfile: model binary file path
+        """
         self.binfile = binfile
 
         self.handle = None
@@ -36,6 +51,8 @@ class Output(object):
     def open(self):
         """
         Open a binary file
+        :return: if binary file was opened successfully
+        :rtype: boolean
         """
         if self.handle is None:
             self.handle = output.init()
@@ -44,17 +61,24 @@ class Output(object):
             self.loaded = True
             output.open(self.handle, self.binfile)
             self.start_time = from_jd(output.get_start_date(self.handle) + 2415018.5)
+            self.start_time = self.start_time.replace(microsecond=0)
             self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
             self.num_period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
+
+        return True
 
     def close(self):
         """
         Close an opened binary file
+        :return: if binary file was closed successfully
+        :rtype: boolean
         """
         if self.handle or self.loaded:
             self.loaded = False
             self.delete_handle = True
             output.close(self.handle)
+
+        return True
 
     def __enter__(self):
         self.open()
@@ -65,15 +89,21 @@ class Output(object):
 
     @property
     def times(self):
+        """
+        Returns list of reporting timestep stored in model binary file
+        :return: list of reporting timesteps
+        :rtype: list
+        """
         if not self._times:
-            start_date_time = self.start_time
-            num_steps = self.num_period
-            report_step = self.report
-            self._times = [start_date_time + timedelta(report_step) * step for step in range(num_steps)]
+            self._times = list()
+            for step in range(1, self.num_period + 1):
+                self._times.append(self.start_time + timedelta(seconds=self.report) * step)
         return self._times
 
     @property
     def project_size(self):
+        """
+        """
         if not self._project_size:
             self._project_size = output.get_proj_size(self.handle)
         return self._project_size
@@ -133,6 +163,23 @@ class Output(object):
 
     @output_open_handler
     def subcatch_series(self, index, attribute, start_index=None, end_index=None):
+        if isinstance(index, str):
+            index = self.subcatchments[index]
+
+        if isinstance(attribute, str):
+            attribute_enum = dict(
+                rainfall=shared_enum.SubcatchAttribute.RAINFALL,
+                snow_depth=shared_enum.SubcatchAttribute.SNOW_DEPTH,
+                evap_loss=shared_enum.SubcatchAttribute.EVAP_LOSS,
+                infil_loss=shared_enum.SubcatchAttribute.INFIL_LOSS,
+                runoff_rate=shared_enum.SubcatchAttribute.RUNOFF_RATE,
+                gw_outflow_rate=shared_enum.SubcatchAttribute.GW_OUTFLOW_RATE,
+                gw_table_elev=shared_enum.SubcatchAttribute.GW_TABLE_ELEV,
+                soil_moisture=shared_enum.SubcatchAttribute.SOIL_MOISTURE,
+                pollutant_concentration=shared_enum.SubcatchAttribute.POLLUT_CONC_0,
+            )
+            attribute = attribute_enum.get(attribute.lower(), None)
+
         if not start_index:
             start_index = 0
 
@@ -143,6 +190,21 @@ class Output(object):
 
     @output_open_handler
     def node_series(self, index, attribute, start_index=None, end_index=None):
+        if isinstance(index, str):
+            index = self.nodes[index]
+
+        if isinstance(attribute, str):
+            attribute_enum = dict(
+                invert_depth=shared_enum.NodeAttribute.INVERT_DEPTH,
+                hydraulic_head=shared_enum.NodeAttribute.HYDRAULIC_HEAD,
+                ponded_volume=shared_enum.NodeAttribute.PONDED_VOLUME,
+                lateral_inflow=shared_enum.NodeAttribute.LATERAL_INFLOW,
+                total_inflow=shared_enum.NodeAttribute.TOTAL_INFLOW,
+                flooding_losses=shared_enum.NodeAttribute.FLOODING_LOSSES,
+                pollutant_concentration=shared_enum.NodeAttribute.POLLUT_CONC_0,
+            )
+            attribute = attribute_enum.get(attribute.lower(), None)
+
         if not start_index:
             start_index = 0
 
@@ -153,16 +215,51 @@ class Output(object):
 
     @output_open_handler
     def link_series(self, index, attribute, start_index=None, end_index=None):
+        if isinstance(index, str):
+            index = self.links[index]
+
+        if isinstance(attribute, str):
+            attribute_enum = dict(
+                flow_rate=shared_enum.LinkAttribute.FLOW_RATE,
+                flow_depth=shared_enum.LinkAttribute.FLOW_DEPTH,
+                flow_velocity=shared_enum.LinkAttribute.FLOW_VELOCITY,
+                flow_volume=shared_enum.LinkAttribute.FLOW_VOLUME,
+                capacity=shared_enum.LinkAttribute.CAPACITY,
+                pollutant_concentration=shared_enum.LinkAttribute.POLLUT_CONC_0,
+            )
+            attribute = attribute_enum.get(attribute.lower(), None)
+
         if not start_index:
             start_index = 0
 
         if not end_index:
             end_index = self.num_period
 
-        return output.get_link_series(self.handle, index, attribute, start_index, end_index)
+        values = output.get_link_series(self.handle, index, attribute, start_index, end_index)
+
+        return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def system_series(self, attribute, start_index=None, end_index=None):
+        if isinstance(attribute, str):
+            attribute_enum = dict(
+                air_temp=shared_enum.SystemAttribute.AIR_TEMP,
+                rainfall=shared_enum.SystemAttribute.RAINFALL,
+                snow_depth=shared_enum.SystemAttribute.SNOW_DEPTH,
+                evap_infil_loss=shared_enum.SystemAttribute.EVAP_INFIL_LOSS,
+                runoff_flow=shared_enum.SystemAttribute.RUNOFF_FLOW,
+                dry_weather_inflow=shared_enum.SystemAttribute.DRY_WEATHER_INFLOW,
+                gw_inflow=shared_enum.SystemAttribute.GW_INFLOW,
+                rdii_inflow=shared_enum.SystemAttribute.RDII_INFLOW,
+                direct_inflow=shared_enum.SystemAttribute.DIRECT_INFLOW,
+                total_lateral_inflow=shared_enum.SystemAttribute.TOTAL_LATERAL_INFLOW,
+                flood_losses=shared_enum.SystemAttribute.FLOOD_LOSSES,
+                outfall_flows=shared_enum.SystemAttribute.OUTFALL_FLOWS,
+                volume_stored=shared_enum.SystemAttribute.VOLUME_STORED,
+                evap_rate=shared_enum.SystemAttribute.EVAP_RATE,
+            )
+            attribute = attribute_enum.get(attribute.lower(), None)
+
         if not start_index:
             start_index = 0
 
@@ -201,6 +298,9 @@ class Output(object):
 
     @output_open_handler
     def subcatch_result(self, index, time_index=0):
+        if isinstance(index, str):
+            index = self.subcatchments[index]
+
         if not time_index:
             time_index = 0
 
@@ -208,6 +308,9 @@ class Output(object):
 
     @output_open_handler
     def node_result(self, index, time_index=0):
+        if isinstance(index, str):
+            index = self.nodes[index]
+
         if not time_index:
             time_index = 0
 
@@ -215,6 +318,9 @@ class Output(object):
 
     @output_open_handler
     def link_result(self, index, time_index=0):
+        if isinstance(index, str):
+            index = self.links[index]
+
         if not time_index:
             time_index = 0
 

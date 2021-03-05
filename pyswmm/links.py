@@ -65,7 +65,6 @@ class Links(object):
         if not model._model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
         self._model = model._model
-        self._sim = model
         self._cuindex = 0
         self._nLinks = self._model.getProjectSize(ObjectType.LINK.value)
 
@@ -89,7 +88,7 @@ class Links(object):
 
     def __getitem__(self, linkid):
         if self.__contains__(linkid):
-            ln = Link(self._sim, linkid)
+            ln = Link(self._model, linkid)
             _ln = ln
             if ln.is_conduit():
                 _ln.__class__ = Conduit
@@ -137,13 +136,12 @@ class Link(object):
     ... 0.0
     """
 
-    def __init__(self, sim, linkid):
-        self._model = sim._model
-        if not self._model.fileLoaded:
+    def __init__(self, model, linkid):
+        if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
-        if linkid not in self._model.getObjectIDList(ObjectType.LINK.value):
+        if linkid not in model.getObjectIDList(ObjectType.LINK.value):
             raise PYSWMMException("ID Not valid")
-        self._sim = sim
+        self._model = model
         self._linkid = linkid
 
     # --- Get Parameters
@@ -925,31 +923,6 @@ class Link(object):
             out_dict[pollut_ids[ind]] = totalLoad_array[ind]
 
         return out_dict
-
-    def series(self, attribute, start_index=None, end_index=None):
-        """
-        Get attribute timeseries for a link.
-
-        If simulation is incomplete, this method will raise an IncompleteSimulation error
-        :return: timeseries, where keys are timestamp and items are values
-        :rtype: dict
-        """
-        if isinstance(attribute, str):
-            attribute_enum = dict(
-                flow_rate=shared_enum.LinkAttribute.FLOW_RATE,
-                flow_depth=shared_enum.LinkAttribute.FLOW_DEPTH,
-                flow_velocity=shared_enum.LinkAttribute.FLOW_VELOCITY,
-                flow_volume=shared_enum.LinkAttribute.FLOW_VOLUME,
-                capacity=shared_enum.LinkAttribute.CAPACITY,
-                pollutant=shared_enum.LinkAttribute.POLLUT_CONC_0,
-            )
-            attribute = attribute_enum.get(attribute.lower(), None)
-
-        times = self._sim.output.times
-        values = self._sim.output.link_series(self._linkid, attribute, start_index, end_index)
-        print(times)
-        print(len(times), len(values))
-        return {time: value for time, value in zip(times, values)}
 
 
 class Conduit(Link):
