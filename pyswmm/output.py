@@ -6,9 +6,11 @@ from julian import from_jd
 
 
 def output_open_handler(func):
-    def inner_function(self, *arg, **kwargs):
+    def inner_function(self, *args, **kwargs):
         if not self.loaded:
             self.open()
+
+        return func(self, *args, **kwargs)
 
     return inner_function
 
@@ -24,6 +26,12 @@ class Output(object):
         self.report = None
         self.start_time = None
         self._times = None
+
+        self._project_size = None
+        self._subcatchments = None
+        self._nodes = None
+        self._links = None
+        self._pollutants = None
 
     def open(self):
         """
@@ -50,7 +58,6 @@ class Output(object):
 
     def __enter__(self):
         self.open()
-
         return self
 
     def __exit__(self, *arg):
@@ -65,24 +72,52 @@ class Output(object):
             self._times = [start_date_time + timedelta(report_step) * step for step in range(num_steps)]
         return self._times
 
-    @output_open_handler
+    @property
     def project_size(self):
-        return output.get_proj_size(self.handle)
+        if not self._project_size:
+            self._project_size = output.get_proj_size(self.handle)
+        return self._project_size
 
-    @output_open_handler
-    @property
-    def links(self):
-        pass
-
-    @output_open_handler
-    @property
-    def nodes(self):
-        pass
-
-    @output_open_handler
     @property
     def subcatchments(self):
-        pass
+        if not self._subcatchments:
+            self._subcatchments = dict()
+            total = self.project_size[0]
+            for index in range(total):
+                name = self.object_name(shared_enum.ElementType.SUBCATCH, index)
+                self._subcatchments[name] = index
+        return self._subcatchments
+
+    @property
+    def nodes(self):
+        if not self._nodes:
+            self._nodes = dict()
+            total = self.project_size[1]
+            for index in range(total):
+                name = self.object_name(shared_enum.ElementType.NODE, index)
+                self._nodes[name] = index
+        return self._nodes
+
+    @property
+    def links(self):
+        if not self._links:
+            self._links = dict()
+            total = self.project_size[2]
+            for index in range(total):
+                name = self.object_name(shared_enum.ElementType.LINK, index)
+                self._links[name] = index
+        return self._links
+
+    @property
+    def pollutants(self):
+        if not self._pollutants:
+            self._pollutants = dict()
+            total = self.project_size[4]
+            for index in range(total):
+                name = self.object_name(shared_enum.ElementType.POLLUT, index)
+                self._pollutants[name] = index
+        return self._pollutants
+
 
     @output_open_handler
     def unit(self):
