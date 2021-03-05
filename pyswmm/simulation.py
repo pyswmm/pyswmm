@@ -13,12 +13,23 @@ from pyswmm.errors import IncompleteSimulation
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
 # Third party imports
 from swmm.toolkit import output, shared_enum
+from datetime import timedelta
+from julian import from_jd
 
 
 def output_exception_handler(func):
     def inner_function(self, *args, **kwargs):
         if self.sim and not self.sim._complete:
             raise IncompleteSimulation('Cannot use output functions due to incomplete simulation.')
+
+    return inner_function
+
+
+def output_open_handler(func):
+    def inner_function(self, *arg, **kwargs):
+        print('hi')
+        if not self._sim.output.loaded:
+            self._sim.output.open()
 
     return inner_function
 
@@ -86,6 +97,7 @@ class Simulation(object):
         self._complete = False
 
         self.output = Output(self._model.binfile, self)
+        self._times = None
 
         self._callbacks = {
             "before_start": None,
@@ -151,6 +163,7 @@ class Simulation(object):
         if time <= 0.0:
             self._execute_callback(self.before_end())
             self._complete = True
+            self.output.open()
             raise StopIteration
         return self._model
 
@@ -662,6 +675,16 @@ class Simulation(object):
         total_time = self.end_time - self.start_time
         return float(dt.total_seconds()) / total_time.total_seconds()
 
+    @property
+    def times(self):
+        if self.output and not self._times:
+            self.output.open()
+            start_date_time = self.output.start_time
+            num_steps = self.output.num_period
+            report_step = self.output.report
+            self._times = [start_date_time + timedelta(report_step) * step for step in range(num_steps)]
+        return self._times
+
 
 class Output(object):
     def __init__(self, binfile, sim=None):
@@ -675,18 +698,20 @@ class Output(object):
         self.report = None
         self.start_time = None
 
-    @output_exception_handler
+    #@output_exception_handler
     def open(self):
         """
         Open a binary file
         """
+        print('hi')
         if self.handle is None:
             self.handle = output.init()
 
         if not self.loaded:
             self.loaded = True
+            print(self.binfile)
             output.open(self.handle, self.binfile)
-            self.start_time = output.get_start_date(self.handle)
+            self.start_time = from_jd(output.get_start_date(self.handle) + 2415018.5)
             self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
             self.num_period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
 
@@ -709,22 +734,27 @@ class Output(object):
             output.close(self.handle)
 
     @output_exception_handler
+    @output_open_handler
     def project_size(self):
         return output.get_proj_size(self.handle)
 
     @output_exception_handler
+    @output_open_handler
     def unit(self):
         return output.get_units(self.handle)
 
     @output_exception_handler
+    @output_open_handler
     def version(self):
         return output.get_version(self.handle)
 
     @output_exception_handler
+    @output_open_handler
     def object_name(self, object_type, index):
         return output.get_elem_name(self.handle, object_type, index)
 
     @output_exception_handler
+    @output_open_handler
     def subcatch_series(self, index, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
@@ -735,6 +765,7 @@ class Output(object):
         return output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
 
     @output_exception_handler
+    @output_open_handler
     def node_series(self, index, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
@@ -745,6 +776,7 @@ class Output(object):
         return output.get_node_series(self.handle, index, attribute, start_index, end_index)
 
     @output_exception_handler
+    @output_open_handler
     def link_series(self, index, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
@@ -755,6 +787,7 @@ class Output(object):
         return output.get_link_series(self.handle, index, attribute, start_index, end_index)
 
     @output_exception_handler
+    @output_open_handler
     def system_series(self, attribute, start_index=None, end_index=None):
         if not start_index:
             start_index = 0
@@ -765,6 +798,7 @@ class Output(object):
         return output.get_system_series(self.handle, attribute, start_index, end_index)
 
     @output_exception_handler
+    @output_open_handler
     def subcatch_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
@@ -772,6 +806,7 @@ class Output(object):
         return output.get_subcatch_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
+    @output_open_handler
     def node_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
@@ -779,6 +814,7 @@ class Output(object):
         return output.get_node_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
+    @output_open_handler
     def link_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
@@ -786,6 +822,7 @@ class Output(object):
         return output.get_link_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
+    @output_open_handler
     def system_attribute(self, attribute, time_index=0):
         if not time_index:
             time_index = 0
@@ -793,6 +830,7 @@ class Output(object):
         return output.get_system_attribute(self.handle, time_index, attribute)
 
     @output_exception_handler
+    @output_open_handler
     def subcatch_result(self, index, time_index=0):
         if not time_index:
             time_index = 0
@@ -800,6 +838,7 @@ class Output(object):
         return output.get_subcatch_result(self.handle, time_index, index)
 
     @output_exception_handler
+    @output_open_handler
     def node_result(self, index, time_index=0):
         if not time_index:
             time_index = 0
@@ -807,12 +846,15 @@ class Output(object):
         return output.get_node_result(self.handle, time_index, index)
 
     @output_exception_handler
+    @output_open_handler
     def link_result(self, index, time_index=0):
         if not time_index:
             time_index = 0
 
         return output.get_link_result(self.handle, time_index, index)
 
+    @output_exception_handler
+    @output_open_handler
     def system_result(self, index, time_index=0):
         if not time_index:
             time_index = 0

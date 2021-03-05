@@ -17,7 +17,7 @@ import sys
 from datetime import datetime
 
 # Third party imports
-from swmm.toolkit import output, solver, shared_enum
+from swmm.toolkit import solver
 
 # Local imports
 import pyswmm.toolkitapi as tka
