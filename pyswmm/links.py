@@ -945,7 +945,7 @@ class Link(object):
             )
             attribute = attribute_enum.get(attribute.lower(), None)
 
-        times = self._sim.times
+        times = self._sim.output.times
         values = self._sim.output.link_series(self._linkid, attribute, start_index, end_index)
         print(times)
         print(len(times), len(values))

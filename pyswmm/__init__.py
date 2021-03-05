@@ -12,7 +12,8 @@ from pyswmm.links import Link, Links
 from pyswmm.lidcontrols import LidControls, LidControl
 from pyswmm.lidgroups import LidGroups, LidGroup, LidUnit
 from pyswmm.nodes import Node, Nodes
-from pyswmm.simulation import Simulation, Output
+from pyswmm.simulation import Simulation
+from pyswmm.output import Output
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage

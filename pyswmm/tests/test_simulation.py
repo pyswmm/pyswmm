@@ -7,13 +7,11 @@
 # -----------------------------------------------------------------------------
 
 # Standard library imports
-import pytest
 from random import randint
-import sys
 
 # Local imports
 import pyswmm.toolkitapi as tka
-from pyswmm import Links, Nodes, Simulation, Output
+from pyswmm import Links, Nodes, Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 
 
@@ -138,28 +136,3 @@ def test_simulation_terminate():
                 sim.terminate_simulation()
         assert(i == 11)
 
-
-def test_simulation_sim_objects():
-    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
-        c1c2 = Links(sim)["C1:C2"]
-        for step in sim:
-            pass
-
-        print(c1c2.series('flow_rate'))
-        # access timeseries from links and nodes
-
-test_simulation_sim_objects()
-def test_simulation_output_with():
-    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
-        for step in sim:
-            pass
-
-    with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as sim:
-        pass
-        # access with output methods
-
-
-def test_simulation_output():
-    output = Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out'))
-    output.open()
-    output.close()
