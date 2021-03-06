@@ -5,6 +5,7 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
+from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from datetime import timedelta
 
 # Third party imports
@@ -103,6 +104,9 @@ class Output(object):
     @property
     def project_size(self):
         """
+        Returns project size for model elements in the following order: [subcatchment, node, link, system, pollutant]
+        :return: list of model elements sizes
+        :rtype: list
         """
         if not self._project_size:
             self._project_size = output.get_proj_size(self.handle)
@@ -163,22 +167,21 @@ class Output(object):
 
     @output_open_handler
     def subcatch_series(self, index, attribute, start_index=None, end_index=None):
+        """
+        Get subcatchment time series results for particular attribute. Specify series
+        start index and end index to get desired time range.
+        :param index:
+        :param attribute:
+        :param start_index:
+        :param end_index:
+        :return:
+        :rtype:
+        """
         if isinstance(index, str):
             index = self.subcatchments[index]
 
         if isinstance(attribute, str):
-            attribute_enum = dict(
-                rainfall=shared_enum.SubcatchAttribute.RAINFALL,
-                snow_depth=shared_enum.SubcatchAttribute.SNOW_DEPTH,
-                evap_loss=shared_enum.SubcatchAttribute.EVAP_LOSS,
-                infil_loss=shared_enum.SubcatchAttribute.INFIL_LOSS,
-                runoff_rate=shared_enum.SubcatchAttribute.RUNOFF_RATE,
-                gw_outflow_rate=shared_enum.SubcatchAttribute.GW_OUTFLOW_RATE,
-                gw_table_elev=shared_enum.SubcatchAttribute.GW_TABLE_ELEV,
-                soil_moisture=shared_enum.SubcatchAttribute.SOIL_MOISTURE,
-                pollutant_concentration=shared_enum.SubcatchAttribute.POLLUT_CONC_0,
-            )
-            attribute = attribute_enum.get(attribute.lower(), None)
+            attribute = subcatch_attribute.get(attribute.lower(), None)
 
         if not start_index:
             start_index = 0
@@ -186,7 +189,8 @@ class Output(object):
         if not end_index:
             end_index = self.num_period
 
-        return output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
+        values = output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
+        return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def node_series(self, index, attribute, start_index=None, end_index=None):
@@ -194,16 +198,7 @@ class Output(object):
             index = self.nodes[index]
 
         if isinstance(attribute, str):
-            attribute_enum = dict(
-                invert_depth=shared_enum.NodeAttribute.INVERT_DEPTH,
-                hydraulic_head=shared_enum.NodeAttribute.HYDRAULIC_HEAD,
-                ponded_volume=shared_enum.NodeAttribute.PONDED_VOLUME,
-                lateral_inflow=shared_enum.NodeAttribute.LATERAL_INFLOW,
-                total_inflow=shared_enum.NodeAttribute.TOTAL_INFLOW,
-                flooding_losses=shared_enum.NodeAttribute.FLOODING_LOSSES,
-                pollutant_concentration=shared_enum.NodeAttribute.POLLUT_CONC_0,
-            )
-            attribute = attribute_enum.get(attribute.lower(), None)
+            attribute = node_attribute.get(attribute.lower(), None)
 
         if not start_index:
             start_index = 0
@@ -211,7 +206,8 @@ class Output(object):
         if not end_index:
             end_index = self.num_period
 
-        return output.get_node_series(self.handle, index, attribute, start_index, end_index)
+        values = output.get_node_series(self.handle, index, attribute, start_index, end_index)
+        return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def link_series(self, index, attribute, start_index=None, end_index=None):
@@ -219,15 +215,7 @@ class Output(object):
             index = self.links[index]
 
         if isinstance(attribute, str):
-            attribute_enum = dict(
-                flow_rate=shared_enum.LinkAttribute.FLOW_RATE,
-                flow_depth=shared_enum.LinkAttribute.FLOW_DEPTH,
-                flow_velocity=shared_enum.LinkAttribute.FLOW_VELOCITY,
-                flow_volume=shared_enum.LinkAttribute.FLOW_VOLUME,
-                capacity=shared_enum.LinkAttribute.CAPACITY,
-                pollutant_concentration=shared_enum.LinkAttribute.POLLUT_CONC_0,
-            )
-            attribute = attribute_enum.get(attribute.lower(), None)
+            attribute = link_attribute.get(attribute.lower(), None)
 
         if not start_index:
             start_index = 0
@@ -236,29 +224,12 @@ class Output(object):
             end_index = self.num_period
 
         values = output.get_link_series(self.handle, index, attribute, start_index, end_index)
-
         return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def system_series(self, attribute, start_index=None, end_index=None):
         if isinstance(attribute, str):
-            attribute_enum = dict(
-                air_temp=shared_enum.SystemAttribute.AIR_TEMP,
-                rainfall=shared_enum.SystemAttribute.RAINFALL,
-                snow_depth=shared_enum.SystemAttribute.SNOW_DEPTH,
-                evap_infil_loss=shared_enum.SystemAttribute.EVAP_INFIL_LOSS,
-                runoff_flow=shared_enum.SystemAttribute.RUNOFF_FLOW,
-                dry_weather_inflow=shared_enum.SystemAttribute.DRY_WEATHER_INFLOW,
-                gw_inflow=shared_enum.SystemAttribute.GW_INFLOW,
-                rdii_inflow=shared_enum.SystemAttribute.RDII_INFLOW,
-                direct_inflow=shared_enum.SystemAttribute.DIRECT_INFLOW,
-                total_lateral_inflow=shared_enum.SystemAttribute.TOTAL_LATERAL_INFLOW,
-                flood_losses=shared_enum.SystemAttribute.FLOOD_LOSSES,
-                outfall_flows=shared_enum.SystemAttribute.OUTFALL_FLOWS,
-                volume_stored=shared_enum.SystemAttribute.VOLUME_STORED,
-                evap_rate=shared_enum.SystemAttribute.EVAP_RATE,
-            )
-            attribute = attribute_enum.get(attribute.lower(), None)
+            attribute = system_attribute.get(attribute.lower(), None)
 
         if not start_index:
             start_index = 0
@@ -266,69 +237,104 @@ class Output(object):
         if not end_index:
             end_index = self.num_period
 
-        return output.get_system_series(self.handle, attribute, start_index, end_index)
+        values = output.get_system_series(self.handle, attribute, start_index, end_index)
+        return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
-    def subcatch_attribute(self, attribute, time_index=0):
+    def subcatch_attribute(self, attribute, time_index=None):
+        """
+        For all subcatchments at given time, get a particular attribute.
+        :param attribute:
+        :param time_index:
+        :return:
+        :rtype: dict of node values
+        """
+        if isinstance(attribute, str):
+            attribute = subcatch_attribute.get(attribute.lower(), None)
+
         if not time_index:
             time_index = 0
 
-        return output.get_subcatch_attribute(self.handle, time_index, attribute)
+        values = output.get_subcatch_attribute(self.handle, time_index, attribute)
+        return {sub: value for sub, value in zip(self.subcatchments, values)}
 
     @output_open_handler
-    def node_attribute(self, attribute, time_index=0):
+    def node_attribute(self, attribute, time_index=None):
+        if isinstance(attribute, str):
+            attribute = node_attribute.get(attribute.lower(), None)
+
         if not time_index:
             time_index = 0
 
-        return output.get_node_attribute(self.handle, time_index, attribute)
+        values = output.get_node_attribute(self.handle, time_index, attribute)
+        return {node: value for node, value in zip(self.nodes, values)}
 
     @output_open_handler
-    def link_attribute(self, attribute, time_index=0):
+    def link_attribute(self, attribute, time_index=None):
+        if isinstance(attribute, str):
+            attribute = link_attribute.get(attribute.lower(), None)
+
         if not time_index:
             time_index = 0
 
-        return output.get_link_attribute(self.handle, time_index, attribute)
+        values = output.get_link_attribute(self.handle, time_index, attribute)
+        return {link: value for link, value in zip(self.links, values)}
 
     @output_open_handler
-    def system_attribute(self, attribute, time_index=0):
+    def system_attribute(self, attribute, time_index=None):
+        if isinstance(attribute, str):
+            attribute = system_attribute.get(attribute.lower(), None)
+
         if not time_index:
             time_index = 0
 
-        return output.get_system_attribute(self.handle, time_index, attribute)
+        value = output.get_system_attribute(self.handle, time_index, attribute)
+        return {'system': value}
 
     @output_open_handler
-    def subcatch_result(self, index, time_index=0):
+    def subcatch_result(self, index, time_index=None):
+        """
+        For a subcatchment at given time, get all attributes.
+        :param index:
+        :param time_index:
+        :return:
+        :rtype: dict of attributes
+        """
         if isinstance(index, str):
             index = self.subcatchments[index]
 
         if not time_index:
             time_index = 0
 
-        return output.get_subcatch_result(self.handle, time_index, index)
+        values = output.get_subcatch_result(self.handle, time_index, index)
+        return {attr: value for attr, value in zip(subcatch_attribute, values)}
 
     @output_open_handler
-    def node_result(self, index, time_index=0):
+    def node_result(self, index, time_index=None):
         if isinstance(index, str):
             index = self.nodes[index]
 
         if not time_index:
             time_index = 0
 
-        return output.get_node_result(self.handle, time_index, index)
+        values = output.get_node_result(self.handle, time_index, index)
+        return {attr: value for attr, value in zip(node_attribute, values)}
 
     @output_open_handler
-    def link_result(self, index, time_index=0):
+    def link_result(self, index, time_index=None):
         if isinstance(index, str):
             index = self.links[index]
 
         if not time_index:
             time_index = 0
 
-        return output.get_link_result(self.handle, time_index, index)
+        values = output.get_link_result(self.handle, time_index, index)
+        return {attr: value for attr, value in zip(link_attribute, values)}
 
     @output_open_handler
-    def system_result(self, index, time_index=0):
+    def system_result(self, index, time_index=None):
         if not time_index:
             time_index = 0
 
-        return output.get_system_result(self.handle, time_index, index)
+        values = output.get_system_result(self.handle, time_index, index)
+        return {attr: value for attr, value in zip(system_attribute, values)}

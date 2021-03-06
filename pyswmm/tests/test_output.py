@@ -1,4 +1,5 @@
 from pyswmm import Simulation, Output
+from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 from datetime import datetime
 
@@ -23,6 +24,17 @@ def test_simulation_output_with():
         assert len(out.node_series('J1', 'flow_rate')) == 3480
         assert len(out.subcatch_series('S1', 'flow_rate')) == 3480
         assert len(out.system_series('evap_rate')) == 3480
+
+        assert len(out.subcatch_attribute('runoff_rate', 0)) == 3
+        assert len(out.node_attribute('hydraulic_head', 0)) == 5
+        assert len(out.link_attribute('flow_rate', 0)) == 4
+        assert len(out.system_attribute('rainfall', 0)) == 1
+
+        # no pollutant
+        assert len(out.subcatch_result('S1', 0)) == len(subcatch_attribute) - 1
+        assert len(out.node_result('J1', 0)) == len(node_attribute) - 1
+        assert len(out.link_result('C1', 0)) == len(link_attribute) - 1
+        assert len(out.system_result(0)) == len(system_attribute)
 
 
 def test_simulation_output():
