@@ -5,6 +5,7 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
+from pyswmm.errors import OutputException
 from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from datetime import timedelta
 
@@ -152,7 +153,6 @@ class Output(object):
                 self._pollutants[name] = index
         return self._pollutants
 
-
     @output_open_handler
     def unit(self):
         return output.get_units(self.handle)
@@ -178,7 +178,7 @@ class Output(object):
         :rtype:
         """
         if isinstance(index, str):
-            index = self.subcatchments[index]
+            index = self.subcatchments.get(index, None)
 
         if isinstance(attribute, str):
             attribute = subcatch_attribute.get(attribute.lower(), None)
@@ -189,13 +189,19 @@ class Output(object):
         if not end_index:
             end_index = self.num_period
 
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in subcatch attribute list.")
+
+        if index is None:
+            raise OutputException(f"Subcatch ID: {index} does not exist in model output.")
+
         values = output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def node_series(self, index, attribute, start_index=None, end_index=None):
         if isinstance(index, str):
-            index = self.nodes[index]
+            index = self.nodes.get(index, None)
 
         if isinstance(attribute, str):
             attribute = node_attribute.get(attribute.lower(), None)
@@ -206,13 +212,19 @@ class Output(object):
         if not end_index:
             end_index = self.num_period
 
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in node attribute list.")
+
+        if index is None:
+            raise OutputException(f"Node ID: {index} does not exist in model output.")
+
         values = output.get_node_series(self.handle, index, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def link_series(self, index, attribute, start_index=None, end_index=None):
         if isinstance(index, str):
-            index = self.links[index]
+            index = self.links.get(index, None)
 
         if isinstance(attribute, str):
             attribute = link_attribute.get(attribute.lower(), None)
@@ -222,6 +234,12 @@ class Output(object):
 
         if not end_index:
             end_index = self.num_period
+
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in link attribute list.")
+
+        if index is None:
+            raise OutputException(f"Link ID: {index} does not exist in model output.")
 
         values = output.get_link_series(self.handle, index, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
@@ -236,6 +254,9 @@ class Output(object):
 
         if not end_index:
             end_index = self.num_period
+
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in system attribute list.")
 
         values = output.get_system_series(self.handle, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
@@ -255,6 +276,9 @@ class Output(object):
         if not time_index:
             time_index = 0
 
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in subcatch attribute list.")
+
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
         return {sub: value for sub, value in zip(self.subcatchments, values)}
 
@@ -265,6 +289,9 @@ class Output(object):
 
         if not time_index:
             time_index = 0
+
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in node attribute list.")
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
         return {node: value for node, value in zip(self.nodes, values)}
@@ -277,6 +304,9 @@ class Output(object):
         if not time_index:
             time_index = 0
 
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in link attribute list.")
+
         values = output.get_link_attribute(self.handle, time_index, attribute)
         return {link: value for link, value in zip(self.links, values)}
 
@@ -288,6 +318,9 @@ class Output(object):
         if not time_index:
             time_index = 0
 
+        if attribute is None:
+            raise OutputException(f"Attribute: {attribute} does not exist in system attribute list.")
+
         value = output.get_system_attribute(self.handle, time_index, attribute)
         return {'system': value}
 
@@ -295,46 +328,76 @@ class Output(object):
     def subcatch_result(self, index, time_index=None):
         """
         For a subcatchment at given time, get all attributes.
-        :param index:
-        :param time_index:
-        :return:
-        :rtype: dict of attributes
+        :param index: subcatchment index
+        :param time_index: datetime index
+        :return: dict of attributes for a subcatchment at given timestep
+        :rtype: dict
         """
         if isinstance(index, str):
-            index = self.subcatchments[index]
+            index = self.subcatchments.get(index, None)
 
         if not time_index:
             time_index = 0
+
+        if index is None:
+            raise OutputException(f"Subcatch ID: {index} does not exist in model output.")
 
         values = output.get_subcatch_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(subcatch_attribute, values)}
 
     @output_open_handler
     def node_result(self, index, time_index=None):
+        """
+        For a node at given time, get all attributes.
+        :param index: node index
+        :param time_index: datetime index
+        :return: dict of attributes for a node at given timestep
+        :rtype: dict
+        """
         if isinstance(index, str):
-            index = self.nodes[index]
+            index = self.nodes.get(index, None)
 
         if not time_index:
             time_index = 0
+
+        if index is None:
+            raise OutputException(f"Node ID: {index} does not exist in model output.")
 
         values = output.get_node_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(node_attribute, values)}
 
     @output_open_handler
     def link_result(self, index, time_index=None):
+        """
+        For a link at given time, get all attributes.
+        :param index: link index
+        :param time_index: datetime index
+        :return: dict of attributes for a link at given timestep
+        :rtype: dict
+        """
         if isinstance(index, str):
-            index = self.links[index]
+            index = self.links.get(index, None)
 
         if not time_index:
             time_index = 0
+
+        if index is None:
+            raise OutputException(f"Link ID: {index} does not exist in model output.")
 
         values = output.get_link_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(link_attribute, values)}
 
     @output_open_handler
-    def system_result(self, index, time_index=None):
+    def system_result(self, time_index=None):
+        """
+        At a given time, get all system attributes.
+        :param time_index: datetime index
+        :return: dict of attributes for the system at given timestep
+        :rtype: dict
+        """
+        dummy_index = 0
         if not time_index:
             time_index = 0
 
-        values = output.get_system_result(self.handle, time_index, index)
+        values = output.get_system_result(self.handle, time_index, dummy_index)
         return {attr: value for attr, value in zip(system_attribute, values)}
