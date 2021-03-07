@@ -50,6 +50,30 @@ class Output(object):
         self._links = None
         self._pollutants = None
 
+    @staticmethod
+    def verify_attribute(attribute, attribute_dict, attribute_type):
+        arg_attribute = attribute
+
+        if isinstance(attribute, str):
+            attribute = attribute_dict.get(attribute.lower(), None)
+
+        if attribute is None:
+            raise OutputException(f"Attribute: {arg_attribute} does not exist in {attribute_type} attribute list.")
+
+        return attribute
+
+    @staticmethod
+    def verify_index(index, index_dict, index_type):
+        arg_index = index
+
+        if isinstance(index, str):
+            index = index_dict.get(index, None)
+
+        if index is None:
+            raise OutputException(f"{index_type} ID: {arg_index} does not exist in model output.")
+
+        return index
+
     def open(self):
         """
         Open a binary file
@@ -115,6 +139,9 @@ class Output(object):
 
     @property
     def subcatchments(self):
+        """
+        Return a list of subcatchments stored in SWMM output binary file
+        """
         if not self._subcatchments:
             self._subcatchments = dict()
             total = self.project_size[0]
@@ -125,6 +152,9 @@ class Output(object):
 
     @property
     def nodes(self):
+        """
+        Return a list of nodes stored in SWMM output binary file
+        """
         if not self._nodes:
             self._nodes = dict()
             total = self.project_size[1]
@@ -135,6 +165,9 @@ class Output(object):
 
     @property
     def links(self):
+        """
+        Return a list of links stored in SWMM output binary file
+        """
         if not self._links:
             self._links = dict()
             total = self.project_size[2]
@@ -145,6 +178,9 @@ class Output(object):
 
     @property
     def pollutants(self):
+        """
+        Return a list of pollutants stored in SWMM output binary file
+        """
         if not self._pollutants:
             self._pollutants = dict()
             total = self.project_size[4]
@@ -155,14 +191,27 @@ class Output(object):
 
     @output_open_handler
     def unit(self):
+        """
+        Return SWMM output binary file unit type from swmm.toolkit.shared_enum.UnitSystem
+        """
         return output.get_units(self.handle)
 
     @output_open_handler
     def version(self):
+        """
+        Return SWMM version used to generate SWMM output binary file results
+        """
         return output.get_version(self.handle)
 
     @output_open_handler
     def object_name(self, object_type, index):
+        """
+        Get object name from SWMM output binary file using object index and object type
+        :param object_type: object type from swmm.toolkit.shared_enum.ElementType
+        :param index: object index
+        :return: object name
+        :rtype: str
+        """
         return output.get_elem_name(self.handle, object_type, index)
 
     @output_open_handler
@@ -170,93 +219,91 @@ class Output(object):
         """
         Get subcatchment time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-        :param index:
-        :param attribute:
-        :param start_index:
-        :param end_index:
-        :return:
-        :rtype:
+        :param index: subcatchment index
+        :param attribute: attribute from toolkitapi.subcatch_attribute
+        :param start_index: start datetime index
+        :param end_index: end datetime index
+        :return: attribute values for a subcatchment between start_index and end_index
+        :rtype: dict with reporting timesteps as keys
         """
-        if isinstance(index, str):
-            index = self.subcatchments.get(index, None)
-
-        if isinstance(attribute, str):
-            attribute = subcatch_attribute.get(attribute.lower(), None)
+        index = self.verify_index(index, self.subcatchments, 'subcatchment')
+        attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
 
         if not start_index:
             start_index = 0
 
         if not end_index:
             end_index = self.num_period
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in subcatch attribute list.")
-
-        if index is None:
-            raise OutputException(f"Subcatch ID: {index} does not exist in model output.")
 
         values = output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def node_series(self, index, attribute, start_index=None, end_index=None):
-        if isinstance(index, str):
-            index = self.nodes.get(index, None)
-
-        if isinstance(attribute, str):
-            attribute = node_attribute.get(attribute.lower(), None)
+        """
+        Get node time series results for particular attribute. Specify series
+        start index and end index to get desired time range.
+        :param index: node index
+        :param attribute: attribute from toolkitapi.node_attribute
+        :param start_index: start datetime index
+        :param end_index: end datetime index
+        :return: attribute values for a node between start_index and end_index
+        :rtype: dict with reporting timesteps as keys
+        """
+        index = self.verify_index(index, self.nodes, 'node')
+        attribute = self.verify_attribute(attribute, node_attribute, 'node')
 
         if not start_index:
             start_index = 0
 
         if not end_index:
             end_index = self.num_period
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in node attribute list.")
-
-        if index is None:
-            raise OutputException(f"Node ID: {index} does not exist in model output.")
 
         values = output.get_node_series(self.handle, index, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def link_series(self, index, attribute, start_index=None, end_index=None):
-        if isinstance(index, str):
-            index = self.links.get(index, None)
-
-        if isinstance(attribute, str):
-            attribute = link_attribute.get(attribute.lower(), None)
+        """
+        Get link time series results for particular attribute. Specify series
+        start index and end index to get desired time range.
+        :param index: link index
+        :param attribute: attribute from toolkitapi.link_attribute
+        :param start_index: start datetime index
+        :param end_index: end datetime index
+        :return: attribute values for a link between start_index and end_index
+        :rtype: dict with reporting timesteps as keys
+        """
+        index = self.verify_index(index, self.links, 'link')
+        attribute = self.verify_attribute(attribute, link_attribute, 'link')
 
         if not start_index:
             start_index = 0
 
         if not end_index:
             end_index = self.num_period
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in link attribute list.")
-
-        if index is None:
-            raise OutputException(f"Link ID: {index} does not exist in model output.")
 
         values = output.get_link_series(self.handle, index, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
 
     @output_open_handler
     def system_series(self, attribute, start_index=None, end_index=None):
-        if isinstance(attribute, str):
-            attribute = system_attribute.get(attribute.lower(), None)
+        """
+        Get system time series results for particular attribute. Specify series
+        start index and end index to get desired time range.
+        :param attribute: attribute from toolkitapi.system_attribute
+        :param start_index: start datetime index
+        :param end_index: end datetime index
+        :return: attribute values for system between start_index and end_index
+        :rtype: dict with reporting timesteps as keys
+        """
+        attribute = self.verify_attribute(attribute, system_attribute, 'system')
 
         if not start_index:
             start_index = 0
 
         if not end_index:
             end_index = self.num_period
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in system attribute list.")
 
         values = output.get_system_series(self.handle, attribute, start_index, end_index)
         return {time: value for time, value in zip(self.times, values)}
@@ -265,61 +312,66 @@ class Output(object):
     def subcatch_attribute(self, attribute, time_index=None):
         """
         For all subcatchments at given time, get a particular attribute.
-        :param attribute:
-        :param time_index:
-        :return:
-        :rtype: dict of node values
+        :param attribute: attribute from stoolkitapi.subcatch_attribute
+        :param time_index: datetime index
+        :return: attribute value for all subcatchments at given timestep
+        :rtype: dict of all subcatchments for one attribute
         """
-        if isinstance(attribute, str):
-            attribute = subcatch_attribute.get(attribute.lower(), None)
+        attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
 
         if not time_index:
             time_index = 0
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in subcatch attribute list.")
 
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
         return {sub: value for sub, value in zip(self.subcatchments, values)}
 
     @output_open_handler
     def node_attribute(self, attribute, time_index=None):
-        if isinstance(attribute, str):
-            attribute = node_attribute.get(attribute.lower(), None)
+        """
+        For all nodes at given time, get a particular attribute.
+        :param attribute: attribute from toolkitapi.node_attribute
+        :param time_index: datetime index
+        :return: attribute value for all nodes at given timestep
+        :rtype: dict of all nodes for one attribute
+        """
+        attribute = self.verify_attribute(attribute, node_attribute, 'node')
 
         if not time_index:
             time_index = 0
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in node attribute list.")
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
         return {node: value for node, value in zip(self.nodes, values)}
 
     @output_open_handler
     def link_attribute(self, attribute, time_index=None):
-        if isinstance(attribute, str):
-            attribute = link_attribute.get(attribute.lower(), None)
+        """
+        For all links at given time, get a particular attribute.
+        :param attribute: attribute from toolkitapi.link_attribute
+        :param time_index: datetime index
+        :return: attribute value for all links at given timestep
+        :rtype: dict of all links for one attribute
+        """
+        attribute = self.verify_attribute(attribute, link_attribute, 'link')
 
         if not time_index:
             time_index = 0
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in link attribute list.")
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
         return {link: value for link, value in zip(self.links, values)}
 
     @output_open_handler
     def system_attribute(self, attribute, time_index=None):
-        if isinstance(attribute, str):
-            attribute = system_attribute.get(attribute.lower(), None)
+        """
+        At given time, get a particular system attribute.
+        :param attribute: attribute from toolkitapi.system_attribute
+        :param time_index: datetime index
+        :return: attribute value for system at given timestep
+        :rtype: dict of system attribute
+        """
+        attribute = self.verify_attribute(attribute, system_attribute, 'system')
 
         if not time_index:
             time_index = 0
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {attribute} does not exist in system attribute list.")
 
         value = output.get_system_attribute(self.handle, time_index, attribute)
         return {'system': value}
@@ -333,14 +385,10 @@ class Output(object):
         :return: dict of attributes for a subcatchment at given timestep
         :rtype: dict
         """
-        if isinstance(index, str):
-            index = self.subcatchments.get(index, None)
+        index = self.verify_index(index, self.subcatchments, 'subcatchment')
 
         if not time_index:
             time_index = 0
-
-        if index is None:
-            raise OutputException(f"Subcatch ID: {index} does not exist in model output.")
 
         values = output.get_subcatch_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(subcatch_attribute, values)}
@@ -354,14 +402,11 @@ class Output(object):
         :return: dict of attributes for a node at given timestep
         :rtype: dict
         """
-        if isinstance(index, str):
-            index = self.nodes.get(index, None)
+        index = self.verify_index(index, self.nodes, 'node')
 
         if not time_index:
             time_index = 0
 
-        if index is None:
-            raise OutputException(f"Node ID: {index} does not exist in model output.")
 
         values = output.get_node_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(node_attribute, values)}
@@ -375,14 +420,10 @@ class Output(object):
         :return: dict of attributes for a link at given timestep
         :rtype: dict
         """
-        if isinstance(index, str):
-            index = self.links.get(index, None)
+        index = self.verify_index(index, self.links, 'link')
 
         if not time_index:
             time_index = 0
-
-        if index is None:
-            raise OutputException(f"Link ID: {index} does not exist in model output.")
 
         values = output.get_link_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(link_attribute, values)}
@@ -396,6 +437,7 @@ class Output(object):
         :rtype: dict
         """
         dummy_index = 0
+
         if not time_index:
             time_index = 0
 
