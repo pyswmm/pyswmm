@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 from pyswmm.errors import OutputException
 from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 # Third party imports
 from swmm.toolkit import output, shared_enum
@@ -39,9 +39,10 @@ class Output(object):
         self.handle = None
         self.loaded = False
         self.delete_handle = False
-        self.num_period = None
+        self.period = None
         self.report = None
-        self.start_time = None
+        self.start = None
+        self.end = None
         self._times = None
 
         self._project_size = None
@@ -52,6 +53,9 @@ class Output(object):
 
     @staticmethod
     def verify_attribute(attribute, attribute_dict, attribute_type):
+        """
+        Validate attribute parameter passed to Output methods
+        """
         arg_attribute = attribute
 
         if isinstance(attribute, str):
@@ -64,6 +68,9 @@ class Output(object):
 
     @staticmethod
     def verify_index(index, index_dict, index_type):
+        """
+        Validate index parameter passed to Output methods
+        """
         arg_index = index
 
         if isinstance(index, str):
@@ -73,6 +80,32 @@ class Output(object):
             raise OutputException(f"{index_type} ID: {arg_index} does not exist in model output.")
 
         return index
+
+    @staticmethod
+    def verify_time(time_index, time_list, start, end, report, default_time):
+        """
+        Validate time parameter passed to Output methods
+        """
+        arg_time_index = time_index
+
+        if time_index is None:
+            time_index = default_time
+        else:
+            if isinstance(time_index, datetime):
+                if time_index in time_list:
+                    time_index = time_list.index(time_index)
+                else:
+                    time_index = None
+
+            if time_index is None:
+                datetime_format = '%Y-%m-%d %H:%M:%S'
+                msg = f"{arg_time_index} does not exist in model output reporting time steps."
+                msg += f"The reporting time range from {start.strftime(datetime_format)} to " \
+                       f"{end.strftime(datetime_format)} at increments of " \
+                       f"{report} seconds."
+                raise OutputException(msg)
+
+        return time_index
 
     def open(self):
         """
@@ -86,10 +119,11 @@ class Output(object):
         if not self.loaded:
             self.loaded = True
             output.open(self.handle, self.binfile)
-            self.start_time = from_jd(output.get_start_date(self.handle) + 2415018.5)
-            self.start_time = self.start_time.replace(microsecond=0)
+            self.start = from_jd(output.get_start_date(self.handle) + 2415018.5)
+            self.start = self.start.replace(microsecond=0)
             self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
-            self.num_period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
+            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
+            self.end = self.start + timedelta(seconds=self.period * self.report)
 
         return True
 
@@ -120,10 +154,10 @@ class Output(object):
         :return: list of reporting timesteps
         :rtype: list
         """
-        if not self._times:
+        if self._times is None:
             self._times = list()
-            for step in range(1, self.num_period + 1):
-                self._times.append(self.start_time + timedelta(seconds=self.report) * step)
+            for step in range(1, self.period + 1):
+                self._times.append(self.start + timedelta(seconds=self.report) * step)
         return self._times
 
     @property
@@ -133,7 +167,7 @@ class Output(object):
         :return: list of model elements sizes
         :rtype: list
         """
-        if not self._project_size:
+        if self._project_size is None:
             self._project_size = output.get_proj_size(self.handle)
         return self._project_size
 
@@ -142,7 +176,7 @@ class Output(object):
         """
         Return a list of subcatchments stored in SWMM output binary file
         """
-        if not self._subcatchments:
+        if self._subcatchments is None:
             self._subcatchments = dict()
             total = self.project_size[0]
             for index in range(total):
@@ -155,7 +189,7 @@ class Output(object):
         """
         Return a list of nodes stored in SWMM output binary file
         """
-        if not self._nodes:
+        if self._nodes is None:
             self._nodes = dict()
             total = self.project_size[1]
             for index in range(total):
@@ -168,7 +202,7 @@ class Output(object):
         """
         Return a list of links stored in SWMM output binary file
         """
-        if not self._links:
+        if self._links is None:
             self._links = dict()
             total = self.project_size[2]
             for index in range(total):
@@ -181,7 +215,7 @@ class Output(object):
         """
         Return a list of pollutants stored in SWMM output binary file
         """
-        if not self._pollutants:
+        if self._pollutants is None:
             self._pollutants = dict()
             total = self.project_size[4]
             for index in range(total):
@@ -219,6 +253,7 @@ class Output(object):
         """
         Get subcatchment time series results for particular attribute. Specify series
         start index and end index to get desired time range.
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param index: subcatchment index
         :param attribute: attribute from toolkitapi.subcatch_attribute
         :param start_index: start datetime index
@@ -228,21 +263,18 @@ class Output(object):
         """
         index = self.verify_index(index, self.subcatchments, 'subcatchment')
         attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
-
-        if not start_index:
-            start_index = 0
-
-        if not end_index:
-            end_index = self.num_period
+        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
+        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
         values = output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times, values)}
+        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
 
     @output_open_handler
     def node_series(self, index, attribute, start_index=None, end_index=None):
         """
         Get node time series results for particular attribute. Specify series
         start index and end index to get desired time range.
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param index: node index
         :param attribute: attribute from toolkitapi.node_attribute
         :param start_index: start datetime index
@@ -252,21 +284,18 @@ class Output(object):
         """
         index = self.verify_index(index, self.nodes, 'node')
         attribute = self.verify_attribute(attribute, node_attribute, 'node')
-
-        if not start_index:
-            start_index = 0
-
-        if not end_index:
-            end_index = self.num_period
+        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
+        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
         values = output.get_node_series(self.handle, index, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times, values)}
+        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
 
     @output_open_handler
     def link_series(self, index, attribute, start_index=None, end_index=None):
         """
         Get link time series results for particular attribute. Specify series
         start index and end index to get desired time range.
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param index: link index
         :param attribute: attribute from toolkitapi.link_attribute
         :param start_index: start datetime index
@@ -276,21 +305,18 @@ class Output(object):
         """
         index = self.verify_index(index, self.links, 'link')
         attribute = self.verify_attribute(attribute, link_attribute, 'link')
-
-        if not start_index:
-            start_index = 0
-
-        if not end_index:
-            end_index = self.num_period
+        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
+        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
         values = output.get_link_series(self.handle, index, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times, values)}
+        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
 
     @output_open_handler
     def system_series(self, attribute, start_index=None, end_index=None):
         """
         Get system time series results for particular attribute. Specify series
         start index and end index to get desired time range.
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param attribute: attribute from toolkitapi.system_attribute
         :param start_index: start datetime index
         :param end_index: end datetime index
@@ -298,15 +324,11 @@ class Output(object):
         :rtype: dict with reporting timesteps as keys
         """
         attribute = self.verify_attribute(attribute, system_attribute, 'system')
-
-        if not start_index:
-            start_index = 0
-
-        if not end_index:
-            end_index = self.num_period
+        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
+        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
         values = output.get_system_series(self.handle, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times, values)}
+        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
 
     @output_open_handler
     def subcatch_attribute(self, attribute, time_index=None):
@@ -318,9 +340,7 @@ class Output(object):
         :rtype: dict of all subcatchments for one attribute
         """
         attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
         return {sub: value for sub, value in zip(self.subcatchments, values)}
@@ -335,9 +355,7 @@ class Output(object):
         :rtype: dict of all nodes for one attribute
         """
         attribute = self.verify_attribute(attribute, node_attribute, 'node')
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
         return {node: value for node, value in zip(self.nodes, values)}
@@ -352,9 +370,7 @@ class Output(object):
         :rtype: dict of all links for one attribute
         """
         attribute = self.verify_attribute(attribute, link_attribute, 'link')
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
         return {link: value for link, value in zip(self.links, values)}
@@ -369,9 +385,7 @@ class Output(object):
         :rtype: dict of system attribute
         """
         attribute = self.verify_attribute(attribute, system_attribute, 'system')
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         value = output.get_system_attribute(self.handle, time_index, attribute)
         return {'system': value}
@@ -386,9 +400,7 @@ class Output(object):
         :rtype: dict
         """
         index = self.verify_index(index, self.subcatchments, 'subcatchment')
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_subcatch_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(subcatch_attribute, values)}
@@ -403,10 +415,7 @@ class Output(object):
         :rtype: dict
         """
         index = self.verify_index(index, self.nodes, 'node')
-
-        if not time_index:
-            time_index = 0
-
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_node_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(node_attribute, values)}
@@ -421,9 +430,7 @@ class Output(object):
         :rtype: dict
         """
         index = self.verify_index(index, self.links, 'link')
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_link_result(self.handle, time_index, index)
         return {attr: value for attr, value in zip(link_attribute, values)}
@@ -437,9 +444,7 @@ class Output(object):
         :rtype: dict
         """
         dummy_index = 0
-
-        if not time_index:
-            time_index = 0
+        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
         return {attr: value for attr, value in zip(system_attribute, values)}

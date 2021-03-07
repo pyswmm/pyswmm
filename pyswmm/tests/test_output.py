@@ -1,4 +1,10 @@
-import pytest
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2021 Jennifer Wu
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
 from pyswmm import Simulation, Output
 from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
@@ -30,6 +36,17 @@ def test_output_with():
         assert times[0] == datetime(2015, 11, 1, 14, 1)
         assert times[-1] == datetime(2015, 11, 4)
         assert len(flow_rate) == 3480
+
+        subset_flow_rate = out.link_series('C3', 'flow_rate', datetime(2015, 11, 1, 15))
+        subset_times = list(subset_flow_rate.keys())
+        assert subset_times[0] == datetime(2015, 11, 1, 15)
+        assert subset_times[-1] == datetime(2015, 11, 4)
+
+        subset_flow_rate = out.link_series('C3', 'flow_rate', datetime(2015, 11, 2, 15), datetime(2015, 11, 3, 15))
+        subset_times = list(subset_flow_rate.keys())
+        assert subset_times[0] == datetime(2015, 11, 2, 15)
+        assert subset_times[-1] == datetime(2015, 11, 3, 14, 59)
+
         assert len(out.node_series('J1', 'total_inflow')) == 3480
         assert len(out.subcatch_series('S1', 'runoff_rate')) == 3480
         assert len(out.system_series('evap_rate')) == 3480

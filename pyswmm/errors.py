@@ -11,7 +11,7 @@ class IncompleteSimulation(Exception):
 
 
 class OutputException(Exception):
-    """Exception raised for incomplete simulation
+    """Exception raised for SWMM Output object
 
     Attributes:
         message -- explanation of the error

@@ -497,8 +497,8 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.start_time
-        ...     sim.start_time = datetime(2015,5,10,15,15,1)
+        ...     print sim.start
+        ...     sim.start = datetime(2015,5,10,15,15,1)
         >>>
         >>> datetime.datetime(2015,5,10,15,15,1)
         """
@@ -520,8 +520,8 @@ class Simulation(object):
         >>> from pyswmm import Simulation
         >>>
         >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.end_time
-        ...     sim.end_time = datetime(2016,5,10,15,15,1)
+        ...     print sim.end
+        ...     sim.end = datetime(2016,5,10,15,15,1)
         >>>
         >>> datetime.datetime(2016,5,10,15,15,1)
         """
