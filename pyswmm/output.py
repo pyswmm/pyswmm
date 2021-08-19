@@ -5,13 +5,21 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
-from pyswmm.errors import OutputException
-from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from datetime import datetime, timedelta
+from typing import NoReturn, Optional, Union
+
+from julian import from_jd
 
 # Third party imports
 from swmm.toolkit import output, shared_enum
-from julian import from_jd
+
+from pyswmm.errors import OutputException
+from pyswmm.toolkitapi import (
+    link_attribute,
+    node_attribute,
+    subcatch_attribute,
+    system_attribute,
+)
 
 
 def output_open_handler(func):
@@ -51,41 +59,107 @@ class Output(object):
         self._links = None
         self._pollutants = None
 
+        self.subcatch_attributes = subcatch_attribute
+        self.node_attributes = node_attribute
+        self.link_attributes = link_attribute
+        self.system_attributes = system_attribute
+
     @staticmethod
-    def verify_attribute(attribute, attribute_dict, attribute_type):
+    def verify_attribute(
+        attribute: Union[str, int], attribute_dict: dict, attribute_type: str
+    ) -> int:
         """
         Validate attribute parameter passed to Output methods
+
+        :param attribute: The name or index of the attribute listed in the attribute dict
+        :type attribute: Union[str, int]
+        :param attribute_dict: The attribute dict against which to validate the attribute
+                               (one of the dicts in enums.py)
+        :type attribute_dict: dict
+        :param attribute_type: The attribute type (only used to print the exception
+                               if an attribute cannot be found)
+        :type attribute_type: str
+        :raises OutputException: Exception if attribute cannot be found in attribute dict
+        :return: The integer index of the requested attribute
+        :rtype: int
         """
+
         arg_attribute = attribute
 
         if isinstance(attribute, str):
             attribute = attribute_dict.get(attribute.lower(), None)
 
         if attribute is None:
-            raise OutputException(f"Attribute: {arg_attribute} does not exist in {attribute_type} attribute list.")
+            raise OutputException(
+                f"Attribute: {arg_attribute} does not exist in {attribute_type} attribute list."
+            )
 
         return attribute
 
     @staticmethod
-    def verify_index(index, index_dict, index_type):
+    def verify_index(index: Union[str, int], index_dict: dict, index_type: str) -> int:
         """
-        Validate index parameter passed to Output methods
+        Validate the index of a model element passed to Output methods. Used to
+        convert model element names to their index in the out file.
+
+        :param index: The name or index of the model element listed in the index_dict dict
+        :type index: Union[str, int]
+        :param index_dict: The dict against which to validate the index
+                           (one of self.nodes, self.links, self.subcatchments)
+        :type index_dict: dict
+        :param index_type: The type of model element (e.g. node, link, etc.)
+                           Only used to print the exception if an attribute cannot be found
+        :type index_type: str
+        :raises OutputException: Exception if element cannot be found in dict
+        :return: The integer index of the requested element
+        :rtype: int
         """
+
         arg_index = index
 
         if isinstance(index, str):
             index = index_dict.get(index, None)
 
         if index is None:
-            raise OutputException(f"{index_type} ID: {arg_index} does not exist in model output.")
+            raise OutputException(
+                f"{index_type} ID: {arg_index} does not exist in model output."
+            )
 
         return index
 
     @staticmethod
-    def verify_time(time_index, time_list, start, end, report, default_time):
+    def verify_time(
+        time_index: Optional[Union[datetime, int]],
+        time_list: list,
+        start: datetime,
+        end: datetime,
+        report: int,
+        default_time: Union[datetime, int],
+    ) -> int:
         """
-        Validate time parameter passed to Output methods
+        Validate time parameter passed to Output methods. Used to convert a datetime value to
+        the period index in model time.
+
+        :param time_index: The datetime to validate
+        :type time_index: Optional[Union[datetime, int]]
+        :param time_list: A list of datetimes against which to validate time_index
+        :type time_list: list
+        :param start: The starting datetime in the out file
+                      (only used to print the exception if the datetime cannot be found)
+        :type start: datetime
+        :param end: The ending datetime in the out file
+                    (only used to print the exception if the datetime cannot be found)
+        :type end: datetime
+        :param report: The reporting interval in the out file
+                       (only used to print the exception if the datetime cannot be found)
+        :type report: int
+        :param default_time: The default time_index to use of time_index is None
+        :type default_time: Union[datetime, int]
+        :raises OutputException: Exception raised of time_index cannot be found intime_index
+        :return: The integer index of the datetime given
+        :rtype: int
         """
+
         arg_time_index = time_index
 
         if time_index is None:
@@ -98,20 +172,23 @@ class Output(object):
                     time_index = None
 
             if time_index is None:
-                datetime_format = '%Y-%m-%d %H:%M:%S'
+                datetime_format = "%Y-%m-%d %H:%M:%S"
                 msg = f"{arg_time_index} does not exist in model output reporting time steps."
-                msg += f"The reporting time range from {start.strftime(datetime_format)} to " \
-                       f"{end.strftime(datetime_format)} at increments of " \
-                       f"{report} seconds."
+                msg += (
+                    f"The reporting time range from {start.strftime(datetime_format)} to "
+                    f"{end.strftime(datetime_format)} at increments of "
+                    f"{report} seconds."
+                )
                 raise OutputException(msg)
 
         return time_index
 
-    def open(self):
+    def open(self) -> bool:
         """
         Open a binary file
-        :return: if binary file was opened successfully
-        :rtype: boolean
+
+        :return: True if binary file was opened successfully
+        :rtype: bool
         """
         if self.handle is None:
             self.handle = output.init()
@@ -125,13 +202,26 @@ class Output(object):
             self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
             self.end = self.start + timedelta(seconds=self.period * self.report)
 
+            # add pollutants to attribute dicts
+            for v, i in self.pollutants.items():
+                self.subcatch_attributes[v.lower()] = (
+                    shared_enum.SubcatchAttribute.POLLUT_CONC_0.value + i
+                )
+                self.node_attributes[v.lower()] = (
+                    shared_enum.NodeAttribute.POLLUT_CONC_0.value + i
+                )
+                self.link_attributes[v.lower()] = (
+                    shared_enum.LinkAttribute.POLLUT_CONC_0.value + i
+                )
+
         return True
 
-    def close(self):
+    def close(self) -> bool:
         """
         Close an opened binary file
-        :return: if binary file was closed successfully
-        :rtype: boolean
+
+        :returns: True if binary file was closed successfully
+        :rtype: bool
         """
         if self.handle or self.loaded:
             self.loaded = False
@@ -140,311 +230,528 @@ class Output(object):
 
         return True
 
+    # method used for context manager with statement
     def __enter__(self):
         self.open()
         return self
 
-    def __exit__(self, *arg):
+    # method used for context manager with statement
+    def __exit__(self, *arg) -> NoReturn:
         self.close()
 
     @property
-    def times(self):
+    def times(self) -> list:
         """
         Returns list of reporting timestep stored in model binary file
-        :return: list of reporting timesteps
+
+        :returns: list of datetime values for each reporting timestep
         :rtype: list
         """
         if self._times is None:
-            self._times = list()
-            for step in range(1, self.period + 1):
-                self._times.append(self.start + timedelta(seconds=self.report) * step)
+            self._load_times()
         return self._times
 
+    @output_open_handler
+    def _load_times(self) -> NoReturn:
+        """Load model reporting times into self._times"""
+        self._times = list()
+        for step in range(1, self.period + 1):
+            self._times.append(self.start + timedelta(seconds=self.report) * step)
+
     @property
-    def project_size(self):
+    def project_size(self) -> list:
         """
-        Returns project size for model elements in the following order: [subcatchment, node, link, system, pollutant]
-        :return: list of model elements sizes
+        Returns project size for model elements in the following order:
+        [subcatchment, node, link, system, pollutant]
+
+        :returns: list of numbers of each model type
+                  [nSubcatchments, nNodes, nLinks, nSystems(1), nPollutants]
         :rtype: list
         """
         if self._project_size is None:
-            self._project_size = output.get_proj_size(self.handle)
+            self._load_project_size()
         return self._project_size
 
+    @output_open_handler
+    def _load_project_size(self) -> NoReturn:
+        """Load model size into self._project_size"""
+        self._project_size = output.get_proj_size(self.handle)
+
     @property
-    def subcatchments(self):
+    def subcatchments(self) -> list:
         """
         Return a list of subcatchments stored in SWMM output binary file
+
+        :returns: list of model subcatchment names
+        :rtype: list
         """
         if self._subcatchments is None:
-            self._subcatchments = dict()
-            total = self.project_size[0]
-            for index in range(total):
-                name = self.object_name(shared_enum.ElementType.SUBCATCH, index)
-                self._subcatchments[name] = index
+            self._load_subcatchments()
         return self._subcatchments
 
+    @output_open_handler
+    def _load_subcatchments(self) -> list:
+        """Load model size into self._project_size"""
+        total = self.project_size[0]
+        self._subcatchments = {
+            self.object_name(shared_enum.ElementType.SUBCATCH, index): index
+            for index in range(total)
+        }
+
     @property
-    def nodes(self):
+    def nodes(self) -> list:
         """
         Return a list of nodes stored in SWMM output binary file
+
+        :returns: list of model node names
+        :rtype: list
         """
         if self._nodes is None:
-            self._nodes = dict()
-            total = self.project_size[1]
-            for index in range(total):
-                name = self.object_name(shared_enum.ElementType.NODE, index)
-                self._nodes[name] = index
+            self._load_nodes()
         return self._nodes
 
-    @property
-    def links(self):
-        """
-        Return a list of links stored in SWMM output binary file
-        """
-        if self._links is None:
-            self._links = dict()
-            total = self.project_size[2]
-            for index in range(total):
-                name = self.object_name(shared_enum.ElementType.LINK, index)
-                self._links[name] = index
-        return self._links
+    @output_open_handler
+    def _load_nodes(self) -> NoReturn:
+        """Load model nodes into self._nodes"""
+        total = self.project_size[1]
+        self._nodes = {
+            self.object_name(shared_enum.ElementType.NODE, index): index
+            for index in range(total)
+        }
 
     @property
-    def pollutants(self):
+    def links(self) -> list:
+        """Return a list of links stored in SWMM output binary file
+
+        :returns: list of model link names
+        :rtype: list
+        """
+        if self._links is None:
+            self._load_links()
+        return self._links
+
+    @output_open_handler
+    def _load_links(self) -> NoReturn:
+        """Load model links into self._links"""
+        total = self.project_size[2]
+        self._links = {
+            self.object_name(shared_enum.ElementType.LINK, index): index
+            for index in range(total)
+        }
+
+    @property
+    def pollutants(self) -> list:
         """
         Return a list of pollutants stored in SWMM output binary file
+
+        :returns: list of pollutant names
+        :rtype: list
         """
         if self._pollutants is None:
-            self._pollutants = dict()
-            total = self.project_size[4]
-            for index in range(total):
-                name = self.object_name(shared_enum.ElementType.POLLUT, index)
-                self._pollutants[name] = index
+            self._load_pollutants()
         return self._pollutants
 
     @output_open_handler
-    def unit(self):
+    def _load_pollutants(self) -> NoReturn:
+        """Load model size into self._project_size"""
+        total = self.project_size[4]
+        self._pollutants = {
+            self.object_name(shared_enum.ElementType.POLLUT, index): index
+            for index in range(total)
+        }
+
+    @property
+    @output_open_handler
+    def unit(self) -> int:
         """
         Return SWMM output binary file unit type from swmm.toolkit.shared_enum.UnitSystem
+
+        :returns: integer indicating unit system (0 = US, 1 = SI)
+        :rtype: int
         """
         return output.get_units(self.handle)
 
+    @property
     @output_open_handler
-    def version(self):
+    def version(self) -> int:
         """
         Return SWMM version used to generate SWMM output binary file results
+
+        :returns: integer representation of SWMM version used to make out file
+        :rtype: int
         """
         return output.get_version(self.handle)
 
     @output_open_handler
-    def object_name(self, object_type, index):
+    def object_name(self, object_type: int, index: int) -> str:
         """
         Get object name from SWMM output binary file using object index and object type
+
         :param object_type: object type from swmm.toolkit.shared_enum.ElementType
+        :type object_type: int
         :param index: object index
-        :return: object name
+        :type index: int
+        :returns: object name
         :rtype: str
         """
         return output.get_elem_name(self.handle, object_type, index)
 
     @output_open_handler
-    def subcatch_series(self, index, attribute, start_index=None, end_index=None):
+    def subcatch_series(
+        self,
+        index: Union[int, str],
+        attribute: Union[int, str],
+        start_index: Union[int, datetime, None] = None,
+        end_index: Union[int, datetime, None] = None,
+    ) -> dict:
         """
         Get subcatchment time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-        :param index: subcatchment index
-        :param attribute: attribute from toolkitapi.subcatch_attribute
-        :param start_index: start datetime index
-        :param end_index: end datetime index
-        :return: attribute values for a subcatchment between start_index and end_index
-        :rtype: dict with reporting timesteps as keys
-        """
-        index = self.verify_index(index, self.subcatchments, 'subcatchment')
-        attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
-        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
-        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
-        values = output.get_subcatch_series(self.handle, index, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+        :param index: subcatchment index or name
+        :type index: Union[int, str]
+        :param attribute: attribute index or name. On of:
+                          rainfall, snow_depth, evap_loss, infil_loss, runoff_rate, gw_outflow_rate,
+                          gw_table_elev, soil_moisture
+        :type attribute: Union[int, str]
+        :param start_index: start datetime or index from which to return series, defaults to None
+        :type start_index: Union[int, datetime, None], optional
+        :param end_index: end datetime or index from which to return series, defaults to None
+        :type end_index: Union[int, datetime, None], optional
+        :return: dict of attribute values with between start_index and end_index
+                 with reporting timesteps as keys {datetime : value}
+        :rtype: dict
+        """
+        index = self.verify_index(index, self.subcatchments, "subcatchment")
+        attribute = self.verify_attribute(
+            attribute, self.subcatch_attributes, "subcatchment"
+        )
+        start_index = self.verify_time(
+            start_index, self.times, self.start, self.end, self.report, 0
+        )
+        end_index = self.verify_time(
+            end_index, self.times, self.start, self.end, self.report, self.period
+        )
+
+        values = output.get_subcatch_series(
+            self.handle, index, attribute, start_index, end_index
+        )
+        return {
+            time: value
+            for time, value in zip(self.times[start_index:end_index], values)
+        }
 
     @output_open_handler
-    def node_series(self, index, attribute, start_index=None, end_index=None):
+    def node_series(
+        self,
+        index: Union[int, str],
+        attribute: Union[int, str],
+        start_index: Union[int, datetime, None] = None,
+        end_index: Union[int, datetime, None] = None,
+    ) -> dict:
         """
         Get node time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-        :param index: node index
-        :param attribute: attribute from toolkitapi.node_attribute
-        :param start_index: start datetime index
-        :param end_index: end datetime index
-        :return: attribute values for a node between start_index and end_index
-        :rtype: dict with reporting timesteps as keys
-        """
-        index = self.verify_index(index, self.nodes, 'node')
-        attribute = self.verify_attribute(attribute, node_attribute, 'node')
-        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
-        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
-        values = output.get_node_series(self.handle, index, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+        :param index: node index or name
+        :type index: Union[int, str]
+        :param attribute: attribute index or name. On of:
+                          invert_depth, hydraulic_head, ponded_volume, lateral_inflow,
+                          total_inflow, flooding_losses
+        :type attribute: Union[int, str]
+        :param start_index: start datetime or index from which to return series, defaults to None
+        :type start_index: Union[int, datetime, None], optional
+        :param end_index: end datetime or index from which to return series, defaults to None
+        :type end_index: Union[int, datetime, None], optional
+        :return: dict of attribute values with between start_index and end_index
+                 with reporting timesteps as keys
+        :rtype: dict {datetime : value}
+        """
+        index = self.verify_index(index, self.nodes, "node")
+        attribute = self.verify_attribute(attribute, self.node_attributes, "node")
+        start_index = self.verify_time(
+            start_index, self.times, self.start, self.end, self.report, 0
+        )
+        end_index = self.verify_time(
+            end_index, self.times, self.start, self.end, self.report, self.period
+        )
+
+        values = output.get_node_series(
+            self.handle, index, attribute, start_index, end_index
+        )
+        return {
+            time: value
+            for time, value in zip(self.times[start_index:end_index], values)
+        }
 
     @output_open_handler
-    def link_series(self, index, attribute, start_index=None, end_index=None):
+    def link_series(
+        self,
+        index: Union[int, str],
+        attribute: Union[int, str],
+        start_index: Union[int, datetime, None] = None,
+        end_index: Union[int, datetime, None] = None,
+    ) -> dict:
         """
         Get link time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-        :param index: link index
-        :param attribute: attribute from toolkitapi.link_attribute
-        :param start_index: start datetime index
-        :param end_index: end datetime index
-        :return: attribute values for a link between start_index and end_index
-        :rtype: dict with reporting timesteps as keys
-        """
-        index = self.verify_index(index, self.links, 'link')
-        attribute = self.verify_attribute(attribute, link_attribute, 'link')
-        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
-        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
-        values = output.get_link_series(self.handle, index, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+        :param index: link index or name
+        :type index: Union[int, str]
+        :param attribute: attribute index or name. On of:
+                          flow_rate, flow_depth, flow_velocity, flow_volume,capacity
+        :type attribute: Union[int, str]
+        :param start_index: start datetime or index from which to return series, defaults to None
+        :type start_index: Union[int, datetime, None], optional
+        :param end_index: end datetime or index from which to return series, defaults to None
+        :type end_index: Union[int, datetime, None], optional
+        :return: dict of attribute values with between start_index and end_index
+                 with reporting timesteps as keys
+        :rtype: dict {datetime : value}
+        """
+        index = self.verify_index(index, self.links, "link")
+        attribute = self.verify_attribute(attribute, self.link_attributes, "link")
+        start_index = self.verify_time(
+            start_index, self.times, self.start, self.end, self.report, 0
+        )
+        end_index = self.verify_time(
+            end_index, self.times, self.start, self.end, self.report, self.period
+        )
+
+        values = output.get_link_series(
+            self.handle, index, attribute, start_index, end_index
+        )
+        return {
+            time: value
+            for time, value in zip(self.times[start_index:end_index], values)
+        }
 
     @output_open_handler
-    def system_series(self, attribute, start_index=None, end_index=None):
+    def system_series(
+        self,
+        attribute: Union[int, str],
+        start_index: Union[int, datetime, None] = None,
+        end_index: Union[int, datetime, None] = None,
+    ) -> dict:
         """
         Get system time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-        :param attribute: attribute from toolkitapi.system_attribute
-        :param start_index: start datetime index
-        :param end_index: end datetime index
-        :return: attribute values for system between start_index and end_index
-        :rtype: dict with reporting timesteps as keys
-        """
-        attribute = self.verify_attribute(attribute, system_attribute, 'system')
-        start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
-        end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
-        values = output.get_system_series(self.handle, attribute, start_index, end_index)
-        return {time: value for time, value in zip(self.times[start_index:end_index], values)}
+        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+        :param attribute: attribute index or name. On of:
+                          air_temp, rainfall, snow_depth, evap_infil_loss, runoff_flow,
+                          dry_weather_inflow, gw_inflow, rdii_inflow, direct_inflow, total_lateral_inflow,
+                          flood_losses, outfall_flows, volume_stored, evap_rate
+        :type attribute: Union[int, str]
+        :param start_index: start datetime or index from which to return series, defaults to None
+        :type start_index: Union[int, datetime, None], optional
+        :param end_index: end datetime or index from which to return series, defaults to None
+        :type end_index: Union[int, datetime, None], optional
+        :return: dict of attribute values with between start_index and end_index
+                 with reporting timesteps as keys
+        :rtype: dict {datetime : value}
+        """
+        attribute = self.verify_attribute(attribute, self.system_attributes, "system")
+        start_index = self.verify_time(
+            start_index, self.times, self.start, self.end, self.report, 0
+        )
+        end_index = self.verify_time(
+            end_index, self.times, self.start, self.end, self.report, self.period
+        )
+
+        values = output.get_system_series(
+            self.handle, attribute, start_index, end_index
+        )
+        return {
+            time: value
+            for time, value in zip(self.times[start_index:end_index], values)
+        }
 
     @output_open_handler
-    def subcatch_attribute(self, attribute, time_index=None):
+    def subcatch_attribute(
+        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+    ) -> dict:
         """
         For all subcatchments at given time, get a particular attribute.
-        :param attribute: attribute from stoolkitapi.subcatch_attribute
-        :param time_index: datetime index
-        :return: attribute value for all subcatchments at given timestep
-        :rtype: dict of all subcatchments for one attribute
+
+        :param attribute: attribute index or name. On of:
+                          rainfall, snow_depth, evap_loss, infil_loss, runoff_rate, gw_outflow_rate,
+                          gw_table_elev, soil_moisture
+        :type attribute: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attribute value for all subcatchments at given timestep
+        :rtype: dict {subcatchment: value}
         """
-        attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        attribute = self.verify_attribute(
+            attribute, self.subcatch_attributes, "subcatchment"
+        )
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
         return {sub: value for sub, value in zip(self.subcatchments, values)}
 
     @output_open_handler
-    def node_attribute(self, attribute, time_index=None):
+    def node_attribute(
+        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+    ) -> dict:
         """
         For all nodes at given time, get a particular attribute.
-        :param attribute: attribute from toolkitapi.node_attribute
-        :param time_index: datetime index
-        :return: attribute value for all nodes at given timestep
-        :rtype: dict of all nodes for one attribute
+
+        :param attribute: attribute index or name. On of:
+                          invert_depth, hydraulic_head, ponded_volume, lateral_inflow,
+                          total_inflow, flooding_losses
+        :type attribute: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attribute values for all nodes at given timestep
+        :rtype: dict {node:value}
         """
-        attribute = self.verify_attribute(attribute, node_attribute, 'node')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        attribute = self.verify_attribute(attribute, self.node_attributes, "node")
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
         return {node: value for node, value in zip(self.nodes, values)}
 
     @output_open_handler
-    def link_attribute(self, attribute, time_index=None):
+    def link_attribute(
+        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+    ):
         """
         For all links at given time, get a particular attribute.
-        :param attribute: attribute from toolkitapi.link_attribute
-        :param time_index: datetime index
-        :return: attribute value for all links at given timestep
-        :rtype: dict of all links for one attribute
+
+        :param attribute: attribute index or name. On of:
+                          flow_rate, flow_depth, flow_velocity, flow_volume,capacity
+        :type attribute: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attribute values for all nodes at given timestep
+        :rtype: dict {link : value}
         """
-        attribute = self.verify_attribute(attribute, link_attribute, 'link')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        attribute = self.verify_attribute(attribute, self.link_attributes, "link")
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
         return {link: value for link, value in zip(self.links, values)}
 
     @output_open_handler
-    def system_attribute(self, attribute, time_index=None):
+    def system_attribute(
+        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+    ):
         """
         At given time, get a particular system attribute.
-        :param attribute: attribute from toolkitapi.system_attribute
-        :param time_index: datetime index
-        :return: attribute value for system at given timestep
-        :rtype: dict of system attribute
+
+        :param attribute: attribute index or name. On of:
+                          air_temp, rainfall, snow_depth, evap_infil_loss, runoff_flow,
+                          dry_weather_inflow, gw_inflow, rdii_inflow, direct_inflow, total_lateral_inflow,
+                          flood_losses, outfall_flows, volume_stored, evap_rate
+        :type attribute: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attribute value for system at given timestep
+        :rtype: dict of {"system",value}
         """
-        attribute = self.verify_attribute(attribute, system_attribute, 'system')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        attribute = self.verify_attribute(attribute, system_attribute, "system")
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         value = output.get_system_attribute(self.handle, time_index, attribute)
-        return {'system': value}
+        return {"system": value}
 
     @output_open_handler
-    def subcatch_result(self, index, time_index=None):
+    def subcatch_result(
+        self, index: Union[int, str], time_index: Union[int, datetime, None] = None
+    ):
         """
         For a subcatchment at given time, get all attributes.
-        :param index: subcatchment index
-        :param time_index: datetime index
-        :return: dict of attributes for a subcatchment at given timestep
-        :rtype: dict
+
+        :param index: subcatchment name or index
+        :type index: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attributes for a subcatchment at given timestep
+        :rtype: dict {attribute:value}
         """
-        index = self.verify_index(index, self.subcatchments, 'subcatchment')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        index = self.verify_index(index, self.subcatchments, "subcatchment")
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_subcatch_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(subcatch_attribute, values)}
+        return {attr: value for attr, value in zip(self.subcatch_attributes, values)}
 
     @output_open_handler
-    def node_result(self, index, time_index=None):
+    def node_result(
+        self, index: Union[int, str], time_index: Union[int, datetime, None] = None
+    ):
         """
         For a node at given time, get all attributes.
-        :param index: node index
-        :param time_index: datetime index
-        :return: dict of attributes for a node at given timestep
-        :rtype: dict
+
+        :param index: node name or index
+        :type index: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attributes for a node at given timestep
+        :rtype: dict {attribute:value}
         """
-        index = self.verify_index(index, self.nodes, 'node')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        index = self.verify_index(index, self.nodes, "node")
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(node_attribute, values)}
+        return {attr: value for attr, value in zip(self.node_attributes, values)}
 
     @output_open_handler
-    def link_result(self, index, time_index=None):
+    def link_result(
+        self, index: Union[int, str], time_index: Union[int, datetime, None] = None
+    ):
         """
         For a link at given time, get all attributes.
-        :param index: link index
-        :param time_index: datetime index
-        :return: dict of attributes for a link at given timestep
-        :rtype: dict
+
+        :param index: link name or index
+        :type index: Union[int, str]
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attributes for a link at given timestep
+        :rtype: dict {attribute:value}
         """
-        index = self.verify_index(index, self.links, 'link')
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        index = self.verify_index(index, self.links, "link")
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(link_attribute, values)}
+        return {attr: value for attr, value in zip(self.link_attributes, values)}
 
     @output_open_handler
-    def system_result(self, time_index=None):
+    def system_result(self, time_index: Union[int, datetime, None] = None):
         """
         At a given time, get all system attributes.
-        :param time_index: datetime index
-        :return: dict of attributes for the system at given timestep
-        :rtype: dict
+
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attributes for the system at given timestep
+        :rtype: dict {attribute:value}
         """
         dummy_index = 0
-        time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
+        time_index = self.verify_time(
+            time_index, self.times, self.start, self.end, self.report, 0
+        )
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
-        return {attr: value for attr, value in zip(system_attribute, values)}
+        return {attr: value for attr, value in zip(self.system_attributes, values)}
