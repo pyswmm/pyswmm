@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Bryant"
+  given-names: "McDonnell"
+  orcid: "https://orcid.org/0000-0002-6250-2220"
+- family-names: "Katherine"
+  given-names: "Ratliff"
+  orcid: "https://orcid.org/0000-0003-1410-2756"
+- family-names: "Michael"
+  given-names: "Tryby"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Jennifer"
+  given-names: "Wu"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Abhiram"
+  given-names: "Mullapudi"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "PySWMM: The Python Interface to Stormwater Management Model (SWMM)"
+version: 1.0.1
+doi: 10.21105/joss.02292
+date-released: 2020-08-04
+url: "https://github.com/OpenWaterAnalytics/pyswmm"

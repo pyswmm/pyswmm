@@ -675,7 +675,7 @@ if __name__ in "__main__":
     # Run Tests
 
     # Open
-    path = r"C:\PROJECTCODE\pyswmm\pyswmm\tests\data\model_node_inflows.out"
+    path = r"C:\Projects\pyswmm\pyswmm\tests\data\model_node_inflows.out"
     Test = SWMMBinReader()
     Test.OpenBinFile(path)
 
