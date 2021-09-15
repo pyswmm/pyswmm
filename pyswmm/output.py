@@ -6,7 +6,7 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 from pyswmm.errors import OutputException
-from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
+#from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from datetime import datetime, timedelta
 
 # Third party imports
@@ -50,21 +50,6 @@ class Output(object):
         self._nodes = None
         self._links = None
         self._pollutants = None
-
-    @staticmethod
-    def verify_attribute(attribute, attribute_dict, attribute_type):
-        """
-        Validate attribute parameter passed to Output methods
-        """
-        arg_attribute = attribute
-
-        if isinstance(attribute, str):
-            attribute = attribute_dict.get(attribute.lower(), None)
-
-        if attribute is None:
-            raise OutputException(f"Attribute: {arg_attribute} does not exist in {attribute_type} attribute list.")
-
-        return attribute
 
     @staticmethod
     def verify_index(index, index_dict, index_type):
@@ -255,14 +240,13 @@ class Output(object):
         start index and end index to get desired time range.
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param index: subcatchment index
-        :param attribute: attribute from toolkitapi.subcatch_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.SubcatchAttribute
         :param start_index: start datetime index
         :param end_index: end datetime index
         :return: attribute values for a subcatchment between start_index and end_index
         :rtype: dict with reporting timesteps as keys
         """
         index = self.verify_index(index, self.subcatchments, 'subcatchment')
-        attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
         start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
         end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
@@ -276,14 +260,13 @@ class Output(object):
         start index and end index to get desired time range.
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param index: node index
-        :param attribute: attribute from toolkitapi.node_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
         :param start_index: start datetime index
         :param end_index: end datetime index
         :return: attribute values for a node between start_index and end_index
         :rtype: dict with reporting timesteps as keys
         """
         index = self.verify_index(index, self.nodes, 'node')
-        attribute = self.verify_attribute(attribute, node_attribute, 'node')
         start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
         end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
@@ -297,14 +280,13 @@ class Output(object):
         start index and end index to get desired time range.
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
         :param index: link index
-        :param attribute: attribute from toolkitapi.link_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
         :param start_index: start datetime index
         :param end_index: end datetime index
         :return: attribute values for a link between start_index and end_index
         :rtype: dict with reporting timesteps as keys
         """
         index = self.verify_index(index, self.links, 'link')
-        attribute = self.verify_attribute(attribute, link_attribute, 'link')
         start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
         end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
@@ -317,13 +299,12 @@ class Output(object):
         Get system time series results for particular attribute. Specify series
         start index and end index to get desired time range.
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-        :param attribute: attribute from toolkitapi.system_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
         :param start_index: start datetime index
         :param end_index: end datetime index
         :return: attribute values for system between start_index and end_index
         :rtype: dict with reporting timesteps as keys
         """
-        attribute = self.verify_attribute(attribute, system_attribute, 'system')
         start_index = self.verify_time(start_index, self.times, self.start, self.end, self.report, 0)
         end_index = self.verify_time(end_index, self.times, self.start, self.end, self.report, self.period)
 
@@ -334,12 +315,11 @@ class Output(object):
     def subcatch_attribute(self, attribute, time_index=None):
         """
         For all subcatchments at given time, get a particular attribute.
-        :param attribute: attribute from stoolkitapi.subcatch_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.SubcatchAttribute
         :param time_index: datetime index
         :return: attribute value for all subcatchments at given timestep
         :rtype: dict of all subcatchments for one attribute
         """
-        attribute = self.verify_attribute(attribute, subcatch_attribute, 'subcatchment')
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
@@ -349,12 +329,11 @@ class Output(object):
     def node_attribute(self, attribute, time_index=None):
         """
         For all nodes at given time, get a particular attribute.
-        :param attribute: attribute from toolkitapi.node_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
         :param time_index: datetime index
         :return: attribute value for all nodes at given timestep
         :rtype: dict of all nodes for one attribute
         """
-        attribute = self.verify_attribute(attribute, node_attribute, 'node')
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
@@ -364,12 +343,11 @@ class Output(object):
     def link_attribute(self, attribute, time_index=None):
         """
         For all links at given time, get a particular attribute.
-        :param attribute: attribute from toolkitapi.link_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
         :param time_index: datetime index
         :return: attribute value for all links at given timestep
         :rtype: dict of all links for one attribute
         """
-        attribute = self.verify_attribute(attribute, link_attribute, 'link')
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
@@ -379,12 +357,11 @@ class Output(object):
     def system_attribute(self, attribute, time_index=None):
         """
         At given time, get a particular system attribute.
-        :param attribute: attribute from toolkitapi.system_attribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
         :param time_index: datetime index
         :return: attribute value for system at given timestep
         :rtype: dict of system attribute
         """
-        attribute = self.verify_attribute(attribute, system_attribute, 'system')
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         value = output.get_system_attribute(self.handle, time_index, attribute)
@@ -403,7 +380,7 @@ class Output(object):
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_subcatch_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(subcatch_attribute, values)}
+        return {attr: value for attr, value in zip(shared_enum.SubcatchAttribute, values)}
 
     @output_open_handler
     def node_result(self, index, time_index=None):
@@ -418,7 +395,7 @@ class Output(object):
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(node_attribute, values)}
+        return {attr: value for attr, value in zip(shared_enum.NodeAttribute, values)}
 
     @output_open_handler
     def link_result(self, index, time_index=None):
@@ -433,7 +410,7 @@ class Output(object):
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(link_attribute, values)}
+        return {attr: value for attr, value in zip(shared_enum.LinkAttribute, values)}
 
     @output_open_handler
     def system_result(self, time_index=None):
@@ -447,4 +424,4 @@ class Output(object):
         time_index = self.verify_time(time_index, self.times, self.start, self.end, self.report, 0)
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
-        return {attr: value for attr, value in zip(system_attribute, values)}
+        return {attr: value for attr, value in zip(shared_enum.SystemAttribute, values)}
