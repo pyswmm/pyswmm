@@ -6,7 +6,6 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 from pyswmm.errors import OutputException
-#from pyswmm.toolkitapi import subcatch_attribute, node_attribute, link_attribute, system_attribute
 from datetime import datetime, timedelta
 
 # Third party imports
@@ -85,7 +84,7 @@ class Output(object):
             if time_index is None:
                 datetime_format = '%Y-%m-%d %H:%M:%S'
                 msg = f"{arg_time_index} does not exist in model output reporting time steps."
-                msg += f"The reporting time range from {start.strftime(datetime_format)} to " \
+                msg += f" The reporting time range is {start.strftime(datetime_format)} to " \
                        f"{end.strftime(datetime_format)} at increments of " \
                        f"{report} seconds."
                 raise OutputException(msg)

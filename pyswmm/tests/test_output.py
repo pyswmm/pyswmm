@@ -5,18 +5,34 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
+import pytest
+
 from pyswmm import Simulation, Output
-from swmm.toolkit.shared_enum import LinkAttribute, NodeAttribute, SubcatchAttribute, SystemAttribute
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm.errors import OutputException
+
+from swmm.toolkit.shared_enum import LinkAttribute, NodeAttribute, SubcatchAttribute, SystemAttribute
 from datetime import datetime
 
 
 def test_output_unknown_object_id():
-    pass
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for step in sim:
+            pass
+
+    with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as out:
+        with pytest.raises(OutputException):
+            flow_rate = out.link_series('C4', LinkAttribute.FLOW_RATE)
 
 
-def test_output_unknown_attribute():
-    pass
+def test_output_invalid_time():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for step in sim:
+            pass
+
+    with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as out:
+        with pytest.raises(OutputException):
+            flow_rate = out.link_series('C3', LinkAttribute.FLOW_RATE, datetime(2015, 10, 1, 15))
 
 
 def test_output_with():
