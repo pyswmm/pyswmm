@@ -4,5 +4,5 @@ wheel
 enum34
 pytest
 julian
-swmm-toolkit==0.8.1
+swmm-toolkit==0.8.2
 aenum==2.2.6

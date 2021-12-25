@@ -5,24 +5,24 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
+from pyswmm.errors import OutputException
 from datetime import datetime, timedelta
+from functools import wraps
 from typing import NoReturn, Optional, Union
-
-from julian import from_jd
 
 # Third party imports
 from swmm.toolkit import output, shared_enum
-
-from pyswmm.errors import OutputException
-from pyswmm.toolkitapi import (
-    link_attribute,
-    node_attribute,
-    subcatch_attribute,
-    system_attribute,
-)
+from julian import from_jd
 
 
 def output_open_handler(func):
+    """
+    Checks if output file is open before running function.
+
+    :param func : function method of Output class
+    """
+
+    @wraps(func)
     def inner_function(self, *args, **kwargs):
         if not self.loaded:
             self.open()
@@ -59,45 +59,8 @@ class Output(object):
         self._links = None
         self._pollutants = None
 
-        self.subcatch_attributes = subcatch_attribute
-        self.node_attributes = node_attribute
-        self.link_attributes = link_attribute
-        self.system_attributes = system_attribute
-
     @staticmethod
-    def verify_attribute(
-        attribute: Union[str, int], attribute_dict: dict, attribute_type: str
-    ) -> int:
-        """
-        Validate attribute parameter passed to Output methods
-
-        :param attribute: The name or index of the attribute listed in the attribute dict
-        :type attribute: Union[str, int]
-        :param attribute_dict: The attribute dict against which to validate the attribute
-                               (one of the dicts in enums.py)
-        :type attribute_dict: dict
-        :param attribute_type: The attribute type (only used to print the exception
-                               if an attribute cannot be found)
-        :type attribute_type: str
-        :raises OutputException: Exception if attribute cannot be found in attribute dict
-        :return: The integer index of the requested attribute
-        :rtype: int
-        """
-
-        arg_attribute = attribute
-
-        if isinstance(attribute, str):
-            attribute = attribute_dict.get(attribute.lower(), None)
-
-        if attribute is None:
-            raise OutputException(
-                f"Attribute: {arg_attribute} does not exist in {attribute_type} attribute list."
-            )
-
-        return attribute
-
-    @staticmethod
-    def verify_index(index: Union[str, int], index_dict: dict, index_type: str) -> int:
+    def verify_index(index, index_dict, index_type):
         """
         Validate the index of a model element passed to Output methods. Used to
         convert model element names to their index in the out file.
@@ -175,7 +138,7 @@ class Output(object):
                 datetime_format = "%Y-%m-%d %H:%M:%S"
                 msg = f"{arg_time_index} does not exist in model output reporting time steps."
                 msg += (
-                    f"The reporting time range from {start.strftime(datetime_format)} to "
+                    f" The reporting time range is {start.strftime(datetime_format)} to "
                     f"{end.strftime(datetime_format)} at increments of "
                     f"{report} seconds."
                 )
@@ -201,18 +164,6 @@ class Output(object):
             self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
             self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
             self.end = self.start + timedelta(seconds=self.period * self.report)
-
-            # add pollutants to attribute dicts
-            for v, i in self.pollutants.items():
-                self.subcatch_attributes[v.lower()] = (
-                    shared_enum.SubcatchAttribute.POLLUT_CONC_0.value + i
-                )
-                self.node_attributes[v.lower()] = (
-                    shared_enum.NodeAttribute.POLLUT_CONC_0.value + i
-                )
-                self.link_attributes[v.lower()] = (
-                    shared_enum.LinkAttribute.POLLUT_CONC_0.value + i
-                )
 
         return True
 
@@ -278,19 +229,19 @@ class Output(object):
         self._project_size = output.get_proj_size(self.handle)
 
     @property
-    def subcatchments(self) -> list:
+    def subcatchments(self) -> dict:
         """
-        Return a list of subcatchments stored in SWMM output binary file
+        Return a dict of subcatchments stored in SWMM output binary file
 
-        :returns: list of model subcatchment names
-        :rtype: list
+        :returns: dict of model subcatchment names with their indices as values
+        :rtype: dict
         """
         if self._subcatchments is None:
             self._load_subcatchments()
         return self._subcatchments
 
     @output_open_handler
-    def _load_subcatchments(self) -> list:
+    def _load_subcatchments(self) -> NoReturn:
         """Load model size into self._project_size"""
         total = self.project_size[0]
         self._subcatchments = {
@@ -299,12 +250,12 @@ class Output(object):
         }
 
     @property
-    def nodes(self) -> list:
+    def nodes(self) -> dict:
         """
-        Return a list of nodes stored in SWMM output binary file
+        Return a dict of nodes stored in SWMM output binary file
 
-        :returns: list of model node names
-        :rtype: list
+        :returns: dict of model node names with their indices as values
+        :rtype: dict
         """
         if self._nodes is None:
             self._load_nodes()
@@ -320,11 +271,11 @@ class Output(object):
         }
 
     @property
-    def links(self) -> list:
-        """Return a list of links stored in SWMM output binary file
+    def links(self) -> dict:
+        """Return a dict of links stored in SWMM output binary file
 
-        :returns: list of model link names
-        :rtype: list
+        :returns: dict of model link names with their indices as values
+        :rtype: dict
         """
         if self._links is None:
             self._load_links()
@@ -340,12 +291,12 @@ class Output(object):
         }
 
     @property
-    def pollutants(self) -> list:
+    def pollutants(self) -> dict:
         """
-        Return a list of pollutants stored in SWMM output binary file
+        Return a dict of pollutants stored in SWMM output binary file
 
-        :returns: list of pollutant names
-        :rtype: list
+        :returns: dict of pollutant names with their indices as values
+        :rtype: dict
         """
         if self._pollutants is None:
             self._load_pollutants()
@@ -400,22 +351,18 @@ class Output(object):
     def subcatch_series(
         self,
         index: Union[int, str],
-        attribute: Union[int, str],
+        attribute: shared_enum.SubcatchAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
     ) -> dict:
         """
         Get subcatchment time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-
         :param index: subcatchment index or name
         :type index: Union[int, str]
-        :param attribute: attribute index or name. On of:
-                          rainfall, snow_depth, evap_loss, infil_loss, runoff_rate, gw_outflow_rate,
-                          gw_table_elev, soil_moisture
-        :type attribute: Union[int, str]
+        :param attribute: attribute from swmm.toolkit.shared_enum.SubcatchAttribute
+        :type attribute: swmm.toolkit.shared_enum.SubcatchAttribute
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -425,9 +372,6 @@ class Output(object):
         :rtype: dict
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
-        attribute = self.verify_attribute(
-            attribute, self.subcatch_attributes, "subcatchment"
-        )
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
@@ -447,22 +391,18 @@ class Output(object):
     def node_series(
         self,
         index: Union[int, str],
-        attribute: Union[int, str],
+        attribute: shared_enum.NodeAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
     ) -> dict:
         """
         Get node time series results for particular attribute. Specify series
         start index and end index to get desired time range.
-
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
-
         :param index: node index or name
         :type index: Union[int, str]
-        :param attribute: attribute index or name. On of:
-                          invert_depth, hydraulic_head, ponded_volume, lateral_inflow,
-                          total_inflow, flooding_losses
-        :type attribute: Union[int, str]
+        :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
+        :type attribute: swmm.toolkit.shared_enum.NodeAttribute
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -471,8 +411,8 @@ class Output(object):
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
         """
+
         index = self.verify_index(index, self.nodes, "node")
-        attribute = self.verify_attribute(attribute, self.node_attributes, "node")
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
@@ -492,7 +432,7 @@ class Output(object):
     def link_series(
         self,
         index: Union[int, str],
-        attribute: Union[int, str],
+        attribute: shared_enum.LinkAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
     ) -> dict:
@@ -504,9 +444,8 @@ class Output(object):
 
         :param index: link index or name
         :type index: Union[int, str]
-        :param attribute: attribute index or name. On of:
-                          flow_rate, flow_depth, flow_velocity, flow_volume,capacity
-        :type attribute: Union[int, str]
+        :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
+        :type attribute: swmm.toolkit.shared_enum.LinkAttribute
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -516,7 +455,6 @@ class Output(object):
         :rtype: dict {datetime : value}
         """
         index = self.verify_index(index, self.links, "link")
-        attribute = self.verify_attribute(attribute, self.link_attributes, "link")
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
@@ -535,7 +473,7 @@ class Output(object):
     @output_open_handler
     def system_series(
         self,
-        attribute: Union[int, str],
+        attribute: shared_enum.SystemAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
     ) -> dict:
@@ -545,11 +483,8 @@ class Output(object):
 
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
 
-        :param attribute: attribute index or name. On of:
-                          air_temp, rainfall, snow_depth, evap_infil_loss, runoff_flow,
-                          dry_weather_inflow, gw_inflow, rdii_inflow, direct_inflow, total_lateral_inflow,
-                          flood_losses, outfall_flows, volume_stored, evap_rate
-        :type attribute: Union[int, str]
+        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
+        :type attribute: swmm.toolkit.shared_enum.SystemAttribute
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -558,7 +493,6 @@ class Output(object):
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
         """
-        attribute = self.verify_attribute(attribute, self.system_attributes, "system")
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
@@ -576,23 +510,21 @@ class Output(object):
 
     @output_open_handler
     def subcatch_attribute(
-        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+        self,
+        attribute: shared_enum.SubcatchAttribute,
+        time_index: Union[int, datetime, None] = None,
     ) -> dict:
         """
         For all subcatchments at given time, get a particular attribute.
 
-        :param attribute: attribute index or name. On of:
-                          rainfall, snow_depth, evap_loss, infil_loss, runoff_rate, gw_outflow_rate,
-                          gw_table_elev, soil_moisture
-        :type attribute: Union[int, str]
+        :param attribute: attribute from swmm.toolkit.shared_enum.SubcatchAttribute
+        :type attribute: swmm.toolkit.shared_enum.SubcatchAttribute
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute value for all subcatchments at given timestep
         :rtype: dict {subcatchment: value}
         """
-        attribute = self.verify_attribute(
-            attribute, self.subcatch_attributes, "subcatchment"
-        )
+
         time_index = self.verify_time(
             time_index, self.times, self.start, self.end, self.report, 0
         )
@@ -602,21 +534,21 @@ class Output(object):
 
     @output_open_handler
     def node_attribute(
-        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+        self,
+        attribute: shared_enum.NodeAttribute,
+        time_index: Union[int, datetime, None] = None,
     ) -> dict:
         """
         For all nodes at given time, get a particular attribute.
 
-        :param attribute: attribute index or name. On of:
-                          invert_depth, hydraulic_head, ponded_volume, lateral_inflow,
-                          total_inflow, flooding_losses
-        :type attribute: Union[int, str]
+        :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
+        :type attribute: swmm.toolkit.shared_enum.NodeAttribute
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute values for all nodes at given timestep
         :rtype: dict {node:value}
         """
-        attribute = self.verify_attribute(attribute, self.node_attributes, "node")
+
         time_index = self.verify_time(
             time_index, self.times, self.start, self.end, self.report, 0
         )
@@ -626,20 +558,21 @@ class Output(object):
 
     @output_open_handler
     def link_attribute(
-        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+        self,
+        attribute: shared_enum.LinkAttribute,
+        time_index: Union[int, datetime, None] = None,
     ):
         """
         For all links at given time, get a particular attribute.
 
-        :param attribute: attribute index or name. On of:
-                          flow_rate, flow_depth, flow_velocity, flow_volume,capacity
-        :type attribute: Union[int, str]
+         :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
+        :type attribute: swmm.toolkit.shared_enum.LinkAttribute
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute values for all nodes at given timestep
         :rtype: dict {link : value}
         """
-        attribute = self.verify_attribute(attribute, self.link_attributes, "link")
+
         time_index = self.verify_time(
             time_index, self.times, self.start, self.end, self.report, 0
         )
@@ -649,22 +582,21 @@ class Output(object):
 
     @output_open_handler
     def system_attribute(
-        self, attribute: Union[int, str], time_index: Union[int, datetime, None] = None
+        self,
+        attribute: shared_enum.SystemAttribute,
+        time_index: Union[int, datetime, None] = None,
     ):
         """
-        At given time, get a particular system attribute.
+         At given time, get a particular system attribute.
 
-        :param attribute: attribute index or name. On of:
-                          air_temp, rainfall, snow_depth, evap_infil_loss, runoff_flow,
-                          dry_weather_inflow, gw_inflow, rdii_inflow, direct_inflow, total_lateral_inflow,
-                          flood_losses, outfall_flows, volume_stored, evap_rate
-        :type attribute: Union[int, str]
-        :param time_index: datetime or simulation index, defaults to None
-        :type time_index: Union[int, datetime, None]
-        :returns: dict of attribute value for system at given timestep
-        :rtype: dict of {"system",value}
+        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
+         :type attribute: swmm.toolkit.shared_enum.SystemAttribute
+         :param time_index: datetime or simulation index, defaults to None
+         :type time_index: Union[int, datetime, None]
+         :returns: dict of attribute value for system at given timestep
+         :rtype: dict of {"system",value}
         """
-        attribute = self.verify_attribute(attribute, system_attribute, "system")
+
         time_index = self.verify_time(
             time_index, self.times, self.start, self.end, self.report, 0
         )
@@ -692,7 +624,9 @@ class Output(object):
         )
 
         values = output.get_subcatch_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(self.subcatch_attributes, values)}
+        return {
+            attr: value for attr, value in zip(shared_enum.SubcatchAttribute, values)
+        }
 
     @output_open_handler
     def node_result(
@@ -714,7 +648,7 @@ class Output(object):
         )
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(self.node_attributes, values)}
+        return {attr: value for attr, value in zip(shared_enum.NodeAttribute, values)}
 
     @output_open_handler
     def link_result(
@@ -736,7 +670,7 @@ class Output(object):
         )
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(self.link_attributes, values)}
+        return {attr: value for attr, value in zip(shared_enum.LinkAttribute, values)}
 
     @output_open_handler
     def system_result(self, time_index: Union[int, datetime, None] = None):
@@ -754,4 +688,4 @@ class Output(object):
         )
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
-        return {attr: value for attr, value in zip(self.system_attributes, values)}
+        return {attr: value for attr, value in zip(shared_enum.SystemAttribute, values)}

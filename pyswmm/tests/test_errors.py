@@ -54,9 +54,6 @@ def test_error_output():
             out.node_series('potato', 'total_inflow')
 
         with pytest.raises(OutputException):
-            out.subcatch_series('S1', 'sloth')
-
-        with pytest.raises(OutputException):
             out.link_series('C3', 'flow_rate', datetime(2021, 1, 1))
 
         with pytest.raises(OutputException):
