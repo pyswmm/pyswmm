@@ -565,7 +565,7 @@ class Output(object):
         """
         For all links at given time, get a particular attribute.
 
-         :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
+        :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
         :type attribute: swmm.toolkit.shared_enum.LinkAttribute
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
@@ -587,14 +587,14 @@ class Output(object):
         time_index: Union[int, datetime, None] = None,
     ):
         """
-         At given time, get a particular system attribute.
+        At given time, get a particular system attribute.
 
         :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
-         :type attribute: swmm.toolkit.shared_enum.SystemAttribute
-         :param time_index: datetime or simulation index, defaults to None
-         :type time_index: Union[int, datetime, None]
-         :returns: dict of attribute value for system at given timestep
-         :rtype: dict of {"system",value}
+        :type attribute: swmm.toolkit.shared_enum.SystemAttribute
+        :param time_index: datetime or simulation index, defaults to None
+        :type time_index: Union[int, datetime, None]
+        :returns: dict of attribute value for system at given timestep
+        :rtype: dict of {"system",value}
         """
 
         time_index = self.verify_time(
