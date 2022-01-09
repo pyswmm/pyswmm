@@ -7,15 +7,12 @@
 # -----------------------------------------------------------------------------
 
 # Standard library imports
-import pytest
 from random import randint
-import sys
 
 # Local imports
 import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-from pyswmm.swmm5 import SWMMException
 
 
 def test_simulation_1():
@@ -138,3 +135,4 @@ def test_simulation_terminate():
             if ind == 10:
                 sim.terminate_simulation()
         assert(i == 11)
+

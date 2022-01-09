@@ -6,7 +6,7 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """SWMM Object Enum."""
-
+from swmm.toolkit import shared_enum
 # Standard library imports
 from enum import Enum
 import ctypes

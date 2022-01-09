@@ -2,4 +2,7 @@
 #python
 wheel
 pytest
+julian
 swmm-toolkit==0.8.2
+aenum==2.2.6
+

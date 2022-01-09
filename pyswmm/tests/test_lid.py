@@ -1,7 +1,6 @@
 # Local imports
 from pyswmm import Simulation
-from pyswmm import LidControls, LidGroups, LidUnit
-from pyswmm.swmm5 import PySWMM
+from pyswmm import LidControls, LidGroups
 from pyswmm.tests.data import MODEL_LIDS_PATH
 from pytest import approx
 UT_PRECISION = 1  # %

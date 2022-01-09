@@ -13,6 +13,7 @@ from pyswmm.lidcontrols import LidControls, LidControl
 from pyswmm.lidgroups import LidGroups, LidGroup, LidUnit
 from pyswmm.nodes import Node, Nodes
 from pyswmm.simulation import Simulation
+from pyswmm.output import Output
 from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage
@@ -25,5 +26,5 @@ __copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell (See AUTHORS)'
 __licence__ = 'BSD2'
 __all__ = [
     Link, Links, LidControls, LidGroups, Node, Nodes, Subcatchment, Subcatchments, Simulation,
-    SystemStats, RainGages, RainGage
+    SystemStats, RainGages, RainGage, Output
 ]

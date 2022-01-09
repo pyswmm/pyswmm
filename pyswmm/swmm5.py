@@ -22,9 +22,6 @@ from swmm.toolkit import solver
 # Local imports
 import pyswmm.toolkitapi as tka
 
-# Local variables
-SWMM_VER_51011 = '5.1.14'
-
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
@@ -119,6 +116,7 @@ class PySWMM(object):
         self.inpfile = inpfile
         self.rptfile = rptfile
         self.binfile = binfile
+
         self.curSimTime = 0.0
 
     def swmmExec(self, inpfile=None, rptfile=None, binfile=None):

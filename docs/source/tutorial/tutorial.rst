@@ -205,6 +205,48 @@ runoff or seasonality.
 	... 		j1.generated_inflow(9)
     
     
+Access SWMM Output Binary File
+---------------------
+As of pyswmm version v1.1.0, the Output module provides the ability to process 
+timeseries and metadata in the SWMM output binary file. This feature enables the user to 
+access data in the binary file without re-running the simulation.
+
+To access a SWMM outfile, you need to initialize a :py:class:`pyswmm.output.Output` object.
+Once the ``Output`` object is initialized, you can use pre-defined methods to access data in the binary file.
+
+The following example opens a SWMM output binary file and identifies the number of subcatchments, nodes,
+and links and the SWMM engine used to generate the binary file. 
+
+.. code-block:: python
+
+    >>> from pyswmm import Output
+    >>>
+    >>> with Output('tests/data/model_full_features.out') as out:
+    ...     print(len(out.subcatchments))
+    ...     print(len(out.nodes))
+    ...     print(len(out.links))
+    ...     print(out.version)
+
+The next example opens a SWMM output binary file and gets the entire depth timeseries for node `J1` stored in the 
+binary file using :py:class:`pyswmm.output.Output.node_series` method.
+
+.. code-block:: python
+
+        >>> from swmm.toolkit.shared_enum import NodeAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH, datetime(2015, 11, 1, 15), datetime(2015, 11, 1, 16))
+        ...     for index in ts:
+        ...         print(index, ts[index])
+        >>> 2015-11-01 15:00:00 15.0
+        >>> 2015-11-01 15:01:00 15.0
+        >>> 2015-11-01 15:02:00 15.0
+        >>> 2015-11-01 15:03:00 15.0
+
+The :py:class:`pyswmm.output.Output.node_series` method allows the user to access all timeseries types for node objects such as INVERT_DEPTH, HYDRAULIC_HEAD, 
+PONDED_VOLUME, LATERAL_INFLOW, TOTAL_INFLOW, and FLOODING_LOSSES. If pollutants are defined in the simulation, the concentration 
+timeseries can be accessed using POLLUT_CONC_0.
 
 Lid Controls
 ---------------------
