@@ -385,12 +385,17 @@ class Output(object):
 
     @property
     @output_open_handler
-    def unit(self) -> int:
+    def units(self) -> int:
         """
-        Return SWMM output binary file unit type from swmm.toolkit.shared_enum.UnitSystem
+        Return SWMM output binary file units for unit system, flow, and pollutants
 
-        :returns: integer indicating unit system (0 = US, 1 = SI)
-        :rtype: int
+        :returns: list of integers indicating units for
+                  [unit system, flow, and pollutant]
+
+                  unit system unit from swmm.toolkit.shared_enum.UnitSystem: US=0, SI=1
+                  flow unit from swmm.toolkit.shared_enum.FlowUnits: CFS=0, GPM=1, MGD=2, CMS=3, LPS=4, MLD=5
+                  pollutants from swmm.toolkit.shared_enum.ConcUnits: MG=0, UG=1, COUNT=2, NONE=3
+        :rtype: list
 
         Examples:
 
@@ -398,7 +403,7 @@ class Output(object):
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
         ...     print(out.unit)
-        >>>
+        >>> [0, 0, 3]
         """
         return output.get_units(self.handle)
 
@@ -427,7 +432,8 @@ class Output(object):
         Get object name from SWMM output binary file using object index and object type
 
         :param object_type: object type from swmm.toolkit.shared_enum.ElementType
-        :type object_type: int
+        :type object_type: int: SUBCATCH=0, NODE=1, LINK=2, SYSTEM=3, POLLUT=4
+                           swmm.toolkit.shared_enum.ElementType: SUBCATCH, NODE, LINK, SYSTEM, POLLUT
         :param index: object index
         :type index: int
         :returns: object name
@@ -463,7 +469,8 @@ class Output(object):
         :param index: subcatchment index or name
         :type index: Union[int, str]
         :param attribute: attribute from swmm.toolkit.shared_enum.SubcatchAttribute
-        :type attribute: swmm.toolkit.shared_enum.SubcatchAttribute
+        :type attribute: swmm.toolkit.shared_enum.SubcatchAttribute: RAINFALL, SNOW_DEPTH, EVAP_LOSS, INFIL_LOSS,
+                         RUNOFF_RATE, GW_OUTFLOW_RATE, GW_TABLE_ELEV, SOIL_MOISTURE, POLLUT_CONC_0
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -517,7 +524,8 @@ class Output(object):
         :param index: node index or name
         :type index: Union[int, str]
         :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
-        :type attribute: swmm.toolkit.shared_enum.NodeAttribute
+        :type attribute: swmm.toolkit.shared_enum.NodeAttribute: INVERT_DEPTH, HYDRAULIC_HEAD, PONDED_VOLUME,
+                         LATERAL_INFLOW, TOTAL_INFLOW, FLOODING_LOSSES, POLLUT_CONC_0
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -574,7 +582,8 @@ class Output(object):
         :param index: link index or name
         :type index: Union[int, str]
         :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
-        :type attribute: swmm.toolkit.shared_enum.LinkAttribute
+        :type attribute: swmm.toolkit.shared_enum.LinkAttribute: FLOW_RATE, FLOW_DEPTH, FLOW_VELOCITY, FLOW_VOLUME,
+                         CAPACITY, POLLUT_CONC_0
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -627,7 +636,10 @@ class Output(object):
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
 
         :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
-        :type attribute: swmm.toolkit.shared_enum.SystemAttribute
+        :type attribute: swmm.toolkit.shared_enum.SystemAttribute: AIR_TEMP, RAINFALL, SNOW_DEPTH, EVAP_INFIL_LOSS,
+                         RUNOFF_FLOW, DRY_WEATHER_INFLOW, GW_INFLOW, RDII_INFLOW, DIRECT_INFLOW, TOTAL_LATERAL_INFLOW,
+                         FLOOD_LOSSES, OUTFALL_FLOWS, VOLUME_STORED, EVAP_RATE
+
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
@@ -675,7 +687,8 @@ class Output(object):
         For all subcatchments at given time, get a particular attribute.
 
         :param attribute: attribute from swmm.toolkit.shared_enum.SubcatchAttribute
-        :type attribute: swmm.toolkit.shared_enum.SubcatchAttribute
+        :type attribute: swmm.toolkit.shared_enum.SubcatchAttribute: RAINFALL, SNOW_DEPTH, EVAP_LOSS, INFIL_LOSS,
+                         RUNOFF_RATE, GW_OUTFLOW_RATE, GW_TABLE_ELEV, SOIL_MOISTURE, POLLUT_CONC_0
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute value for all subcatchments at given timestep
@@ -711,7 +724,8 @@ class Output(object):
         For all nodes at given time, get a particular attribute.
 
         :param attribute: attribute from swmm.toolkit.shared_enum.NodeAttribute
-        :type attribute: swmm.toolkit.shared_enum.NodeAttribute
+        :type attribute: swmm.toolkit.shared_enum.NodeAttribute: INVERT_DEPTH, HYDRAULIC_HEAD, PONDED_VOLUME,
+                         LATERAL_INFLOW, TOTAL_INFLOW, FLOODING_LOSSES, POLLUT_CONC_0
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute values for all nodes at given timestep
@@ -749,7 +763,8 @@ class Output(object):
         For all links at given time, get a particular attribute.
 
         :param attribute: attribute from swmm.toolkit.shared_enum.LinkAttribute
-        :type attribute: swmm.toolkit.shared_enum.LinkAttribute
+        :type attribute: swmm.toolkit.shared_enum.LinkAttribute: FLOW_RATE, FLOW_DEPTH, FLOW_VELOCITY, FLOW_VOLUME,
+                         CAPACITY, POLLUT_CONC_0
         :param time_index: datetime or simulation index, defaults to None
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute values for all nodes at given timestep
@@ -775,32 +790,34 @@ class Output(object):
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
         return {link: value for link, value in zip(self.links, values)}
-
-    @output_open_handler
-    def system_attribute(
-        self,
-        attribute: shared_enum.SystemAttribute,
-        time_index: Union[int, datetime, None] = None,
-    ):
-        """
-        At given time, get a particular system attribute.
-
-        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
-        :type attribute: swmm.toolkit.shared_enum.SystemAttribute
-        :param time_index: datetime or simulation index, defaults to None
-        :type time_index: Union[int, datetime, None]
-        :returns: dict of attribute value for system at given timestep
-        :rtype: dict of {"system",value}
-
-        Not usable due to error in swmm toolkit
-        """
-
-        time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
-        )
-
-        value = output.get_system_attribute(self.handle, time_index, attribute)
-        return {"system": value}
+     
+    # @output_open_handler
+    # def system_attribute(
+    #     self,
+    #     attribute: shared_enum.SystemAttribute,
+    #     time_index: Union[int, datetime, None] = None,
+    # ):
+    #     """
+    #     At given time, get a particular system attribute.
+    #
+    #     :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
+    #     :type attribute: swmm.toolkit.shared_enum.SystemAttribute: AIR_TEMP, RAINFALL, SNOW_DEPTH, EVAP_INFIL_LOSS,
+    #                      RUNOFF_FLOW, DRY_WEATHER_INFLOW, GW_INFLOW, RDII_INFLOW, DIRECT_INFLOW, TOTAL_LATERAL_INFLOW,
+    #                      FLOOD_LOSSES, OUTFALL_FLOWS, VOLUME_STORED, EVAP_RATE
+    #     :param time_index: datetime or simulation index, defaults to None
+    #     :type time_index: Union[int, datetime, None]
+    #     :returns: dict of attribute value for system at given timestep
+    #     :rtype: dict of {"system",value}
+    #
+    #     Not usable due to error in swmm toolkit
+    #     """
+    #
+    #     time_index = self.verify_time(
+    #         time_index, self.times, self.start, self.end, self.report, 0
+    #     )
+    #
+    #     value = output.get_system_attribute(self.handle, time_index, attribute)
+    #     return {"system": value}
 
     @output_open_handler
     def subcatch_result(
