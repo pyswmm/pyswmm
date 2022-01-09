@@ -169,8 +169,8 @@ Distributed with a BSD2 license; see LICENSE.txt::
 Powered By
 ----------
 
-EmNet LLC:
-	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
+EmNet, a Xylem Brand:
+	.. image:: https://ideacenter.nd.edu/assets/269492/1200x630/emnet_xylem.png
 	  :target: http://emnet.net/
 Open Storm:
     .. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
