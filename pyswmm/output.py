@@ -639,11 +639,10 @@ class Output(object):
 
         Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
 
-        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute
-        :type attribute: swmm.toolkit.shared_enum.SystemAttribute: AIR_TEMP, RAINFALL, SNOW_DEPTH, EVAP_INFIL_LOSS,
-                         RUNOFF_FLOW, DRY_WEATHER_INFLOW, GW_INFLOW, RDII_INFLOW, DIRECT_INFLOW, TOTAL_LATERAL_INFLOW,
-                         FLOOD_LOSSES, OUTFALL_FLOWS, VOLUME_STORED, EVAP_RATE
-
+        :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute: AIR_TEMP, RAINFALL, SNOW_DEPTH,
+                          EVAP_INFIL_LOSS, RUNOFF_FLOW, DRY_WEATHER_INFLOW, GW_INFLOW, RDII_INFLOW, DIRECT_INFLOW,
+                          TOTAL_LATERAL_INFLOW, FLOOD_LOSSES, OUTFALL_FLOWS, VOLUME_STORED, EVAP_RATE
+        :type attribute: swmm.toolkit.shared_enum.SystemAttribute
         :param start_index: start datetime or index from which to return series, defaults to None
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
