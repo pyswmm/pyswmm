@@ -33,12 +33,31 @@ def output_open_handler(func):
 
 
 class Output(object):
+    """
+    Output Methods.
+    Base class for a SWMM Output binary file.
+    The output object provides several options to process timeseries within output binary file.
+
+    :param binfile: model binary file path
+
+    Examples:
+
+    This example opens a SWMM Output binary file and identify the number of subcatchments, nodes, and links within
+    the SWMM Output binary file.
+    >>> from pyswmm import Output
+    >>>
+    >>> with Output('tests/data/model_full_features.out') as out:
+    ...     print(len(out.subcatchments))
+    ...     print(len(out.nodes))
+    ...     print(len(out.links))
+    >>>
+    >>> 3
+    >>> 4
+    >>> 3
+    """
+
     def __init__(self, binfile):
         """
-        Base class for a SWMM Output binary file.
-
-        The output object provides several options to process timeseries within output binary file.
-
         Initialize the Output class.
         :param binfile: model binary file path
         """
@@ -197,6 +216,19 @@ class Output(object):
 
         :returns: list of datetime values for each reporting timestep
         :rtype: list
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     times = out.times
+        ...     for time in times:
+        ...         print(time)
+        >>> 2015-11-01 14:01:00
+        >>> 2015-11-01 14:02:00
+        >>> 2015-11-01 14:03:00
+        >>> 2015-11-01 14:04:00
         """
         if self._times is None:
             self._load_times()
@@ -218,6 +250,14 @@ class Output(object):
         :returns: list of numbers of each model type
                   [nSubcatchments, nNodes, nLinks, nSystems(1), nPollutants]
         :rtype: list
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.project_size)
+        >>> [3, 4, 3, 1, 0]
         """
         if self._project_size is None:
             self._load_project_size()
@@ -235,6 +275,14 @@ class Output(object):
 
         :returns: dict of model subcatchment names with their indices as values
         :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.subcatchments)
+        >>> {'S1': 0, 'S2': 1, 'S3': 2}
         """
         if self._subcatchments is None:
             self._load_subcatchments()
@@ -256,6 +304,14 @@ class Output(object):
 
         :returns: dict of model node names with their indices as values
         :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.nodes)
+        >>> {'J1': 0, 'J3': 1, 'J4': 2, 'J2': 3}
         """
         if self._nodes is None:
             self._load_nodes()
@@ -276,6 +332,14 @@ class Output(object):
 
         :returns: dict of model link names with their indices as values
         :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.links)
+        >>> {'C1:C2': 0, 'C2': 1, 'C3': 2}
         """
         if self._links is None:
             self._load_links()
@@ -297,6 +361,14 @@ class Output(object):
 
         :returns: dict of pollutant names with their indices as values
         :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.pollutants)
+        >>> {}
         """
         if self._pollutants is None:
             self._load_pollutants()
@@ -319,6 +391,14 @@ class Output(object):
 
         :returns: integer indicating unit system (0 = US, 1 = SI)
         :rtype: int
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.unit)
+        >>>
         """
         return output.get_units(self.handle)
 
@@ -330,6 +410,14 @@ class Output(object):
 
         :returns: integer representation of SWMM version used to make out file
         :rtype: int
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.unit)
+        >>> 51013
         """
         return output.get_version(self.handle)
 
@@ -344,6 +432,19 @@ class Output(object):
         :type index: int
         :returns: object name
         :rtype: str
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import ElementType
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     print(out.object_name(ElementType.SUBCATCH, 0))
+        ...     print(out.object_name(ElementType.NODE, 0))
+        ...     print(out.object_name(ElementType.LINK, 0))
+        >>> S1
+        >>> J1
+        >>> C1:C2
         """
         return output.get_elem_name(self.handle, object_type, index)
 
@@ -370,6 +471,20 @@ class Output(object):
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys {datetime : value}
         :rtype: dict
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import SubcatchAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     ts = out.subcatch_series('S1', SubcatchAttribute.RUNOFF_RATE, datetime(2015, 11, 1, 15), datetime(2015, 11, 1, 16))
+        ...     for index in ts:
+        ...         print(index, ts[index])
+        >>> 2015-11-01 15:00:00 0.004305889364331961
+        >>> 2015-11-01 15:01:00 0.004312679171562195
+        >>> 2015-11-01 15:02:00 0.004319469444453716
+        >>> 2015-11-01 15:03:00 0.00432625925168395
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
         start_index = self.verify_time(
@@ -410,6 +525,20 @@ class Output(object):
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import NodeAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH, datetime(2015, 11, 1, 15), datetime(2015, 11, 1, 16))
+        ...     for index in ts:
+        ...         print(index, ts[index])
+        >>> 2015-11-01 15:00:00 15.0
+        >>> 2015-11-01 15:01:00 15.0
+        >>> 2015-11-01 15:02:00 15.0
+        >>> 2015-11-01 15:03:00 15.0
         """
 
         index = self.verify_index(index, self.nodes, "node")
@@ -453,6 +582,20 @@ class Output(object):
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import LinkAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     ts = out.link_series('C2', LinkAttribute.FLOW_RATE, datetime(2015, 11, 1, 15), datetime(2015, 11, 1, 16))
+        ...     for index in ts:
+        ...         print(index, ts[index])
+        >>> 2015-11-01 15:00:00 8.226319313049316
+        >>> 2015-11-01 15:01:00 8.226363182067871
+        >>> 2015-11-01 15:02:00 8.226407051086426
+        >>> 2015-11-01 15:03:00 8.22645092010498
         """
         index = self.verify_index(index, self.links, "link")
         start_index = self.verify_time(
@@ -492,6 +635,20 @@ class Output(object):
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import SystemAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     ts = out.system_series(SystemAttribute.RUNOFF_FLOW, datetime(2015, 11, 1, 15), datetime(2015, 11, 1, 16))
+        ...     for index in ts:
+        ...         print(index, ts[index])
+        >>> 2015-11-01 15:00:00 0.02255748212337494
+        >>> 2015-11-01 15:01:00 0.022702988237142563
+        >>> 2015-11-01 15:02:00 0.022848498076200485
+        >>> 2015-11-01 15:03:00 0.022994007915258408
         """
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
@@ -523,6 +680,18 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute value for all subcatchments at given timestep
         :rtype: dict {subcatchment: value}
+
+        Examples:
+        >>> from swmm.toolkit.shared_enum import SubcatchAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.subcatch_attribute(SubcatchAttribute.RUNOFF_RATE, datetime(2015, 11, 1, 16))
+        ...     for object in data:
+        ...         print(object, data[object])
+        >>> S1 0.004410634282976389
+        >>> S2 0.008775550872087479
+        >>> S3 0.012964698486030102
         """
 
         time_index = self.verify_time(
@@ -547,6 +716,20 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute values for all nodes at given timestep
         :rtype: dict {node:value}
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import NodeAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.node_attribute(NodeAttribute.INVERT_DEPTH, datetime(2015, 11, 1, 16))
+        ...     for object in data:
+        ...         print(object, data[object])
+        >>> J1 15.0
+        >>> J3 1.9746614694595337
+        >>> J4 0.0
+        >>> J2 0.0009783204877749085
         """
 
         time_index = self.verify_time(
@@ -571,6 +754,19 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute values for all nodes at given timestep
         :rtype: dict {link : value}
+
+        Examples:
+
+        >>> from swmm.toolkit.shared_enum import LinkAttribute
+        >>> from pyswmm import Output
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.link_attribute(LinkAttribute.FLOW_RATE, datetime(2015, 11, 1, 16))
+        ...     for object in data:
+        ...         print(object, data[object])
+        >>> C1:C2 7.218499660491943
+        >>> C2 8.227274894714355
+        >>> C3 9.240239143371582
         """
 
         time_index = self.verify_time(
@@ -595,6 +791,8 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attribute value for system at given timestep
         :rtype: dict of {"system",value}
+
+        Not usable due to error in swmm toolkit
         """
 
         time_index = self.verify_time(
@@ -617,6 +815,24 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attributes for a subcatchment at given timestep
         :rtype: dict {attribute:value}
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>> from datetime import datetime
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.subcatch_result('S1', datetime(2015, 11, 1, 15))
+        ...     for attribute in data:
+        ...         print(attribute, data[attribute])
+        >>> SubcatchAttribute.RAINFALL 0.017500000074505806
+        >>> SubcatchAttribute.SNOW_DEPTH 0.0
+        >>> SubcatchAttribute.EVAP_LOSS 0.0
+        >>> SubcatchAttribute.INFIL_LOSS 0.0
+        >>> SubcatchAttribute.RUNOFF_RATE 0.004305889364331961
+        >>> SubcatchAttribute.GW_OUTFLOW_RATE 0.0
+        >>> SubcatchAttribute.GW_TABLE_ELEV 0.0
+        >>> SubcatchAttribute.SOIL_MOISTURE 0.0
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
         time_index = self.verify_time(
@@ -641,6 +857,22 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attributes for a node at given timestep
         :rtype: dict {attribute:value}
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>> from datetime import datetime
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.node_result('J1', datetime(2015, 11, 1, 15))
+        ...     for attribute in data:
+        ...         print(attribute, data[attribute])
+        >>> NodeAttribute.INVERT_DEPTH 15.0
+        >>> NodeAttribute.HYDRAULIC_HEAD 35.72800064086914
+        >>> NodeAttribute.PONDED_VOLUME 0.0
+        >>> NodeAttribute.LATERAL_INFLOW 9.004305839538574
+        >>> NodeAttribute.TOTAL_INFLOW 9.004305839538574
+        >>> NodeAttribute.FLOODING_LOSSES 1.7858062982559204
         """
         index = self.verify_index(index, self.nodes, "node")
         time_index = self.verify_time(
@@ -663,6 +895,21 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attributes for a link at given timestep
         :rtype: dict {attribute:value}
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>> from datetime import datetime
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.link_result('C2', datetime(2015, 11, 1, 15))
+        ...     for attribute in data:
+        ...         print(attribute, data[attribute])
+        >>> LinkAttribute.FLOW_RATE 8.226319313049316
+        >>> LinkAttribute.FLOW_DEPTH 0.0
+        >>> LinkAttribute.FLOW_VELOCITY 0.0
+        >>> LinkAttribute.FLOW_VOLUME 0.0
+        >>> LinkAttribute.CAPACITY 1.0
         """
         index = self.verify_index(index, self.links, "link")
         time_index = self.verify_time(
@@ -681,6 +928,30 @@ class Output(object):
         :type time_index: Union[int, datetime, None]
         :returns: dict of attributes for the system at given timestep
         :rtype: dict {attribute:value}
+
+        Examples:
+
+        >>> from pyswmm import Output
+        >>> from datetime import datetime
+        >>>
+        >>> with Output('tests/data/model_full_features.out') as out:
+        ...     data = out.system_result(datetime(2015, 11, 1, 15))
+        ...     for attribute in data:
+        ...         print(attribute, data[attribute])
+        >>> SystemAttribute.AIR_TEMP 70.0
+        >>> SystemAttribute.RAINFALL 0.017500001937150955
+        >>> SystemAttribute.SNOW_DEPTH 0.0
+        >>> SystemAttribute.EVAP_INFIL_LOSS 0.0
+        >>> SystemAttribute.RUNOFF_FLOW 0.02255748212337494
+        >>> SystemAttribute.DRY_WEATHER_INFLOW 8.0
+        >>> SystemAttribute.GW_INFLOW 0.0
+        >>> SystemAttribute.RDII_INFLOW 0.0
+        >>> SystemAttribute.DIRECT_INFLOW 3.0
+        >>> SystemAttribute.TOTAL_LATERAL_INFLOW 11.022557258605957
+        >>> SystemAttribute.FLOOD_LOSSES 1.7858062982559204
+        >>> SystemAttribute.OUTFALL_FLOWS 9.23674488067627
+        >>> SystemAttribute.VOLUME_STORED 97.05753326416016
+        >>> SystemAttribute.EVAP_RATE 0.0
         """
         dummy_index = 0
         time_index = self.verify_time(
