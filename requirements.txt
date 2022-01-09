@@ -1,7 +1,5 @@
 # Build dependencies
 #python
-six
-enum34
+wheel
 pytest
-
-# Run dependencies
+swmm-toolkit==0.8.2

@@ -90,6 +90,10 @@ class NodeResults(Enum):
     newLatFlow = 7  # Current Lateral Inflow
 
 
+class NodePollut(Enum):
+    nodeQual = 0  # Current Water Quality Value
+
+
 class NodeType(Enum):
     junction = 0  # Junction Type
     outfall = 1  # Outfall Type
@@ -117,6 +121,11 @@ class LinkResults(Enum):
     setting = 5  # double
     targetSetting = 6  # double
     froude = 7  # double
+
+
+class LinkPollut(Enum):
+    linkQual = 0  # Current Water Quality Value
+    totalLoad = 1  # Total Quality Mass Loading
 
 
 class LinkType(Enum):
@@ -148,6 +157,8 @@ class SubcResults(Enum):
 class SubcPollut(Enum):
     buildup = 0  # Subcatchment Surface Buildup
     concPonded = 1  # Ponded Pollutant Concentration
+    subcQual = 2  # Current Pollutant Runoff Quality
+    subcTotalLoad = 3  # Total Pollutant Washoff Load
 
 
 class LidUParams(Enum):
@@ -268,7 +279,8 @@ class NodeStats(ctypes.Structure):
         "maxOverflow": "peak_flooding_rate",
         "maxPondedVol": "max_ponded_volume",
         "maxInflowDate": "max_inflow_date",
-        "maxOverflowDate": "max_flooding_date"
+        "maxOverflowDate": "max_flooding_date",
+        "loads": "pollutant_loading"
     }
 
 
@@ -299,7 +311,8 @@ class OutfallStats(ctypes.Structure):
         "avgFlow": "average_flowrate",
         "maxFlow": "peak_flowrate",
         "totalLoad": "pollutant_loading",
-        "totalPeriods": "total_periods"
+        "totalPeriods": "total_periods",
+        "loads": "pollutant_loading"
     }
 
 

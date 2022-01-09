@@ -196,8 +196,7 @@ class RainGage(object):
         >>> 1.0
         >>> 0.2
         """
-        return self._model.getGagePrecip(self._raingageid)[
-            RainGageResults.total_precip.value]
+        return self._model.getGagePrecip(self._raingageid, RainGageResults.total_precip)
 
     @total_precip.setter
     def total_precip(self, param):
@@ -221,8 +220,7 @@ class RainGage(object):
         ...     print(rg1.rainfall)
         >>> 1.0
         """
-        return self._model.getGagePrecip(self._raingageid)[
-            RainGageResults.rainfall.value]
+        return self._model.getGagePrecip(self._raingageid, RainGageResults.rainfall)
 
     @property
     def snowfall(self):
@@ -241,5 +239,4 @@ class RainGage(object):
         ...     print(rg1.snowfall)
         >>> 0.0
         """
-        return self._model.getGagePrecip(self._raingageid)[
-            RainGageResults.snowfall.value]
+        return self._model.getGagePrecip(self._raingageid, RainGageResults.snowfall)

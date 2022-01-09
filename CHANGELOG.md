@@ -1,5 +1,54 @@
 # History of changes
 
+## Version 1.0.1 (2021-01-13)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 267](https://github.com/OpenWaterAnalytics/pyswmm/issues/267) - Add swmm-toolkit package as an install_require in setup.py
+
+In this release 1 issue was closed.
+
+
+## Version 1.0.0 (2021-01-12)
+
+### Issues Closed
+
+#### Enhancements
+
+* [Issue 264](https://github.com/OpenWaterAnalytics/pyswmm/issues/264) - Refactor PySWMM to use swmm-toolkit package ([PR 262](https://github.com/OpenWaterAnalytics/pyswmm/pull/262))
+
+#### Maintenance
+
+* [Issue 265](https://github.com/OpenWaterAnalytics/pyswmm/issues/265) - Repository clean up ([PR 262](https://github.com/OpenWaterAnalytics/pyswmm/pull/262))
+
+#### Deprecated
+
+* [Issue 263](https://github.com/OpenWaterAnalytics/pyswmm/issues/263) - Deprecate DLL selector function ([PR 262](https://github.com/OpenWaterAnalytics/pyswmm/pull/262))
+
+In this release 3 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 262](https://github.com/OpenWaterAnalytics/pyswmm/pull/262) - PySWMM v1.0 ([265](https://github.com/OpenWaterAnalytics/pyswmm/issues/265), [264](https://github.com/OpenWaterAnalytics/pyswmm/issues/264), [263](https://github.com/OpenWaterAnalytics/pyswmm/issues/263))
+
+In this release 1 pull request was closed.
+
+
+## Version 0.6.2 (2020/08/04)
+
+Updating release version.
+
+## Version 0.6.1 (2020/08/04)
+
+
+### Pull Requests Merged
+
+* [PR 217](https://github.com/OpenWaterAnalytics/pyswmm/pull/217) - add node, link water quality getters, by [@katmratliff](https://github.com/katmratliff) ([206](https://github.com/OpenWaterAnalytics/pyswmm/issues/206))
+
+In this release 1 pull request was closed.
+
 ## Version 0.6.0 (2019-10-19)
 
 
