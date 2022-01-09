@@ -188,9 +188,9 @@ Powered By
 ----------
 
 EmNet, a Xylem Brand:
-	.. image:: https://ideacenter.nd.edu/assets/269492/1200x630/emnet_xylem.png
+	.. image:: https://media-exp1.licdn.com/dms/image/C4D0BAQHaKTsKSWX1_w/company-logo_200_200/0/1519922058017?e=2159024400&v=beta&t=qYRoPhFhmfiuNBU36Y_Qxwy3Kcg1ZF_ud0YeUCz0VT4
 	  :target: http://emnet.net/
-      :scale: 20
+
 Open Storm:
     .. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
       :target: http://open-storm.org/
