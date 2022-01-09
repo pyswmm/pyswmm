@@ -249,7 +249,6 @@ The :py:class:`pyswmm.output.Output.node_series` method allows the user to acces
 PONDED_VOLUME, LATERAL_INFLOW, TOTAL_INFLOW, and FLOODING_LOSSES. If pollutants are defined in the simulation, the concentration 
 timeseries can be accessed using POLLUT_CONC_0.
 
-
 Lid Controls
 ---------------------
 For interacting with lid controls a :py:class:`pyswmm.lidcontrols.LidControls`

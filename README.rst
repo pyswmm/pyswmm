@@ -60,6 +60,9 @@ With the development of PySWMM, control algorithms can now be developed exclusiv
 in Python which allows the use of functions and objects as well as storing and
 tracking hydraulic trends for control actions.
 
+As of version v1.1.0, PySWMM includes new features to proccess metadata and timeseries
+stored in SWMM binary output file.
+
 Who uses PySWMM?
 ----------------
 
@@ -143,6 +146,21 @@ approach requires some clean up.
 ...     pass
 >>>
 >>> sim.close()
+
+Opening a SWMM binary output file and accessing model metadata and 
+timeseries.
+
+>>> from swmm.toolkit.shared_enum import SubcatchAttribute, NodeAttribute, LinkAttribute
+>>> from pyswmm import Output
+>>>
+>>> with Output('model.out') as out:
+...     print(len(out.subcatchments))
+...     print(len(out.nodes))
+...     print(len(out.links))
+...     print(out.version)
+...     sub_ts = out.subcatch_series('S1', SubcatchAttribute.RUNOFF_RATE)
+...     node_ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH)
+...     link_ts = out.link_series('C2', LinkAttribute.FLOW_RATE)
 
 Bugs
 ----
