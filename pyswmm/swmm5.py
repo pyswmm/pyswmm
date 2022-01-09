@@ -22,9 +22,6 @@ from swmm.toolkit import solver
 # Local imports
 import pyswmm.toolkitapi as tka
 
-# Local variables
-SWMM_VER_51011 = '5.1.14'
-
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
