@@ -389,12 +389,11 @@ class Output(object):
         """
         Return SWMM output binary file units for unit system, flow, and pollutants
 
-        :returns: list of integers indicating units for
-                  [unit system, flow, and pollutant]
+        :returns: dict indicating units for unit system, flow, and pollutant
 
                   unit system unit from swmm.toolkit.shared_enum.UnitSystem: US=0, SI=1
                   flow unit from swmm.toolkit.shared_enum.FlowUnits: CFS=0, GPM=1, MGD=2, CMS=3, LPS=4, MLD=5
-                  pollutants from swmm.toolkit.shared_enum.ConcUnits: MG=0, UG=1, COUNT=2, NONE=3
+                  pollutant unit from swmm.toolkit.shared_enum.ConcUnits: MG=0, UG=1, COUNT=2, NONE=3
         :rtype: list
 
         Examples:
@@ -403,9 +402,16 @@ class Output(object):
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
         ...     print(out.unit)
-        >>> [0, 0, 3]
+        >>> {'system': <UnitSystem.US: 0>, 'flow': <FlowUnits.CFS: 0>, 'pollutant': <ConcUnits.NONE: 3>}
         """
-        return output.get_units(self.handle)
+        units_mapping = dict(
+            system=shared_enum.UnitSystem,
+            flow=shared_enum.FlowUnits,
+            pollutant=shared_enum.ConcUnits,
+        )
+        return {attribute: units_mapping[attribute](unit) for unit, attribute in zip(
+            output.get_units(self.handle),
+            units_mapping.keys())}
 
     @property
     @output_open_handler
@@ -790,7 +796,7 @@ class Output(object):
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
         return {link: value for link, value in zip(self.links, values)}
-     
+
     # @output_open_handler
     # def system_attribute(
     #     self,
