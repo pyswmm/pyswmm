@@ -9,7 +9,6 @@ Please acknowledge use of PySWMM by citing our paper:
 
 - McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020). PySWMM: The Python Interface to Stormwater Management Model (SWMM). *Journal of Open Source Software, 5*\ (52), 2292, https://doi.org/10.21105/joss.02292
 
-
 Projects using PySWMM (Newest on top)
 =====================================
 - Oberascher, M., Kinzel, C., Kastlunger, U., Kleidorfer, M., Zingerle, C., Rauch, W., Sitzenfrei, R., 2021. Integrated urban water management with micro storages developed as an IoT-based solution – the smart rain barrel. Environmental Modelling & Software, 105028. https://doi.org/10.1016/j.envsoft.2021.105028.
