@@ -1,5 +1,31 @@
 # History of changes
 
+## Version 1.1.0 (2022/01/09)
+
+### Issues Closed
+
+#### Documentation
+
+* [Issue 297](https://github.com/OpenWaterAnalytics/pyswmm/issues/297) - Update List for Projects using PySWMM
+* [Issue 293](https://github.com/OpenWaterAnalytics/pyswmm/issues/293) - Add Citation file
+
+#### New Features
+
+* [Issue 274](https://github.com/OpenWaterAnalytics/pyswmm/issues/274) - Port SWMM output functions into PySWMM from swmm-python
+
+#### Bugs fixed
+
+* [Issue 268](https://github.com/OpenWaterAnalytics/pyswmm/issues/268) - readthedocs build is broken
+
+In this release 4 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 275](https://github.com/OpenWaterAnalytics/pyswmm/pull/275) - Port swmm-toolkit output into simulation module, by [@jennwuu](https://github.com/jennwuu)
+
+In this release 1 pull request was closed.
+
+
 ## Version 1.0.1 (2021-01-13)
 
 ### Issues Closed
