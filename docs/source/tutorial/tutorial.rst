@@ -214,7 +214,6 @@ access data in the binary file without re-running the simulation.
 To access a SWMM outfile, you need to initialize a :py:class:`pyswmm.output.Output` object.
 Once the ``Output`` object is initialized, you can use pre-defined methods to access data in the binary file.
 
-
 The following example opens a SWMM output binary file and identifies the number of subcatchments, nodes,
 and links and the SWMM engine used to generate the binary file. 
 

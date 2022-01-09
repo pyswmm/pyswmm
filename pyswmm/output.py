@@ -401,15 +401,15 @@ class Output(object):
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
-        ...     print(out.unit)
-        >>> {'system': <UnitSystem.US: 0>, 'flow': <FlowUnits.CFS: 0>, 'pollutant': <ConcUnits.NONE: 3>}
+        ...     print(out.units)
+        >>> {'system': 'US', 'flow': 'CFS', 'pollutant': 'NONE'}
         """
         units_mapping = dict(
             system=shared_enum.UnitSystem,
             flow=shared_enum.FlowUnits,
             pollutant=shared_enum.ConcUnits,
         )
-        return {attribute: units_mapping[attribute](unit) for unit, attribute in zip(
+        return {attribute: units_mapping[attribute](unit).name for unit, attribute in zip(
             output.get_units(self.handle),
             units_mapping.keys())}
 
