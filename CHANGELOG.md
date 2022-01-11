@@ -1,5 +1,22 @@
 # History of changes
 
+## Version 1.1.1 (2022/01/11)
+
+### Issues Closed
+
+#### Bugs fixed
+
+* [Issue 312](https://github.com/OpenWaterAnalytics/pyswmm/issues/312) - Pip install pyswmm does not install julian
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 313](https://github.com/OpenWaterAnalytics/pyswmm/pull/313) - v1.1.1, by [@jennwuu](https://github.com/jennwuu)
+
+In this release 1 pull request was closed.
+
+
 ## Version 1.1.0 (2022/01/09)
 
 ### Issues Closed
