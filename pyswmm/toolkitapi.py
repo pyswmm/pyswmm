@@ -88,10 +88,13 @@ class NodeResults(Enum):
     newDepth = 5  # Current water depth
     newHead = 6  # Current water head
     newLatFlow = 7  # Current Lateral Inflow
+    hrt = 8  # Current hydraulic retention time
 
 
 class NodePollut(Enum):
     nodeQual = 0  # Current Water Quality Value
+    inf_conc = 1  # Current inflow water quality value
+    reactor_conc = 2  # Current quality value in the mixed reactor
 
 
 class NodeType(Enum):
@@ -126,6 +129,7 @@ class LinkResults(Enum):
 class LinkPollut(Enum):
     linkQual = 0  # Current Water Quality Value
     totalLoad = 1  # Total Quality Mass Loading
+    reactor_conc = 2  # Current quality value in the mixed reactor
 
 
 class LinkType(Enum):
