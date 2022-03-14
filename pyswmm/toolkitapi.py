@@ -88,7 +88,7 @@ class NodeResults(Enum):
     newDepth = 5  # Current water depth
     newHead = 6  # Current water head
     newLatFlow = 7  # Current Lateral Inflow
-    hrt = 8  # Current hydraulic retention time
+    hyd_res_time = 8  # Current hydraulic retention time
 
 
 class NodePollut(Enum):
