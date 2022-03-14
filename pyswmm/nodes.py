@@ -657,6 +657,20 @@ class Node(object):
         return self._model.getNodeResult(self._nodeid,
                                          NodeResults.newLatFlow.value)
 
+    @property
+    def hydraulic_retention_time(self):
+        """
+        Get Node Results for hydraulic retention time.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Parameter Value
+        :rtype: float
+        """
+        return self._model.getNodeResult(self._nodeid,
+                                         NodeResults.hrt.value)
+
     def generated_inflow(self, inflowrate):
         """
         Generate and Set a Node Inflow Rate.
@@ -717,6 +731,70 @@ class Node(object):
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
         quality_array = self._model.getNodePollut(self._nodeid,
                                                       NodePollut.nodeQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
+
+    @property
+    def inflow_quality(self):
+        """
+        Get Current Inflow Water Quality Values for a Node.
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Nodes
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     J1 = Nodes(sim)["J1"]
+        ...     for step in sim:
+        ...         print(J1.inflow_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getNodePollut(self._nodeid,
+                                                      NodePollut.inflowQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
+
+    @property
+    def reactor_quality(self):
+        """
+        Get Current Water Quality Values for the mixed reactor inside a Node.
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Nodes
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     J1 = Nodes(sim)["J1"]
+        ...     for step in sim:
+        ...         print(J1.reactor_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getNodePollut(self._nodeid,
+                                                      NodePollut.reactorQual.value)
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = quality_array[ind]

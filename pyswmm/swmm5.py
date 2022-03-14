@@ -1153,21 +1153,23 @@ class PySWMM(object):
         Get water quality results from a Node.
 
         :param str ID: Node ID
-        :param int result_type: parameter (toolkitapi.NodePollut)
+        :param int result_type: parameter (toolkitapi.NodePollut member value)
         :rtype: list
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         return solver.node_get_pollutant(index, result_type)
 
-     def setNodePollut(self, ID, pollutant_value):
+     def setNodePollut(self, ID, pollutant_ID, pollutant_value):
         """
         Set water quality results in a Node.
 
         :param str ID: Node ID
+        :param str pollutant_ID
         :param float pollutant_value: pollutant value to set
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        return solver.node_set_pollutant(index, pollutant_value)
+        pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
+        return solver.node_set_pollutant(index, pollutant_index, pollutant_value)
 
     def getLinkResult(self, ID, result_type):
         """
@@ -1204,22 +1206,24 @@ class PySWMM(object):
         Get water quality results from a Link.
 
         :param str ID: Link ID
-        :param int result_type:  parameter (toolkitapi.LinkPollut)
-        :return: Pollutant Values
+        :param int result_type:  parameter (toolkitapi.LinkPollut member value)
+        :return: Pollutant Value
         :rtype: list
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         return solver.link_get_pollutant(index, result_type)
 
-     def setLinkPollut(self, ID, pollutant_value):
+     def setLinkPollut(self, ID, pollutant_ID, pollutant_value):
         """
         Set water quality results in a Link.
 
         :param str ID: Link ID
+        :param str ID: Pollutant ID
         :param float pollutant_value: pollutant value to set
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        return solver.link_set_pollutant(index, pollutant_value)
+        pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
+        return solver.link_set_pollutant(index, pollutant_index, pollutant_value)
 
     def getSubcatchResult(self, ID, result_type):
         """
