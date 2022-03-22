@@ -891,6 +891,12 @@ class Link(object):
 
         return out_dict
 
+    @pollut_quality.setter
+    def pollutant_quality(self, pollutant_ID, pollutant_value):
+        """Set Current Link Water Quality Value"""
+
+        self._model.setLinkPollut(self._linkid, pollutant_ID, pollutant_value)
+
     @property
     def total_loading(self):
         """

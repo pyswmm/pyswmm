@@ -737,6 +737,12 @@ class Node(object):
 
         return out_dict
 
+    @pollut_quality.setter
+    def pollutant_quality(self, pollutant_ID, pollutant_value):
+        """Set Current Node Water Quality Value"""
+
+        self._model.setNodePollut(self._nodeid, pollutant_ID, pollutant_value)
+
     @property
     def inflow_quality(self):
         """

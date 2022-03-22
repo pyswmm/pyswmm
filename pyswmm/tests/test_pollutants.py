@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright (c) 2017 Katherine M. Ratliff
+# Modified 2022 Brooke E. Mason
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -9,7 +10,10 @@
 # Local imports
 from pyswmm import Simulation, Subcatchments, Links, Nodes
 # from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import MODEL_POLLUTANTS_PATH
+from pyswmm.tests.data import (MODEL_POLLUTANTS_PATH, 
+                               MODEL_POLLUTANTS_PATH_2,
+                               MODEL_POLLUTANTS_SETTERS_PATH)
+import pyswmm.toolkitapi as tka
 
 
 def test_pollutants_1():
@@ -91,3 +95,54 @@ def test_pollutants_1():
         assert J2.pollut_quality['test-pollutant'] == 0.0
         assert J3.pollut_quality['test-pollutant'] == 0.0
         assert J4.pollut_quality['test-pollutant'] == 0.0
+
+def test_pollutants_2():
+    # Test inflow_quality and reactor_quality in nodes
+    # Test reactor_quality in links
+    with Simulation(MODEL_POLLUTANTS_PATH_2) as sim:
+        C1 = Links(sim)["C1"]
+
+        J1 = Nodes(sim)["J1"]
+
+        for step in sim:
+            #pass
+            #print(C1.reactor_quality)
+
+            print("inflow_qual", J1.inflow_quality['test-pollutant'])
+            print("pollut_qual", J1.pollut_quality['test-pollutant'])
+            print("reactor_qual", J1.reactor_quality['test-pollutant'])
+
+        #assert 9.999999999999932 <= C1.reactor_quality['test-pollutant'] <= 10.0
+
+        #assert J1.inflow_quality['test-pollutant'] == 0.0
+
+        #assert J1.reactor_quality['test-pollutant'] == 0.0
+
+def test_pollutants_3():
+    # Test pollutant getters and setters in nodes
+    with Simulation(MODEL_POLLUTANTS_SETTERS_PATH) as sim:
+        J1 = Nodes(sim)["J1"]
+
+        for step in sim:
+            print(J1.pollut_quality['test-pollutant'])
+            J1.pollut_quality['test-pollutant'] = 100.0
+            print(J1.pollut_quality['test-pollutant']) 
+
+        #assert J1.pollut_quality['test-pollutant'] == 10.0
+
+def test_pollutants_4():
+    # Test pollutant getters and setters in links
+    with Simulation(MODEL_POLLUTANTS_SETTERS_PATH) as sim:
+        C1 = Links(sim)["C1"]
+
+        for step in sim:
+            print(C1.pollut_quality['test-pollutant'])
+            C1.pollut_quality['test-pollutant'] = 100.0
+            print(C1.pollut_quality['test-pollutant']) 
+
+        #assert C1.pollut_quality['test-pollutant'] == 10.0
+
+
+test_pollutants_2()
+#test_pollutants_4()
+
