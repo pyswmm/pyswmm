@@ -1534,6 +1534,7 @@ class PySWMM(object):
         Set water quality results in a Link.
 
         :param str ID: Link ID
+        :param type: LinkPollut.linkQual to alllow for accounting for loss and mix calculations
         :param str ID: Pollutant ID
         :param float pollutant_value: pollutant value to set
         """
