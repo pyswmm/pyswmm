@@ -1527,7 +1527,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
-        return solver.node_set_pollutant(index, pollutant_index, pollutant_value)
+        solver.node_set_pollutant(index, pollutant_index, pollutant_value)
 
     def setLinkPollut(self, ID, pollutant_ID, pollutant_value):
         """
@@ -1539,7 +1539,7 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
         pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
-        return solver.link_set_pollutant(index, pollutant_index, pollutant_value)
+        solver.link_set_pollutant(index, pollutant_index, pollutant_value)
 
 if __name__ == '__main__':
     test = PySWMM(

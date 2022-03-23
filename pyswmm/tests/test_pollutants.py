@@ -143,6 +143,6 @@ def test_pollutants_4():
         #assert C1.pollut_quality['test-pollutant'] == 10.0
 
 
-test_pollutants_2()
+test_pollutants_3()
 #test_pollutants_4()
 
