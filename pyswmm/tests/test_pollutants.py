@@ -128,7 +128,7 @@ def test_pollutants_3():
             J1.pollut_quality['test-pollutant'] = 100.0
             print(J1.pollut_quality['test-pollutant']) 
 
-        #assert J1.pollut_quality['test-pollutant'] == 10.0
+        #assert J1.pollut_quality['test-pollutant'] == 100.0
 
 def test_pollutants_4():
     # Test pollutant getters and setters in links
@@ -140,9 +140,9 @@ def test_pollutants_4():
             C1.pollut_quality['test-pollutant'] = 100.0
             print(C1.pollut_quality['test-pollutant']) 
 
-        #assert C1.pollut_quality['test-pollutant'] == 10.0
+        #assert C1.pollut_quality['test-pollutant'] == 100.0
 
 
-test_pollutants_3()
+test_pollutants_2()
 #test_pollutants_4()
 
