@@ -130,29 +130,29 @@ def test_pollutants_node_inflow():
 
         assert 9.999999999999999 <=Tank.inflow_quality['P1'] <= 10.000000000000002
 
-def test_pollutants_3():
+def test_pollutants_node_setter():
     # Test pollutant getters and setters in nodes
     with Simulation(MODEL_POLLUTANTS_SETTERS_PATH) as sim:
-        J1 = Nodes(sim)["J1"]
-        
+        #J1 = Nodes(sim)["J1"]
+
         for step in sim:
-            pass
             #print(J1.pollut_quality['test-pollutant'])
-            #J1.pollut_quality['test-pollutant'] = 100.0
-            #print(J1.pollut_quality['test-pollutant'])
+            sim._model.setNodePollut("J1", "test-pollutant", 100)
+            #J1.pollut_quality['test-pollutant'] = 100
+            print(J1.pollut_quality['test-pollutant'])
             
         #assert J1.pollut_quality['test-pollutant'] == 100.0
 
-def test_pollutants_4():
+def test_pollutants_link_setter():
     # Test pollutant getters and setters in links
     with Simulation(MODEL_POLLUTANTS_SETTERS_PATH) as sim:
         C1 = Links(sim)["C1"]
 
         for step in sim:
-            pass
             #print(C1.pollut_quality['test-pollutant'])
-            #C1.pollut_quality['test-pollutant'] = 100.0
-            #print(C1.pollut_quality['test-pollutant']) 
+            sim._model.setLinkPollut("C1", "test-pollutant", 100)
+            #C1.pollut_quality['test-pollutant'] = 100
+            print(C1.pollut_quality['test-pollutant']) 
 
-        #assert C1.pollut_quality['test-pollutant'] == 100.0
+        assert C1.pollut_quality['test-pollutant'] == 100.0
 

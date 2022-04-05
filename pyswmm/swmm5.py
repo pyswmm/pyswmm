@@ -1527,14 +1527,13 @@ class PySWMM(object):
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
         pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
-        solver.node_set_pollutant(index, pollutant_index, pollutant_value)
+        solver.node_set_pollutant(index, tka.NodePollut.nodeQual.value, pollutant_index, pollutant_value)
 
-    def setLinkPollut(self, ID, LinkPollut_linkQual, pollutant_ID, pollutant_value):
+    def setLinkPollut(self, ID, pollutant_ID, pollutant_value):
         """
         Set water quality results in a Link.
 
         :param str ID: Link ID
-        :param type: LinkPollut.linkQual to alllow for accounting for loss and mix calculations
         :param str ID: Pollutant ID
         :param float pollutant_value: pollutant value to set
         """
