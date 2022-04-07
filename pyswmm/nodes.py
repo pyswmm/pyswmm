@@ -738,9 +738,26 @@ class Node(object):
         return out_dict
 
     @pollut_quality.setter
-    def pollutant_quality(self, pollutant_ID, pollutant_value):
-        """Set Current Node Water Quality Value"""
+    def pollut_quality(self, args):
+        """
+        Set Current Node Water Quality Value
+        
+        Examples:
 
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     Tank = Nodes(sim)["Tank"]
+        ...     for step in sim:
+        ...         Tank.pollut_quality = ('test-pollutant', 100)
+                    print(Tank.pollut_quality)
+        >>> {'test-pollutant': 100.0}
+        >>> {'test-pollutant': 100.0}
+        >>> {'test-pollutant': 100.0}
+
+        """
+        pollutant_ID, pollutant_value = args
+        
         self._model.setNodePollut(self._nodeid, pollutant_ID, pollutant_value)
 
     @property

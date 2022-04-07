@@ -136,8 +136,8 @@ def test_pollutants_node_setter():
         Tank = Nodes(sim)["Tank"]
 
         for step in sim:
-            sim._model.setNodePollut("Tank", "P1", 100)
-            #Tank.pollut_quality['P1'] = 100
+            #sim._model.setNodePollut("Tank", "P1", 100)
+            Tank.pollut_quality = ('P1', 100)
             #print(Tank.pollut_quality['P1'])
             
         assert Tank.pollut_quality['P1'] == 100.0
@@ -148,8 +148,8 @@ def test_pollutants_link_setter():
         C1 = Links(sim)["C1"]
 
         for step in sim:
-            sim._model.setLinkPollut("C1", "test-pollutant", 100)
-            #C1.pollut_quality['test-pollutant'] = 100
+            #sim._model.setLinkPollut("C1", "test-pollutant", 100)
+            C1.pollut_quality = ('test-pollutant', 100)
             #print(C1.pollut_quality['test-pollutant']) 
 
         assert C1.pollut_quality['test-pollutant'] == 100.0

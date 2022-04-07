@@ -892,8 +892,25 @@ class Link(object):
         return out_dict
 
     @pollut_quality.setter
-    def pollutant_quality(self, pollutant_ID, pollutant_value):
-        """Set Current Link Water Quality Value"""
+    def pollut_quality(self, args):
+        """
+        Set Current Link Water Quality Value
+        
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Links(sim)["C1"]
+        ...     for step in sim:
+        ...         C1.pollut_quality = ('test-pollutant', 100)
+                    print(C1.pollut_quality)
+        >>> {'test-pollutant': 100.0}
+        >>> {'test-pollutant': 100.0}
+        >>> {'test-pollutant': 100.0}
+        """
+
+        pollutant_ID, pollutant_value = args
 
         self._model.setLinkPollut(self._linkid, pollutant_ID, pollutant_value)
 
