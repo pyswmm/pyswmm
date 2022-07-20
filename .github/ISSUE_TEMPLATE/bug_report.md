@@ -7,8 +7,12 @@ assignees: ''
 
 ---
 
+** WAIT!!! WAIT!!! Is this an ISSUE or DISCUSSION??**
+If you need help with a problem, ask a question in our discussion board! if you are getting bad/wrong data or you are experiencing a bug due to pyswmm, raise an issue.   
+
+
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what the bug is.  
 
 **To Reproduce**
 Steps to reproduce the behavior.  Good to place code here with support files.
