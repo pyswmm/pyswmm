@@ -367,7 +367,7 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        major, minor, patch = solver.swmm_version_info()
+        major, minor, patch = solver.swmm_version_info().split('.')
         return distutils.version.LooseVersion('.'.join([major, minor, patch]))
 
         return
