@@ -38,7 +38,7 @@ def get_description():
     return data
 
 
-REQUIREMENTS = ['six']
+REQUIREMENTS = ['swmm-toolkit==0.8.2', 'julian==0.14']
 
 
 setup(
@@ -52,10 +52,7 @@ setup(
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
-        '': [
-            'lib/windows/swmm5.dll', 'lib/windows/swmm5-x64.dll', 'lib/linux/swmm5.so', 'lib/macos/swmm5.dylib', 'LICENSE.txt',
-            'AUTHORS', 'tests/data/*.inp', 'tests/*.py'
-        ]
+        '': ['LICENSE.txt', 'AUTHORS', 'tests/data/*.inp', 'tests/*.py']
     },
     include_package_data=True,
     license="BSD2 License",

@@ -14,7 +14,6 @@ Authors with Copyrighted Contributions
 ======================================
 
 - Bryant E. McDonnell
-- Katherine Ratliff
 - Jennifer Wu
 - Gonzalo Peña-Castellanos
 - Stephen Roberts
@@ -26,3 +25,4 @@ Authors with Contributions in the Public Domain
 ===============================================
 
 - Michael Tryby
+- Katherine Ratliff

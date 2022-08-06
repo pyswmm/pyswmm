@@ -6,10 +6,11 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Links module for the pythonic interface to SWMM5."""
+from swmm.toolkit import shared_enum
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import LinkParams, LinkResults, LinkType, ObjectType
+from pyswmm.toolkitapi import LinkParams, LinkResults, LinkPollut, LinkType, ObjectType
 
 
 class Links(object):
@@ -180,7 +181,7 @@ class Link(object):
         ...     print c1c2.is_conduit()
         >>> True
         """
-        return self._model.getLinkType(self._linkid) is LinkType.conduit.value
+        return self._model.getLinkType(self._linkid) is shared_enum.LinkType.CONDUIT
 
     def is_pump(self):
         """
@@ -198,7 +199,7 @@ class Link(object):
         ...     print c1c2.is_pump()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.pump.value
+        return self._model.getLinkType(self._linkid) is shared_enum.LinkType.PUMP
 
     def is_orifice(self):
         """
@@ -216,7 +217,7 @@ class Link(object):
         ...     print c1c2.is_orifice()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.orifice.value
+        return self._model.getLinkType(self._linkid) is shared_enum.LinkType.ORIFICE
 
     def is_weir(self):
         """
@@ -234,7 +235,7 @@ class Link(object):
         ...     print c1c2.is_weir()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.weir.value
+        return self._model.getLinkType(self._linkid) is shared_enum.LinkType.WEIR
 
     def is_outlet(self):
         """
@@ -252,7 +253,7 @@ class Link(object):
         ...     print c1c2.is_outlet()
         >>> False
         """
-        return self._model.getLinkType(self._linkid) is LinkType.outlet.value
+        return self._model.getLinkType(self._linkid) is shared_enum.LinkType.OUTLET
 
     @property
     def connections(self):
@@ -856,6 +857,72 @@ class Link(object):
         return 0.
         """
         return self._model.setLinkSetting(self._linkid, setting)
+
+    @property
+    def pollut_quality(self):
+        """
+        Get Current Water Quality Values for a Link.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Nodes(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.pollut_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.linkQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
+
+    @property
+    def total_loading(self):
+        """
+        Get Total Pollutant Loading Values for a Link.
+
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Total Loading Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Nodes(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.total_loading)
+        >>> {'test-pollutant': 0.01}
+        >>> {'test-pollutant': 0.02}
+        >>> {'test-pollutant': 0.03}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        totalLoad_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.totalLoad.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = totalLoad_array[ind]
+
+        return out_dict
 
 
 class Conduit(Link):

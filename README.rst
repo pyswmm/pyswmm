@@ -9,6 +9,8 @@ Development
 	https://github.com/OpenWaterAnalytics/pyswmm/
 PySWMM Wiki
 	https://github.com/OpenWaterAnalytics/pyswmm/wiki/
+Cite our Paper
+	McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020). PySWMM: The Python Interface to Stormwater Management Model (SWMM). *Journal of Open Source Software, 5*\ (52), 2292, https://doi.org/10.21105/joss.02292
 
 Build status
 ------------
@@ -16,7 +18,7 @@ Build status
 
 Project information
 -------------------
-|docs| |license| |pypi version| |downloads|
+|docs| |license| |pypi version| |downloads| |cite|
 
 .. |appveyor status| image:: https://ci.appveyor.com/api/projects/status/gm3ci07gmkoyaeol/branch/master?svg=true
    :target: https://ci.appveyor.com/project/bemcdonnell/pyswmm
@@ -36,6 +38,9 @@ Project information
 .. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
    :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+.. |cite| image:: https://joss.theoj.org/papers/10.21105/joss.02292/status.svg
+   :target: https://doi.org/10.21105/joss.02292
+   :alt: Cite our Paper
 
 
 YouTube Examples
@@ -54,6 +59,9 @@ With PySWMM you can load and manipulate USEPA Stormwater Management Models.
 With the development of PySWMM, control algorithms can now be developed exclusively
 in Python which allows the use of functions and objects as well as storing and
 tracking hydraulic trends for control actions.
+
+As of version v1.1.0, PySWMM includes new features to proccess metadata and timeseries
+stored in SWMM binary output file.
 
 Who uses PySWMM?
 ----------------
@@ -139,6 +147,21 @@ approach requires some clean up.
 >>>
 >>> sim.close()
 
+Opening a SWMM binary output file and accessing model metadata and
+timeseries.
+
+>>> from swmm.toolkit.shared_enum import SubcatchAttribute, NodeAttribute, LinkAttribute
+>>> from pyswmm import Output
+>>>
+>>> with Output('model.out') as out:
+...     print(len(out.subcatchments))
+...     print(len(out.nodes))
+...     print(len(out.links))
+...     print(out.version)
+...     sub_ts = out.subcatch_series('S1', SubcatchAttribute.RUNOFF_RATE)
+...     node_ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH)
+...     link_ts = out.link_series('C2', LinkAttribute.FLOW_RATE)
+
 Bugs
 ----
 
@@ -148,23 +171,18 @@ GitHub and create a pull request.  All changes are welcome, big or small, and we
 will help you make the pull request if you are new to git
 (just ask on the issue).
 
+Contributing
+------------
+Please check out our Wiki https://github.com/OpenWaterAnalytics/pyswmm/wiki
+for more information on contributing, including an Author Contribution Checklist.
+
 License
 -------
 
 Distributed with a BSD2 license; see LICENSE.txt::
 
-   Copyright (C) 2014 PySWMM Developers
-   Bryant E. McDonnell <bemcdonnell@gmail.com>
-
-Powered By
-----------
-
-EmNet LLC:
-	.. image:: http://emnet.net/templates/emnet/images/footer_logo.png
-	  :target: http://emnet.net/
-Open Storm:
-    .. image:: https://avatars2.githubusercontent.com/u/28744644?v=3&s=200
-      :target: http://open-storm.org/
+   Copyright (C) 2014-2022 PySWMM Developers
+   Community-Owned See AUTHORS and CITATION.cff
 
 Acknowledgements
 ----------------

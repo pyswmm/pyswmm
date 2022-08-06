@@ -6,10 +6,11 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Nodes module for the pythonic interface to SWMM5."""
+from swmm.toolkit import shared_enum
 
 # Local imports
 from pyswmm.swmm5 import PYSWMMException
-from pyswmm.toolkitapi import NodeParams, NodeResults, NodeType, ObjectType
+from pyswmm.toolkitapi import NodeParams, NodeResults, NodePollut, NodeType, ObjectType
 
 
 class Nodes(object):
@@ -186,7 +187,7 @@ class Node(object):
         ...     print j1.is_junction()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is NodeType.junction.value
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.JUNCTION
 
     def is_outfall(self):
         """
@@ -204,7 +205,7 @@ class Node(object):
         ...     print j1.is_outfall()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is NodeType.outfall.value
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.OUTFALL
 
     def is_storage(self):
         """
@@ -222,7 +223,7 @@ class Node(object):
         ...     print j1.is_storage()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is NodeType.storage.value
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.STORAGE
 
     def is_divider(self):
         """
@@ -240,7 +241,7 @@ class Node(object):
         ...     print j1.is_divider()
         >>> True
         """
-        return self._model.getNodeType(self._nodeid) is NodeType.divider.value
+        return self._model.getNodeType(self._nodeid) is shared_enum.NodeType.DIVIDER
 
     @property
     def invert_elevation(self):
@@ -684,14 +685,43 @@ class Node(object):
         """
         Get Cumulative Node Loading.
 
-        If Simulation is not running this method will raise a warning and
-        return 0.
-
         :return: Cumulative Volume
         :rtype: float
         """
         value = self._model.node_inflow(self.nodeid)
         return value
+
+    @property
+    def pollut_quality(self):
+        """
+        Get Current Water Quality Values for a Node.
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Nodes
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     J1 = Nodes(sim)["J1"]
+        ...     for step in sim:
+        ...         print(J1.pollut_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getNodePollut(self._nodeid,
+                                                      NodePollut.nodeQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
+
+        return out_dict
 
     @property
     def statistics(self):

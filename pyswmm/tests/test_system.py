@@ -19,7 +19,7 @@ def test_system_flow_routing():
         stats = SystemStats(sim)
 
         print(r"\n\n\System\n")
-        with pytest.raises(SWMMException):
+        with pytest.raises(Exception):
             print(stats.routing_stats)
 
         sim.step_advance(1200)
@@ -32,7 +32,7 @@ def test_system_runoff_routing():
         stats = SystemStats(sim)
 
         print("\n\nRunoff Routing\n\n")
-        with pytest.raises(SWMMException):
+        with pytest.raises(Exception):
             print(stats.runoff_stats)
 
         sim.step_advance(1200)
