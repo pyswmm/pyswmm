@@ -5,4 +5,4 @@ pytest
 julian==0.14
 swmm-toolkit==0.9.0
 aenum==2.2.6
-
+aenum==3.1.11
