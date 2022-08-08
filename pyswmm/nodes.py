@@ -744,7 +744,7 @@ class Node(object):
         
         Examples:
 
-        >>> from pyswmm import Simulation, Links
+        >>> from pyswmm import Simulation, Nodes
         >>>
         >>> with Simulation('tests/buildup-test.inp') as sim:
         ...     Tank = Nodes(sim)["Tank"]

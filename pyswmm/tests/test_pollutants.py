@@ -16,7 +16,6 @@ from pyswmm.tests.data import (MODEL_POLLUTANTS_PATH,
                                MODEL_POLLUTANTS_SETTERS_PATH)
 import pyswmm.toolkitapi as tka
 
-
 def test_pollutants_allobjects_quality():
     with Simulation(MODEL_POLLUTANTS_PATH) as sim:
         S1 = Subcatchments(sim)["S1"]
