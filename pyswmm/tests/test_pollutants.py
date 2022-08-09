@@ -105,7 +105,7 @@ def test_pollutants_link_reactor():
             #print(C1.reactor_quality)
             pass
 
-        assert 9.999999999999932 <= C1.reactor_quality['test-pollutant'] <= 10.000000000000002
+        assert abs(10.000000000000002 - C1.reactor_quality['test-pollutant']) <= 10E-6
 
 def test_pollutants_node_reactor():
     # Test reactor_quality in nodes
@@ -116,7 +116,9 @@ def test_pollutants_node_reactor():
             #print(Tank.reactor_quality)
             pass
 
-        assert 2.30 <= Tank.reactor_quality['P1'] <= 2.302266769180957
+        assert abs(2.302266769180957 - Tank.reactor_quality['P1']) <= 10E-6
+
+        #assert 2.30 <= Tank.reactor_quality['P1'] <= 2.302266769180957
 
 def test_pollutants_node_inflow():
     # Test inflow_quality in nodes
@@ -127,7 +129,7 @@ def test_pollutants_node_inflow():
             #print(Tank.inflow_quality)
             pass
 
-        assert 9.999999999999999 <=Tank.inflow_quality['P1'] <= 10.000000000000002
+        assert abs(10.000000000000002 - Tank.inflow_quality['P1']) <= 10E-6
 
 def test_pollutants_node_setter():
     # Test pollutant getters and setters in nodes
