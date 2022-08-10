@@ -1153,7 +1153,7 @@ class PySWMM(object):
         Get water quality results from a Node.
 
         :param str ID: Node ID
-        :param int result_type: parameter (toolkitapi.NodePollut)
+        :param int result_type: parameter (toolkitapi.NodePollut member value)
         :rtype: list
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
@@ -1194,8 +1194,8 @@ class PySWMM(object):
         Get water quality results from a Link.
 
         :param str ID: Link ID
-        :param int result_type:  parameter (toolkitapi.LinkPollut)
-        :return: Pollutant Values
+        :param int result_type:  parameter (toolkitapi.LinkPollut member value)
+        :return: Pollutant Value
         :rtype: list
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
@@ -1517,6 +1517,29 @@ class PySWMM(object):
         index = self.getObjectIDIndex(tka.ObjectType.GAGE.value, ID)
         solver.raingage_set_precipitation(index, value)
 
+    def setNodePollut(self, ID, pollutant_ID, pollutant_value):
+        """
+        Set water quality results in a Node.
+
+        :param str ID: Node ID
+        :param str pollutant_ID
+        :param float pollutant_value: pollutant value to set
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
+        pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
+        solver.node_set_pollutant(index, tka.NodePollut.nodeQual.value, pollutant_index, pollutant_value)
+
+    def setLinkPollut(self, ID, pollutant_ID, pollutant_value):
+        """
+        Set water quality results in a Link.
+
+        :param str ID: Link ID
+        :param str ID: Pollutant ID
+        :param float pollutant_value: pollutant value to set
+        """
+        index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
+        pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
+        solver.link_set_pollutant(index, tka.LinkPollut.linkQual.value, pollutant_index, pollutant_value)
 
 if __name__ == '__main__':
     test = PySWMM(

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright (c) 2017 Katherine M. Ratliff
+# Modified 2022 Brooke E. Mason
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -9,10 +10,13 @@
 # Local imports
 from pyswmm import Simulation, Subcatchments, Links, Nodes
 # from pyswmm.swmm5 import PySWMM
-from pyswmm.tests.data import MODEL_POLLUTANTS_PATH
+from pyswmm.tests.data import (MODEL_POLLUTANTS_PATH, 
+                               MODEL_POLLUTANTS_PATH_2,
+                               MODEL_POLLUTANTS_PATH_3,
+                               MODEL_POLLUTANTS_SETTERS_PATH)
+import pyswmm.toolkitapi as tka
 
-
-def test_pollutants_1():
+def test_pollutants_allobjects_quality():
     with Simulation(MODEL_POLLUTANTS_PATH) as sim:
         S1 = Subcatchments(sim)["S1"]
         S2 = Subcatchments(sim)["S2"]
@@ -91,3 +95,63 @@ def test_pollutants_1():
         assert J2.pollut_quality['test-pollutant'] == 0.0
         assert J3.pollut_quality['test-pollutant'] == 0.0
         assert J4.pollut_quality['test-pollutant'] == 0.0
+
+def test_pollutants_link_reactor():
+    # Test reactor_quality in links
+    with Simulation(MODEL_POLLUTANTS_PATH_2) as sim:
+        C1 = Links(sim)["C1"]
+
+        for step in sim:
+            #print(C1.reactor_quality)
+            pass
+
+        assert abs(10.000000000000002 - C1.reactor_quality['test-pollutant']) <= 10E-6
+
+def test_pollutants_node_reactor():
+    # Test reactor_quality in nodes
+    with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
+        Tank = Nodes(sim)["Tank"]
+        
+        for step in sim:
+            #print(Tank.reactor_quality)
+            pass
+
+        assert abs(2.302266769180957 - Tank.reactor_quality['P1']) <= 10E-6
+
+        #assert 2.30 <= Tank.reactor_quality['P1'] <= 2.302266769180957
+
+def test_pollutants_node_inflow():
+    # Test inflow_quality in nodes
+    with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
+        Tank = Nodes(sim)["Tank"]
+        
+        for step in sim:
+            #print(Tank.inflow_quality)
+            pass
+
+        assert abs(10.000000000000002 - Tank.inflow_quality['P1']) <= 10E-6
+
+def test_pollutants_node_setter():
+    # Test pollutant getters and setters in nodes
+    with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
+        Tank = Nodes(sim)["Tank"]
+
+        for step in sim:
+            #sim._model.setNodePollut("Tank", "P1", 100)
+            Tank.pollut_quality = ('P1', 100)
+            #print(Tank.pollut_quality['P1'])
+            
+        assert Tank.pollut_quality['P1'] == 100.0
+
+def test_pollutants_link_setter():
+    # Test pollutant getters and setters in links
+    with Simulation(MODEL_POLLUTANTS_SETTERS_PATH) as sim:
+        C1 = Links(sim)["C1"]
+
+        for step in sim:
+            #sim._model.setLinkPollut("C1", "test-pollutant", 100)
+            C1.pollut_quality = ('test-pollutant', 100)
+            #print(C1.pollut_quality['test-pollutant']) 
+
+        assert C1.pollut_quality['test-pollutant'] == 100.0
+

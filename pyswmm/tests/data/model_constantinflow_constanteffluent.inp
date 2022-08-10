@@ -1,0 +1,133 @@
+[TITLE]
+;;Project Title/Notes
+
+[OPTIONS]
+;;Option             Value
+FLOW_UNITS           CMS
+INFILTRATION         HORTON
+FLOW_ROUTING         KINWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        NO
+SKIP_STEADY_STATE    NO
+
+START_DATE           01/27/2020
+START_TIME           00:00:00
+REPORT_START_DATE    01/27/2020
+REPORT_START_TIME    00:00:00
+END_DATE             01/27/2020
+END_TIME             00:30:00
+SWEEP_START          01/01
+SWEEP_END            02/28
+DRY_DAYS             0
+REPORT_STEP          00:00:01
+WET_STEP             00:00:01
+DRY_STEP             00:00:01
+ROUTING_STEP         0:00:01 
+
+INERTIAL_DAMPING     PARTIAL
+NORMAL_FLOW_LIMITED  BOTH
+FORCE_MAIN_EQUATION  H-W
+VARIABLE_STEP        0.75
+LENGTHENING_STEP     0
+MIN_SURFAREA         1.14
+MAX_TRIALS           8
+HEAD_TOLERANCE       0.0015
+SYS_FLOW_TOL         5
+LAT_FLOW_TOL         5
+MINIMUM_STEP         0.5
+THREADS              1
+
+[EVAPORATION]
+;;Data Source    Parameters
+;;-------------- ----------------
+CONSTANT         0.0
+DRY_ONLY         NO
+
+[OUTFALLS]
+;;Name           Elevation  Type       Stage Data       Gated    Route To        
+;;-------------- ---------- ---------- ---------------- -------- ----------------
+Outfall          0          FREE                        NO                       
+
+[STORAGE]
+;;Name           Elev.    MaxDepth   InitDepth  Shape      Curve Name/Params            N/A      Fevap    Psi      Ksat     IMD     
+;;-------------- -------- ---------- ----------- ---------- ---------------------------- -------- --------          -------- --------
+Tank             10       5          0          TABULAR    Tank_Curve                   0        0       
+
+[ORIFICES]
+;;Name           From Node        To Node          Type         Offset     Qcoeff     Gated    CloseTime 
+;;-------------- ---------------- ---------------- ------------ ---------- ---------- -------- ----------
+Valve            Tank             Outfall          BOTTOM       0          1          NO       0         
+
+[XSECTIONS]
+;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
+;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
+Valve            RECT_CLOSED  1                1          0          0    
+
+[POLLUTANTS]
+;;Name           Units  Crain      Cgw        Crdii      Kdecay     SnowOnly   Co-Pollutant     Co-Frac    Cdwf       Cinit     
+;;-------------- ------ ---------- ---------- ---------- ---------- ---------- ---------------- ---------- ---------- ----------
+P1               MG/L   0.0        0.0        0          0.0        NO         *                0.0        0.0        0         
+
+
+[INFLOWS]
+;;Node           Constituent      Time Series      Type     Mfactor  Sfactor  Baseline Pattern
+;;-------------- ---------------- ---------------- -------- -------- -------- -------- --------
+Tank             FLOW             ""               FLOW     1.0      1.0      5                
+Tank             P1               ""               CONCENTRATION     1.0      1.0	10                    
+
+[TREATMENT]
+;;Node           Pollutant        Function  
+;;-------------- ---------------- ----------
+Tank             P1               C = 2.0
+
+[CURVES]
+;;Name           Type       X-Value    Y-Value   
+;;-------------- ---------- ---------- ----------
+Tank_Curve       Storage    0          100       
+Tank_Curve                  1          100       
+Tank_Curve                  2          100       
+Tank_Curve                  3          100       
+Tank_Curve                  4          100       
+Tank_Curve                  5          100       
+
+[TIMESERIES]
+;;Name           Date       Time       Value     
+;;-------------- ---------- ---------- ----------
+TestRain                    1          0         
+TestRain                    2          0.5       
+TestRain                    3          0.75      
+TestRain                    4          1         
+TestRain                    5          0.75      
+TestRain                    6          0.5       
+TestRain                    7          0         
+
+[PATTERNS]
+;;Name           Type       Multipliers
+;;-------------- ---------- -----------
+DailyX1          DAILY      1.0   1.0   1.0   1.0   1.0   1.0   1.0  
+
+[REPORT]
+;;Reporting Options
+INPUT      NO
+CONTROLS   NO
+SUBCATCHMENTS ALL
+NODES ALL
+LINKS ALL
+
+[TAGS]
+
+[MAP]
+DIMENSIONS 0.000 0.000 10000.000 10000.000
+Units      None
+
+[COORDINATES]
+;;Node           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+Outfall          -178.777           6435.986          
+Tank             -1101.499          6828.143          
+
+[VERTICES]
+;;Link           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+
