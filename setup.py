@@ -38,7 +38,9 @@ def get_description():
     return data
 
 
-REQUIREMENTS = ['swmm-toolkit==0.9.0', 'julian==0.14', 'aenum==3.1.11']
+REQUIREMENTS = ['swmm-toolkit>=0.9.0',
+                'julian>=0.14',
+                'aenum>=3.1.11']
 
 
 setup(
