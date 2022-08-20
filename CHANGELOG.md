@@ -1,5 +1,11 @@
 # History of changes
 
+## Version 1.2.0 (2022/08/20)
+
+### New Feature
+
+* [Issue 230](https://github.com/OpenWaterAnalytics/pyswmm/issues/230) - Pollutant treatment enhancements
+
 ## Version 1.1.1 (2022/01/11)
 
 ### Issues Closed
