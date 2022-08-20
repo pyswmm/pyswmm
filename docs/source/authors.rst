@@ -26,3 +26,4 @@ Authors with Contributions in the Public Domain
 
 - Michael Tryby
 - Katherine Ratliff
+- Brooke Mason

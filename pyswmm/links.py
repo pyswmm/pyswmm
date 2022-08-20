@@ -874,7 +874,7 @@ class Link(object):
         >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('tests/buildup-test.inp') as sim:
-        ...     C1 = Nodes(sim)["C1"]
+        ...     C1 = Links(sim)["C1"]
         ...     for step in sim:
         ...         print(C1.pollut_quality)
         >>> {'test-pollutant': 0.0}
@@ -890,6 +890,29 @@ class Link(object):
             out_dict[pollut_ids[ind]] = quality_array[ind]
 
         return out_dict
+
+    @pollut_quality.setter
+    def pollut_quality(self, args):
+        """
+        Set Current Link Water Quality Value
+        
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Links(sim)["C1"]
+        ...     for step in sim:
+        ...         C1.pollut_quality = ('test-pollutant', 100)
+                    print(C1.pollut_quality)
+        >>> {'test-pollutant': 100.0}
+        >>> {'test-pollutant': 100.0}
+        >>> {'test-pollutant': 100.0}
+        """
+
+        pollutant_ID, pollutant_value = args
+
+        self._model.setLinkPollut(self._linkid, pollutant_ID, pollutant_value)
 
     @property
     def total_loading(self):
@@ -907,7 +930,7 @@ class Link(object):
         >>> from pyswmm import Simulation, Links
         >>>
         >>> with Simulation('tests/buildup-test.inp') as sim:
-        ...     C1 = Nodes(sim)["C1"]
+        ...     C1 = Links(sim)["C1"]
         ...     for step in sim:
         ...         print(C1.total_loading)
         >>> {'test-pollutant': 0.01}
@@ -921,6 +944,38 @@ class Link(object):
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = totalLoad_array[ind]
+
+        return out_dict
+
+    @property
+    def reactor_quality(self):
+        """
+        Get Current Water Quality Values for the mixed reactor inside a Link.
+        If Simulation is not running this method will raise a warning and
+        return 0.
+
+        :return: Group of Water Quality Values.
+        :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>>
+        >>> with Simulation('tests/buildup-test.inp') as sim:
+        ...     C1 = Links(sim)["C1"]
+        ...     for step in sim:
+        ...         print(C1.reactor_quality)
+        >>> {'test-pollutant': 0.0}
+        >>> {'test-pollutant': 120.0}
+        >>> {'test-pollutant': 120.0}
+        """
+        out_dict = {}
+        pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
+        quality_array = self._model.getLinkPollut(self._linkid,
+                                                      LinkPollut.linkQual.value)
+
+        for ind in range(len(pollut_ids)):
+            out_dict[pollut_ids[ind]] = quality_array[ind]
 
         return out_dict
 
