@@ -4,8 +4,8 @@
 # gedit files
 *~
 
-# kate files
-.directory
+# virtual environment
+venv/
 
 # Python special dirs and files
 *.egg-info
