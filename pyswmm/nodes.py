@@ -669,7 +669,7 @@ class Node(object):
         :rtype: float
         """
         return self._model.getNodeResult(self._nodeid,
-                                         NodeResults.hrt.value)
+                                         NodeResults.hyd_res_time.value)
 
     def generated_inflow(self, inflowrate):
         """
