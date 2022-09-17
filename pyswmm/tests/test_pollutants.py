@@ -34,36 +34,6 @@ def test_pollutants_allobjects_quality():
 
         for step in sim:
             pass
-            # print(S1.buildup)
-            # print(S2.buildup)
-            # print(S3.buildup)
-
-            # print(S1.conc_ponded)
-            # print(S2.conc_ponded)
-            # print(S3.conc_ponded)
-
-            # print(S1.pollut_quality)
-            # print(S2.pollut_quality)
-            # print(S3.pollut_quality)
-
-            # print(S1.runoff_total_loading)
-            # print(S2.runoff_total_loading)
-            # print(S3.runoff_total_loading)
-
-            # print(C1.pollut_quality)
-            # print(C2.pollut_quality)
-            # print(C3.pollut_quality)
-            # print(C4.pollut_quality)
-
-            # print(C1.total_loading)
-            # print(C2.total_loading)
-            # print(C3.total_loading)
-            # print(C4.total_loading)
-
-            # print(J1.pollut_quality)
-            # print(J2.pollut_quality)
-            # print(J3.pollut_quality)
-            # print(J4.pollut_quality)
 
         assert S1.buildup['test-pollutant'] == 25.000
         assert S2.buildup['test-pollutant'] == 25.000
@@ -155,3 +125,9 @@ def test_pollutants_link_setter():
 
         assert C1.pollut_quality['test-pollutant'] == 100.0
 
+def test_pollutants_node_hrt():
+    # Test node hrt
+    with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
+        Tank = Nodes(sim)['Tank']
+        for _ in sim:
+            assert Tank.hydraulic_retention_time is not None
