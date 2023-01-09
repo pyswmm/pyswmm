@@ -23,7 +23,6 @@ Reference
    subcatchments
    system
    output
-   lib
    legal
 
 .. only:: html

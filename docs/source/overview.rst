@@ -54,7 +54,7 @@ https://github.com/OpenWaterAnalytics/pyswmm
 What Next
 ^^^^^^^^^
 
- - :doc:`A Brief Tour </tutorial/tutorial>`
+ - :doc:`A Brief Tour </tutorial>`
 
  - :doc:`Installing </install>`
 

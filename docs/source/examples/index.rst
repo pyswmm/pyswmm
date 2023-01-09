@@ -8,7 +8,7 @@ Examples
 
    examples
 
-See the :doc:`Tutorial </tutorial/tutorial>` for a guided tour
+See the :doc:`Tutorial </tutorial>` for a guided tour
 on using PySWMM.
 
 The :doc:`Reference Section </reference/index>` provides details on PySWMM.
