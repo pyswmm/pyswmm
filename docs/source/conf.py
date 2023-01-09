@@ -149,7 +149,8 @@ html_theme_options = {
             "url": "https://pypi.org/project/pyswmm",
             "icon": "fa-solid fa-box",
         }
-    ]
+    ],
+    "footer_items": ["copyright"],
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
