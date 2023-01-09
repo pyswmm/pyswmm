@@ -38,7 +38,9 @@ def get_description():
     return data
 
 
-REQUIREMENTS = ['swmm-toolkit==0.9.0', 'julian==0.14']
+REQUIREMENTS = ['swmm-toolkit>=0.9.0',
+                'julian>=0.14',
+                'aenum>=3.1.11']
 
 
 setup(
@@ -48,7 +50,6 @@ setup(
     long_description=get_description(),
     url='https://github.com/OpenWaterAnalytics/pyswmm/wiki',
     author='Bryant E. McDonnell (See AUTHORS)',
-    author_email='bemcdonnell@gmail.com',
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
@@ -64,8 +65,10 @@ setup(
         "Operating System :: Unix",
         "Operating System :: MacOS",
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
-        "Programming Language :: C",
-        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python",
+        "Development Status :: 5 - Production/Stable",
     ])

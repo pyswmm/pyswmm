@@ -34,7 +34,6 @@ labels.txt
 
 # SWMM files
 *.out
-#*.ini
 *.rpt
 *.mp4
 *.chi

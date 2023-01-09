@@ -67,61 +67,63 @@ def test_pollutants_allobjects_quality():
         assert J4.pollut_quality['test-pollutant'] == 0.0
 
 def test_pollutants_link_reactor():
-    # Test reactor_quality in links
+    """
+    Test pollutant getter: concentration in the link 
+    """
     with Simulation(MODEL_POLLUTANTS_PATH_2) as sim:
         C1 = Links(sim)["C1"]
 
         for step in sim:
-            #print(C1.reactor_quality)
             pass
 
         assert abs(10.000000000000002 - C1.reactor_quality['test-pollutant']) <= 10E-6
 
 def test_pollutants_node_reactor():
-    # Test reactor_quality in nodes
+    """
+    Test pollutant getter: concentration in the node 
+    """
     with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
         Tank = Nodes(sim)["Tank"]
         
         for step in sim:
-            #print(Tank.reactor_quality)
             pass
 
         assert abs(2.302266769180957 - Tank.reactor_quality['P1']) <= 10E-6
 
-        #assert 2.30 <= Tank.reactor_quality['P1'] <= 2.302266769180957
 
 def test_pollutants_node_inflow():
-    # Test inflow_quality in nodes
+    """
+    Test pollutant getter: inflow concentration into a node
+    """
     with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
         Tank = Nodes(sim)["Tank"]
         
         for step in sim:
-            #print(Tank.inflow_quality)
             pass
 
         assert abs(10.000000000000002 - Tank.inflow_quality['P1']) <= 10E-6
 
 def test_pollutants_node_setter():
-    # Test pollutant getters and setters in nodes
+    """
+    Test pollutant setter in node
+    """
     with Simulation(MODEL_POLLUTANTS_PATH_3) as sim:
         Tank = Nodes(sim)["Tank"]
 
         for step in sim:
-            #sim._model.setNodePollut("Tank", "P1", 100)
             Tank.pollut_quality = ('P1', 100)
-            #print(Tank.pollut_quality['P1'])
             
         assert Tank.pollut_quality['P1'] == 100.0
 
 def test_pollutants_link_setter():
-    # Test pollutant getters and setters in links
+    """
+    Test pollutant setter in link
+    """
     with Simulation(MODEL_POLLUTANTS_SETTERS_PATH) as sim:
         C1 = Links(sim)["C1"]
 
         for step in sim:
-            #sim._model.setLinkPollut("C1", "test-pollutant", 100)
             C1.pollut_quality = ('test-pollutant', 100)
-            #print(C1.pollut_quality['test-pollutant']) 
 
         assert C1.pollut_quality['test-pollutant'] == 100.0
 

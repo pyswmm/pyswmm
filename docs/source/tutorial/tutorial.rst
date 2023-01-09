@@ -312,8 +312,8 @@ using the LidGroup object.
 	... 		print(lid)
 	... 	print(lid_on_sub[0])
 	... 	for step in sim:
-	... 		print(lid_on_sub.WaterBalance.inflow)
-	... 		print(lid_on_sub.WaterBalance.evaporation)
+	... 		print(lid_on_sub.water_balance.inflow)
+	... 		print(lid_on_sub.water_balance.evaporation)
     
 All LidUnits parameters can be accessed before and during model simulations. 
 All LidUnits parameters can be set before model simulation. Only some LidUnits parameters can be set 
