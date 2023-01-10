@@ -28,7 +28,7 @@ Check out the website for some basic Examples!!!
 
 Stream Results and Adjust Weir Setting
 	.. image:: http://img.youtube.com/vi/U5Z0NXTEjHE/0.jpg
-	  :target: http://www.youtube.com/watch?v=U5Z0NXTEjHE
+	  :target: https://www.youtube.com/watch?v=3Od5PG1PMuY
 
 Overview
 --------
