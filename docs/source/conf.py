@@ -123,6 +123,13 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 # keep_warnings = False
 
+
+autodoc_default_options = {
+    'member-order': 'bysource',
+    'undoc-members': True,
+    'inherited-members' : False
+}
+
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
@@ -148,6 +155,13 @@ html_theme_options = {
             "name": "PyPI",
             "url": "https://pypi.org/project/pyswmm",
             "icon": "fa-solid fa-box",
+        },
+        {
+            "name":"pyswmm.org",
+            "url":"https://www.pyswmm.org",
+            "icon": "_static/icon-logo-grey.png",
+            "type": "local",
+
         }
     ],
     "footer_items": ["copyright"],
