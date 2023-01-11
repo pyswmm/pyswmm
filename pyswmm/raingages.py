@@ -131,7 +131,7 @@ class RainGage(object):
     >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
     ...     rg1 = Raingages(sim)["Gage1"]
     ...     print(rg1.raingageid)
-    ...     for step in simulation:
+    ...     for step in sim:
     ...         print(rg1.total_precip)
     ... Gage1
     ... 0

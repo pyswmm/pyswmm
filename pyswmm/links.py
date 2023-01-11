@@ -130,7 +130,7 @@ class Link(object):
     >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
     ...     c1c2 = Links(sim)["C1:C2"]
     ...     print(c1c2.flow)
-    ...     for step in simulation:
+    ...     for step in sim:
     ...         print(c1c2.flow)
     0.0
     """
@@ -1035,6 +1035,37 @@ class Conduit(Link):
 
         :return: Group of Stats
         :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>> import pprint
+        >>> pp = pprint.PrettyPrinter(indent=4)
+        >>>
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:        
+        ...     c1c2 = Links(sim)["C1:C2"]
+        ...     print(c1c2.flow)
+        ...     for step in sim:
+        ...         pass
+        ...     pp.pprint(c1c2.conduit_statistics)        
+        o  Retrieving project data
+        {   'flow_turn_sign': -1,
+            'flow_turns': 1,
+            'peak_depth': 0.8744979811226141,
+            'peak_flow': 9.612897240188659,
+            'peak_flow_date': 42310.00000579861,
+            'peak_velocity': 13.200109870715737,
+            'time_capacity_limited': 0.0,
+            'time_courant_crit': 0.0,
+            'time_full_downstream': 0.0,
+            'time_full_flow': 57.98847222222222,
+            'time_full_upstream': 57.98902777777778,
+            'time_in_flow_class': <Swig Object of type 'DateTime *' at 0x7f7d591269a0>,
+            'time_inlet_control': 0.0,
+            'time_normal_flow': 0.0001388888888888889,
+            'time_surcharged': 0.0
+        }
+
         """
         return self._model.conduit_statistics(self.linkid)
 
@@ -1077,5 +1108,29 @@ class Pump(Link):
 
         :return: Group of Stats
         :rtype: dict
+
+        Examples:
+
+        >>> from pyswmm import Simulation, Links
+        >>> import pprint
+        >>> pp = pprint.PrettyPrinter(indent=4)
+        >>>        
+        >>> with Simulation('tests/data/model_pump_setting.inp') as sim:        
+        ...     c3 = Links(sim)["C3"]
+        ...     for step in sim:
+        ...         pass
+        ...     pp.pprint(c3.pump_statistics)        
+        o  Retrieving project data
+        {   'average_flowrate': 20.0,
+            'energy_consumed': 2792.5975765384896,
+            'max_flowrate': 20.0,
+            'min_flowrate': 0.0,
+            'number_startups': 1,
+            'off_curve_high': 0.0,
+            'off_curve_low': 0.0,
+            'percent_utilized': 208800.0,
+            'total_periods': 208801,
+            'total_volume': 4176000.0
+        }
         """
         return self._model.pump_statistics(self.linkid)

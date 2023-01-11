@@ -136,7 +136,7 @@ class Node(object):
     >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
     ...     j1 = Nodes(sim)["J1"]
     ...     print(j1.invert_el)
-    ...     for step in simulation:
+    ...     for step in sim:
     ...         print(j1.depth)
     0.0
     """
