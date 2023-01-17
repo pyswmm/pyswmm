@@ -64,8 +64,6 @@ class LidControls(object):
         else:
             raise StopIteration()
 
-    next = __next__  # Python 2
-
     @property
     def _lidcontrolid(self):
         """Lid Control ID."""

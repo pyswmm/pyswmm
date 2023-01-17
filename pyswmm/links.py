@@ -108,8 +108,6 @@ class Links(object):
         else:
             raise StopIteration()
 
-    next = __next__  # Python 2
-
     @property
     def _linkid(self):
         """Link ID."""

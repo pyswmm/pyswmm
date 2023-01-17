@@ -135,8 +135,6 @@ class Simulation(object):
             raise StopIteration
         return self._model
 
-    next = __next__  # Python 2
-
     def __exit__(self, *a):
         """close"""
         if self._isStarted:

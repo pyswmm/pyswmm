@@ -109,8 +109,6 @@ class RainGages(object):
         else:
             raise StopIteration()
 
-    next = __next__  # Python 2
-
     @property
     def _raingageid(self):
         """Node ID."""

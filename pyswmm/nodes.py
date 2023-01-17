@@ -114,8 +114,6 @@ class Nodes(object):
         else:
             raise StopIteration()
 
-    next = __next__  # Python 2
-
     @property
     def _nodeid(self):
         """Node ID."""
