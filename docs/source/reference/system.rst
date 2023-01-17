@@ -2,7 +2,7 @@
 
 .. currentmodule:: pyswmm.system
 
-system module
+System Module
 =============
 
 .. automodule:: pyswmm.system

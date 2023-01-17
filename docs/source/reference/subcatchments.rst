@@ -2,10 +2,14 @@
 
 .. currentmodule:: pyswmm.subcatchments
 
-subcatchments module
+Subcatchments Module
 ====================
 
-.. automodule:: pyswmm.subcatchments
-    :members: Subcatchments, Subcatchment
-    :undoc-members:
-    :show-inheritance:
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
+
+   Subcatchments
+   Subcatchment
+
+

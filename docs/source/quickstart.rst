@@ -1,8 +1,8 @@
 ..  -*- coding: utf-8 -*-
 
-========
-Tutorial
-========
+============
+Quick Start
+============
 
 Start here to begin working with pyswmm.
 

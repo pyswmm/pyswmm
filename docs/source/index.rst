@@ -33,11 +33,11 @@ More information about pyswmm can be found at the `official pyswmm website`_.
     ---
     :img-top: _static/power.svg
 
-    Tutorials
+    Quick Start
     ^^^^^^^^^^
 
-    The tutorials provide sample code snippets for various use cases of pyswmm.
-    This is the perfect place to jump-start your own project with pswmm.
+    The quick start section provides sample code snippets for various use cases of pyswmm.
+    This is the perfect place to jump-start your own project with pyswmm.
 
     +++
 
@@ -52,8 +52,8 @@ More information about pyswmm can be found at the `official pyswmm website`_.
     API reference
     ^^^^^^^^^^^^^
 
-    The API reference provides a catalogue of all docstrings written in pswmm.
-    It lays out the modules, functions, and classes provided in pswmm like and encyclopedia.
+    The API reference provides a catalogue of all docstrings written in pyswmm.
+    It lays out the modules, functions, and classes provided in pyswmm like and encyclopedia.
 
     +++
 
@@ -65,19 +65,17 @@ More information about pyswmm can be found at the `official pyswmm website`_.
     ---
     :img-top: _static/coffee.svg
 
-    Examples
-    ^^^^^^^^^^^^^
+    Video Tutorials
+    ^^^^^^^^^^^^^^^^
 
-    Stand-alone example projects can be found here so you can
-    try out pyswmm without needing your own model and data.
+    The pyswmm development team is putting together a video 
+    tutorial series the covers the various use cases of pyswmm.
 
     +++
 
-    .. link-button:: https://www.pyswmm.org/examples
-            :text: Examples!
+    .. link-button:: https://www.pyswmm.org/tutorial
+            :text: Video Tutorials!
             :classes: btn-block btn-secondary stretched-link
-
-
 
 .. toctree::
    :maxdepth: 2
@@ -85,7 +83,7 @@ More information about pyswmm can be found at the `official pyswmm website`_.
 
    overview
    install
-   tutorial
+   quickstart
    reference/index
    Examples <https://www.pyswmm.org/examples>
    authors

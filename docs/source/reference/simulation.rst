@@ -2,10 +2,11 @@
 
 .. currentmodule:: pyswmm.simulation
 
-simulation module
+Simulation Module
 =================
 
-.. automodule:: pyswmm.simulation
-    :members: 
-    :undoc-members:
-    :show-inheritance:
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
+    
+    Simulation
