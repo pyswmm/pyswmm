@@ -48,9 +48,24 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['.templates']
+templates_path = ['_templates']
 
+
+autosummary_generate = True
+toc_object_entries = True
 toc_object_entries_show_parents ="domain"
+add_function_parentheses = True
+
+autodoc_member_order = "bysource"
+autodoc_typehints = "none"
+autoclass_content = "both"
+add_module_names = False
+
+autodoc_default_options = {
+    'member-order': 'bysource',
+    'undoc-members': True,
+    'inherited-members' : False
+}
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -124,12 +139,6 @@ pygments_style = 'sphinx'
 # keep_warnings = False
 
 
-autodoc_default_options = {
-    'member-order': 'bysource',
-    'undoc-members': True,
-    'inherited-members' : False
-}
-
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
@@ -165,6 +174,9 @@ html_theme_options = {
         }
     ],
     "footer_items": ["copyright"],
+    #"show_nav_level": 3,
+    "navigation_depth": 3,
+    "show_toc_level": 3
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
