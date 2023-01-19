@@ -27,8 +27,8 @@ Check out the website for some basic Examples!!!
 	`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
 
 Stream Results and Adjust Weir Setting
-	.. image:: http://img.youtube.com/vi/U5Z0NXTEjHE/0.jpg
-	  :target: https://www.youtube.com/watch?v=3Od5PG1PMuY
+	.. image:: http://img.youtube.com/vi/av8L5gNSBvI/0.jpg
+	  :target: https://youtu.be/av8L5gNSBvI
 
 Overview
 --------
