@@ -24,9 +24,9 @@ Examples
 --------
 Check out the website for some basic Examples!!!
 
-	`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
+`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
 
-Stream Results and Adjust Weir Setting
+Setting a manhole inflow during a running simulation!
 	.. image:: http://img.youtube.com/vi/av8L5gNSBvI/0.jpg
 	  :target: https://youtu.be/av8L5gNSBvI
 
