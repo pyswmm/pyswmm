@@ -2,7 +2,7 @@ PYSWMM
 ======
 
 
-|appveyor status| |travisci status| |docs| |license| |pypi version| |downloads| |cite|
+|gh actions| |docs| |license| |pypi version| |downloads| |cite|
 
 *Python Wrapper for Stormwater Management Model (SWMM5)*
 
@@ -154,6 +154,9 @@ Acknowledgements
 .. |travisci status| image:: https://travis-ci.org/OpenWaterAnalytics/pyswmm.svg?branch=master
    :target: https://travis-ci.org/OpenWaterAnalytics/pyswmm
    :alt: Travis-CI build status
+.. |gh actions| image:: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master
+   :target: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml
+   :alt: GitHub Actions Build Status
 .. |downloads| image:: https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month
    :target: https://pypi.python.org/pypi/pyswmm/
    :alt: PyPI Monthly Downloads
