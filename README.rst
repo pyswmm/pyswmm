@@ -140,7 +140,7 @@ License
 
 Distributed with a BSD2 license; see LICENSE.txt::
 
-   Copyright (C) 2014-2022 PySWMM Developers
+   Copyright (C) 2014-2023 PySWMM Developers
    Community-Owned See AUTHORS and CITATION.cff
 
 Acknowledgements
