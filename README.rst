@@ -1,6 +1,9 @@
 PYSWMM
 ======
 
+
+|appveyor status| |travisci status| |docs| |license| |pypi version| |downloads| |cite|
+
 *Python Wrapper for Stormwater Management Model (SWMM5)*
 
 Website
@@ -9,22 +12,15 @@ Video Tutorial Series:
 	`PySWMM YouTube Channel <https://www.youtube.com/channel/UCv-OYsz2moiMRzZIRhqbpHA/featured>`_
 Documentation
 	`PySWMM Documentation <http://pyswmm.readthedocs.io/en/latest/>`_
+Examples
+	`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
+:sos:Do you need HELP?:sos: 
+	We provide support on `Stack Overflow <https://stackoverflow.com/search?q=pyswmm>`_ or `GitHub Discussions <https://github.com/OpenWaterAnalytics/pyswmm/discussions>`_ to answer support questions related to PySWMM.
 Cite our Paper
 	McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020). PySWMM: The Python Interface to Stormwater Management Model (SWMM). *Journal of Open Source Software, 5*\ (52), 2292, https://doi.org/10.21105/joss.02292
 
-Build status
-------------
-|appveyor status| |travisci status|
-
-Project information
--------------------
-|docs| |license| |pypi version| |downloads| |cite|
-
-Examples
---------
-Check out the website for some basic Examples!!!
-
-`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
+YouTube Training Vidoes
+-----------------------
 
 Setting a manhole inflow during a running simulation!
 	.. image:: http://img.youtube.com/vi/av8L5gNSBvI/0.jpg
@@ -124,11 +120,6 @@ timeseries.
         sub_ts = out.subcatch_series('S1', SubcatchAttribute.RUNOFF_RATE)
         node_ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH)
         link_ts = out.link_series('C2', LinkAttribute.FLOW_RATE)
-
-Support
--------
-
-We are active on `Stack Overflow <https://stackoverflow.com/search?q=pyswmm>`_ to answer support questions related to PySWMM:
 
 Bugs
 ----
