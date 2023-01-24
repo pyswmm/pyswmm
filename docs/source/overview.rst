@@ -1,5 +1,6 @@
-..  -*- coding: utf-8 -*-
-
+.. image:: _static/banner.jpg
+  :alt: pyswmm banner
+  
 Overview
 ========
 

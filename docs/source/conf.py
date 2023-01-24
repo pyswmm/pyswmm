@@ -40,11 +40,14 @@ extensions = [
     'sphinx_panels',
     "sphinx.ext.autosummary",
     'sphinx.ext.autodoc',
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
     'sphinx.ext.intersphinx',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
+    'sphinx_copybutton',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -164,6 +167,16 @@ html_theme_options = {
             "name": "PyPI",
             "url": "https://pypi.org/project/pyswmm",
             "icon": "fa-solid fa-box",
+        },
+        {
+            "name": "YouTube",
+            "url": "https://www.youtube.com/@pyswmm",
+            "icon": "fa-brands fa-youtube",
+        },
+        {
+            "name": "LinkedIn",
+            "url": "https://www.linkedin.com/company/pyswmm/",
+            "icon": "fa-brands fa-linkedin",
         },
         {
             "name":"pyswmm.org",

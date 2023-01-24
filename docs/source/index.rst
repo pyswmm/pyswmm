@@ -1,5 +1,18 @@
+.. use raw html to hide the doc title show it is shows up in browser tab but not on page 
+.. https://github.com/sphinx-doc/sphinx/issues/8356#issuecomment-1201029122
+.. raw:: html
+
+   <div style="visibility: hidden;height:0px">
+
 PySWMM documentation
 =====================
+
+.. raw:: html
+
+   </div>
+
+.. image:: _static/banner.jpg
+  :alt: pyswmm banner
 
 **Date**: |today| **Version**: |version|
 
