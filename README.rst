@@ -1,6 +1,9 @@
 PYSWMM
 ======
 
+
+|gh actions| |docs| |license| |pypi version| |downloads| |cite|
+
 *Python Wrapper for Stormwater Management Model (SWMM5)*
 
 Website
@@ -9,26 +12,19 @@ Video Tutorial Series:
 	`PySWMM YouTube Channel <https://www.youtube.com/channel/UCv-OYsz2moiMRzZIRhqbpHA/featured>`_
 Documentation
 	`PySWMM Documentation <http://pyswmm.readthedocs.io/en/latest/>`_
+Examples
+	`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
+:sos:Do you need HELP?:sos: 
+	We provide support on `Stack Overflow <https://stackoverflow.com/search?q=pyswmm>`_ or `GitHub Discussions <https://github.com/OpenWaterAnalytics/pyswmm/discussions>`_ to answer support questions related to PySWMM.
 Cite our Paper
 	McDonnell, Bryant E., Ratliff, Katherine M., Tryby, Michael E., Wu, Jennifer Jia Xin, & Mullapudi, Abhiram. (2020). PySWMM: The Python Interface to Stormwater Management Model (SWMM). *Journal of Open Source Software, 5*\ (52), 2292, https://doi.org/10.21105/joss.02292
 
-Build status
-------------
-|appveyor status| |travisci status|
+YouTube Training Vidoes
+-----------------------
 
-Project information
--------------------
-|docs| |license| |pypi version| |downloads| |cite|
-
-Examples
---------
-Check out the website for some basic Examples!!!
-
-	`PySWMM Example Bundles <https://www.pyswmm.org/examples>`_
-
-Stream Results and Adjust Weir Setting
-	.. image:: http://img.youtube.com/vi/U5Z0NXTEjHE/0.jpg
-	  :target: http://www.youtube.com/watch?v=U5Z0NXTEjHE
+Setting a manhole inflow during a running simulation!
+	.. image:: http://img.youtube.com/vi/av8L5gNSBvI/0.jpg
+	  :target: https://youtu.be/av8L5gNSBvI
 
 Overview
 --------
@@ -125,11 +121,6 @@ timeseries.
         node_ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH)
         link_ts = out.link_series('C2', LinkAttribute.FLOW_RATE)
 
-Support
--------
-
-We are active on `Stack Overflow <https://stackoverflow.com/search?q=pyswmm>`_ to answer support questions related to PySWMM:
-
 Bugs
 ----
 
@@ -149,7 +140,7 @@ License
 
 Distributed with a BSD2 license; see LICENSE.txt::
 
-   Copyright (C) 2014-2022 PySWMM Developers
+   Copyright (C) 2014-2023 PySWMM Developers
    Community-Owned See AUTHORS and CITATION.cff
 
 Acknowledgements
@@ -163,6 +154,9 @@ Acknowledgements
 .. |travisci status| image:: https://travis-ci.org/OpenWaterAnalytics/pyswmm.svg?branch=master
    :target: https://travis-ci.org/OpenWaterAnalytics/pyswmm
    :alt: Travis-CI build status
+.. |gh actions| image:: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master
+   :target: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml
+   :alt: GitHub Actions Build Status
 .. |downloads| image:: https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month
    :target: https://pypi.python.org/pypi/pyswmm/
    :alt: PyPI Monthly Downloads
