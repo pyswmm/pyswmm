@@ -12,8 +12,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-# sys.path.append(r'C:\PROJECTCODE\pyswmm\pyswmm')
-
 # Standard library imports
 import os
 import sys
@@ -35,24 +33,42 @@ sys.path.insert(0, os.path.abspath("../../pyswmm"))
 
 # -- General configuration ------------------------------------------------
 
-# If your documentation needs a minimal Sphinx version, state it here.
-#
-# needs_sphinx = '1.0'
-
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx_panels',
+    "sphinx.ext.autosummary",
     'sphinx.ext.autodoc',
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
     'sphinx.ext.intersphinx',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
+    'sphinx_copybutton',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['.templates']
+templates_path = ['_templates']
+
+
+autosummary_generate = True
+toc_object_entries = True
+toc_object_entries_show_parents ="domain"
+add_function_parentheses = True
+
+autodoc_member_order = "bysource"
+autodoc_typehints = "none"
+autoclass_content = "both"
+add_module_names = False
+
+autodoc_default_options = {
+    'member-order': 'bysource',
+    'undoc-members': True,
+    'inherited-members' : False
+}
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -81,7 +97,7 @@ release = pyswmm.__version__
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -125,6 +141,7 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 # keep_warnings = False
 
+
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
@@ -133,13 +150,47 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'pydata_sphinx_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+   "logo": {
+      "image_light": "type-logo-black.png",
+      "image_dark": "type-logo-white.png",
+   },
+   "github_url": "https://github.com/OpenWaterAnalytics/pyswmm",
+    "icon_links": [
+        {
+            "name": "PyPI",
+            "url": "https://pypi.org/project/pyswmm",
+            "icon": "fa-solid fa-box",
+        },
+        {
+            "name": "YouTube",
+            "url": "https://www.youtube.com/@pyswmm",
+            "icon": "fa-brands fa-youtube",
+        },
+        {
+            "name": "LinkedIn",
+            "url": "https://www.linkedin.com/company/pyswmm/",
+            "icon": "fa-brands fa-linkedin",
+        },
+        {
+            "name":"pyswmm.org",
+            "url":"https://www.pyswmm.org",
+            "icon": "_static/icon-logo-grey.png",
+            "type": "local",
+
+        }
+    ],
+    "footer_items": ["copyright"],
+    #"show_nav_level": 3,
+    "navigation_depth": 3,
+    "show_toc_level": 3
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -147,7 +198,7 @@ html_theme = 'sphinx_rtd_theme'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'pyswmm v0.1.0'
+html_title = 'pyswmm'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -162,12 +213,19 @@ html_theme = 'sphinx_rtd_theme'
 # the docs. This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #
-# html_favicon = None
+html_favicon = "_static/icon-logo-black.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['.static']
+html_static_path = ['_static']
+
+html_css_files = [
+    "css/pyswmm.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css",
+]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -233,7 +291,7 @@ html_static_path = ['.static']
 #   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
 #   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr', 'zh'
 #
-# html_search_language = 'en'
+html_search_language = 'en'
 
 # A dictionary with options for the search language support, empty by default.
 # 'ja' uses this config value.

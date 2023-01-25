@@ -2,10 +2,16 @@
 
 .. currentmodule:: pyswmm.links
 
-links module
+Links Module
 ============
 
-.. automodule:: pyswmm.links
-    :members: Links, Link, Conduit, Pump
-    :undoc-members:
-    :show-inheritance:
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
+
+   Links
+   Link
+   Conduit
+   Pump
+
+

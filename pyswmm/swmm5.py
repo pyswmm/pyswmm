@@ -36,7 +36,7 @@ class SWMMException(Exception):
 
 
 class PYSWMMException(Exception):
-    """Custom exception class for PySWMM errors. """
+    """Custom exception class for PySWMM errors."""
 
     def __init__(self, error_message):
         self.warning = False
@@ -395,11 +395,11 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimulationDateTime(SimulationTime.StartDateTime)
-        >>> 2015-11-01 14:00:00
+        2015-11-01 14:00:00
         >>> swmm_model.getSimulationDateTime(SimulationTime.EndDateTime)
-        >>> 2015-11-04 00:00:00
+        2015-11-04 00:00:00
         >>> swmm_model.getSimulationDateTime(SimulationTime.ReportStart)
-        >>> 2015-11-01 14:00:00
+        2015-11-01 14:00:00
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -435,7 +435,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimUnit(SimulationUnits.FlowUnits)
-        >>> CFS
+        CFS
         >>> swmm_model.swmm_close()
         """
         value = solver.simulation_get_unit(unit_type)
@@ -463,7 +463,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimAnalysisSetting(SimAnalysisSettings.AllowPonding)
-        >>> False
+        False
         >>> swmm_model.swmm_close()
         """
         return bool(solver.simulation_get_setting(setting_type))
@@ -481,7 +481,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSimAnalysisSetting(SimulationParameters.RouteStep)
-        >>> 300
+        300
         >>> swmm_model.swmm_close()
         """
         return solver.simulation_get_parameter(param_type)
@@ -499,7 +499,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getProjectSize(ObjectType.NODE)
-        >>> 10
+        10
         >>> swmm_model.swmm_close()
         """
         return solver.project_get_count(object_type)
@@ -518,7 +518,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getObjectId(ObjectType.NODE,35)
-        >>> "example_id_name"
+        "example_id_name"
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -535,7 +535,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getObjectIDList(ObjectType.LINK)
-        >>> ['C1:C2', 'C2', 'C3']
+        ['C1:C2', 'C2', 'C3']
         >>>
         >>> swmm_model.swmm_close()
         >>>
@@ -571,10 +571,10 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeType('J1')
-        >>> 0
+        0
         >>>
         >>> swmm_model.getNodeType('J1') is NodeType.junction
-        >>> True
+        True
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -594,10 +594,10 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkType('C1')
-        >>> 3
+        3
         >>>
         >>> swmm_model.getLinkType('C1') is LinkType.weir
-        >>> True
+        True
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -625,7 +625,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkConnections('C1')
-        >>> ('NodeUSID','NodeDSID')
+        ('NodeUSID','NodeDSID')
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -668,7 +668,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getNodeParam('J2',NodeParams.invertElev )
-        >>> 13.392
+        13.392
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -707,7 +707,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkParam('C1:C2',LinkParams.offset1 )
-        >>> 0.0
+        0.0
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -744,7 +744,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLidCOverflow('J2')
-        >>> True
+        True
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -785,7 +785,6 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.setLidCParam('J2', LidLayer.surface, LidLayersProperty.thickness, 110)
-
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -804,7 +803,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLidUCount('J2')
-        >>> 2
+        2
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -826,7 +825,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLidUParam('S2', 0, LidUParams.unitarea)
-        >>> 1000
+        1000
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -867,7 +866,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLidUOption('S2', 0, LidUParams.index)
-        >>> 1000
+        1000
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -907,7 +906,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getLinkParam('S2',SubcParams.area )
-        >>> 43561.596096880996
+        43561.596096880996
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -953,11 +952,11 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getSubcatchOutConnection('S2',SubcParams.area )
-        >>> (2, 'J2')
+        (2, 'J2')
         >>>
         >>> subout = swmm_model.getSubcatchOutConnection('S2',SubcParams.area )
         >>> subout[0]  == ObjectType.NODE
-        >>> True
+        True
         >>>
         >>> swmm_model.swmm_close()
         """
@@ -984,7 +983,7 @@ class PySWMM(object):
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
         >>> swmm_model.getGagePrecip('Gage1', )
-        >>> 0.0
+        0.0
         >>> swmm_model.swmm_close()
 
         """
@@ -1007,13 +1006,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getCurrentSimualationTime()
+        ...     print(swmm_model.getCurrentSimualationTime())
         ...     if (time <= 0.0): break
-        ...
-        >>> 2015-11-03 10:10:12
-        >>> 2015-11-03 10:20:12
-        >>> 2015-11-03 10:30:12
-        >>> 2015-11-03 10:40:12
+        2015-11-03 10:10:12
+        2015-11-03 10:20:12
+        2015-11-03 10:30:12
+        2015-11-03 10:40:12
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1037,13 +1035,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getLidUFluxRates('J1', 0, LidLayers.surface)
+        ...     print(swmm_model.getLidUFluxRates('J1', 0, LidLayers.surface))
         ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        1.2
+        1.5
+        1.9
+        1.2
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1070,13 +1067,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getLidUResult('J1', 0, LidUResults.inflow)
+        ...     print(swmm_model.getLidUResult('J1', 0, LidUResults.inflow))
         ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        1.2
+        1.5
+        1.9
+        1.2
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1102,13 +1098,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getLidGResult('J1', LidUResults.flowToPerv)
+        ...     print(swmm_model.getLidGResult('J1', LidUResults.flowToPerv))
         ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        1.2
+        1.5
+        1.9
+        1.2
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1133,13 +1128,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getNodeResult('J1', NodeResults.newDepth)
+        ...     print(swmm_model.getNodeResult('J1', NodeResults.newDepth))
         ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        1.2
+        1.5
+        1.9
+        1.2
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1174,13 +1168,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getLinkResult('J1', LinkResults.newFlow)
+        ...     print(swmm_model.getLinkResult('J1', LinkResults.newFlow))
         ...     if (time <= 0.0): break
-        ...
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        1.2
+        1.5
+        1.9
+        1.2
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1218,13 +1211,12 @@ class PySWMM(object):
         >>> swmm_model.swmm_start()
         >>> while(True):
         ...     time = swmm_model.swmm_step()
-        ...     print swmm_model.getSubcatchResult('S3', SubcResults.newRunoff)
+        ...     print(swmm_model.getSubcatchResult('S3', SubcResults.newRunoff))
         ...     if (time <= 0.0): break
-        ...
-        >>> 0.01
-        >>> 0.05
-        >>> 0.09
-        >>> 0.08
+        0.01
+        0.05
+        0.09
+        0.08
         >>>
         >>> swmm_model.swmm_end()
         >>> swmm_model.swmm_report()
@@ -1421,7 +1413,6 @@ class PySWMM(object):
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     i+=1
-        ...
         ...     if i == 80:
         ...         swmm_model.setLinkSetting('C3',0.5)
         ...     if (time <= 0.0): break

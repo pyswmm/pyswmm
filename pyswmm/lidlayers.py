@@ -10,6 +10,8 @@ from pyswmm.toolkitapi import LidLayers, LidLayersProperty
 
 class Surface(object):
     """
+    Methods and properties of the surface layer associated with an LID 
+
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
     +====================+====================+====================+====================+
@@ -147,6 +149,8 @@ class Surface(object):
 
 class Soil(object):
     """
+    Methods and properties of the soil layer associated with an LID 
+
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
     +====================+====================+====================+====================+
@@ -314,6 +318,8 @@ class Soil(object):
 
 class Storage(object):
     """
+    Methods and properties of the storage layer associated with an LID 
+
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
     +====================+====================+====================+====================+
@@ -415,6 +421,8 @@ class Storage(object):
 
 class Pavement(object):
     """
+    Methods and properties of the pavement layer associated with an LID 
+
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
     +====================+====================+====================+====================+
@@ -583,6 +591,8 @@ class Pavement(object):
 
 class Drain(object):
     """
+    Methods and properties of the under drain layer associated with an LID 
+
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
     +====================+====================+====================+====================+
@@ -728,6 +738,8 @@ class Drain(object):
 
 class DrainMat(object):
     """
+    Methods and properties of the drain mat layer associated with an LID 
+
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
     +====================+====================+====================+====================+

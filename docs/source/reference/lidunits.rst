@@ -1,11 +1,17 @@
-..  -*- coding: utf-8 -*-
+LID Units
+===========
+
+Classes that represent the layers and properties of LID units that 
+are part of LidGroups on subcatchments
 
 .. currentmodule:: pyswmm.lidunits
 
-lidunits module
-===============
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
 
-.. automodule:: pyswmm.lidunits
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   Surface
+   Pavement
+   Storage
+   Soil
+   WaterBalance

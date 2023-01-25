@@ -1,5 +1,8 @@
 ..  -*- coding: utf-8 -*-
 
+============
+Quick Start
+============
 
 Start here to begin working with pyswmm.
 
@@ -185,7 +188,7 @@ If an EPA-SWMM5 Model has existing control actions within, any control
 rules developed using pyswmm will have the highest priority.  All pyswmm
 control actions are evaluated at the end of each simulation step, after
 EPA-SWMM native controls have been evaluated.  If control actions are reported,
-any control action updated by pyswmm will be output to the *.rpt file.
+any control action updated by pyswmm will be output to the \*.rpt file.
 
 
 Generate Node Inflows
@@ -206,7 +209,7 @@ runoff or seasonality.
     
     
 Access SWMM Output Binary File
----------------------
+-------------------------------
 As of pyswmm version v1.1.0, the Output module provides the ability to process 
 timeseries and metadata in the SWMM output binary file. This feature enables the user to 
 access data in the binary file without re-running the simulation.

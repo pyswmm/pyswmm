@@ -25,7 +25,7 @@ module. Check your installation and your PYTHONPATH.
 The following simulation classes are available:
 
 :class:`Simulation`
-   This class initializes a simulation object from a SWMM input file (*.inp).
+   This class initializes a simulation object from a SWMM input file (\*.inp).
 
 Initialize a SWMM Model with
 

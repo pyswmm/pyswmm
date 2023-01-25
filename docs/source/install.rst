@@ -17,10 +17,5 @@ You can also get pyswmm from the Python Package Index manually
 at http://pypi.python.org/pypi/pyswmm
 To use pip, you need to have `setuptools <https://pypi.python.org/pypi/setuptools>`_ installed.
 
-Requirements
-============
-
-Python
-------
-
-To use PySWMM you need Python 3.6 or greater.
+.. attention::
+   To use PySWMM you need 64-bit Python 3.7 or greater.

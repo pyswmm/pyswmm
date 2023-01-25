@@ -2,10 +2,14 @@
 
 .. currentmodule:: pyswmm.nodes
 
-nodes module
+Nodes Module
 ============
 
-.. automodule:: pyswmm.nodes
-    :members: Nodes, Node, Outfall, Storage
-    :undoc-members:
-    :show-inheritance:
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
+
+   Nodes
+   Node
+   Outfall
+   Storage
