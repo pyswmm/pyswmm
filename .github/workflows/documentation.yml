@@ -29,8 +29,8 @@ jobs:
       # deploy docs      
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        # only deploy if pushing to master or merging PR into master
-        if: ${{ github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event.pull_request.merged == true)}}
+        # only deploy if tagging a new version
+        if: startsWith(github.event.ref, 'refs/tags/v')
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
