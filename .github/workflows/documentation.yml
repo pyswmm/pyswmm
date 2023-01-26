@@ -1,0 +1,38 @@
+name: GH Pages Sphinx Docs
+on: [push, pull_request]
+  
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+            python-version: "3.10"
+            cache: "pip"
+     
+      - name: Install pyswmm
+        run: |
+          pip install -r requirements.txt -r docs/source/docs_requirements.txt
+          pip install -e .
+      
+      - name: Sphinx build
+        run: sphinx-build docs/source docs/build
+
+      # deploy docs      
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        # only deploy if pushing to master or merging PR into master
+        if: ${{ github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event.pull_request.merged == true)}}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build
+          force_orphan: true
