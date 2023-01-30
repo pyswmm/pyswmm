@@ -85,7 +85,7 @@ class PySWMM(object):
 
     >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
     >>> swmm_model.swmm_open()
-    >>> swmm_model.swmm_start()
+    >>> swmm_model.swmm_start(True)
     >>> while(True):
     ...     time = swmm_model.swmm_step() # or swmm_stride()
     ...     if (time <= 0.0): break
@@ -228,7 +228,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
@@ -247,7 +247,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
@@ -266,7 +266,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
@@ -295,7 +295,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_stride(600)
         ...     if (time <= 0.0): break
@@ -326,7 +326,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
@@ -345,7 +345,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     if (time <= 0.0): break
@@ -1003,7 +1003,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getCurrentSimualationTime())
@@ -1032,7 +1032,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getLidUFluxRates('J1', 0, LidLayers.surface))
@@ -1064,7 +1064,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getLidUResult('J1', 0, LidUResults.inflow))
@@ -1095,7 +1095,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getLidGResult('J1', LidUResults.flowToPerv))
@@ -1125,7 +1125,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getNodeResult('J1', NodeResults.newDepth))
@@ -1165,7 +1165,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getLinkResult('J1', LinkResults.newFlow))
@@ -1208,7 +1208,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> while(True):
         ...     time = swmm_model.swmm_step()
         ...     print(swmm_model.getSubcatchResult('S3', SubcResults.newRunoff))
@@ -1408,7 +1408,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> i = 0
         >>> while(True):
         ...     time = swmm_model.swmm_step()
@@ -1439,7 +1439,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> i = 0
         >>> while(True):
         ...     if i == 80:
@@ -1470,7 +1470,7 @@ class PySWMM(object):
 
         >>> swmm_model = PySWMM(r'\\.inp',r'\\.rpt',r'\\.out')
         >>> swmm_model.swmm_open()
-        >>> swmm_model.swmm_start()
+        >>> swmm_model.swmm_start(True)
         >>> i = 0
         >>> while(True):
         ...     if i == 80:
