@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.py }}
+          cache: "pip"
 
       - name: Install pyswmm
         run: |

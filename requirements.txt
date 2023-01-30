@@ -3,11 +3,5 @@
 wheel
 pytest
 julian==0.14
-swmm-toolkit==0.9.0
+swmm-toolkit==0.9.1
 aenum==3.1.11
-
-# docs requirements
-git+https://github.com/karosc/sphinx-panels
-pydata-sphinx-theme==0.12.0
-sphinx==5.3.0
-sphinx_copybutton==0.5.1
