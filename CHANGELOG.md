@@ -1,5 +1,17 @@
 # History of changes
 
+## Version 1.3.0 (2023/01/24)
+### Issues Closed
+#### Bugs fixed
+
+* [Issue 360](https://github.com/OpenWaterAnalytics/pyswmm/issues/360) - node hrt accessor fixed
+
+### Pull Requests Merged
+* Unit test with OWA SWMM 5.1.15
+* [PR 374](https://github.com/OpenWaterAnalytics/pyswmm/pull/374) - debug LID tutorial code
+* [PR 377](https://github.com/OpenWaterAnalytics/pyswmm/pull/377) - updates to readme.md for pyswmm.org website
+* [PR 393](https://github.com/OpenWaterAnalytics/pyswmm/pull/393) - updates to readme.md for pyswmm youtube channel
+* [PR 392](https://github.com/OpenWaterAnalytics/pyswmm/pull/392) - overhaul pyswmm sphinx docs
 ## Version 1.2.0 (2022/08/20)
 
 ### New Feature
