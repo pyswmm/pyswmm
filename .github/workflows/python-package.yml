@@ -3,17 +3,52 @@ name: Build Wheels
 on: [push, pull_request]
 
 jobs:
+
+  multi_platform_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, macos-12, ubuntu-latest]
+        py: ["3.7", "3.8", "3.9", "3.10"]
+    
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+          cache: "pip"
+
+      - name: Install pyswmm
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+      
+      - name: run unit tests
+        run: pytest
+
+
+      - name: Test wheel
+        run: |
+          pip install --no-index --find-links=./dist pyswmm
+          pytest
+  
   build_wheels:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: "3.10"
 
       - name: Install build requirements
         run: pip install -r requirements.txt
@@ -25,8 +60,7 @@ jobs:
         run: |
           pip install --no-index --find-links=./dist pyswmm
           pytest
-
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ./dist/pyswmm-*.*

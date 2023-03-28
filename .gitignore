@@ -39,3 +39,6 @@ labels.txt
 *.chi
 *.CSV
 *.thm
+
+#IDE Folders
+.vscode/

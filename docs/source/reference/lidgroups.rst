@@ -1,11 +1,12 @@
-..  -*- coding: utf-8 -*-
+LID Groups
+===========
 
 .. currentmodule:: pyswmm.lidgroups
 
-lidgroups module
-================
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
 
-.. automodule:: pyswmm.lidgroups
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   LidGroups
+   LidGroup
+   LidUnit

@@ -33,7 +33,7 @@ class Simulation(object):
 
     >>> from pyswmm import Simulation
     >>>
-    >>> sim = Simulation('tests/data/TestModel1_weirSetting.inp')
+    >>> sim = Simulation('tests/data/model_weir_setting.inp')
     >>> for step in sim:
     ...     pass
     >>>
@@ -45,7 +45,7 @@ class Simulation(object):
 
     >>> from pyswmm import Simulation
     >>>
-    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
     ...     for step in sim:
     ...         pass
     ...     sim.report()
@@ -56,7 +56,7 @@ class Simulation(object):
 
     >>> from pyswmm import Simulation
     >>>
-    >>> sim = Simulation('tests/data/TestModel1_weirSetting.inp')
+    >>> sim = Simulation('tests/data/model_weir_setting.inp')
     >>> sim.execute()
     """
 
@@ -86,15 +86,14 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     for step in sim:
         ...         print(sim.current_time)
         ...     sim.report()
-        >>>
-        >>> 2015-11-01 14:00:30
-        >>> 2015-11-01 14:01:00
-        >>> 2015-11-01 14:01:30
-        >>> 2015-11-01 14:02:00
+        2015-11-01 14:00:30
+        2015-11-01 14:01:00
+        2015-11-01 14:01:30
+        2015-11-01 14:02:00
         """
         return self
 
@@ -136,8 +135,6 @@ class Simulation(object):
             raise StopIteration
         return self._model
 
-    next = __next__  # Python 2
-
     def __exit__(self, *a):
         """close"""
         if self._isStarted:
@@ -178,7 +175,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     nodeJ1 = Nodes(sim)["J1"]
         ...
         ...     def init_conditions():
@@ -213,7 +210,7 @@ class Simulation(object):
         >>> def test_callback():
         ...     print("CALLBACK - Executed")
         >>>
-        >>> with Simulation('./TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...
         ...     sim.before_start(test_callback) #<- pass function handle.
         ...     print("Waiting to Start")
@@ -221,14 +218,12 @@ class Simulation(object):
         ...         print("Step {}".format(ind))
         ...     print("Complete!")
         ... print("Closed")
-        >>>
-        >>> "Waiting to Start"
-        >>> "CALLBACK - Executed"
-        >>> "Step 0"
-        >>> "Step 1"
-        >>> ...
-        >>> "Complete!"
-        >>> "Closed"
+        "Waiting to Start"
+        "CALLBACK - Executed"
+        "Step 0"
+        "Step 1"
+        "Complete!"
+        "Closed"
         """
         if self._is_callback(callback):
             self._callbacks["before_start"] = callback
@@ -341,17 +336,16 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     sim.step_advance(300)
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     sim.step_advance(30)
         ...     for step in sim:
-        ...         print(step.current_time)
+        ...         print(sim.current_time)
         ...         # or here! sim.step_advance(newvalue)
         ...     sim.report()
-        >>>
-        >>> 2015-11-01 14:00:30
-        >>> 2015-11-01 14:01:00
-        >>> 2015-11-01 14:01:30
-        >>> 2015-11-01 14:02:00
+        2015-11-01 14:00:30
+        2015-11-01 14:01:00
+        2015-11-01 14:01:30
+        2015-11-01 14:02:00
         """
         self._advance_seconds = advance_seconds
 
@@ -385,7 +379,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     for step in sim:
         ...         pass
         ...     sim.report()
@@ -401,7 +395,7 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> sim = Simulation('./TestModel1_weirSetting.inp')
+        >>> sim = Simulation('tests/data/model_weir_setting.inp')
         >>> for step in sim:
         ...     pass
         >>>
@@ -416,7 +410,7 @@ class Simulation(object):
 
         Examples:
 
-        >>> sim = PYSWMM(r'\\test.inp')
+        >>> sim = Simulation('tests/data/model_weir_setting.inp')
         >>> sim.execute()
         """
         self._model.swmmExec()
@@ -427,13 +421,13 @@ class Simulation(object):
         Retrieves the SWMM Engine Version.
 
         :return: Engine Version
-        :rtype: StrictVersion
+        :rtype: LooseVersion
 
         Examples:
 
-        >>> sim = PYSWMM(r'\\test.inp')
-        >>> sim.engine_version
-        StrictVersion("5.1.13")
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     print(sim.engine_version)
+        5.1.14
         """
         return self._model.swmm_getVersion()
 
@@ -447,9 +441,9 @@ class Simulation(object):
 
         Examples:
 
-        >>> sim = PYSWMM(r'\\test.inp')
-        >>> sim.execute()
-        >>> sim.runoff_error
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...    sim.execute()
+        ...    print(sim.runoff_error)
         0.01
         """
         return self._model.swmm_getMassBalErr()[0]
@@ -464,9 +458,9 @@ class Simulation(object):
 
         Examples:
 
-        >>> sim = PYSWMM(r'\\test.inp')
-        >>> sim.execute()
-        >>> sim.flow_routing_error
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...    sim.execute()
+        ...    print(sim.flow_routing_error)
         0.01
         """
         return self._model.swmm_getMassBalErr()[1]
@@ -481,9 +475,9 @@ class Simulation(object):
 
         Examples:
 
-        >>> sim = PYSWMM(r'\\test.inp')
-        >>> sim.execute()
-        >>> sim.quality_error
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...    sim.execute()
+        ...    print(sim.quality_error)
         0.01
         """
         return self._model.swmm_getMassBalErr()[2]
@@ -496,11 +490,10 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.start_time
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     print(sim.start_time)
         ...     sim.start_time = datetime(2015,5,10,15,15,1)
-        >>>
-        >>> datetime.datetime(2015,5,10,15,15,1)
+        datetime.datetime(2015,5,10,15,15,1)
         """
         return self._model.getSimulationDateTime(
             SimulationTime.StartDateTime.value)
@@ -519,11 +512,10 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.end_time
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     print(sim.end_time)
         ...     sim.end_time = datetime(2016,5,10,15,15,1)
-        >>>
-        >>> datetime.datetime(2016,5,10,15,15,1)
+        datetime.datetime(2016,5,10,15,15,1)
         """
         return self._model.getSimulationDateTime(
             SimulationTime.EndDateTime.value)
@@ -542,11 +534,10 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.report_start
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     print(sim.report_start)
         ...     sim.report_start = datetime(2015,5,10,15,15,1)
-        >>>
-        >>> datetime.datetime(2015,5,10,15,15,1)
+        datetime.datetime(2015,5,10,15,15,1)
         """
         return self._model.getSimulationDateTime(
             SimulationTime.ReportStart.value)
@@ -569,10 +560,9 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.flow_units
-        >>>
-        >>> CFS
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     print(sim.flow_units)
+        CFS
         """
         return self._model.getSimUnit(SimulationUnits.FlowUnits.value)
 
@@ -587,10 +577,9 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
-        ...     print sim.system_units
-        >>>
-        >>> US
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
+        ...     print(sim.system_units)
+        US
         """
         return self._model.getSimUnit(SimulationUnits.UnitSystem.value)
 
@@ -605,15 +594,14 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     for step in sim:
         ...         print(sim.current_time)
         ...     sim.report()
-        >>>
-        >>> 2015-11-01 14:00:30
-        >>> 2015-11-01 14:01:00
-        >>> 2015-11-01 14:01:30
-        >>> 2015-11-01 14:02:00
+        2015-11-01 14:00:30
+        2015-11-01 14:01:00
+        2015-11-01 14:01:30
+        2015-11-01 14:02:00
         """
         return self._model.getCurrentSimulationTime()
 
@@ -628,15 +616,14 @@ class Simulation(object):
 
         >>> from pyswmm import Simulation
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     for step in sim:
         ...         print(sim.percent_complete)
         ...     sim.report()
-        >>>
-        >>> 0.01
-        >>> 0.25
-        >>> 0.50
-        >>> 0.75
+        0.01
+        0.25
+        0.50
+        0.75
         """
         dt = self.current_time - self.start_time
         total_time = self.end_time - self.start_time

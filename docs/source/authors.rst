@@ -19,6 +19,7 @@ Authors with Copyrighted Contributions
 - Stephen Roberts
 - Abhiram Mullapudi
 - Jiada Li
+- Constantine Karos
 
 
 Authors with Contributions in the Public Domain

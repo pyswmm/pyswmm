@@ -2,10 +2,13 @@
 
 .. currentmodule:: pyswmm.raingages
 
-raingages module
+Raingages Module
 ================
 
-.. automodule:: pyswmm.raingages
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
+
+   RainGages
+   RainGage
+

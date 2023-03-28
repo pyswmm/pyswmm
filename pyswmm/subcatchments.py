@@ -22,46 +22,45 @@ class Subcatchments(object):
 
     >>> from pyswmm import Simulation, Subcatchments
     >>>
-    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
     ...     for subcatchment in Subcatchments(sim):
-    ...         print subcatchment
-    ...         print subcatchment.subcatchmentid
-    ...
-    >>> <swmm5.Subcatchment object at 0x031B0350>
-    >>> S1
-    >>> <swmm5.Subcatchment object at 0x030693D0>
-    >>> S2
-    >>> <swmm5.Subcatchment object at 0x031B0350>
-    >>> S3
-    >>> <swmm5.Subcatchment object at 0x030693D0>
-    >>> S4
+    ...         print(subcatchment)
+    ...         print(subcatchment.subcatchmentid)
+    <swmm5.Subcatchment object at 0x031B0350>
+    S1
+    <swmm5.Subcatchment object at 0x030693D0>
+    S2
+    <swmm5.Subcatchment object at 0x031B0350>
+    S3
+    <swmm5.Subcatchment object at 0x030693D0>
+    S4
 
     Iterating over Subcatchments Object
 
     >>> subcatchments = Subcatchments(sim)
     >>> for subcatchment in subcatchments:
-    ...     print subcatchment.subcatchmentid
-    >>> S0
-    >>> S1
-    >>> S2
-    >>> S3
+    ...     print(subcatchment.subcatchmentid)
+    S0
+    S1
+    S2
+    S3
 
     Testing Existence
 
     >>> subcatchments = Subcatchments(sim)
     >>> "S1" in subcatchments
-    >>> True
+    True
 
     Initializing a subcatchment Object
 
     >>> subcatchments = Subcatchments(sim)
     >>> s1 = subcatchments['S1']
     >>> print(s1.area)
-    >>> 12
+    12
     >>>
     >>> s1.area = 200
     >>> print(s1.area)
-    >>> 200
+    200
     """
 
     def __init__(self, model):
@@ -111,8 +110,6 @@ class Subcatchments(object):
         else:
             raise StopIteration()
 
-    next = __next__  # Python 2
-
     @property
     def _subcatchmentid(self):
         """Subcatchment ID."""
@@ -129,14 +126,14 @@ class Subcatchment(object):
 
     Examples:
 
-    >>> from pyswmm import Simulation, Subcatchments
+    >>> from pyswm import Simulation, Subcatchments
     >>>
-    >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+    >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
     ...     s1 = Subcatchments(sim)["S1"]
-    ...     print s1.rainfall
+    ...     print(s1.rainfall)
     ...     for step in sim:
-    ...         print s1.rainfall
-    ... 0.04
+    ...         print(s1.rainfall)
+    0.04
     """
 
     def __init__(self, model, subcatchmentid):
@@ -162,10 +159,10 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.subcatchmentid
-        >>> S1
+        ...     print(s1.subcatchmentid)
+        S1
         """
         return self._subcatchmentid
 
@@ -190,10 +187,10 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.connection
-        >>> (2, 'J2')
+        ...     print(s1.connection)
+        (2, 'J2')
         """
         return self._model.getSubcatchOutConnection(self._subcatchmentid)
 
@@ -209,22 +206,22 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.width
-        >>> 100.0
+        ...     print(s1.width)
+        100.0
 
         Setting the value
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.width
+        ...     print(s1.width)
         ...     s1.width = 30
-        ...     print s1.width
-        >>> 100
-        >>> 30
+        ...     print(s1.width)
+        100
+        30
         """
         return self._model.getSubcatchParam(self._subcatchmentid,
                                             SubcParams.width.value)
@@ -247,22 +244,22 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.area
-        >>> 10
+        ...     print(s1.area)
+        10
 
         Setting the value
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.area
+        ...     print(s1.area)
         ...     s1.area = 50
-        ...     print s1.area
-        >>> 10
-        >>> 50
+        ...     print(s1.area)
+        10
+        50
         """
         return self._model.getSubcatchParam(self._subcatchmentid,
                                             SubcParams.area.value)
@@ -285,22 +282,22 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.percent_impervious
-        >>> 10
+        ...     print(s1.percent_impervious)
+        10
 
         Setting the value
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.percent_impervious
+        ...     print(s1.percent_impervious)
         ...     s1.percent_impervious = 50
-        ...     print s1.percent_impervious
-        >>> 10
-        >>> 50
+        ...     print(s1.percent_impervious)
+        10
+        50
         """
         return self._model.getSubcatchParam(self._subcatchmentid,
                                             SubcParams.fracImperv.value)
@@ -323,22 +320,22 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.slope
-        >>> 0.01
+        ...     print(s1.slope)
+        0.01
 
         Setting the value
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.slope
+        ...     print(s1.slope)
         ...     s1.slope = 0.02
-        ...     print s1.slope
-        >>> 0.1
-        >>> 0.2
+        ...     print(s1.slope)
+        0.1
+        0.2
         """
         return self._model.getSubcatchParam(self._subcatchmentid,
                                             SubcParams.slope.value)
@@ -361,22 +358,22 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.curb_length
-        >>> 0
+        ...     print(s1.curb_length)
+        0
 
         Setting the value
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
-        ...     print s1.curb_length
+        ...     print(s1.curb_length)
         ...     s1.curb_length = 100
-        ...     print s1.curb_length
-        >>> 0
-        >>> 100
+        ...     print(s1.curb_length)
+        0
+        100
         """
         return self._model.getSubcatchParam(self._subcatchmentid,
                                             SubcParams.curbLength.value)
@@ -402,15 +399,15 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
-        ...         print s1.rainfall
-        >>> 0
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        ...         print(s1.rainfall)
+        0
+        1.2
+        1.5
+        1.9
+        1.2
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.rainfall.value)
@@ -430,15 +427,15 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
-        ...         print s1.evaporation_loss
-        >>> 0.01
-        >>> 0.01
-        >>> 0.01
-        >>> 0.01
-        >>> 0.01
+        ...         print(s1.evaporation_loss)
+        0.01
+        0.01
+        0.01
+        0.01
+        0.01
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.evapLoss.value)
@@ -458,15 +455,15 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
-        ...         print s1.infiltration_loss
-        >>> 0
-        >>> 0.01
-        >>> 0.01
-        >>> 0.01
-        >>> 0.01
+        ...         print(s1.infiltration_loss)
+        0
+        0.01
+        0.01
+        0.01
+        0.01
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.infilLoss.value)
@@ -486,15 +483,15 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
-        ...         print s1.runon
-        >>> 0
-        >>> 1.2
-        >>> 1.5
-        >>> 1.9
-        >>> 1.2
+        ...         print(s1.runon)
+        0
+        1.2
+        1.5
+        1.9
+        1.2
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.runon.value)
@@ -514,15 +511,15 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
-        ...         print s1.runoff
-        >>> 0
-        >>> 0
-        >>> 0.01
-        >>> 0
-        >>> 0
+        ...         print(s1.runoff)
+        0
+        0
+        0.01
+        0
+        0
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.newRunoff.value)
@@ -542,15 +539,15 @@ class Subcatchment(object):
 
         >>> from pyswmm import Simulation, Subcatchments
         >>>
-        >>> with Simulation('tests/data/TestModel1_weirSetting.inp') as sim:
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
-        ...         print s1.snow_depth
-        >>> 0
-        >>> 0.5
-        >>> 0.51
-        >>> 0.52
-        >>> 0.49
+        ...         print(s1.snow_depth)
+        0
+        0.5
+        0.51
+        0.52
+        0.49
         """
         return self._model.getSubcatchResult(self._subcatchmentid,
                                              SubcResults.newSnowDepth.value)
@@ -574,11 +571,11 @@ class Subcatchment(object):
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
         ...         print(s1.buildup)
-        >>> {'test-pollutant': 8.0}
-        >>> {'test-pollutant': 8.0}
-        >>> {'test-pollutant': 7.998}
-        >>> {'test-pollutant': 7.991}
-        >>> {'test-pollutant': 7.981}
+        {'test-pollutant': 8.0}
+        {'test-pollutant': 8.0}
+        {'test-pollutant': 7.998}
+        {'test-pollutant': 7.991}
+        {'test-pollutant': 7.981}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
@@ -610,9 +607,9 @@ class Subcatchment(object):
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
         ...         print(s1.conc_ponded)
-        >>> {'test-pollut1': 0.0, 'test-pollut2': 0.0}
-        >>> {'test-pollut1': 0.0, 'test-pollut2': 0.0}
-        >>> {'test-pollut1': 0.0, 'test-pollut2': 0.0}
+        {'test-pollut1': 0.0, 'test-pollut2': 0.0}
+        {'test-pollut1': 0.0, 'test-pollut2': 0.0}
+        {'test-pollut1': 0.0, 'test-pollut2': 0.0}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
@@ -642,9 +639,9 @@ class Subcatchment(object):
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
         ...         print(s1.pollut_quality)
-        >>> {'TSS': 0.0, 'Lead': 0.0}
-        >>> {'TSS': 0.0, 'Lead': 0.0}
-        >>> {'TSS': 0.0, 'Lead': 0.0}
+        {'TSS': 0.0, 'Lead': 0.0}
+        {'TSS': 0.0, 'Lead': 0.0}
+        {'TSS': 0.0, 'Lead': 0.0}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
@@ -675,9 +672,9 @@ class Subcatchment(object):
         ...     s1 = Subcatchments(sim)["S1"]
         ...     for step in sim:
         ...         print(s1.runoff_total_loading)
-        >>> {'TSS': 0.01, 'Lead': 0.001}
-        >>> {'TSS': 0.02, 'Lead': 0.002}
-        >>> {'TSS': 0.03, 'Lead': 0.003}
+        {'TSS': 0.01, 'Lead': 0.001}
+        {'TSS': 0.02, 'Lead': 0.002}
+        {'TSS': 0.03, 'Lead': 0.003}
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)

@@ -65,8 +65,6 @@ class LidGroups(object):
         else:
             raise StopIteration()
 
-    next = __next__  # Python 2
-
     @property
     def _subcatchmentid(self):
         """Subcatchment ID."""
@@ -75,6 +73,13 @@ class LidGroups(object):
 
 
 class LidGroup(object):
+    """
+    Methods and properties associated with a group of LIDs defined on a subcatchment
+
+    :param object model: Open Model Instance
+    :param str subcatchmentid: Name of subcatchment associated with the Lid Group
+    """
+
     def __init__(self, model, subcatchmentid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
@@ -126,8 +131,6 @@ class LidGroup(object):
             return lidunitobject
         else:
             raise StopIteration()
-
-    next = __next__  # Python 2
 
     @property
     def pervious_area(self):

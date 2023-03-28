@@ -1,5 +1,6 @@
-..  -*- coding: utf-8 -*-
-
+.. image:: _static/banner.jpg
+  :alt: pyswmm banner
+  
 Overview
 ========
 
@@ -54,7 +55,7 @@ https://github.com/OpenWaterAnalytics/pyswmm
 What Next
 ^^^^^^^^^
 
- - :doc:`A Brief Tour </tutorial/tutorial>`
+ - :doc:`A Brief Tour </tutorial>`
 
  - :doc:`Installing </install>`
 

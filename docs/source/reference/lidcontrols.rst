@@ -1,11 +1,10 @@
-..  -*- coding: utf-8 -*-
+LID Controls
+=============
 
 .. currentmodule:: pyswmm.lidcontrols
 
-lidcontrols module
-==================
+.. autoclass:: LidControls
+   :members:
 
-.. automodule:: pyswmm.lidcontrols
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. autoclass:: LidControl
+   :members:

@@ -25,8 +25,8 @@ class SystemStats(object):
     ...     system_routing = SystemStats(sim)
     ...
     ...     for step in sim:
-    ...         print system_routing.routing_stats
-    ...         print system_routing.runoff_stats
+    ...         print(system_routing.routing_stats)
+    ...         print(system_routing.runoff_stats)
     """
 
     def __init__(self, model):

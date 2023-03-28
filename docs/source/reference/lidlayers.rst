@@ -1,11 +1,17 @@
-..  -*- coding: utf-8 -*-
+LID Layers
+===========
+
+Classes the represent the layers within an LID Control object
 
 .. currentmodule:: pyswmm.lidlayers
 
-lidlayers module
-================
+.. autosummary::
+   :nosignatures:
+   :toctree: api/
 
-.. automodule:: pyswmm.lidlayers
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   Surface
+   Soil
+   Storage
+   Pavement
+   Drain
+   DrainMat
