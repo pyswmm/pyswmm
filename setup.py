@@ -33,7 +33,7 @@ def get_version(module='pyswmm'):
 
 def get_description():
     """Get long description."""
-    with open(os.path.join(HERE, 'README.rst'), 'r') as f:
+    with open(os.path.join(HERE, 'README.md'), 'r') as f:
         data = f.read()
     return data
 
@@ -48,6 +48,7 @@ setup(
     version=get_version(),
     description='Python Wrapper for SWMM5 API',
     long_description=get_description(),
+    long_description_content_type='text/markdown',
     url='https://github.com/OpenWaterAnalytics/pyswmm/wiki',
     author='Bryant E. McDonnell (See AUTHORS)',
     install_requires=REQUIREMENTS,
