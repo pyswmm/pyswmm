@@ -84,7 +84,7 @@ $ pip install pyswmm
 As of v1.3.1, pyswmm can be installed with specific versions of the SWMM engine ranging from 5.1.14 to 5.2.3 using pip extras:
 
 ```
-$ pip install pyswmm[5.2.1]
+$ pip install pyswmm[swmm5.2.1]
 ```
 
 ### SWMM and Python Compatibility Table
