@@ -51,6 +51,14 @@ setup(
     url='https://github.com/OpenWaterAnalytics/pyswmm/wiki',
     author='Bryant E. McDonnell (See AUTHORS)',
     install_requires=REQUIREMENTS,
+    extras_require = {
+        '5.1.14':['swmm-toolkit==0.9.1'],
+        '5.1.15':['swmm-toolkit==0.10.0'],
+        '5.2.0' :['swmm-toolkit==0.11.0'],
+        '5.2.1' :['swmm-toolkit==0.12.0'],
+        '5.2.2' :['swmm-toolkit==0.13.0'],
+        '5.2.3' :['swmm-toolkit==0.14.0'],
+    },
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={
         '': ['LICENSE.txt', 'AUTHORS', 'tests/data/*.inp', 'tests/*.py']
