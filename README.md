@@ -1,3 +1,10 @@
+<div align="center" style="max-width:500px;margin: auto;">
+  <img src="https://raw.githubusercontent.com/OpenWaterAnalytics/pyswmm/master/docs/source/_static/type-logo-black.png"><br>
+</div>
+
+
+# python wrappers for the Stormwater Management Model (SWMM5)
+
 [![GitHub Actions Build Status](https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master)](https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml)
 [![Documentation Status](https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=master)](http://docs.pyswmm.org/)
 [![License](https://img.shields.io/pypi/l/pyswmm.svg)](LICENSE.txt)
@@ -5,17 +12,16 @@
 [![PyPI Monthly Downloads](https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month)](https://pypi.python.org/pypi/pyswmm/)
 [![Cite our Paper](https://joss.theoj.org/papers/10.21105/joss.02292/status.svg)](https://doi.org/10.21105/joss.02292)
 
-*Python Wrapper for Stormwater Management Model (SWMM5)*
-
 ## Getting started
 
-Project Website: [www.pyswmm.org](https://www.pyswmm.org)
+* Poject Website: [www.pyswmm.org](https://www.pyswmm.org)
 
-[PySWMM YouTube Channel](https://www.youtube.com/channel/UCv-OYsz2moiMRzZIRhqbpHA/featured)
+* [Official PySWMM Documentation](http://docs.pyswmm.org)
 
-[Official PySWMM Documentation](http://pyswmm.readthedocs.io/en/latest/)
+* [PySWMM YouTube Channel](https://www.youtube.com/channel/UCv-OYsz2moiMRzZIRhqbpHA/featured)
 
-[PySWMM Example Bundles](https://www.pyswmm.org/examples)
+
+* [PySWMM Example Bundles](https://www.pyswmm.org/examples)
 
 🆘Do you need HELP?🆘
 > We provide support on [Stack
