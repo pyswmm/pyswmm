@@ -115,8 +115,8 @@ More information about pyswmm can be found at the `official pyswmm website`_.
 .. |pypi version| image:: https://img.shields.io/pypi/v/pyswmm.svg
    :target: https://pypi.python.org/pypi/pyswmm/
    :alt: Latest PyPI version
-.. |docs| image:: https://readthedocs.org/projects/pyswmm/badge/?version=latest
-   :target: http://pyswmm.readthedocs.io/en/latest/?badge=latest
+.. |docs| image:: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=master
+   :target: http://docs.pyswmm.org/
    :alt: Documentation Status
 .. |cite| image:: https://joss.theoj.org/papers/10.21105/joss.02292/status.svg
    :target: https://doi.org/10.21105/joss.02292

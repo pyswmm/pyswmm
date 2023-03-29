@@ -98,7 +98,7 @@ $ pip install pyswmm[swmm5.2.1]
 | pyswmm version | swmm-toolkit compatibility<br>(SWMM engine)                                                            | python compatibility |
 |----------------|--------------------------------------------------------------------------------------------------------|----------------------|
 | 1.0.0 - 1.1.1  | 0.8.2 (SWMM 5.1.13)                                                                                    | 3.6 - 3.9            |
-| 1.2.0 - 1.3.1  | 0.9.1 - 0.14.0 (SWMM 5.1.14 - 5.2.3)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows           | 3.7 - 3.11           |
+| 1.2.0 - 1.4.0  | 0.9.1 - 0.14.0 (SWMM 5.1.14 - 5.2.3)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows           | 3.7 - 3.11           |
 
 # Usage
 
