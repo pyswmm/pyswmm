@@ -1,4 +1,8 @@
 # History of changes
+## Version 1.4.0 (2023/03/28)
+
+#### New Features
+* added pip extras to enable easily installing pyswmm with different versions of swmm-python
 
 ## Version 1.3.0 (2023/01/24)
 ### Issues Closed
