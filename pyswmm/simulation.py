@@ -7,6 +7,9 @@
 # -----------------------------------------------------------------------------
 """Base class for a SWMM Simulation."""
 
+# Standard import
+from warnings import warn
+
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
@@ -73,6 +76,7 @@ class Simulation(object):
         self._terminate_request = False
         self._callbacks = {
             "before_start": None,
+            "after_start": None,
             "before_step": None,
             "after_step": None,
             "before_end": None,
@@ -104,13 +108,13 @@ class Simulation(object):
     def start(self):
         """Start Simulation"""
         if not self._isStarted:
-            # Set Model Initial Conditions
-            # (This Will be Deprecated with Time)
             if hasattr(self, "_initial_conditions"):
                 self._initial_conditions()
-            # Execute Callback Hooks Before Simulation
+            # Execute Callback Hooks Before Start
             self._execute_callback(self.before_start())
             self._model.swmm_start(True)
+            # Execute Callback Hooks After Start
+            self._execute_callback(self.after_start())
             self._isStarted = True
 
     def __next__(self):
@@ -169,6 +173,13 @@ class Simulation(object):
 
     def initial_conditions(self, init_conditions):
         """
+        DEPRECATION WARNING - 2023/06/10
+
+        Starting in PySWMM-v2 this method/function is set to be
+        deprecated.  For setting initial depths refer to the
+        Simulation.add_before_start() callback. If the user's goal is to
+        set the initial link settings, instead use Simulation.add_after_start().
+
         Intial Conditions for Hydraulics and Hydrology can be set
         from within the api by setting a function to the
         initial_conditions property.
@@ -188,6 +199,9 @@ class Simulation(object):
         ...     sim.report()
 
         """
+        warn('This method will be deprecated in PySWMM-v2',
+             DeprecationWarning, stacklevel=2)
+
         if self._is_callback(init_conditions):
             self._initial_conditions = init_conditions
 
@@ -227,6 +241,26 @@ class Simulation(object):
         """
         if self._is_callback(callback):
             self._callbacks["before_start"] = callback
+
+    def after_start(self):
+        """Get After Start Callback.
+
+        :return: Callbacks
+        """
+        return self._callbacks["after_start"]
+
+    def add_after_start(self, callback):
+        """
+        Add callback function/method/object to execute after
+        a simlation start. Needs to be callable.  This callback allows
+        setting initial link target_settings (such as an orifice).
+
+        :param func callback: Callable Object
+
+        (See self.add_after_start() for more details)
+        """
+        if self._is_callback(callback):
+            self._callbacks["after_start"] = callback
 
     def before_step(self):
         """Get Before Step Callback.

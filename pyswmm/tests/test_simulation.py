@@ -86,6 +86,11 @@ def test_simulation_callback_1():
 
         sim.add_before_start(before_start1)
 
+        def after_start1():
+            LIST.append("after_start1")
+
+        sim.add_after_start(after_start1)
+
         def before_step1():
             if "before_step1" not in LIST:
                 LIST.append("before_step1")
@@ -121,8 +126,8 @@ def test_simulation_callback_1():
                 LIST.append("SIM_STEP")
 
     assert LIST == [
-        "OPENED", "before_start1", "before_step1", "after_step1", "SIM_STEP",
-        "before_end1", "after_end1", "after_close1"
+        "OPENED", "before_start1", "after_start1", "before_step1",
+        "after_step1", "SIM_STEP", "before_end1", "after_end1", "after_close1"
     ]
     print(LIST)
 
@@ -135,4 +140,3 @@ def test_simulation_terminate():
             if ind == 10:
                 sim.terminate_simulation()
         assert(i == 11)
-
