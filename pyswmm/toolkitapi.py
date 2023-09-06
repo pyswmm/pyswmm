@@ -256,6 +256,11 @@ class RainGageResults(Enum):
     snowfall = 2
 
 
+class HotstartFile(Enum):
+    use = 0
+    save = 1
+
+
 class NodeStats(ctypes.Structure):
     _fields_ = [
         ("avgDepth", ctypes.c_double), ("maxDepth", ctypes.c_double),

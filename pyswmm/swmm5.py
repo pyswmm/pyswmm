@@ -22,6 +22,10 @@ from swmm.toolkit import solver
 # Local imports
 import pyswmm.toolkitapi as tka
 
+# Monkey Patching
+from pyswmm._monkey_patch import _patch_solver
+_patch_solver(solver)
+
 
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
@@ -356,6 +360,26 @@ class PySWMM(object):
         """
         solver.swmm_close()
         self.fileLoaded = False
+
+    def swmm_save_hotstart(self, hotstart_filename):
+        """
+        Save the current state of the model to a hotstart file. 
+        
+        This can be run at any point during the simultion.
+
+        :param str hotstart_filename: Name of hotstart file to save to.
+        """
+        solver.swmm_hotstart(tka.HotstartFile.save,hotstart_filename)
+
+    def swmm_use_hotstart(self, hotstart_filename):
+        """
+        Use a hotstart file to initialize the model.
+
+        This must be run before swmm_start() and after swmm_open().
+
+        :param str hotstart_filename: Name of hotstart file to load from.
+        """
+        solver.swmm_hotstart(tka.HotstartFile.use,hotstart_filename)
 
     def swmm_getVersion(self):
         """
