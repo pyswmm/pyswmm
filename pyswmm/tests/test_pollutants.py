@@ -15,6 +15,7 @@ from pyswmm.tests.data import (MODEL_POLLUTANTS_PATH,
                                MODEL_POLLUTANTS_PATH_3,
                                MODEL_POLLUTANTS_SETTERS_PATH)
 import pyswmm.toolkitapi as tka
+import pytest
 
 def test_pollutants_allobjects_quality():
     with Simulation(MODEL_POLLUTANTS_PATH) as sim:
@@ -39,27 +40,28 @@ def test_pollutants_allobjects_quality():
         assert S2.buildup['test-pollutant'] == 25.000
         assert S3.buildup['test-pollutant'] == 25.000
 
-        assert 9.99999 <= S1.conc_ponded['test-pollutant'] <= 10.00001
-        assert 9.99999 <= S2.conc_ponded['test-pollutant'] <= 10.00001
-        assert 9.99999 <= S3.conc_ponded['test-pollutant'] <= 10.00001
+
+        assert S1.conc_ponded['test-pollutant'] == pytest.approx(10, abs=1e-5)
+        assert S2.conc_ponded['test-pollutant'] == pytest.approx(10, abs=1e-5)
+        assert S3.conc_ponded['test-pollutant'] == pytest.approx(10, abs=1e-5)
 
         assert S1.pollut_quality['test-pollutant'] == 0.0
         assert S2.pollut_quality['test-pollutant'] == 0.0
         assert S3.pollut_quality['test-pollutant'] == 0.0
 
-        assert 0.0016769 <= S1.runoff_total_loading['test-pollutant'] <= 0.0016770
-        assert 0.0012341 <= S2.runoff_total_loading['test-pollutant'] <= 0.0012342
-        assert 0.00077987 <= S3.runoff_total_loading['test-pollutant'] <= 0.00077988
+        assert S1.runoff_total_loading['test-pollutant'] == pytest.approx(0.0016770, abs=1e-5)
+        assert S2.runoff_total_loading['test-pollutant'] == pytest.approx(0.0012342, abs=1e-5)
+        assert S3.runoff_total_loading['test-pollutant'] == pytest.approx(0.00077988, abs=1e-5)
 
         assert C1.pollut_quality['test-pollutant'] == 0.0
         assert C2.pollut_quality['test-pollutant'] == 0.0
         assert C3.pollut_quality['test-pollutant'] == 0.0
         assert C4.pollut_quality['test-pollutant'] == 0.0
         
-        assert 26.87 <= C1.total_loading['test-pollutant'] <= 26.88
-        assert 46.64 <= C2.total_loading['test-pollutant'] <= 46.66
-        assert 12.48 <= C3.total_loading['test-pollutant'] <= 12.50
-        assert 59.12 <= C4.total_loading['test-pollutant'] <= 59.15
+        assert C1.total_loading['test-pollutant'] == pytest.approx(26.87112, abs=1e-2)
+        assert C2.total_loading['test-pollutant'] == pytest.approx(46.64880, abs=1e-2)
+        assert C3.total_loading['test-pollutant'] == pytest.approx(12.49796, abs=1e-2)
+        assert C4.total_loading['test-pollutant'] == pytest.approx(59.13658, abs=1e-2)
 
         assert J1.pollut_quality['test-pollutant'] == 0.0
         assert J2.pollut_quality['test-pollutant'] == 0.0

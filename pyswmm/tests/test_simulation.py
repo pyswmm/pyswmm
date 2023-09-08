@@ -13,7 +13,8 @@ from random import randint
 import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-
+import pytest
+import os
 
 def test_simulation_1():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
@@ -140,3 +141,33 @@ def test_simulation_terminate():
             if ind == 10:
                 sim.terminate_simulation()
         assert(i == 11)
+
+def test_hotstart():
+    HSF_PATH = MODEL_WEIR_SETTING_PATH.replace('.inp', '.hsf')
+    if os.path.exists(HSF_PATH):
+        os.remove(HSF_PATH)
+    
+    # test saving hotstart works
+    assert not os.path.exists(HSF_PATH)
+
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        J1 = Nodes(sim)["J1"]
+        for ind, step in enumerate(sim):
+            if ind == 10:
+                sim.save_hotstart(HSF_PATH)
+                J1_dep = J1.depth
+                break
+    
+    assert os.path.exists(HSF_PATH)
+
+    # test loading hotstart works and that data matches
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        def store_J1_depth_before_step():
+            sim.J1_depth = Nodes(sim)["J1"].depth
+        sim.add_before_step(store_J1_depth_before_step)
+        sim.use_hotstart(HSF_PATH)
+
+        for ind, step in enumerate(sim):
+            break
+    assert sim.J1_depth == pytest.approx(J1_dep, 0.00001)
+    

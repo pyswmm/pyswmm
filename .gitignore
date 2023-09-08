@@ -35,6 +35,7 @@ labels.txt
 # SWMM files
 *.out
 *.rpt
+*.hsf
 *.mp4
 *.chi
 *.CSV

@@ -59,6 +59,7 @@ setup(
         'swmm5.2.1' :['swmm-toolkit==0.12.0'],
         'swmm5.2.2' :['swmm-toolkit==0.13.0'],
         'swmm5.2.3' :['swmm-toolkit==0.14.0'],
+        'swmm5.2.4' :['swmm-toolkit==0.15.0'],
     },
     packages=find_packages(exclude=['contrib', 'docs']),
     package_data={

@@ -662,3 +662,25 @@ class Simulation(object):
         dt = self.current_time - self.start_time
         total_time = self.end_time - self.start_time
         return float(dt.total_seconds()) / total_time.total_seconds()
+
+    def use_hotstart(self,hotstart_file):
+        """
+        Use a hotstart file to initialize the simulation.
+
+        This must be run before the simualation loop but inside
+        the simulation context manager.
+
+        :param str hotstart_file: Path to hotstart file.
+        """
+        self._model.swmm_use_hotstart(hotstart_file)
+    
+    def save_hotstart(self,hotstart_file):
+        
+        """
+        Save the current state of the model to a hotstart file. 
+
+        This can be run at any point during the simultion.
+
+        :param str hotstart_file: Path to hotstart file.
+        """
+        self._model.swmm_save_hotstart(hotstart_file)
