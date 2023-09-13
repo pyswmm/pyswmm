@@ -22,11 +22,6 @@ from swmm.toolkit import solver
 # Local imports
 import pyswmm.toolkitapi as tka
 
-# Monkey Patching
-from pyswmm._monkey_patch import _patch_solver
-_patch_solver(solver)
-
-
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
 
@@ -308,19 +303,9 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        ctime = self.curSimTime
-        secPday = 3600.0 * 24.0
-        advanceDays = advanceSeconds / secPday
-        eps = advanceDays * 0.00001
-        elapsed_time = 0
+        self.curSimTime = solver.swmm_stride(advanceSeconds)
 
-        while self.curSimTime <= ctime + advanceDays - eps:
-            elapsed_time = solver.swmm_step()
-            if elapsed_time == 0:
-                return 0.0
-            self.curSimTime = elapsed_time
-
-        return elapsed_time
+        return self.curSimTime
 
     def swmm_report(self):
         """

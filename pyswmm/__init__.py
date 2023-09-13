@@ -28,3 +28,8 @@ __all__ = [
     Link, Links, LidControls, LidGroups, Node, Nodes, Subcatchment, Subcatchments, Simulation,
     SystemStats, RainGages, RainGage, Output
 ]
+
+
+# Monkey Patching
+import pyswmm._monkey_patch
+pyswmm._monkey_patch.patch()
