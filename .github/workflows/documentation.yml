@@ -14,19 +14,15 @@ concurrency:
   cancel-in-progress: false
   
 jobs:
-  docs:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
       
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -41,16 +37,19 @@ jobs:
       - name: Sphinx build
         run: sphinx-build docs/source docs/build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          # Upload entire repository
+          # Upload build
           path: './docs/build'
-          
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-
