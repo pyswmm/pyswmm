@@ -1,5 +1,17 @@
 name: GH Pages Sphinx Docs
 on: [push, pull_request]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
   
 jobs:
   docs:
@@ -8,6 +20,9 @@ jobs:
       contents: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -26,13 +41,16 @@ jobs:
       - name: Sphinx build
         run: sphinx-build docs/source docs/build
 
-      # deploy docs      
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        # only deploy if tagging a new version
-        if: startsWith(github.event.ref, 'refs/tags/v')
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build
-          force_orphan: true
+          # Upload entire repository
+          path: './docs/build'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
