@@ -1,12 +1,12 @@
 <div align="center" style="max-width:500px;margin: auto;">
-  <img src="https://raw.githubusercontent.com/OpenWaterAnalytics/pyswmm/master/docs/source/_static/type-logo-black.png"><br>
+  <img src="https://raw.githubusercontent.com/pyswmm/pyswmm/master/docs/source/_static/type-logo-black.png"><br>
 </div>
 
 
 # python wrappers for the Stormwater Management Model (SWMM5)
 
-[![GitHub Actions Build Status](https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master)](https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml)
-[![Documentation Status](https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=master)](http://docs.pyswmm.org/)
+[![GitHub Actions Build Status](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master)](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml)
+[![Documentation Status](https://github.com/pyswmm/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=master)](http://docs.pyswmm.org/)
 [![License](https://img.shields.io/pypi/l/pyswmm.svg)](LICENSE.txt)
 [![Latest PyPI version](https://img.shields.io/pypi/v/pyswmm.svg)](https://pypi.python.org/pypi/pyswmm/)
 [![PyPI Monthly Downloads](https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month)](https://pypi.python.org/pypi/pyswmm/)
@@ -14,7 +14,7 @@
 
 ## Getting started
 
-* Poject Website: [www.pyswmm.org](https://www.pyswmm.org)
+* Project Website: [www.pyswmm.org](https://www.pyswmm.org)
 
 * [Official PySWMM Documentation](http://docs.pyswmm.org)
 
@@ -23,10 +23,13 @@
 
 * [PySWMM Example Bundles](https://www.pyswmm.org/examples)
 
+Introducing the SWAG STORE! All Proceeds go toward the hosting/service fees related to maintaining the PySWMM Project!!!  Get yourself a hoodie or coffee cup!
+
+
+* [PySWMM SWAG Store](https://www.zazzle.com/store/pyswmm)
+
 🆘Do you need HELP?🆘
-> We provide support on [Stack
-> Overflow](https://stackoverflow.com/search?q=pyswmm) or [GitHub
-> Discussions](https://github.com/OpenWaterAnalytics/pyswmm/discussions)
+> [GitHub Discussions](https://github.com/pyswmm/pyswmm/discussions)
 > to answer support questions related to PySWMM.
 
 Cite our Paper  
@@ -87,18 +90,18 @@ Guide](https://www.pyswmm.org/docs)!
 ```
 $ pip install pyswmm
 ```
-As of version 1.3.1, pyswmm can be installed with specific versions of the SWMM engine ranging from 5.1.14 to 5.2.3 using pip extras:
+As of version 1.3.1, pyswmm can be installed with specific versions of the SWMM engine ranging from 5.1.14 to 5.2.4 using pip extras:
 
 ```
-$ pip install pyswmm[swmm5.2.1]
+$ pip install pyswmm[swmm5.2.4]
 ```
 
 ### SWMM and Python Compatibility Table
 
-| pyswmm version | swmm-toolkit compatibility<br>(SWMM engine)                                                            | python compatibility |
-|----------------|--------------------------------------------------------------------------------------------------------|----------------------|
-| 1.0.0 - 1.1.1  | 0.8.2 (SWMM 5.1.13)                                                                                    | 3.6 - 3.9            |
-| 1.2.0 - 1.3.1  | 0.9.1 - 0.14.0 (SWMM 5.1.14 - 5.2.3)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows           | 3.7 - 3.11           |
+| pyswmm version | swmm-toolkit compatibility<br>(SWMM engine)                  | python compatibility |
+| -------------- | ------------------------------------------------------------ | -------------------- |
+| 1.0.0 - 1.1.1  | 0.8.2 (SWMM 5.1.13)                                          | 3.6 - 3.9            |
+| 1.2.0 - 1.5.0  | 0.9.1 - 0.15.0 (SWMM 5.1.14 - 5.2.4)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows | 3.7 - 3.12           |
 
 # Usage
 
@@ -145,7 +148,7 @@ with Output('model.out') as out:
 # Bugs
 
 Our issue tracker is at
-<https://github.com/OpenWaterAnalytics/pyswmm/issues>. Please report any
+<https://github.com/pyswmm/pyswmm/issues>. Please report any
 bugs that you find. Or, even better, fork the repository on GitHub and
 create a pull request. All changes are welcome, big or small, and we
 will help you make the pull request if you are new to git (just ask on
@@ -154,7 +157,7 @@ the issue).
 # Contributing
 
 Please check out our Wiki
-<https://github.com/OpenWaterAnalytics/pyswmm/wiki> for more information
+<https://github.com/pyswmm/pyswmm/wiki> for more information
 on contributing, including an Author Contribution Checklist.
 
 # License

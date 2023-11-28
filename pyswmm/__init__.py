@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2014 Bryant E. McDonnell
+# Copyright (c) 2023 Bryant E. McDonnell (See AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -18,11 +18,11 @@ from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage
 
-VERSION_INFO = (1, 4, 0)
+VERSION_INFO = (1, 5, 0)
 
 __version__ = '.'.join(map(str, VERSION_INFO))
-__author__ = 'Bryant E. McDonnell (EmNet LLC) - bemcdonnell@gmail.com'
-__copyright__ = 'Copyright (c) 2016 Bryant E. McDonnell (See AUTHORS)'
+__author__ = 'Bryant E. McDonnell (Hydroinformatics, LLC) - bemcdonnell@gmail.com'
+__copyright__ = 'Copyright (c) 2023 Bryant E. McDonnell (See AUTHORS)'
 __licence__ = 'BSD2'
 __all__ = [
     Link, Links, LidControls, LidGroups, Node, Nodes, Subcatchment, Subcatchments, Simulation,

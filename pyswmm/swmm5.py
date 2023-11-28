@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2014 Bryant E. McDonnell
+# Copyright (c) 2023 Bryant E. McDonnell (See AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """
 Python extensions for the SWMM5 Programmers toolkit.
-
-Open Water Analytics (http://wateranalytics.org/)
 """
 
 # Standard library imports
-import distutils.version
+import packaging.version
 import sys
 from datetime import datetime
 
@@ -21,6 +19,10 @@ from swmm.toolkit import solver
 
 # Local imports
 import pyswmm.toolkitapi as tka
+
+# Monkey Patching
+from pyswmm._monkey_patch import _patch_solver
+_patch_solver(solver)
 
 
 class SWMMException(Exception):
@@ -357,6 +359,26 @@ class PySWMM(object):
         solver.swmm_close()
         self.fileLoaded = False
 
+    def swmm_save_hotstart(self, hotstart_filename):
+        """
+        Save the current state of the model to a hotstart file.
+
+        This can be run at any point during the simultion.
+
+        :param str hotstart_filename: Name of hotstart file to save to.
+        """
+        solver.swmm_hotstart(tka.HotstartFile.save,hotstart_filename)
+
+    def swmm_use_hotstart(self, hotstart_filename):
+        """
+        Use a hotstart file to initialize the model.
+
+        This must be run before swmm_start() and after swmm_open().
+
+        :param str hotstart_filename: Name of hotstart file to load from.
+        """
+        solver.swmm_hotstart(tka.HotstartFile.use,hotstart_filename)
+
     def swmm_getVersion(self):
         """
         Retrieves version number of current SWMM engine.
@@ -368,7 +390,7 @@ class PySWMM(object):
         :rtype: int
         """
         major, minor, patch = solver.swmm_version_info().split('.')
-        return distutils.version.LooseVersion('.'.join([major, minor, patch]))
+        return packaging.version.parse('.'.join([major, minor, patch]))
 
         return
     def swmm_getMassBalErr(self):
@@ -419,7 +441,7 @@ class PySWMM(object):
                                              datetime(2009, 10, 1, 12,30))
         >>>
         """
-        solver.simulation_set_datetime(timeType, newDateTime.year, newDateTime.month, 
+        solver.simulation_set_datetime(timeType, newDateTime.year, newDateTime.month,
             newDateTime.day, newDateTime.hour, newDateTime.minute, newDateTime.second)
 
     def getSimUnit(self, unit_type):

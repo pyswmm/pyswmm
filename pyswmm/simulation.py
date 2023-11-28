@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2014 Bryant E. McDonnell
+# Copyright (c) 2023 Bryant E. McDonnell (See AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Base class for a SWMM Simulation."""
+
+# Standard import
+from warnings import warn
 
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
@@ -27,18 +30,6 @@ class Simulation(object):
     :param str swmm_lib_path: User-specified SWMM library path (default None).
 
     Examples:
-
-    Intialize a simulation and iterate through a simulation. This
-    approach requires some clean up.
-
-    >>> from pyswmm import Simulation
-    >>>
-    >>> sim = Simulation('tests/data/model_weir_setting.inp')
-    >>> for step in sim:
-    ...     pass
-    >>>
-    >>> sim.report()
-    >>> sim.close()
 
     Intialize using with statement.  This automatically cleans up
     after a simulation
@@ -73,6 +64,7 @@ class Simulation(object):
         self._terminate_request = False
         self._callbacks = {
             "before_start": None,
+            "after_start": None,
             "before_step": None,
             "after_step": None,
             "before_end": None,
@@ -104,13 +96,13 @@ class Simulation(object):
     def start(self):
         """Start Simulation"""
         if not self._isStarted:
-            # Set Model Initial Conditions
-            # (This Will be Deprecated with Time)
             if hasattr(self, "_initial_conditions"):
                 self._initial_conditions()
-            # Execute Callback Hooks Before Simulation
+            # Execute Callback Hooks Before Start
             self._execute_callback(self.before_start())
             self._model.swmm_start(True)
+            # Execute Callback Hooks After Start
+            self._execute_callback(self.after_start())
             self._isStarted = True
 
     def __next__(self):
@@ -169,6 +161,13 @@ class Simulation(object):
 
     def initial_conditions(self, init_conditions):
         """
+        DEPRECATION WARNING - 2023/06/10
+
+        Starting in PySWMM-v2 this method/function is set to be
+        deprecated.  For setting initial depths refer to the
+        Simulation.add_before_start() callback. If the user's goal is to
+        set the initial link settings, instead use Simulation.add_after_start().
+
         Intial Conditions for Hydraulics and Hydrology can be set
         from within the api by setting a function to the
         initial_conditions property.
@@ -188,6 +187,9 @@ class Simulation(object):
         ...     sim.report()
 
         """
+        warn('This method will be deprecated in PySWMM-v2',
+             DeprecationWarning, stacklevel=2)
+
         if self._is_callback(init_conditions):
             self._initial_conditions = init_conditions
 
@@ -227,6 +229,26 @@ class Simulation(object):
         """
         if self._is_callback(callback):
             self._callbacks["before_start"] = callback
+
+    def after_start(self):
+        """Get After Start Callback.
+
+        :return: Callbacks
+        """
+        return self._callbacks["after_start"]
+
+    def add_after_start(self, callback):
+        """
+        Add callback function/method/object to execute after
+        a simlation start. Needs to be callable.  This callback allows
+        setting initial link target_settings (such as an orifice).
+
+        :param func callback: Callable Object
+
+        (See self.add_after_start() for more details)
+        """
+        if self._is_callback(callback):
+            self._callbacks["after_start"] = callback
 
     def before_step(self):
         """Get Before Step Callback.
@@ -628,3 +650,25 @@ class Simulation(object):
         dt = self.current_time - self.start_time
         total_time = self.end_time - self.start_time
         return float(dt.total_seconds()) / total_time.total_seconds()
+
+    def use_hotstart(self,hotstart_file):
+        """
+        Use a hotstart file to initialize the simulation.
+
+        This must be run before the simualation loop but inside
+        the simulation context manager.
+
+        :param str hotstart_file: Path to hotstart file.
+        """
+        self._model.swmm_use_hotstart(hotstart_file)
+
+    def save_hotstart(self,hotstart_file):
+
+        """
+        Save the current state of the model to a hotstart file.
+
+        This can be run at any point during the simultion.
+
+        :param str hotstart_file: Path to hotstart file.
+        """
+        self._model.swmm_save_hotstart(hotstart_file)
