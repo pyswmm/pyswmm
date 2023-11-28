@@ -86,8 +86,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pyswmm'
-copyright = u'2016, Bryant E. McDonnell (EmNet LLC)'
-author = u'Bryant E. McDonnell (EmNet LLC)'
+copyright = u'2023, Bryant E. McDonnell (Hydroinformatics, LLC)'
+author = u'Bryant E. McDonnell (See AUTHORS)'
 
 version = pyswmm.__version__
 # The full version, including alpha/beta/rc tags.
@@ -162,7 +162,7 @@ html_theme_options = {
       "image_light": "type-logo-black.png",
       "image_dark": "type-logo-white.png",
    },
-   "github_url": "https://github.com/OpenWaterAnalytics/pyswmm",
+   "github_url": "https://github.com/pyswmm/pyswmm",
     "icon_links": [
         {
             "name": "PyPI",
@@ -333,7 +333,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'pyswmm.tex', u'pyswmm Documentation',
-     u'Bryant E. McDonnell (EmNet LLC)', 'manual'),
+     u'Bryant E. McDonnell (Hydroinformatics, LLC)', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

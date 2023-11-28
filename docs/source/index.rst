@@ -1,4 +1,4 @@
-.. use raw html to hide the doc title show it is shows up in browser tab but not on page 
+.. use raw html to hide the doc title show it is shows up in browser tab but not on page
 .. https://github.com/sphinx-doc/sphinx/issues/8356#issuecomment-1201029122
 .. raw:: html
 
@@ -80,7 +80,7 @@ More information about pyswmm can be found at the `official pyswmm website`_.
     Video Tutorials
     ^^^^^^^^^^^^^^^^
 
-    The pyswmm development team is putting together a video 
+    The pyswmm development team is putting together a video
     tutorial series the covers the various use cases of pyswmm.
 
     +++
@@ -103,8 +103,8 @@ More information about pyswmm can be found at the `official pyswmm website`_.
 
 .. only:: html
 
-.. |gh actions| image:: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master
-   :target: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/python-package.yml
+.. |gh actions| image:: https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=master
+   :target: https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml
    :alt: GitHub Actions Build Status
 .. |downloads| image:: https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month
    :target: https://pypi.python.org/pypi/pyswmm/
@@ -115,7 +115,7 @@ More information about pyswmm can be found at the `official pyswmm website`_.
 .. |pypi version| image:: https://img.shields.io/pypi/v/pyswmm.svg
    :target: https://pypi.python.org/pypi/pyswmm/
    :alt: Latest PyPI version
-.. |docs| image:: https://github.com/OpenWaterAnalytics/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=master
+.. |docs| image:: https://github.com/pyswmm/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=master
    :target: http://docs.pyswmm.org/
    :alt: Documentation Status
 .. |cite| image:: https://joss.theoj.org/papers/10.21105/joss.02292/status.svg
