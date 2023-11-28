@@ -14,7 +14,7 @@
 
 ## Getting started
 
-* Poject Website: [www.pyswmm.org](https://www.pyswmm.org)
+* Project Website: [www.pyswmm.org](https://www.pyswmm.org)
 
 * [Official PySWMM Documentation](http://docs.pyswmm.org)
 
@@ -23,10 +23,13 @@
 
 * [PySWMM Example Bundles](https://www.pyswmm.org/examples)
 
+Introducing the SWAG STORE! All Proceeds go toward the hosting/service fees related to maintaining the PySWMM Project!!!  Get yourself a hoodie or coffee cup!
+
+
+* [PySWMM SWAG Store](https://www.zazzle.com/store/pyswmm)
+
 🆘Do you need HELP?🆘
-> We provide support on [Stack
-> Overflow](https://stackoverflow.com/search?q=pyswmm) or [GitHub
-> Discussions](https://github.com/OpenWaterAnalytics/pyswmm/discussions)
+> [GitHub Discussions](https://github.com/OpenWaterAnalytics/pyswmm/discussions)
 > to answer support questions related to PySWMM.
 
 Cite our Paper  
@@ -87,18 +90,18 @@ Guide](https://www.pyswmm.org/docs)!
 ```
 $ pip install pyswmm
 ```
-As of version 1.3.1, pyswmm can be installed with specific versions of the SWMM engine ranging from 5.1.14 to 5.2.3 using pip extras:
+As of version 1.3.1, pyswmm can be installed with specific versions of the SWMM engine ranging from 5.1.14 to 5.2.4 using pip extras:
 
 ```
-$ pip install pyswmm[swmm5.2.1]
+$ pip install pyswmm[swmm5.2.4]
 ```
 
 ### SWMM and Python Compatibility Table
 
-| pyswmm version | swmm-toolkit compatibility<br>(SWMM engine)                                                            | python compatibility |
-|----------------|--------------------------------------------------------------------------------------------------------|----------------------|
-| 1.0.0 - 1.1.1  | 0.8.2 (SWMM 5.1.13)                                                                                    | 3.6 - 3.9            |
-| 1.2.0 - 1.4.0  | 0.9.1 - 0.14.0 (SWMM 5.1.14 - 5.2.3)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows           | 3.7 - 3.11           |
+| pyswmm version | swmm-toolkit compatibility<br>(SWMM engine)                  | python compatibility |
+| -------------- | ------------------------------------------------------------ | -------------------- |
+| 1.0.0 - 1.1.1  | 0.8.2 (SWMM 5.1.13)                                          | 3.6 - 3.9            |
+| 1.2.0 - 1.5.0  | 0.9.1 - 0.15.0 (SWMM 5.1.14 - 5.2.4)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows | 3.7 - 3.12           |
 
 # Usage
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2014 Bryant E. McDonnell
+# Copyright (c) 2023 Bryant E. McDonnell (See AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -30,18 +30,6 @@ class Simulation(object):
     :param str swmm_lib_path: User-specified SWMM library path (default None).
 
     Examples:
-
-    Intialize a simulation and iterate through a simulation. This
-    approach requires some clean up.
-
-    >>> from pyswmm import Simulation
-    >>>
-    >>> sim = Simulation('tests/data/model_weir_setting.inp')
-    >>> for step in sim:
-    ...     pass
-    >>>
-    >>> sim.report()
-    >>> sim.close()
 
     Intialize using with statement.  This automatically cleans up
     after a simulation
@@ -673,11 +661,11 @@ class Simulation(object):
         :param str hotstart_file: Path to hotstart file.
         """
         self._model.swmm_use_hotstart(hotstart_file)
-    
+
     def save_hotstart(self,hotstart_file):
-        
+
         """
-        Save the current state of the model to a hotstart file. 
+        Save the current state of the model to a hotstart file.
 
         This can be run at any point during the simultion.
 
