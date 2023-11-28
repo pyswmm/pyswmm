@@ -3,5 +3,5 @@
 wheel
 pytest
 julian==0.14
-swmm-toolkit==0.15.0
+swmm-toolkit==0.15.3
 aenum==3.1.11
