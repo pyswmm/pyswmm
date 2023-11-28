@@ -49,7 +49,7 @@ setup(
     description='Python Wrapper for SWMM5 API',
     long_description=get_description(),
     long_description_content_type='text/markdown',
-    url='https://github.com/pyswmm/pyswmm/wiki',
+    url='https://www.pyswmm.org',
     author='Bryant E. McDonnell (See AUTHORS)',
     install_requires=REQUIREMENTS,
     extras_require = {
