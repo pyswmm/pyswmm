@@ -12,14 +12,14 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
@@ -28,12 +28,12 @@ jobs:
         with:
             python-version: "3.10"
             cache: "pip"
-     
+
       - name: Install pyswmm
         run: |
           pip install -r requirements.txt -r docs/source/docs_requirements.txt
           pip install -e .
-      
+
       - name: Sphinx build
         run: sphinx-build docs/source docs/build
 
@@ -52,4 +52,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
+        if: startsWith(github.event.ref, 'refs/tags/v')
         uses: actions/deploy-pages@v2
