@@ -40,7 +40,8 @@ def get_description():
 
 REQUIREMENTS = ['swmm-toolkit>=0.9.0',
                 'julian>=0.14',
-                'aenum>=3.1.11']
+                'aenum>=3.1.11',
+                'packaging']
 
 
 setup(
