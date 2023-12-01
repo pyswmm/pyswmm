@@ -44,6 +44,7 @@ jobs:
           path: './docs/build'
 
   deploy:
+    if: startsWith(github.event.ref, 'refs/tags/v')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -52,5 +53,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        if: startsWith(github.event.ref, 'refs/tags/v')
         uses: actions/deploy-pages@v2
