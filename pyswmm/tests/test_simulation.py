@@ -65,13 +65,14 @@ def test_simulation_iter():
 
 
 def test_simulation_9():
+    '''Modified test to use "before_start" '''
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         J1 = Nodes(sim)["J1"]
 
         def init_function():
             J1.initial_depth = 15
 
-        sim.initial_conditions(init_function)
+        sim.add_before_start(init_function)
         for ind, step in enumerate(sim):
             if ind == 0:
                 assert J1.depth > 14
@@ -146,7 +147,7 @@ def test_hotstart():
     HSF_PATH = MODEL_WEIR_SETTING_PATH.replace('.inp', '.hsf')
     if os.path.exists(HSF_PATH):
         os.remove(HSF_PATH)
-    
+
     # test saving hotstart works
     assert not os.path.exists(HSF_PATH)
 
@@ -157,7 +158,7 @@ def test_hotstart():
                 sim.save_hotstart(HSF_PATH)
                 J1_dep = J1.depth
                 break
-    
+
     assert os.path.exists(HSF_PATH)
 
     # test loading hotstart works and that data matches
@@ -170,4 +171,3 @@ def test_hotstart():
         for ind, step in enumerate(sim):
             break
     assert sim.J1_depth == pytest.approx(J1_dep, 0.00001)
-    

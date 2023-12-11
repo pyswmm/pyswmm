@@ -16,6 +16,93 @@ class LidGroups(object):
     LidGroups Iterator Methods.
 
     :param object model: Open Model Instance
+
+    This allows the user to iterate and get one of the LID Groups as
+    defined inside SWMM's [LID_USAGE] section.  For example, here is a sample
+    section from a SWMM INP file.
+
+    .. code-block::
+
+        [LID_USAGE]
+        ;;Subcatchment   LID Process   Number  Area    Width   InitSat  FromImp  ToPerv   RptFile  DrainTo  FromPerv
+        ;;-------------- ------------- ------- ------- ------- -------- -------- -------- -------- -------- ----------
+        J1_J3_qqqqqqq    LID_C1        1       180.00  2       0        0        0        *        *        0
+        J11_J14_qqqqqqq  LID_C1        1       140     2       0        0        0        *        *        0
+
+
+    Now we can peform manipulations in PySWMM and get objects.
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidGroups
+
+        with Simulation('lid_model.inp') as sim:
+            for lid_group in LidGroups(sim):
+                print(lid_group)
+
+    .. code-block::
+
+        >>> J1_J3_qqqqqqq
+        >>> J11_J14_qqqqqqq
+
+    Once a handle has been created of an LidGroup object we can now make
+    adjustments to the parameters and change the behavior.  The following example
+    provides some context around the different object handles created.  One
+    feature presented herein shows that during a simulation the drain_node
+    (or drain subcatchement) can be changed during the simulation.
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidGroups
+
+        with Simulation('lid_model.inp') as sim:
+            # This returns an LidGroup object
+            lid_group_j1_j3 = LidGroups(sim)["J1_J3_qqqqqqq"]
+
+            # Next to get access to one of the LID units
+            # inside this subcatchment it is indexed.
+
+            # This returns an LidUnit object
+            lid_unit0=lid_group_j1_j3[0]
+
+            for ind, step in enumerate(sim):
+                if ind == 50:
+                    lid_unit0.drain_node = "J04"
+
+    Continuing on the previous example, either during the simulation or after
+    it completes, the user has access to lid unit results.  The following code
+    provides details on how to access differne LidUnit results
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidGroups
+
+        with Simulation('lid_model.inp') as sim:
+            # This returns an LidGroup object
+            lid_group_j1_j3 = LidGroups(sim)["J1_J3_qqqqqqq"]
+
+            # Next to get access to one of the LID units
+            # inside this subcatchment it is indexed.
+
+            # This returns an LidUnit object
+            lid_unit0=lid_group_j1_j3[0]
+
+            for ind, step in enumerate(sim):
+                if ind == 50:
+                    lid_unit0.drain_node = "J04"
+
+            surface = lid_unit0.surface
+            pavement = lid_unit0.pavement
+            soil = lid_unit0.soil
+            storage = lid_unit0.storage
+            water_balance = lid_unit0.water_balance
+            print(water_balance.inflow)
+            print(water_balance.evaporation)
+            print(water_balance.infiltration)
+            print(water_balance.surface_flow)
+            print(water_balance.drain_flow)
+            print(water_balance.initial_volume)
+            print(water_balance.final_volume)
     """
 
     def __init__(self, model):
