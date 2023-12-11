@@ -13,11 +13,16 @@ Subcatchments Module
    Subcatchment
 
 
+
+
 .. currentmodule:: pyswmm.lidgroups
+
+LID Groups Module
+-----------------
 
 .. autosummary::
    :nosignatures:
-   :toctree: api/subc/
+   :toctree: api/
 
    LidGroups
    LidGroup
@@ -30,7 +35,7 @@ are part of LidGroups on subcatchments
 
 .. autosummary::
    :nosignatures:
-   :toctree: api/subc/
+   :toctree: api/
 
    Surface
    Pavement

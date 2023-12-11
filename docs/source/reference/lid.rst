@@ -9,7 +9,7 @@ For examples see: :doc:`LID Example Code </reference/api/lid/pyswmm.lidcontrols.
 
 .. autosummary::
    :nosignatures:
-   :toctree: api/lid/
+   :toctree: api/
 
    LidControls
    LidControl
@@ -22,7 +22,7 @@ how these classes are used see :doc:`LID Example Code </reference/api/lid/pyswmm
 
 .. autosummary::
    :nosignatures:
-   :toctree: api/lid/
+   :toctree: api/
 
    Surface
    Soil
