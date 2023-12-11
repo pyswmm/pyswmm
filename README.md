@@ -41,7 +41,7 @@ Cite our Paper
 # YouTube Training Vidoes
 
 Setting a manhole inflow during a running simulation!  
-> [![image](http://img.youtube.com/vi/av8L5gNSBvI/0.jpg)](https://youtu.be/av8L5gNSBvI)
+> [![image](http://img.youtube.com/vi/i4AOHwKyvNw/0.jpg)](https://www.youtube.com/watch?v=i4AOHwKyvNw)
 
 # Overview
 
