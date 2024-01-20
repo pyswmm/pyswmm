@@ -7,7 +7,8 @@
 # -----------------------------------------------------------------------------
 import pytest
 
-from pyswmm import Simulation, Output
+from pyswmm import Simulation
+from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 from pyswmm.errors import OutputException
 
@@ -32,7 +33,9 @@ def test_output_invalid_time():
 
     with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as out:
         with pytest.raises(OutputException):
-            flow_rate = out.link_series('C3', LinkAttribute.FLOW_RATE, datetime(2015, 10, 1, 15))
+            flow_rate = out.link_series(
+                'C3', LinkAttribute.FLOW_RATE, datetime(
+                    2015, 10, 1, 15))
 
 
 def test_output_with():
@@ -53,23 +56,34 @@ def test_output_with():
         assert times[-1] == datetime(2015, 11, 4)
         assert len(flow_rate) == 3480
 
-        subset_flow_rate = out.link_series('C3', LinkAttribute.FLOW_RATE, datetime(2015, 11, 1, 15))
+        subset_flow_rate = out.link_series(
+            'C3', LinkAttribute.FLOW_RATE, datetime(
+                2015, 11, 1, 15))
         subset_times = list(subset_flow_rate.keys())
         assert subset_times[0] == datetime(2015, 11, 1, 15)
         assert subset_times[-1] == datetime(2015, 11, 4)
 
-        subset_flow_rate = out.link_series('C3', LinkAttribute.FLOW_RATE, datetime(2015, 11, 2, 15), datetime(2015, 11, 3, 15))
+        subset_flow_rate = out.link_series(
+            'C3', LinkAttribute.FLOW_RATE, datetime(
+                2015, 11, 2, 15), datetime(
+                2015, 11, 3, 15))
         subset_times = list(subset_flow_rate.keys())
         assert subset_times[0] == datetime(2015, 11, 2, 15)
         assert subset_times[-1] == datetime(2015, 11, 3, 14, 59)
 
         assert len(out.node_series('J1', NodeAttribute.TOTAL_INFLOW)) == 3480
-        assert len(out.subcatch_series('S1', SubcatchAttribute.RUNOFF_RATE)) == 3480
+        assert len(
+            out.subcatch_series(
+                'S1',
+                SubcatchAttribute.RUNOFF_RATE)) == 3480
         assert len(out.system_series(SystemAttribute.EVAP_INFIL_LOSS)) == 3480
 
-        assert len(out.subcatch_attribute(SubcatchAttribute.RUNOFF_RATE, 0)) == 3
+        assert len(
+            out.subcatch_attribute(
+                SubcatchAttribute.RUNOFF_RATE,
+                0)) == 3
         assert len(out.node_attribute(NodeAttribute.HYDRAULIC_HEAD, 0)) == 5
-        assert len(out.link_attribute( LinkAttribute.FLOW_RATE, 0)) == 4
+        assert len(out.link_attribute(LinkAttribute.FLOW_RATE, 0)) == 4
         # waiting for function to be fixed
         # assert len(out.system_attribute('air_temp', 0)) == 1
 
@@ -97,3 +111,23 @@ def test_output():
     assert times[-1] == datetime(2015, 11, 4)
     assert len(flow_rate) == 3480
     out.close()
+
+
+def test_timeseries_abstraction():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for step in sim:
+            pass
+
+    with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as out:
+        for attr in SubcatchAttribute:
+            series = getattr(SubcatchSeries(out)['S1'], attr.name.lower())
+            assert len(series) == 3480
+        for attr in NodeAttribute:
+            series = getattr(NodeSeries(out)['J1'], attr.name.lower())
+            assert len(series) == 3480
+        for attr in LinkAttribute:
+            series = getattr(LinkSeries(out)['C1:C2'], attr.name.lower())
+            assert len(series) == 3480
+        for attr in SystemAttribute:
+            series = getattr(SystemSeries(out), attr.name.lower())
+            assert len(series) == 3480
