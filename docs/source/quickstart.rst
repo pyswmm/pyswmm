@@ -246,14 +246,6 @@ binary file using :py:class:`pyswmm.output.Output.node_series` method.
         link_ts = LinkSeries(out)['C2'].flow_rate
         sys_ts = SystemSeries(out).rainfall
 
-Output:
-
-.. code-block::
-
-    >>> 2015-11-01 15:00:00 15.0
-    >>> 2015-11-01 15:01:00 15.0
-    >>> 2015-11-01 15:02:00 15.0
-    >>> 2015-11-01 15:03:00 15.0
 
 The :py:class:`pyswmm.output.Output.node_series` method allows the user to access all timeseries types for node objects such as INVERT_DEPTH, HYDRAULIC_HEAD,
 PONDED_VOLUME, LATERAL_INFLOW, TOTAL_INFLOW, and FLOODING_LOSSES. If pollutants are defined in the simulation, the concentration
