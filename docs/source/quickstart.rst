@@ -233,13 +233,18 @@ binary file using :py:class:`pyswmm.output.Output.node_series` method.
 
 .. code-block:: python
 
-    from swmm.toolkit.shared_enum import NodeAttribute
-    from pyswmm import Output
+    from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
 
-    with Output('tests/data/model_full_features.out') as out:
-        ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH, datetime(2015, 11, 1, 15), datetime(2015, 11, 1, 16))
-            for index in ts:
-            print(index, ts[index])
+    with Output('model.out') as out:
+        print(len(out.subcatchments))
+        print(len(out.nodes))
+        print(len(out.links))
+        print(out.version)
+
+        sub_ts = SubcatchSeries(out)['S1'].runoff_rate
+        node_ts = NodeSeries(out)['J1'].invert_depth
+        link_ts = LinkSeries(out)['C2'].flow_rate
+        sys_ts = SystemSeries(out).rainfall
 
 Output:
 

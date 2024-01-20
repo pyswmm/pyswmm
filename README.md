@@ -132,17 +132,18 @@ Opening a SWMM binary output file and accessing model metadata and
 timeseries.
 
 ``` python
-from swmm.toolkit.shared_enum import SubcatchAttribute, NodeAttribute, LinkAttribute
-from pyswmm import Output
+from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
 
 with Output('model.out') as out:
     print(len(out.subcatchments))
     print(len(out.nodes))
     print(len(out.links))
     print(out.version)
-    sub_ts = out.subcatch_series('S1', SubcatchAttribute.RUNOFF_RATE)
-    node_ts = out.node_series('J1', NodeAttribute.INVERT_DEPTH)
-    link_ts = out.link_series('C2', LinkAttribute.FLOW_RATE)
+
+    sub_ts = SubcatchSeries(out)['S1'].runoff_rate
+    node_ts = NodeSeries(out)['J1'].invert_depth
+    link_ts = LinkSeries(out)['C2'].flow_rate
+    sys_ts = SystemSeries(out).rainfall
 ```
 
 # Bugs
