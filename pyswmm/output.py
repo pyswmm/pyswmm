@@ -155,8 +155,7 @@ class Output(object):
                 datetime_format = "%Y-%m-%d %H:%M:%S"
                 msg = f"{arg_time_index} does not exist in model output reporting time steps."
                 msg += (
-                    f" The reporting time range is {
-                        start.strftime(datetime_format)} to "
+                    f" The reporting time range is {start.strftime(datetime_format)} to "
                     f"{end.strftime(datetime_format)} at increments of "
                     f"{report} seconds."
                 )
