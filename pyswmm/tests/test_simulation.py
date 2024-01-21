@@ -11,7 +11,7 @@ from random import randint
 
 # Local imports
 import pyswmm.toolkitapi as tka
-from pyswmm import Links, Nodes, Simulation
+from pyswmm import Links, Nodes, Simulation, SimulationPreConfig
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pytest
 import os
@@ -171,3 +171,27 @@ def test_hotstart():
         for ind, step in enumerate(sim):
             break
     assert sim.J1_depth == pytest.approx(J1_dep, 0.00001)
+
+def test_pre_simulation_config():
+    sim_preconfig = SimulationPreConfig()
+    sim_preconfig.filename_suffix = "_a"
+
+    sim_preconfig.add_update_by_token("J2", "SUBCATCHMENTS", "S1", 2)
+    sim_preconfig.add_update_by_token(2.0, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
+
+    with Simulation(MODEL_WEIR_SETTING_PATH, \
+                    sim_preconfig=sim_preconfig) as sim:
+        pass
+
+    with open(MODEL_WEIR_SETTING_PATH.replace(".inp", "_a.inp"), 'r') as fl:
+        for ind, ln in enumerate(fl):
+            if ind == 55:
+                compare = ['S1','SCS_24h_Type_I_1in','J2','1','100','500','0.5','0']
+                ln=ln.strip()
+                ln=ln.split()
+                assert(ln == compare)
+            if ind == 137:
+                compare = ['SCS_24h_Type_I_1in','1:15','2.0']
+                ln=ln.strip()
+                ln=ln.split()
+                assert(ln == compare)

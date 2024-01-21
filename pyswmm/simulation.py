@@ -26,6 +26,7 @@ class Simulation(object):
     :param str inpfile: Name of SWMM input file (default '')
     :param str rptfile: Report file to generate (default None)
     :param str binfile: Optional binary output file (default None)
+    :param SimulationPreConfig sim_preconfig: Optional Pre Config (default None)
 
     Examples:
 
@@ -55,7 +56,18 @@ class Simulation(object):
     def __init__(self,
                  inputfile,
                  reportfile=None,
-                 outputfile=None):
+                 outputfile=None,
+                 sim_preconfig=None):
+        # sim_config enables a find/replace to be fun on the source input file
+        # to create the new INP file.
+        if sim_preconfig:
+            if not isinstance(sim_preconfig, SimulationPreConfig):
+                raise(Exception("Invalid Simulation Preconfig Instance."))
+            else:
+                if not sim_preconfig.input_file:
+                    sim_preconfig.input_file = inputfile
+                inputfile = sim_preconfig.apply_changes()
+
         self._model = PySWMM(inputfile, reportfile, outputfile)
         self._model.swmm_open()
         self._isOpen = True
@@ -724,3 +736,238 @@ class Simulation(object):
         """
         if self._is_callback(callback):
             self._callbacks["after_close"] = callback
+
+
+class SimulationPreConfig():
+    """
+    This class was developed to introduce a simple way to programmatically
+    adjust nearly all model parameters. Once the user instantiates the
+    `SimulationPreConfig` object the method `add_update_by_token` can be called
+    for each parameter (by index) that they would like to update. The parameter
+    limits are still up to the user to get right as per the SWMM user's guide.
+
+    The arguments are as follows.  In the Base INP file:
+
+    .. code-block:: python
+
+        [SUBCATCHMENTS]
+        ;;                                         Total   Pcnt. Pcnt.  Curb
+        ;;Name   Raingage         Outlet   Area    Imperv  Width Slope  Length
+        ;;------ ---------------- -------- ------- ------- ----- ------ --------
+        S1       SCS_24h_Type_I_1in J1     1       100     500   0.5    0
+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, SimulationPreConfig, Subcatchments
+
+        # Create Config Handle
+        sim_conf = SimulationPreConfig()
+
+        # Specifying the update parameters
+        # Parameter Order:
+        # New Value, Section, Object ID, Parameter Index, Obj Row Num (optional)
+        sim_conf.add_update_by_token("J2", "SUBCATCHMENTS", "S1", 2)
+        sim_conf.add_update_by_token(2, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
+
+        with Simulation(<path-to-inp>, sim_preconfig = sim_conf) as sim:
+            S1 = Subcatchments(sim)["S1"]
+            print(S1.connection)
+
+            for step in sim:
+                pass
+
+    .. code-block:: python
+
+        >>> (2, 'J2')
+
+    In the New INP file:
+
+    .. code-block:: python
+
+        [SUBCATCHMENTS]
+        ;;                                         Total   Pcnt. Pcnt.  Curb
+        ;;Name   Raingage         Outlet   Area    Imperv  Width Slope  Length
+        ;;------ ---------------- -------- ------- ------- ----- ------ --------
+        S1       SCS_24h_Type_I_1in J3     1       100     500   0.5    0
+
+    """
+    def __init__(self):
+        self._filename_suffix = "_mod"
+        self._modifications = {}
+        self._source_input_name = None
+
+    @property
+    def input_file(self):
+        """
+        This is set by the `Simulation` class but can also be set directly
+        if the user wants to simply use this class for find replace.
+
+        Examples:
+
+        .. code-block:: python
+
+            sim_conf = SimulationPreConfig()
+            sim_conf.input_file = "./model_weir_setting.inp"
+
+        .. code-block::
+
+            >>> datetime.datetime(2016,5,10,15,15,1)
+        """
+        self._source_input_name
+
+    @input_file.setter
+    def input_file(self, inp_path):
+        """"""
+        self._source_input_name = inp_path
+
+    @property
+    def filename_suffix(self):
+        """
+        If the user wants to modify the new file name simply use this class
+        for find replace.
+
+        Examples:
+
+        .. code-block:: python
+
+            sim_conf = SimulationPreConfig()
+            sim_conf.filename_suffix = "_a"
+
+        .. code-block::
+
+            >>> datetime.datetime(2016,5,10,15,15,1)
+        """
+        return self._filename_suffix
+
+    @filename_suffix.setter
+    def filename_suffix(self, suffix: str):
+        """"""
+        self._filename_suffix = suffix
+
+    def add_update_by_token(self, new_val, section: str, id: str,
+                            index: int, row_num=0):
+        """
+        This method allows the user to give the parmeter to be updated and
+        where this value should be set in the input file.
+
+        :param new_val: The new value (can be any normal data type)
+        :param str section: Section name (such as "JUNCTIONS")
+        :param str id: the SWMM object ID name (such as "J1")
+        :param int index: The index of the parameter in the row to update (0 is first index)
+        :param ind row_num: If multiple rows exist for an object like "HYDROGRAPHS" (0 is first index)
+
+        .. code-block:: python
+
+            from pyswmm import SimulationPreConfig
+
+            # Create Config Handle
+            sim_conf = SimulationPreConfig()
+
+            # Specifying the update parameters
+            # Parameter Order:
+            # New Value, Section, Object ID, Parameter Index, Obj Row Num (optional)
+            sim_conf.add_update_by_token("J2", "SUBCATCHMENTS", "S1", 2)
+            sim_conf.add_update_by_token(2, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
+
+        """
+        section=section.lower()
+        id = id.lower()
+
+        if section not in self._modifications.keys():
+            self._modifications[section] = {}
+        if id not in self._modifications[section].keys():
+            self._modifications[section][id] = {}
+        if row_num not in self._modifications[section][id.lower()].keys():
+            self._modifications[section][id][row_num]={}
+
+        self._modifications[section][id][row_num][index]=new_val
+
+    def apply_changes(self):
+        """
+        If the user wants to modify the new file name simply use this class
+        for find replace then Apply those changes.
+
+        Examples:
+
+        .. code-block:: python
+
+            sim_conf = SimulationPreConfig()
+            sim_conf.input_file = "./model_weir_setting.inp"
+            sim_conf.filename_suffix = "_a"
+
+            sim_conf.apply_changes()
+
+        .. code-block::
+
+            >>> datetime.datetime(2016,5,10,15,15,1)
+
+        """
+        mods = self._modifications
+        if not self._source_input_name:
+            raise(Exception("No Source INP set"))
+
+        def write_line(fl_handle, ln):
+            end=''
+            if not ln.endswith("\n"):
+                end = '\n'
+            fl_handle.write(ln+end)
+
+        dest_file = self._source_input_name[:-4] \
+                    + self._filename_suffix + '.inp'
+
+        fl_source = open(self._source_input_name, 'r')
+        fl_destin = open(dest_file, 'w')
+
+        section_replacements = False
+        section = None
+        id_ref = None
+        row_count = 0
+
+        for ln in fl_source:
+            if '[' in ln and ']' in ln:
+                ln_orig = ln
+                ln = ln.strip()
+                ln = ln.replace("[",'')
+                ln = ln.replace("]",'')
+                section = ln.lower()
+                section_replacements = False
+                # Only modify sections if there are edits.
+                if section in mods.keys():
+                    section_replacements = True
+                id_ref = None
+                row_count = 0
+                write_line(fl_destin, ln_orig)
+            elif ln.startswith(';') or len(ln.split()) == 0:
+                write_line(fl_destin, ln)
+            elif not section_replacements:
+                write_line(fl_destin, ln)
+            else:
+                ln = ln.strip()
+                ln_split = ln.split()
+                if id_ref == ln_split[0].lower():
+                    row_count += 1
+                else:
+                    id_ref = ln_split[0].lower()
+                    row_count = 0
+
+                ln_mod = ln_split
+                if id_ref in mods[section].keys():
+                    if row_count in mods[section][id_ref].keys():
+                        for index in mods[section][id_ref][row_count].keys():
+                            if index >= 0 and index < len(ln_split):
+                                ln_mod[index] = mods[section][id_ref][row_count][index]
+                                ln_out = "     ".join([str(v) for v in ln_mod])
+                            else:
+                                raise(Exception("{0} {1} {2} index {3} out of bounds".format(\
+                                               section, id_ref, \
+                                               row_count, index)))
+                    else:
+                        ln_out = ln
+                else:
+                    ln_out = ln
+                write_line(fl_destin, ln_out)
+        fl_source.close()
+        fl_destin.close()
+
+        return dest_file
