@@ -62,7 +62,7 @@ class Simulation(object):
         # to create the new INP file.
         if sim_preconfig:
             if not isinstance(sim_preconfig, SimulationPreConfig):
-                raise(Exception("Invalid Simulation Preconfig Instance."))
+                raise (Exception("Invalid Simulation Preconfig Instance."))
             else:
                 if not sim_preconfig.input_file:
                     sim_preconfig.input_file = inputfile
@@ -541,7 +541,7 @@ class Simulation(object):
         total_time = self.end_time - self.start_time
         return float(dt.total_seconds()) / total_time.total_seconds()
 
-    def use_hotstart(self,hotstart_file):
+    def use_hotstart(self, hotstart_file):
         """
         Use a hotstart file to initialize the simulation.
 
@@ -561,8 +561,7 @@ class Simulation(object):
         """
         self._model.swmm_use_hotstart(hotstart_file)
 
-    def save_hotstart(self,hotstart_file):
-
+    def save_hotstart(self, hotstart_file):
         """
         Save the current state of the model to a hotstart file.
 
@@ -792,6 +791,7 @@ class SimulationPreConfig():
         S1       SCS_24h_Type_I_1in J3     1       100     500   0.5    0
 
     """
+
     def __init__(self):
         self._filename_suffix = "_mod"
         self._modifications = {}
@@ -871,7 +871,7 @@ class SimulationPreConfig():
             sim_conf.add_update_by_token(2, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
 
         """
-        section=section.lower()
+        section = section.lower()
         id = id.lower()
 
         if section not in self._modifications.keys():
@@ -879,9 +879,9 @@ class SimulationPreConfig():
         if id not in self._modifications[section].keys():
             self._modifications[section][id] = {}
         if row_num not in self._modifications[section][id.lower()].keys():
-            self._modifications[section][id][row_num]={}
+            self._modifications[section][id][row_num] = {}
 
-        self._modifications[section][id][row_num][index]=new_val
+        self._modifications[section][id][row_num][index] = new_val
 
     def apply_changes(self):
         """
@@ -905,16 +905,16 @@ class SimulationPreConfig():
         """
         mods = self._modifications
         if not self._source_input_name:
-            raise(Exception("No Source INP set"))
+            raise (Exception("No Source INP set"))
 
         def write_line(fl_handle, ln):
-            end=''
+            end = ''
             if not ln.endswith("\n"):
                 end = '\n'
             fl_handle.write(ln+end)
 
         dest_file = self._source_input_name[:-4] \
-                    + self._filename_suffix + '.inp'
+            + self._filename_suffix + '.inp'
 
         fl_source = open(self._source_input_name, 'r')
         fl_destin = open(dest_file, 'w')
@@ -928,8 +928,8 @@ class SimulationPreConfig():
             if '[' in ln and ']' in ln:
                 ln_orig = ln
                 ln = ln.strip()
-                ln = ln.replace("[",'')
-                ln = ln.replace("]",'')
+                ln = ln.replace("[", '')
+                ln = ln.replace("]", '')
                 section = ln.lower()
                 section_replacements = False
                 # Only modify sections if there are edits.
@@ -959,9 +959,9 @@ class SimulationPreConfig():
                                 ln_mod[index] = mods[section][id_ref][row_count][index]
                                 ln_out = "     ".join([str(v) for v in ln_mod])
                             else:
-                                raise(Exception("{0} {1} {2} index {3} out of bounds".format(\
-                                               section, id_ref, \
-                                               row_count, index)))
+                                raise (Exception("{0} {1} {2} index {3} out of bounds".format(
+                                    section, id_ref,
+                                    row_count, index)))
                     else:
                         ln_out = ln
                 else:
