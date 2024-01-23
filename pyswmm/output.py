@@ -1046,6 +1046,16 @@ class SubcatchSeries(OutAttributeBase):
             ts9 = SubcatchSeries(out)['S1'].pollut_conc_0
     """
 
+    rainfall: dict[datetime.datetime, float] 
+    snow_depth: dict[datetime.datetime, float] 
+    evap_loss: dict[datetime.datetime, float] 
+    infil_loss: dict[datetime.datetime, float] 
+    runoff_rate: dict[datetime.datetime, float] 
+    gw_outflow_rate: dict[datetime.datetime, float] 
+    gw_table_elev: dict[datetime.datetime, float] 
+    soil_moisture: dict[datetime.datetime, float] 
+    pollut_conc_0: dict[datetime.datetime, float] 
+
     def __init__(self, out_handle):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SubcatchAttribute
@@ -1088,6 +1098,14 @@ class NodeSeries(OutAttributeBase):
             ts7 = NodeSeries(out)['J1'].pollut_conc_0
     """
 
+    invert_depth: dict[datetime.datetime, float] 
+    hydraulic_head: dict[datetime.datetime, float] 
+    ponded_volume: dict[datetime.datetime, float] 
+    lateral_inflow: dict[datetime.datetime, float] 
+    total_inflow: dict[datetime.datetime, float] 
+    flooding_losses: dict[datetime.datetime, float] 
+    pollut_conc_0: dict[datetime.datetime, float] 
+
     def __init__(self, out_handle):
         super().__init__(out_handle)
         self._attr_group = shared_enum.NodeAttribute
@@ -1129,6 +1147,13 @@ class LinkSeries(OutAttributeBase):
             ts6 = LinkSeries(out)['C1:C2'].pollut_conc_0
 
     """
+
+    flow_rate: dict[datetime.datetime, float] 
+    flow_depth: dict[datetime.datetime, float] 
+    flow_velocity: dict[datetime.datetime, float] 
+    flow_volume: dict[datetime.datetime, float] 
+    capacity: dict[datetime.datetime, float] 
+    pollut_conc_0: dict[datetime.datetime, float] 
 
     def __init__(self, out_handle):
         super().__init__(out_handle)
@@ -1179,6 +1204,22 @@ class SystemSeries(OutAttributeBase):
             ts14 = SystemSeries(out).evap_rate
             ts15 = SystemSeries(out).ptnl_evap_rate
     """
+
+    air_temp: dict[datetime.datetime, float] 
+    rainfall: dict[datetime.datetime, float] 
+    snow_depth: dict[datetime.datetime, float] 
+    evap_infil_loss: dict[datetime.datetime, float] 
+    runoff_flow: dict[datetime.datetime, float] 
+    dry_weather_inflow: dict[datetime.datetime, float] 
+    gw_inflow: dict[datetime.datetime, float] 
+    rdii_inflow: dict[datetime.datetime, float] 
+    direct_inflow: dict[datetime.datetime, float] 
+    total_lateral_inflow: dict[datetime.datetime, float] 
+    flood_losses: dict[datetime.datetime, float] 
+    outfall_flows: dict[datetime.datetime, float] 
+    volume_stored: dict[datetime.datetime, float] 
+    evap_rate: dict[datetime.datetime, float] 
+    ptnl_evap_rate: dict[datetime.datetime, float] 
 
     def __init__(self, out_handle):
         super().__init__(out_handle)
