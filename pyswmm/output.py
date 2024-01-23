@@ -5,6 +5,7 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
+from __future__ import annotations
 from pyswmm.errors import OutputException
 from datetime import datetime, timedelta
 from functools import wraps
@@ -153,9 +154,11 @@ class Output(object):
 
             if time_index is None:
                 datetime_format = "%Y-%m-%d %H:%M:%S"
-                msg = f"{arg_time_index} does not exist in model output reporting time steps."
+                msg = f"{
+                    arg_time_index} does not exist in model output reporting time steps."
                 msg += (
-                    f" The reporting time range is {start.strftime(datetime_format)} to "
+                    f" The reporting time range is {
+                        start.strftime(datetime_format)} to "
                     f"{end.strftime(datetime_format)} at increments of "
                     f"{report} seconds."
                 )
@@ -999,14 +1002,18 @@ class Output(object):
 class OutAttributeBase():
     """Baseclass for SubcatchSeries, NodeSeries, LinkSeries."""
 
-    def __init__(self, out_handle):
+    def __init__(self, out_handle: Output):
         if not isinstance(out_handle, Output):
-            raise (Exception("Invalid Outfile Handle"))
+            raise (TypeError("Invalid Outfile Handle"))
         self._handle = out_handle
+        self._attr_group = None
 
-    def __getattr__(self, attr):
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
+    def __getattr__(self, attr) -> dict[datetime.datetime, float]:
         if attr.upper() not in [item.name for item in self._attr_group]:
-            raise (Exception("Invalid Property: {}".format(attr)))
+            raise (AttributeError("Invalid Property: {}".format(attr)))
         else:
             attr_select = getattr(self._attr_group, attr.upper())
             ts = self._series_type(attr_select)
@@ -1045,6 +1052,9 @@ class SubcatchSeries(OutAttributeBase):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SubcatchAttribute
         self._idname = None
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def __getitem__(self, idname):
         self._idname = idname
@@ -1085,6 +1095,9 @@ class NodeSeries(OutAttributeBase):
         self._attr_group = shared_enum.NodeAttribute
         self._idname = None
 
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
     def __getitem__(self, idname):
         self._idname = idname
         return self
@@ -1123,6 +1136,9 @@ class LinkSeries(OutAttributeBase):
         super().__init__(out_handle)
         self._attr_group = shared_enum.LinkAttribute
         self._idname = None
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def __getitem__(self, idname):
         self._idname = idname
@@ -1169,6 +1185,9 @@ class SystemSeries(OutAttributeBase):
     def __init__(self, out_handle):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SystemAttribute
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def _series_type(self, attr_select):
         return self._handle.system_series(attr_select)
