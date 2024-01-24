@@ -12,6 +12,7 @@ from random import randint
 # Local imports
 import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation
+from pyswmm.errors import MultiSimulationError
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pytest
 import os
@@ -171,3 +172,11 @@ def test_hotstart():
         for ind, step in enumerate(sim):
             break
     assert sim.J1_depth == pytest.approx(J1_dep, 0.00001)
+
+def test_multi_sim_exception():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        with pytest.raises(MultiSimulationError):
+            with Simulation(MODEL_WEIR_SETTING_PATH) as sim2:
+                pass
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
+        pass
