@@ -190,3 +190,8 @@ def test_states():
         assert (sim.sim_is_started == False)
         for step in sim:
             assert (sim.sim_is_started == True)
+    
+    sim4 = Simulation(MODEL_WEIR_SETTING_PATH)
+    assert (sim4.sim_is_open == True)
+    sim4.close()
+    assert (sim4.sim_is_open == False)
