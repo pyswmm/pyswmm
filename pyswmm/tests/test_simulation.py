@@ -180,3 +180,13 @@ def test_multi_sim_exception():
                 pass
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
         pass
+
+def test_states():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        assert (sim.sim_is_open == True)
+    assert(sim.sim_is_open == False)
+
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
+        assert (sim.sim_is_started == False)
+        for step in sim:
+            assert (sim.sim_is_started == True)
