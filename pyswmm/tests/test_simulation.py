@@ -195,3 +195,8 @@ def test_states():
     assert (sim4.sim_is_open == True)
     sim4.close()
     assert (sim4.sim_is_open == False)
+
+    sim5 = Simulation(MODEL_WEIR_SETTING_PATH)
+    assert (sim5.sim_is_open == True)
+    sim5.execute()
+    assert (sim5.sim_is_open == False)
