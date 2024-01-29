@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2023 Bryant E. McDonnell (See AUTHORS)
+# Copyright (c) 2024 Bryant E. McDonnell (See AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -13,6 +13,32 @@ from warnings import warn
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
+from pyswmm.errors import MultiSimulationError
+
+
+class _SimulationStateManager(object):
+    """This manager was created to be a guardrail for the PySWMM developers
+    experience.  In the event the developer is unaware of the non thread-safe
+    non-reenterant quality of USEPA-SWMM, this prevents the developer from trying
+    to open multiple instances of SWMM inside one instance of Python.
+
+    The State Manager also give the option to show a simulation progress bar for
+    the users running this code on the command line."""
+
+    def __init__(self):
+        self._sim_is_instantiated = False
+
+    @property
+    def sim_is_instantiated(self) -> bool:
+        return self._sim_is_instantiated
+
+    @sim_is_instantiated.setter
+    def sim_is_instantiated(self, val: bool) -> None:
+        self._sim_is_instantiated = val
+
+
+# Module level instance for the Simulation Manager.
+_sim_state_instance = _SimulationStateManager()
 
 
 class Simulation(object):
@@ -56,11 +82,18 @@ class Simulation(object):
                  inputfile,
                  reportfile=None,
                  outputfile=None):
+
+        # Add Simulation State Manager to Prevent Multiple Instances of
+        # SWMM to be opened in one instance of Python
+        if _sim_state_instance.sim_is_instantiated:
+            raise(MultiSimulationError("Multi-Simulation Error."))
+
         self._model = PySWMM(inputfile, reportfile, outputfile)
         self._model.swmm_open()
-        self._isOpen = True
+        self._is_open = True
+        _sim_state_instance.sim_is_instantiated = self._is_open
         self._advance_seconds = None
-        self._isStarted = False
+        self._is_started = False
         self._terminate_request = False
         self._callbacks = {
             "before_start": None,
@@ -100,13 +133,13 @@ class Simulation(object):
 
     def start(self):
         """Start Simulation (no longer suggested to user)."""
-        if not self._isStarted:
+        if not self._is_started:
             # Execute Callback Hooks Before Start
             self._execute_callback(self._before_start())
             self._model.swmm_start(True)
             # Execute Callback Hooks After Start
             self._execute_callback(self._after_start())
-            self._isStarted = True
+            self._is_started = True
 
     def __next__(self):
         """Next"""
@@ -132,16 +165,17 @@ class Simulation(object):
 
     def __exit__(self, *a):
         """close"""
-        if self._isStarted:
+        if self._is_started:
             self._model.swmm_end()
-            self._isStarted = False
+            self._is_started = False
             # Execute Callback Hooks After Simulation End
             self._execute_callback(self._after_end())
-        if self._isOpen:
+        if self._is_open:
             self._model.swmm_close()
-            self._isOpen = False
+            self._is_open = False
             # Execute Callback Hooks After Simulation Closes
             self._execute_callback(self._after_close())
+        _sim_state_instance.sim_is_instantiated = self._is_open
 
     @staticmethod
     def _is_callback(callable_object):
@@ -161,6 +195,61 @@ class Simulation(object):
             except PYSWMMException:
                 error_msg = "Callback Failed"
                 raise PYSWMMException((error_msg))
+
+    @property
+    def _isOpen(self) -> bool:
+        """._isOpen is set for Deprecation """
+        warn('This method will be deprecated in PySWMM-v2.1',
+             DeprecationWarning, stacklevel=2)
+        return self.sim_is_open
+
+    @property
+    def sim_is_open(self) -> bool:
+        """Check is Model is Open
+
+        Examples:
+
+        .. code-block:: python
+
+            from pyswmm import Simulation
+
+            with Simulation('tests/data/model_weir_setting.inp') as sim:
+                print(sim.sim_is_open)
+
+        .. code-block::
+
+            >>> True
+        """
+        return self._is_open
+
+    @property
+    def _isStarted(self) -> bool:
+        """._isSpen is set for Deprecation """
+        warn('This method will be deprecated in PySWMM-v2.1',
+             DeprecationWarning, stacklevel=2)
+        return self.sim_is_started
+
+    @property
+    def sim_is_started(self) -> bool:
+        """Check is Simulation is Started
+
+        Examples:
+
+        .. code-block:: python
+
+            from pyswmm import Simulation
+
+            with Simulation('tests/data/model_weir_setting.inp') as sim:
+                print(sim.sim_is_started)
+                for step in sim:
+                    print(sim.sim_is_started)
+
+        .. code-block::
+
+            >>> False
+            >>> True
+        """
+        return self._is_started
 
     def initial_conditions(self, init_conditions):
         """
@@ -262,6 +351,11 @@ class Simulation(object):
             sim.execute()
         """
         self._model.swmmExec()
+        # swmm exec brings the simulation to a close therefore we
+        # need to tell the sim state manager that we are free to
+        # open another a simulation.
+        self._is_open = False
+        _sim_state_instance.sim_is_instantiated = self._is_open
 
     @property
     def engine_version(self):
