@@ -12,6 +12,7 @@ from random import randint
 # Local imports
 import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation, SimulationPreConfig
+from pyswmm.errors import MultiSimulationError
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pytest
 import os
@@ -176,7 +177,6 @@ def test_hotstart():
             break
     assert sim.J1_depth == pytest.approx(J1_dep, 0.00001)
 
-
 def test_pre_simulation_config():
     sim_preconfig = SimulationPreConfig()
     sim_preconfig.filename_suffix = "_a"
@@ -202,3 +202,32 @@ def test_pre_simulation_config():
                 ln = ln.strip()
                 ln = ln.split()
                 assert (ln == compare)
+
+def test_multi_sim_exception():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        with pytest.raises(MultiSimulationError):
+            with Simulation(MODEL_WEIR_SETTING_PATH) as sim2:
+                pass
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
+        pass
+
+def test_states():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        assert (sim.sim_is_open == True)
+    assert(sim.sim_is_open == False)
+
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
+        assert (sim.sim_is_started == False)
+        for step in sim:
+            assert (sim.sim_is_started == True)
+    
+    sim4 = Simulation(MODEL_WEIR_SETTING_PATH)
+    assert (sim4.sim_is_open == True)
+    sim4.close()
+    assert (sim4.sim_is_open == False)
+
+    sim5 = Simulation(MODEL_WEIR_SETTING_PATH)
+    assert (sim5.sim_is_open == True)
+    sim5.execute()
+    assert (sim5.sim_is_open == False)
+
