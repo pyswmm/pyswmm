@@ -858,9 +858,9 @@ class SimulationPreConfig():
 
         # Specifying the update parameters
         # Parameter Order:
-        # New Value, Section, Object ID, Parameter Index, Obj Row Num (optional)
-        sim_conf.add_update_by_token("J2", "SUBCATCHMENTS", "S1", 2)
-        sim_conf.add_update_by_token(2, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
+        # Section, Object ID, Parameter Index, New Value, Obj Row Num (optional)
+        sim_conf.add_update_by_token("SUBCATCHMENTS", "S1", 2, "J2")
+        sim_conf.add_update_by_token("TIMESERIES", "SCS_24h_Type_I_1in", 2, 2, 5)
 
         with Simulation(<path-to-inp>, sim_preconfig = sim_conf) as sim:
             S1 = Subcatchments(sim)["S1"]
@@ -881,7 +881,7 @@ class SimulationPreConfig():
         ;;                                         Total   Pcnt. Pcnt.  Curb
         ;;Name   Raingage         Outlet   Area    Imperv  Width Slope  Length
         ;;------ ---------------- -------- ------- ------- ----- ------ --------
-        S1       SCS_24h_Type_I_1in J3     1       100     500   0.5    0
+        S1       SCS_24h_Type_I_1in J2     1       100     500   0.5    0
 
     """
 
@@ -938,16 +938,16 @@ class SimulationPreConfig():
         """"""
         self._filename_suffix = suffix
 
-    def add_update_by_token(self, new_val, section: str, id: str,
-                            index: int, row_num=0):
+    def add_update_by_token(self, section: str, obj_id: str,
+                            index: int, new_val, row_num=0):
         """
         This method allows the user to give the parmeter to be updated and
         where this value should be set in the input file.
 
-        :param new_val: The new value (can be any normal data type)
         :param str section: Section name (such as "JUNCTIONS")
-        :param str id: the SWMM object ID name (such as "J1")
+        :param str obj_id: the SWMM object ID name (such as "J1")
         :param int index: The index of the parameter in the row to update (0 is first index)
+        :param new_val: The new value (can be any normal data type)
         :param ind row_num: If multiple rows exist for an object like "HYDROGRAPHS" (0 is first index)
 
         .. code-block:: python
@@ -960,21 +960,21 @@ class SimulationPreConfig():
             # Specifying the update parameters
             # Parameter Order:
             # New Value, Section, Object ID, Parameter Index, Obj Row Num (optional)
-            sim_conf.add_update_by_token("J2", "SUBCATCHMENTS", "S1", 2)
-            sim_conf.add_update_by_token(2, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
+            sim_conf.add_update_by_token("SUBCATCHMENTS", "S1", 2, "J2")
+            sim_conf.add_update_by_token("TIMESERIES", "SCS_24h_Type_I_1in", 2, 2, 5)
 
         """
         section = section.lower()
-        id = id.lower()
+        obj_id = obj_id.lower()
 
         if section not in self._modifications.keys():
             self._modifications[section] = {}
-        if id not in self._modifications[section].keys():
-            self._modifications[section][id] = {}
-        if row_num not in self._modifications[section][id.lower()].keys():
-            self._modifications[section][id][row_num] = {}
+        if obj_id not in self._modifications[section].keys():
+            self._modifications[section][obj_id] = {}
+        if row_num not in self._modifications[section][obj_id.lower()].keys():
+            self._modifications[section][obj_id][row_num] = {}
 
-        self._modifications[section][id][row_num][index] = new_val
+        self._modifications[section][obj_id][row_num][index] = new_val
 
     def apply_changes(self):
         """
@@ -1018,7 +1018,7 @@ class SimulationPreConfig():
         row_count = 0
 
         for ln in fl_source:
-            if '[' in ln and ']' in ln:
+            if '[' in ln and ']' in ln and ln.strip()[0]!=';':
                 ln_orig = ln
                 ln = ln.strip()
                 ln = ln.replace("[", '')

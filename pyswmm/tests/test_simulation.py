@@ -181,9 +181,9 @@ def test_pre_simulation_config():
     sim_preconfig = SimulationPreConfig()
     sim_preconfig.filename_suffix = "_a"
 
-    sim_preconfig.add_update_by_token("J2", "SUBCATCHMENTS", "S1", 2)
+    sim_preconfig.add_update_by_token("SUBCATCHMENTS", "S1", 2, "J2")
     sim_preconfig.add_update_by_token(
-        2.0, "TIMESERIES", "SCS_24h_Type_I_1in", 2, 5)
+        "TIMESERIES", "SCS_24h_Type_I_1in", 2, 2.0, 5)
 
     with Simulation(MODEL_WEIR_SETTING_PATH,
                     sim_preconfig=sim_preconfig) as sim:
@@ -220,7 +220,7 @@ def test_states():
         assert (sim.sim_is_started == False)
         for step in sim:
             assert (sim.sim_is_started == True)
-    
+
     sim4 = Simulation(MODEL_WEIR_SETTING_PATH)
     assert (sim4.sim_is_open == True)
     sim4.close()
@@ -230,4 +230,3 @@ def test_states():
     assert (sim5.sim_is_open == True)
     sim5.execute()
     assert (sim5.sim_is_open == False)
-
