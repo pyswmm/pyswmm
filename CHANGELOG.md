@@ -1,4 +1,39 @@
-# History of changes
+# Changelog
+## [2.0.0] - 2024-02-06
+
+Happy 10th Anniversary, PySWMM!  In celebration of this release and this milestone in this decade-long endeavor, we have introduced so much new functionality to the tool.  
+
+### Added
+
+- Step-Advance now leverages the `swmm_stride` entry point inside `EPA-SWMM` to give discrete control over model time-stepping [(#481)](https://github.com/pyswmm/pyswmm/pull/481)
+- New and more Pythonic ways to pull time series data from the Output files [(#511)](https://github.com/pyswmm/pyswmm/pull/511)
+- Simulation "State Manager" which is setup to throw an exception if the user tries to instantiate more than one `Simulation` Object at a time [(#513)](https://github.com/pyswmm/pyswmm/pull/513)
+- Token-based parameter modifiers for pre-simulation model changes.  This makes this project easily suitable to embed into **optimization** with 100% coverage of the INP file for mutable parameters [(#512)](https://github.com/pyswmm/pyswmm/pull/512).
+
+### Changed
+
+- Major rewrite of LID and Most of the Documentation [(#499)](https://github.com/pyswmm/pyswmm/pull/499).
+- Added Deprecation Warning for internal class variables `Simulation._isOpen` and `Simulation._isStarted` [(#513)](https://github.com/pyswmm/pyswmm/pull/513).
+
+### Removed
+
+- `Simulation.initial_conditions()` and prescribed migration approach inside documentation` [(#513)](https://github.com/pyswmm/pyswmm/pull/513).
+
+## [1.5.1] - 2023-12-02
+
+This release introduced the ability to save a hot start file at any point during a running simulation (formally known as "Bread Crumbs") and select a different hot start file using the API before a new simulation starts. 
+
+### Added
+
+- Hotstart file Use/Save Features [(#476)](https://github.com/pyswmm/pyswmm/pull/476). 
+- Added Deprecation warning for "Simulation.initial_conditions" [(#446)](https://github.com/pyswmm/pyswmm/pull/446).
+
+
+
+-----------------
+
+(Older Changelog Format)
+
 ## Version 1.4.0 (2023/03/28)
 
 #### New Features
