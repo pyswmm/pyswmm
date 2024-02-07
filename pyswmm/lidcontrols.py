@@ -11,10 +11,102 @@ from pyswmm.lidlayers import Surface, Soil, Storage, Pavement, Drain, DrainMat
 
 
 class LidControls(object):
-    """
-    Lid Control Iterator Methods.
+    """Lid Control Iterator Methods.
 
     :param object model: Open Model Instance
+
+    This allows the user to iterate and get on of the LID control types as
+    defined inside SWMM's [LID_CONTROLS] section.  For example, here is a sample
+    section from a SWMM INP file. 
+
+    .. code-block::
+
+        [LID_CONTROLS]
+        ;;Name           Type_Layer Parameters
+        ;;-------------- ---------- ----------
+        LID_C1  IT
+        LID_C1  SURFACE    0.0    0.0    0.03   1.0    5
+        LID_C1  STORAGE    800    0.3    3.6    0      NO
+        LID_C1  DRAIN      0.5    1.41   400    6      0       0
+
+    Now we can peform manipulations in PySWMM and get objects.
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            for lid_control in LidControls(sim):
+                print(lid_control)
+
+    .. code-block::
+
+        >>> LID_C1
+        >>> lid_control_type_2
+
+    It is also possible to simply get an LID control by name as follows:
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+            print(lid_control)
+
+    .. code-block::
+
+        >>> LID_C1
+
+    Once the LID control object is instantiated, there are getter and setters
+    available for each different layer of the LID Control.  The layers are the
+    following and these become instance attributes of each LID Control (LidControl)
+    object.
+
+    +------------+-----------+
+    | Layer Type | Attribute |
+    +============+===========+
+    | Surface    | surface   |
+    +------------+-----------+
+    | Soil       | soil      |
+    +------------+-----------+
+    | Storage    | storage   |
+    +------------+-----------+
+    | Pavement   | pavement  |
+    +------------+-----------+
+    | Drain      | drain     |
+    +------------+-----------+
+    | DrainMat   | drain_mat |
+    +------------+-----------+
+
+    In our example model section above the layers defined are Surface,
+    Storage, and Drain.  Once the handles are available, the properties
+    and setter methods can be called to read and modify the values.
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_surface = lid_control.surface
+            lid_control_storage = lid_control.storage
+            lid_control_drain = lid_control.drain
+
+            print(lid_control_surface.roughness)
+            lid_control_surface.roughness = 0.5
+            print(lid_control_surface.roughness)
+
+            for step in sim:
+                pass
+
+    .. code-block::
+
+        >>> 0.03
+        >>> 0.5
+
     """
 
     def __init__(self, model):
@@ -72,6 +164,28 @@ class LidControls(object):
 
 
 class LidControl(object):
+    """
+    Once the LID control object is instantiated, there are getter and setters
+    available for each different layer of the LID Control.  The layers are the
+    following and these become instance attributes of each LID Control (LidControl)
+    object.
+
+    +------------+-----------+
+    | Layer Type | Attribute |
+    +============+===========+
+    | Surface    | surface   |
+    +------------+-----------+
+    | Soil       | soil      |
+    +------------+-----------+
+    | Storage    | storage   |
+    +------------+-----------+
+    | Pavement   | pavement  |
+    +------------+-----------+
+    | Drain      | drain     |
+    +------------+-----------+
+    | DrainMat   | drain_mat |
+    +------------+-----------+
+    """
     def __init__(self, sim, model, lidcontrolid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")

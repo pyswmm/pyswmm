@@ -5,6 +5,7 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
+from __future__ import annotations
 from pyswmm.errors import OutputException
 from datetime import datetime, timedelta
 from functools import wraps
@@ -176,11 +177,16 @@ class Output(object):
         if not self.loaded:
             self.loaded = True
             output.open(self.handle, self.binfile)
-            self.start = from_jd(output.get_start_date(self.handle) + 2415018.5)
+            self.start = from_jd(
+                output.get_start_date(
+                    self.handle) + 2415018.5)
             self.start = self.start.replace(microsecond=0)
-            self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
-            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
-            self.end = self.start + timedelta(seconds=self.period * self.report)
+            self.report = output.get_times(
+                self.handle, shared_enum.Time.REPORT_STEP)
+            self.period = output.get_times(
+                self.handle, shared_enum.Time.NUM_PERIODS)
+            self.end = self.start + \
+                timedelta(seconds=self.period * self.report)
 
         return True
 
@@ -237,7 +243,11 @@ class Output(object):
         """Load model reporting times into self._times"""
         self._times = list()
         for step in range(1, self.period + 1):
-            self._times.append(self.start + timedelta(seconds=self.report) * step)
+            self._times.append(
+                self.start +
+                timedelta(
+                    seconds=self.report) *
+                step)
 
     @property
     def project_size(self) -> list:
@@ -484,6 +494,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import SubcatchAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -541,6 +552,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import NodeAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -599,6 +611,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import LinkAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -654,6 +667,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import SystemAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -700,6 +714,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import SubcatchAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -715,7 +730,8 @@ class Output(object):
             time_index, self.times, self.start, self.end, self.report, 0
         )
 
-        values = output.get_subcatch_attribute(self.handle, time_index, attribute)
+        values = output.get_subcatch_attribute(
+            self.handle, time_index, attribute)
         return {sub: value for sub, value in zip(self.subcatchments, values)}
 
     @output_open_handler
@@ -738,6 +754,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import NodeAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -777,6 +794,7 @@ class Output(object):
         Examples:
 
         >>> from swmm.toolkit.shared_enum import LinkAttribute
+        >>> from datetime import datetime
         >>> from pyswmm import Output
         >>>
         >>> with Output('tests/data/model_full_features.out') as out:
@@ -901,7 +919,8 @@ class Output(object):
         )
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.NodeAttribute, values)}
+        return {attr: value for attr, value in zip(
+            shared_enum.NodeAttribute, values)}
 
     @output_open_handler
     def link_result(
@@ -938,7 +957,8 @@ class Output(object):
         )
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.LinkAttribute, values)}
+        return {attr: value for attr, value in zip(
+            shared_enum.LinkAttribute, values)}
 
     @output_open_handler
     def system_result(self, time_index: Union[int, datetime, None] = None):
@@ -980,4 +1000,240 @@ class Output(object):
         )
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
-        return {attr: value for attr, value in zip(shared_enum.SystemAttribute, values)}
+        return {attr: value for attr, value in zip(
+            shared_enum.SystemAttribute, values)}
+
+
+class OutAttributeBase():
+    """Baseclass for SubcatchSeries, NodeSeries, LinkSeries."""
+
+    def __init__(self, out_handle: Output):
+        if not isinstance(out_handle, Output):
+            raise (TypeError("Invalid Outfile Handle"))
+        self._handle = out_handle
+        self._attr_group = None
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
+    def __getattr__(self, attr) -> dict[datetime.datetime, float]:
+        if attr.upper() not in [item.name for item in self._attr_group]:
+            raise (AttributeError("Invalid Property: {}".format(attr)))
+        else:
+            attr_select = getattr(self._attr_group, attr.upper())
+            ts = self._series_type(attr_select)
+        return ts
+
+
+class SubcatchSeries(OutAttributeBase):
+    """
+    Get a subcatchment time series.  New to PySWMM-v2!
+
+    Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+    :return: dict of attribute values with between start_index and end_index
+             with reporting timesteps as keys
+    :rtype: dict {datetime : value}
+
+    Examples:
+
+    .. code-block:: python
+
+        from pyswmm import Output, SubcatchSeries
+
+        with Output('tests/data/model_full_features.out') as out:
+            ts1 = SubcatchSeries(out)['S1'].rainfall
+            ts2 = SubcatchSeries(out)['S1'].snow_depth
+            ts3 = SubcatchSeries(out)['S1'].evap_loss
+            ts4 = SubcatchSeries(out)['S1'].infil_loss
+            ts5 = SubcatchSeries(out)['S1'].runoff_rate
+            ts6 = SubcatchSeries(out)['S1'].gw_outflow_rate
+            ts7 = SubcatchSeries(out)['S1'].gw_table_elev
+            ts8 = SubcatchSeries(out)['S1'].soil_moisture
+            ts9 = SubcatchSeries(out)['S1'].pollut_conc_0
+    """
+
+    rainfall: dict[datetime.datetime, float]
+    snow_depth: dict[datetime.datetime, float]
+    evap_loss: dict[datetime.datetime, float]
+    infil_loss: dict[datetime.datetime, float]
+    runoff_rate: dict[datetime.datetime, float]
+    gw_outflow_rate: dict[datetime.datetime, float]
+    gw_table_elev: dict[datetime.datetime, float]
+    soil_moisture: dict[datetime.datetime, float]
+    pollut_conc_0: dict[datetime.datetime, float]
+
+    def __init__(self, out_handle):
+        super().__init__(out_handle)
+        self._attr_group = shared_enum.SubcatchAttribute
+        self._idname = None
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
+    def __getitem__(self, idname):
+        self._idname = idname
+        return self
+
+    def _series_type(self, attr_select):
+        return self._handle.subcatch_series(self._idname, attr_select)
+
+
+class NodeSeries(OutAttributeBase):
+    """
+    Get a node time series.  New to PySWMM-v2!
+
+    Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+    :return: dict of attribute values with between start_index and end_index
+             with reporting timesteps as keys
+    :rtype: dict {datetime : value}
+
+    Examples:
+
+    .. code-block:: python
+
+        from pyswmm import Output, NodeSeries
+
+        with Output('tests/data/model_full_features.out') as out:
+            ts1 = NodeSeries(out)['J1'].invert_depth
+            ts2 = NodeSeries(out)['J1'].hydraulic_head
+            ts3 = NodeSeries(out)['J1'].ponded_volume
+            ts4 = NodeSeries(out)['J1'].lateral_inflow
+            ts5 = NodeSeries(out)['J1'].total_inflow
+            ts6 = NodeSeries(out)['J1'].flooding_losses
+            ts7 = NodeSeries(out)['J1'].pollut_conc_0
+    """
+
+    invert_depth: dict[datetime.datetime, float]
+    hydraulic_head: dict[datetime.datetime, float]
+    ponded_volume: dict[datetime.datetime, float]
+    lateral_inflow: dict[datetime.datetime, float]
+    total_inflow: dict[datetime.datetime, float]
+    flooding_losses: dict[datetime.datetime, float]
+    pollut_conc_0: dict[datetime.datetime, float]
+
+    def __init__(self, out_handle):
+        super().__init__(out_handle)
+        self._attr_group = shared_enum.NodeAttribute
+        self._idname = None
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
+    def __getitem__(self, idname):
+        self._idname = idname
+        return self
+
+    def _series_type(self, attr_select):
+        return self._handle.node_series(self._idname, attr_select)
+
+
+class LinkSeries(OutAttributeBase):
+    """
+    Get a link time series.  New to PySWMM-v2!
+
+    Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+    :return: dict of attribute values with between start_index and end_index
+             with reporting timesteps as keys
+    :rtype: dict {datetime : value}
+
+    Examples:
+
+    .. code-block:: python
+
+        from pyswmm import Output, LinkSeries
+
+        with Output('tests/data/model_full_features.out') as out:
+            ts1 = LinkSeries(out)['C1:C2'].flow_rate
+            ts2 = LinkSeries(out)['C1:C2'].flow_depth
+            ts3 = LinkSeries(out)['C1:C2'].flow_velocity
+            ts4 = LinkSeries(out)['C1:C2'].flow_volume
+            ts5 = LinkSeries(out)['C1:C2'].capacity
+            ts6 = LinkSeries(out)['C1:C2'].pollut_conc_0
+
+    """
+
+    flow_rate: dict[datetime.datetime, float]
+    flow_depth: dict[datetime.datetime, float]
+    flow_velocity: dict[datetime.datetime, float]
+    flow_volume: dict[datetime.datetime, float]
+    capacity: dict[datetime.datetime, float]
+    pollut_conc_0: dict[datetime.datetime, float]
+
+    def __init__(self, out_handle):
+        super().__init__(out_handle)
+        self._attr_group = shared_enum.LinkAttribute
+        self._idname = None
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
+    def __getitem__(self, idname):
+        self._idname = idname
+        return self
+
+    def _series_type(self, attr_select):
+        return self._handle.link_series(self._idname, attr_select)
+
+
+class SystemSeries(OutAttributeBase):
+    """
+    Get a system time series.  New to PySWMM-v2!
+
+    Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+
+    :return: dict of attribute values with between start_index and end_index
+             with reporting timesteps as keys
+    :rtype: dict {datetime : value}
+
+    Examples:
+
+    .. code-block:: python
+
+        from pyswmm import Output, SystemSeries
+
+        with Output('tests/data/model_full_features.out') as out:
+            ts1 = SystemSeries(out).air_temp
+            ts2 = SystemSeries(out).rainfall
+            ts3 = SystemSeries(out).snow_depth
+            ts4 = SystemSeries(out).evap_infil_loss
+            ts5 = SystemSeries(out).runoff_flow
+            ts6 = SystemSeries(out).dry_weather_inflow
+            ts7 = SystemSeries(out).gw_inflow
+            ts8 = SystemSeries(out).rdii_inflow
+            ts9 = SystemSeries(out).direct_inflow
+            ts10 = SystemSeries(out).total_lateral_inflow
+            ts11 = SystemSeries(out).flood_losses
+            ts12 = SystemSeries(out).outfall_flows
+            ts13 = SystemSeries(out).volume_stored
+            ts14 = SystemSeries(out).evap_rate
+            ts15 = SystemSeries(out).ptnl_evap_rate
+    """
+
+    air_temp: dict[datetime.datetime, float]
+    rainfall: dict[datetime.datetime, float]
+    snow_depth: dict[datetime.datetime, float]
+    evap_infil_loss: dict[datetime.datetime, float]
+    runoff_flow: dict[datetime.datetime, float]
+    dry_weather_inflow: dict[datetime.datetime, float]
+    gw_inflow: dict[datetime.datetime, float]
+    rdii_inflow: dict[datetime.datetime, float]
+    direct_inflow: dict[datetime.datetime, float]
+    total_lateral_inflow: dict[datetime.datetime, float]
+    flood_losses: dict[datetime.datetime, float]
+    outfall_flows: dict[datetime.datetime, float]
+    volume_stored: dict[datetime.datetime, float]
+    evap_rate: dict[datetime.datetime, float]
+    ptnl_evap_rate: dict[datetime.datetime, float]
+
+    def __init__(self, out_handle):
+        super().__init__(out_handle)
+        self._attr_group = shared_enum.SystemAttribute
+
+    def __dir__(self):
+        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+
+    def _series_type(self, attr_select):
+        return self._handle.system_series(attr_select)

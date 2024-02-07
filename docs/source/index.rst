@@ -53,9 +53,9 @@ More information about pyswmm can be found at the `official pyswmm website`_.
 
     +++
 
-    .. link-button:: tutorial
+    .. link-button:: quickstart
             :type: ref
-            :text: Tutorials!
+            :text: Quick Start!
             :classes: btn-block btn-secondary stretched-link
 
     ---

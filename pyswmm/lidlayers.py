@@ -10,7 +10,7 @@ from pyswmm.toolkitapi import LidLayers, LidLayersProperty
 
 class Surface(object):
     """
-    Methods and properties of the surface layer associated with an LID 
+    Methods and properties of the surface layer associated with an LID
 
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
@@ -27,6 +27,26 @@ class Surface(object):
     +--------------------+--------------------+--------------------+--------------------+
     | Surface            | alpha              | enabled            | disabled           |
     +--------------------+--------------------+--------------------+--------------------+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_surface = lid_control.surface
+
+            print(lid_control_surface.roughness)
+            lid_control_surface.roughness = 0.5
+            print(lid_control_surface.roughness)
+
+    .. code-block::
+
+        >>> 0.03
+        >>> 0.5
+
     """
 
     def __init__(self, model, lidcontrol):
@@ -149,7 +169,7 @@ class Surface(object):
 
 class Soil(object):
     """
-    Methods and properties of the soil layer associated with an LID 
+    Methods and properties of the soil layer associated with an LID
 
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
@@ -168,6 +188,20 @@ class Soil(object):
     +--------------------+--------------------+--------------------+--------------------+
     | Soil               | suction_head       | enabled            | disabled           |
     +--------------------+--------------------+--------------------+--------------------+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_soil = lid_control.soil
+
+            print(lid_control_soil.porosity)
+            lid_control_soil.porosity = 0.5
+            print(lid_control_soil.porosity)
     """
 
     def __init__(self, model, lidcontrol):
@@ -318,7 +352,7 @@ class Soil(object):
 
 class Storage(object):
     """
-    Methods and properties of the storage layer associated with an LID 
+    Methods and properties of the storage layer associated with an LID
 
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
@@ -331,6 +365,21 @@ class Storage(object):
     +--------------------+--------------------+--------------------+--------------------+
     | Storage            | clog_factor        | enabled            | enabled            |
     +--------------------+--------------------+--------------------+--------------------+
+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_storage = lid_control.storage
+
+            print(lid_control_storage.porosity)
+            lid_control_storage.porosity = 0.5
+            print(lid_control_storage.porosity)
     """
 
     def __init__(self, model, lidcontrol):
@@ -421,7 +470,7 @@ class Storage(object):
 
 class Pavement(object):
     """
-    Methods and properties of the pavement layer associated with an LID 
+    Methods and properties of the pavement layer associated with an LID
 
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
@@ -440,6 +489,21 @@ class Pavement(object):
     +--------------------+--------------------+--------------------+--------------------+
     | Pavement           | regeneration_degree| enabled            | disabled           |
     +--------------------+--------------------+--------------------+--------------------+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_pavement = lid_control.pavement
+
+            print(lid_control_pavement.void_fraction)
+            lid_control_pavement.void_fraction = 0.05
+            print(lid_control_pavement.void_fraction)
+
     """
 
     def __init__(self, model, lidcontrol):
@@ -591,7 +655,7 @@ class Pavement(object):
 
 class Drain(object):
     """
-    Methods and properties of the under drain layer associated with an LID 
+    Methods and properties of the under drain layer associated with an LID
 
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
@@ -608,6 +672,20 @@ class Drain(object):
     +--------------------+--------------------+--------------------+--------------------+
     | Drain              | close_head         | enabled            | enabled            |
     +--------------------+--------------------+--------------------+--------------------+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_drain = lid_control.drain
+
+            print(lid_control_drain.coefficient)
+            lid_control_drain.coefficient = 0.05
+            print(lid_control_drain.coefficient)
     """
 
     def __init__(self, model, lidcontrol):
@@ -738,7 +816,7 @@ class Drain(object):
 
 class DrainMat(object):
     """
-    Methods and properties of the drain mat layer associated with an LID 
+    Methods and properties of the drain mat layer associated with an LID
 
     +--------------------+--------------------+--------------------+--------------------+
     | Layer              | Parameter          | Setter Before Sim  | Setter During Sim  |
@@ -751,6 +829,21 @@ class DrainMat(object):
     +--------------------+--------------------+--------------------+--------------------+
     | DrainMat           | alpha              | enabled            | disabled           |
     +--------------------+--------------------+--------------------+--------------------+
+
+    .. code-block:: python
+
+        from pyswmm import Simulation, LidControls
+
+        with Simulation('lid_model.inp') as sim:
+            lid_control = LidControls(sim)['LID_C1']
+
+            # Handles to get/set params for each layer
+            lid_control_drain_mat = lid_control.drain_mat
+
+            print(lid_control_drain_mat.roughness)
+            lid_control_drain_mat.roughness = 0.05
+            print(lid_control_drain_mat.roughness)
+
     """
 
     def __init__(self, model, lidcontrol):
