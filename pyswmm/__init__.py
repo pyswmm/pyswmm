@@ -19,7 +19,7 @@ from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage
 
-VERSION_INFO = (2, 0, 0)
+VERSION_INFO = (2, 0, 1, 'dev0')
 
 __version__ = '.'.join(map(str, VERSION_INFO))
 __author__ = 'Bryant E. McDonnell (Hydroinformatics, LLC) - bemcdonnell@gmail.com'
