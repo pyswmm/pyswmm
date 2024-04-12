@@ -30,6 +30,7 @@ def test_nodes_2():
     ''' pytest pyswmm/tests/test_nodes.py -k `test_nodes_2` '''
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         print("\n\n\nNODES\n")
+        assert "DUMMY_LINK" not in Nodes(sim)
         for node in Nodes(sim):
             assert ('J' in node.nodeid)
             node.invert_elevation = 10

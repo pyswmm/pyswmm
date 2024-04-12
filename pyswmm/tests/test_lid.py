@@ -1,4 +1,5 @@
 # Local imports
+from swmm.toolkit.solver import lid_usage_get_flux_rate
 from pyswmm import Simulation
 from pyswmm import LidControls, LidGroups
 from pyswmm.tests.data import MODEL_LIDS_PATH
@@ -17,6 +18,7 @@ def test_list_lid_controls():
 
 def test_list_lid_groups():
     with Simulation(MODEL_LIDS_PATH) as sim:
+        assert "DUMMY_GROUP" not in LidGroups(sim)
         for i, group in enumerate(LidGroups(sim)):
             if i == 0:
                 assert('subcatchment {} has {} lid units'.format(group,

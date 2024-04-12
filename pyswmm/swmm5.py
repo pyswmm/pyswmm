@@ -558,7 +558,15 @@ class PySWMM(object):
 
     def ObjectIDexist(self, objecttype, ID):
         """Check if Object ID Exists. Mostly used as an internal function."""
-        index = solver.project_get_index(objecttype, ID)
+        # Incurred some micro-tech debt. This updated implementation will cover the before and after
+        # case of removing this line in SWMM.  Currently the SWMM function throws a non-zero error code. As
+        # a result, when it hit swmm-python(swmm-toolkit), it throws an exception.
+        # https://github.com/pyswmm/Stormwater-Management-Model/blob/459db1d4dfc61ff994ae01f92eae64e378e08915/src/solver/toolkit.c#L170
+        try:
+            # eventually this function will return -1 if the index does not exist.
+            index = solver.project_get_index(objecttype, ID)
+        except:
+            index = -1
 
         if index != -1:
             return True
