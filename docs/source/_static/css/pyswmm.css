@@ -104,3 +104,10 @@ body{
 .table {
   color: var(--pst-color-text-base) !important;
 }
+
+.sphinx-panel-img {
+  background-color: rgba(0,0,0,0) !important;
+  width:25%; 
+  margin:auto;
+  padding: 5px;
+}
