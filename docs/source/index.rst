@@ -22,72 +22,59 @@ PySWMM documentation
 
 More information about pyswmm can be found at the `official pyswmm website`_.
 
-.. panels::
-    :container: container pb-4
-    :card: + intro-card text-center
-    :column: col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2
+.. grid:: 1 2 2 2
+    :gutter: 2
 
-    ---
-    :img-top: _static/map.svg
+    .. grid-item-card::
+      :img-top: _static/map.svg
+      :class-img-top: sphinx-panel-img
+      :class-header: text-center
+      :link: overview
+      :link-type: doc
 
-    Overview
-    ^^^^^^^^^^^^
+      Overview
+      ^^^^^^^^^^^^
 
-    Learn about pyswmm's ambition!
+      Learn about pyswmm's ambition!
 
-    +++
+    .. grid-item-card::
+      :img-top: _static/power.svg
+      :class-img-top: sphinx-panel-img
+      :class-header: text-center
+      :link: quickstart
+      :link-type: doc
 
-    .. link-button:: overview
-            :type: ref
-            :text: Overview!
-            :classes: btn-block btn-secondary stretched-link
+      Quick Start
+      ^^^^^^^^^^
 
-    ---
-    :img-top: _static/power.svg
+      The quick start section provides sample code snippets for various use cases of pyswmm.
+      This is the perfect place to jump-start your own project with pyswmm.
 
-    Quick Start
-    ^^^^^^^^^^
+    .. grid-item-card::
+      :img-top: _static/book.svg
+      :class-img-top: sphinx-panel-img
+      :class-header: text-center
+      :link: reference/index
+      :link-type: doc
 
-    The quick start section provides sample code snippets for various use cases of pyswmm.
-    This is the perfect place to jump-start your own project with pyswmm.
+      API reference
+      ^^^^^^^^^^^^^
 
-    +++
+      The API reference provides a catalogue of all docstrings written in pyswmm.
+      It lays out the modules, functions, and classes provided in pyswmm like and encyclopedia.
 
-    .. link-button:: quickstart
-            :type: ref
-            :text: Quick Start!
-            :classes: btn-block btn-secondary stretched-link
 
-    ---
-    :img-top: _static/book.svg
+    .. grid-item-card::
+      :img-top: _static/coffee.svg
+      :class-img-top: sphinx-panel-img
+      :class-header: text-center
+      :link: https://www.pyswmm.org/tutorial
 
-    API reference
-    ^^^^^^^^^^^^^
+      Video Tutorials
+      ^^^^^^^^^^^^^^^^
 
-    The API reference provides a catalogue of all docstrings written in pyswmm.
-    It lays out the modules, functions, and classes provided in pyswmm like and encyclopedia.
-
-    +++
-
-    .. link-button:: reference/index
-            :type: ref
-            :text: API Reference!
-            :classes: btn-block btn-secondary stretched-link
-
-    ---
-    :img-top: _static/coffee.svg
-
-    Video Tutorials
-    ^^^^^^^^^^^^^^^^
-
-    The pyswmm development team is putting together a video
-    tutorial series the covers the various use cases of pyswmm.
-
-    +++
-
-    .. link-button:: https://www.pyswmm.org/tutorial
-            :text: Video Tutorials!
-            :classes: btn-block btn-secondary stretched-link
+      The pyswmm development team is putting together a video
+      tutorial series the covers the various use cases of pyswmm.
 
 .. toctree::
    :maxdepth: 2
