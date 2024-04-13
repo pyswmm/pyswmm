@@ -32,6 +32,7 @@ def test_subcatchments_1():
 
 def test_subcatchments_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        assert "DUMMY_SUBC" not in Subcatchments(sim)
         for subcatchment in Subcatchments(sim):
             print(subcatchment)
             print(subcatchment.subcatchmentid)

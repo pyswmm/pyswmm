@@ -19,6 +19,7 @@ def test_api_rainfall():
 
 def test_rainfall():
     with Simulation(MODEL_RAIN) as sim:
+        assert "DUMMY_RG" not in RainGages(sim)
         rg = RainGages(sim)["Gage1"]
         assert(rg.raingageid == "Gage1")
 
