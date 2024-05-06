@@ -31,6 +31,7 @@ def test_links_1():
 def test_links_2():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         link_names = ["C1", "C1:C2", "C2", "C3"]
+        assert "DUMMY_LINK" not in Links(sim)
         for link in Links(sim):
             assert (link.linkid in link_names)
             link.flow_limit = 10
