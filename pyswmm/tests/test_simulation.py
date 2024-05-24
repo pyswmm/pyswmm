@@ -8,11 +8,13 @@
 
 # Standard library imports
 from random import randint
+import warnings
 
 # Local imports
 import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation, SimulationPreConfig
 from pyswmm.errors import MultiSimulationError
+from pyswmm.warnings import SimulationContextWarning
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
 import pytest
 import os
@@ -230,3 +232,38 @@ def test_states():
     assert (sim5.sim_is_open == True)
     sim5.execute()
     assert (sim5.sim_is_open == False)
+
+def test_sim_context_warning():
+    # Cause all warnings to always be triggered.
+    warnings.simplefilter("always")
+
+    # Count number of SimulationContextWarning warnings caught
+    def warning_count(warnings_caught):
+        return sum(
+            1
+            for w in warnings_caught 
+            if w.category == SimulationContextWarning
+        )
+
+    # Positive: init Simulation without context manager
+    with warnings.catch_warnings(record=True) as w1:
+        sim1 = Simulation(MODEL_WEIR_SETTING_PATH)
+        sim1.execute()
+        sim1.execute()
+        sim1.close()
+        assert (warning_count(w1) == 1)
+
+    with warnings.catch_warnings(record=True) as w2:
+        sim2 = Simulation(MODEL_WEIR_SETTING_PATH)
+        sim2.start()
+        sim2.start()
+        sim2.close()
+        assert (warning_count(w2) == 1)
+
+    # Negative: init Simulation with context manager
+    with warnings.catch_warnings(record=True) as w3:
+        with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
+            sim3.execute()
+            sim3.execute()
+            sim3.close()
+        assert (warning_count(w3) == 0)
