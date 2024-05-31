@@ -14,29 +14,29 @@ def test_api_rainfall():
 
             if round(x, 2) == 10.0:
                 check += 1
-    assert check == 718
+    assert(check == 718)
 
 
 def test_rainfall():
     with Simulation(MODEL_RAIN) as sim:
         assert "DUMMY_RG" not in RainGages(sim)
         rg = RainGages(sim)["Gage1"]
-        assert rg.raingageid == "Gage1"
+        assert(rg.raingageid == "Gage1")
 
         sim.step_advance(3600)
         for ind, step in enumerate(sim):
             if 0 < ind < 5:
-                assert rg.total_precip == 1
-                assert rg.rainfall == 1
-                assert rg.snowfall == 0
+                assert(rg.total_precip == 1)
+                assert(rg.rainfall == 1)
+                assert(rg.snowfall == 0)
 
             if ind == 5:
                 rg.total_precip = 10
 
             if ind >= 6:
-                assert int(rg.total_precip) == 10
-                assert int(rg.rainfall) == 10
-                assert int(rg.snowfall) == 0
+                assert(int(rg.total_precip) == 10)
+                assert(int(rg.rainfall) == 10)
+                assert(int(rg.snowfall) == 0)
 
         stats = SystemStats(sim)
-        assert int(stats.runoff_stats["rainfall"]) == 65
+        assert(int(stats.runoff_stats['rainfall']) == 65)

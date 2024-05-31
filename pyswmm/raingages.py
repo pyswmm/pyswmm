@@ -95,7 +95,8 @@ class RainGages(object):
             rg = RainGage(self._model, raingageid)
             return rg
         else:
-            raise PYSWMMException("Raingage ID: {} Does not Exist".format(raingageid))
+            raise PYSWMMException(
+                "Raingage ID: {} Does not Exist".format(raingageid))
 
     def __iter__(self):
         return self

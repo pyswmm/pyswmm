@@ -79,7 +79,11 @@ class Simulation(object):
         sim.execute()
     """
 
-    def __init__(self, inputfile, reportfile=None, outputfile=None, sim_preconfig=None):
+    def __init__(self,
+                 inputfile,
+                 reportfile=None,
+                 outputfile=None,
+                 sim_preconfig=None):
         # sim_config enables a find/replace to be fun on the source input file
         # to create the new INP file.
         if sim_preconfig:
@@ -93,7 +97,7 @@ class Simulation(object):
         # Add Simulation State Manager to Prevent Multiple Instances of
         # SWMM to be opened in one instance of Python
         if _sim_state_instance.sim_is_instantiated:
-            raise (MultiSimulationError("Multi-Simulation Error."))
+            raise(MultiSimulationError("Multi-Simulation Error."))
 
         self._model = PySWMM(inputfile, reportfile, outputfile)
         self._model.swmm_open()
@@ -109,7 +113,7 @@ class Simulation(object):
             "after_step": None,
             "before_end": None,
             "after_end": None,
-            "after_close": None,
+            "after_close": None
         }
 
     def __enter__(self):
@@ -188,7 +192,8 @@ class Simulation(object):
     def _is_callback(callable_object):
         """Checks if arugment is a function/method."""
         if not callable(callable_object):
-            error_msg = "Requires Callable Object, not {}".format(type(callable_object))
+            error_msg = 'Requires Callable Object, not {}'.format(
+                type(callable_object))
             raise (PYSWMMException(error_msg))
         else:
             return True
@@ -204,12 +209,9 @@ class Simulation(object):
 
     @property
     def _isOpen(self) -> bool:
-        """._isOpen is set for Deprecation"""
-        warn(
-            "This method will be deprecated in PySWMM-v2.1",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """._isOpen is set for Deprecation """
+        warn('This method will be deprecated in PySWMM-v2.1',
+             DeprecationWarning, stacklevel=2)
         return self.sim_is_open
 
     @property
@@ -233,12 +235,9 @@ class Simulation(object):
 
     @property
     def _isStarted(self) -> bool:
-        """._isSpen is set for Deprecation"""
-        warn(
-            "This method will be deprecated in PySWMM-v2.1",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        """._isSpen is set for Deprecation """
+        warn('This method will be deprecated in PySWMM-v2.1',
+             DeprecationWarning, stacklevel=2)
         return self.sim_is_started
 
     @property
@@ -270,9 +269,8 @@ class Simulation(object):
         Simulation.add_before_start() callback. If the user's goal is to
         set the initial link settings, instead use Simulation.add_after_start().
         """
-        warn(
-            "This method was deprecated in PySWMM-v2", DeprecationWarning, stacklevel=2
-        )
+        warn('This method was deprecated in PySWMM-v2',
+             DeprecationWarning, stacklevel=2)
 
     def step_advance(self, advance_seconds):
         """
@@ -475,12 +473,14 @@ class Simulation(object):
 
             >>> datetime.datetime(2015,5,10,15,15,1)
         """
-        return self._model.getSimulationDateTime(SimulationTime.StartDateTime.value)
+        return self._model.getSimulationDateTime(
+            SimulationTime.StartDateTime.value)
 
     @start_time.setter
     def start_time(self, dtimeval):
         """Set simulation Start time"""
-        self._model.setSimulationDateTime(SimulationTime.StartDateTime.value, dtimeval)
+        self._model.setSimulationDateTime(SimulationTime.StartDateTime.value,
+                                          dtimeval)
 
     @property
     def end_time(self):
@@ -500,12 +500,14 @@ class Simulation(object):
 
             >>> datetime.datetime(2016,5,10,15,15,1)
         """
-        return self._model.getSimulationDateTime(SimulationTime.EndDateTime.value)
+        return self._model.getSimulationDateTime(
+            SimulationTime.EndDateTime.value)
 
     @end_time.setter
     def end_time(self, dtimeval):
         """Set simulation End time."""
-        self._model.setSimulationDateTime(SimulationTime.EndDateTime.value, dtimeval)
+        self._model.setSimulationDateTime(SimulationTime.EndDateTime.value,
+                                          dtimeval)
 
     @property
     def report_start(self):
@@ -525,12 +527,14 @@ class Simulation(object):
 
             >>> datetime.datetime(2015,5,10,15,15,1)
         """
-        return self._model.getSimulationDateTime(SimulationTime.ReportStart.value)
+        return self._model.getSimulationDateTime(
+            SimulationTime.ReportStart.value)
 
     @report_start.setter
     def report_start(self, dtimeval):
         """Set simulation report start time."""
-        self._model.setSimulationDateTime(SimulationTime.ReportStart.value, dtimeval)
+        self._model.setSimulationDateTime(SimulationTime.ReportStart.value,
+                                          dtimeval)
 
     @property
     def flow_units(self):
@@ -826,7 +830,7 @@ class Simulation(object):
             self._callbacks["after_close"] = callback
 
 
-class SimulationPreConfig:
+class SimulationPreConfig():
     """
     This class was developed to introduce a simple way to programmatically
     adjust nearly all model parameters. Once the user instantiates the
@@ -934,9 +938,8 @@ class SimulationPreConfig:
         """"""
         self._filename_suffix = suffix
 
-    def add_update_by_token(
-        self, section: str, obj_id: str, index: int, new_val, row_num=0
-    ):
+    def add_update_by_token(self, section: str, obj_id: str,
+                            index: int, new_val, row_num=0):
         """
         This method allows the user to give the parmeter to be updated and
         where this value should be set in the input file.
@@ -998,15 +1001,16 @@ class SimulationPreConfig:
             raise (Exception("No Source INP set"))
 
         def write_line(fl_handle, ln):
-            end = ""
+            end = ''
             if not ln.endswith("\n"):
-                end = "\n"
-            fl_handle.write(ln + end)
+                end = '\n'
+            fl_handle.write(ln+end)
 
-        dest_file = self._source_input_name[:-4] + self._filename_suffix + ".inp"
+        dest_file = self._source_input_name[:-4] \
+            + self._filename_suffix + '.inp'
 
-        fl_source = open(self._source_input_name, "r")
-        fl_destin = open(dest_file, "w")
+        fl_source = open(self._source_input_name, 'r')
+        fl_destin = open(dest_file, 'w')
 
         section_replacements = False
         section = None
@@ -1014,11 +1018,11 @@ class SimulationPreConfig:
         row_count = 0
 
         for ln in fl_source:
-            if "[" in ln and "]" in ln and ln.strip()[0] != ";":
+            if '[' in ln and ']' in ln and ln.strip()[0]!=';':
                 ln_orig = ln
                 ln = ln.strip()
-                ln = ln.replace("[", "")
-                ln = ln.replace("]", "")
+                ln = ln.replace("[", '')
+                ln = ln.replace("]", '')
                 section = ln.lower()
                 section_replacements = False
                 # Only modify sections if there are edits.
@@ -1027,7 +1031,7 @@ class SimulationPreConfig:
                 id_ref = None
                 row_count = 0
                 write_line(fl_destin, ln_orig)
-            elif ln.startswith(";") or len(ln.split()) == 0:
+            elif ln.startswith(';') or len(ln.split()) == 0:
                 write_line(fl_destin, ln)
             elif not section_replacements:
                 write_line(fl_destin, ln)
@@ -1048,13 +1052,9 @@ class SimulationPreConfig:
                                 ln_mod[index] = mods[section][id_ref][row_count][index]
                                 ln_out = "     ".join([str(v) for v in ln_mod])
                             else:
-                                raise (
-                                    Exception(
-                                        "{0} {1} {2} index {3} out of bounds".format(
-                                            section, id_ref, row_count, index
-                                        )
-                                    )
-                                )
+                                raise (Exception("{0} {1} {2} index {3} out of bounds".format(
+                                    section, id_ref,
+                                    row_count, index)))
                     else:
                         ln_out = ln
                 else:

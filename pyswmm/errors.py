@@ -21,12 +21,11 @@ class OutputException(Exception):
         self.message = message
         super().__init__(self.message)
 
-
-_multi_sim_message = """\tDue to architectural limitations inside of EPA-SWMM
+_multi_sim_message = \
+"""\tDue to architectural limitations inside of EPA-SWMM
 \tmultiple Simulations cannot be completed within a single
 \tinstance of Python.  Consider launching the model runs
 \tusing a Python Subprocess and a Queue manager.\n"""
-
 
 class MultiSimulationError(Exception):
     """Exception raised if more than one SWMM Simulation

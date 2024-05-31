@@ -41,7 +41,7 @@ def test_swmm_input_error_1():
         with Simulation(MODEL_BAD_INPUT_PATH_1) as sim:
             for step in sim:
                 pass
-    assert str(e.value).strip() == "ERROR 200: one or more errors in input file."
+    assert(str(e.value).strip() == 'ERROR 200: one or more errors in input file.')
 
 
 def test_error_output():
@@ -49,14 +49,12 @@ def test_error_output():
         for step in sim:
             pass
 
-    with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
+    with Output(MODEL_WEIR_SETTING_PATH.replace('inp', 'out')) as out:
         with pytest.raises(OutputException):
-            out.node_series("potato", "total_inflow")
+            out.node_series('potato', 'total_inflow')
 
         with pytest.raises(OutputException):
-            out.link_series("C3", "flow_rate", datetime(2021, 1, 1))
+            out.link_series('C3', 'flow_rate', datetime(2021, 1, 1))
 
         with pytest.raises(OutputException):
-            out.link_series(
-                "C3", "flow_rate", datetime(2015, 11, 4), datetime(2021, 1, 1)
-            )
+            out.link_series('C3', 'flow_rate', datetime(2015, 11, 4), datetime(2021, 1, 1))

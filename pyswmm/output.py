@@ -177,11 +177,16 @@ class Output(object):
         if not self.loaded:
             self.loaded = True
             output.open(self.handle, self.binfile)
-            self.start = from_jd(output.get_start_date(self.handle) + 2415018.5)
+            self.start = from_jd(
+                output.get_start_date(
+                    self.handle) + 2415018.5)
             self.start = self.start.replace(microsecond=0)
-            self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
-            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
-            self.end = self.start + timedelta(seconds=self.period * self.report)
+            self.report = output.get_times(
+                self.handle, shared_enum.Time.REPORT_STEP)
+            self.period = output.get_times(
+                self.handle, shared_enum.Time.NUM_PERIODS)
+            self.end = self.start + \
+                timedelta(seconds=self.period * self.report)
 
         return True
 
@@ -238,7 +243,11 @@ class Output(object):
         """Load model reporting times into self._times"""
         self._times = list()
         for step in range(1, self.period + 1):
-            self._times.append(self.start + timedelta(seconds=self.report) * step)
+            self._times.append(
+                self.start +
+                timedelta(
+                    seconds=self.report) *
+                step)
 
     @property
     def project_size(self) -> list:
@@ -404,12 +413,9 @@ class Output(object):
             flow=shared_enum.FlowUnits,
             pollutant=shared_enum.ConcUnits,
         )
-        return {
-            attribute: units_mapping[attribute](unit).name
-            for unit, attribute in zip(
-                output.get_units(self.handle), units_mapping.keys()
-            )
-        }
+        return {attribute: units_mapping[attribute](unit).name for unit, attribute in zip(
+            output.get_units(self.handle),
+            units_mapping.keys())}
 
     @property
     @output_open_handler
@@ -724,7 +730,8 @@ class Output(object):
             time_index, self.times, self.start, self.end, self.report, 0
         )
 
-        values = output.get_subcatch_attribute(self.handle, time_index, attribute)
+        values = output.get_subcatch_attribute(
+            self.handle, time_index, attribute)
         return {sub: value for sub, value in zip(self.subcatchments, values)}
 
     @output_open_handler
@@ -912,7 +919,8 @@ class Output(object):
         )
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.NodeAttribute, values)}
+        return {attr: value for attr, value in zip(
+            shared_enum.NodeAttribute, values)}
 
     @output_open_handler
     def link_result(
@@ -949,7 +957,8 @@ class Output(object):
         )
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.LinkAttribute, values)}
+        return {attr: value for attr, value in zip(
+            shared_enum.LinkAttribute, values)}
 
     @output_open_handler
     def system_result(self, time_index: Union[int, datetime, None] = None):
@@ -991,10 +1000,11 @@ class Output(object):
         )
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
-        return {attr: value for attr, value in zip(shared_enum.SystemAttribute, values)}
+        return {attr: value for attr, value in zip(
+            shared_enum.SystemAttribute, values)}
 
 
-class OutAttributeBase:
+class OutAttributeBase():
     """Baseclass for SubcatchSeries, NodeSeries, LinkSeries."""
 
     def __init__(self, out_handle: Output):

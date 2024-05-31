@@ -20,13 +20,12 @@ from swmm.toolkit import solver
 # Local imports
 import pyswmm.toolkitapi as tka
 
-
 class SWMMException(Exception):
     """Custom exception class for SWMM errors."""
 
     def __init__(self, error_code, error_message):
         self.warning = False
-        self.args = (error_code,)
+        self.args = (error_code, )
         self.message = error_message
 
     def __str__(self):
@@ -93,7 +92,11 @@ class PySWMM(object):
     >>> swmm_model.swmm_close()
     """
 
-    def __init__(self, inpfile="", rptfile=None, binfile=None, swmm_lib_path=None):
+    def __init__(self,
+                 inpfile='',
+                 rptfile=None,
+                 binfile=None,
+                 swmm_lib_path=None):
         """
         Initialize the PySWMM object class.
 
@@ -132,18 +135,19 @@ class PySWMM(object):
             inpfile = self.inpfile
 
         if rptfile is None:
-            if self.rptfile != "" and self.rptfile is not None:
+            if self.rptfile != '' and self.rptfile is not None:
                 rptfile = self.rptfile
             else:
-                rptfile = self.inpfile.replace(".inp", ".rpt")
+                rptfile = self.inpfile.replace('.inp', '.rpt')
 
         if binfile is None:
-            if self.binfile != "" and self.binfile is not None:
+            if self.binfile != '' and self.binfile is not None:
                 binfile = self.binfile
             else:
-                binfile = self.inpfile.replace(".inp", ".out")
+                binfile = self.inpfile.replace('.inp', '.out')
 
-        sys.stdout.write("\n... SWMM Version {}".format(self.swmm_getVersion()))
+        sys.stdout.write("\n... SWMM Version {}".format(self.swmm_getVersion(
+        )))
 
         try:
             self.swmm_run()
@@ -158,16 +162,16 @@ class PySWMM(object):
             inpfile = self.inpfile
 
         if rptfile is None:
-            if self.rptfile != "" and self.rptfile is not None:
+            if self.rptfile != '' and self.rptfile is not None:
                 rptfile = self.rptfile
             else:
-                rptfile = self.inpfile.replace(".inp", ".rpt")
+                rptfile = self.inpfile.replace('.inp', '.rpt')
 
         if binfile is None:
-            if self.binfile != "" and self.binfile is not None:
+            if self.binfile != '' and self.binfile is not None:
                 binfile = self.binfile
             else:
-                binfile = self.inpfile.replace(".inp", ".out")
+                binfile = self.inpfile.replace('.inp', '.out')
 
         solver.swmm_run(inpfile, rptfile, binfile)
 
@@ -187,24 +191,24 @@ class PySWMM(object):
         """
         if self.fileLoaded:
             self.swmm_close()
-            error_msg = "Fatal error closing previously opened file"
+            error_msg = 'Fatal error closing previously opened file'
             raise (PYSWMMException(error_msg))
 
         if inpfile is None:
             inpfile = self.inpfile
 
         if rptfile is None:
-            if self.rptfile != "" and self.rptfile is not None:
+            if self.rptfile != '' and self.rptfile is not None:
                 rptfile = self.rptfile
             else:
-                rptfile = self.inpfile.replace(".inp", ".rpt")
+                rptfile = self.inpfile.replace('.inp', '.rpt')
                 self.rptfile = rptfile
 
         if binfile is None:
-            if self.binfile != "" and self.binfile is not None:
+            if self.binfile != '' and self.binfile is not None:
                 binfile = self.binfile
             else:
-                binfile = self.inpfile.replace(".inp", ".out")
+                binfile = self.inpfile.replace('.inp', '.out')
                 self.binfile = binfile
 
         solver.swmm_open(inpfile, rptfile, binfile)
@@ -348,7 +352,7 @@ class PySWMM(object):
 
         :param str hotstart_filename: Name of hotstart file to save to.
         """
-        solver.swmm_hotstart(tka.HotstartFile.save, hotstart_filename)
+        solver.swmm_hotstart(tka.HotstartFile.save,hotstart_filename)
 
     def swmm_use_hotstart(self, hotstart_filename):
         """
@@ -358,7 +362,7 @@ class PySWMM(object):
 
         :param str hotstart_filename: Name of hotstart file to load from.
         """
-        solver.swmm_hotstart(tka.HotstartFile.use, hotstart_filename)
+        solver.swmm_hotstart(tka.HotstartFile.use,hotstart_filename)
 
     def swmm_getVersion(self):
         """
@@ -370,11 +374,10 @@ class PySWMM(object):
         :return: version number of the DLL source code
         :rtype: int
         """
-        major, minor, patch = solver.swmm_version_info().split(".")
-        return packaging.version.parse(".".join([major, minor, patch]))
+        major, minor, patch = solver.swmm_version_info().split('.')
+        return packaging.version.parse('.'.join([major, minor, patch]))
 
         return
-
     def swmm_getMassBalErr(self):
         """
         Get Mass Balance Errors.
@@ -423,15 +426,8 @@ class PySWMM(object):
                                              datetime(2009, 10, 1, 12,30))
         >>>
         """
-        solver.simulation_set_datetime(
-            timeType,
-            newDateTime.year,
-            newDateTime.month,
-            newDateTime.day,
-            newDateTime.hour,
-            newDateTime.minute,
-            newDateTime.second,
-        )
+        solver.simulation_set_datetime(timeType, newDateTime.year, newDateTime.month,
+            newDateTime.day, newDateTime.hour, newDateTime.minute, newDateTime.second)
 
     def getSimUnit(self, unit_type):
         """
@@ -1065,7 +1061,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         return solver.lid_usage_get_flux_rate(index, lidIndex, layerIndex)
 
     def getLidUResult(self, subcatchID, lidIndex, resultType):
@@ -1096,7 +1093,8 @@ class PySWMM(object):
         >>> swmm_model.swmm_report()
         >>> swmm_model.swmm_close()
         """
-        index = self.getObjectIDIndex(tka.ObjectType.SUBCATCH.value, subcatchID)
+        index = self.getObjectIDIndex(
+            tka.ObjectType.SUBCATCH.value, subcatchID)
         return solver.lid_usage_get_result(index, lidIndex, resultType)
 
     def getLidGResult(self, subcatchID, resultType):
@@ -1534,12 +1532,8 @@ class PySWMM(object):
         :param float pollutant_value: pollutant value to set
         """
         index = self.getObjectIDIndex(tka.ObjectType.NODE.value, ID)
-        pollutant_index = self.getObjectIDIndex(
-            tka.ObjectType.POLLUT.value, pollutant_ID
-        )
-        solver.node_set_pollutant(
-            index, tka.NodePollut.nodeQual.value, pollutant_index, pollutant_value
-        )
+        pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
+        solver.node_set_pollutant(index, tka.NodePollut.nodeQual.value, pollutant_index, pollutant_value)
 
     def setLinkPollut(self, ID, pollutant_ID, pollutant_value):
         """
@@ -1550,20 +1544,14 @@ class PySWMM(object):
         :param float pollutant_value: pollutant value to set
         """
         index = self.getObjectIDIndex(tka.ObjectType.LINK.value, ID)
-        pollutant_index = self.getObjectIDIndex(
-            tka.ObjectType.POLLUT.value, pollutant_ID
-        )
-        solver.link_set_pollutant(
-            index, tka.LinkPollut.linkQual.value, pollutant_index, pollutant_value
-        )
+        pollutant_index = self.getObjectIDIndex(tka.ObjectType.POLLUT.value, pollutant_ID)
+        solver.link_set_pollutant(index, tka.LinkPollut.linkQual.value, pollutant_index, pollutant_value)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     test = PySWMM(
         inpfile=r"./tests/data/model_weir_setting.inp",
         rptfile=r"./tests/data/model_weir_setting.rpt",
-        binfile=r"./tests/data/model_weir_setting.out",
-    )
+        binfile=r"./tests/data/model_weir_setting.out")
     test.swmm_open()
 
     print("Simulation Time Info")
@@ -1594,18 +1582,17 @@ if __name__ == "__main__":
     print("Node ID")
     IDS = test.getObjectIDList(tka.ObjectType.NODE.value)
     print(IDS)
-    print("ID,Invert,Type")
+    print('ID,Invert,Type')
     for ind, idd in enumerate(IDS):
         print(
             ind,
             idd,
             test.getNodeParam(idd, tka.NodeParams.invertElev.value),
             test.getNodeParam(idd, tka.NodeParams.fullDepth.value),
-            test.getNodeType(idd),
-        )
+            test.getNodeType(idd), )
 
     print("Link ID")
-    print("ID,offset1,LinkConnections")
+    print('ID,offset1,LinkConnections')
     IDS = test.getObjectIDList(tka.ObjectType.LINK.value)
     print(IDS)
     for ind, idd in enumerate(IDS):
@@ -1613,8 +1600,7 @@ if __name__ == "__main__":
             ind,
             idd,
             test.getLinkParam(idd, tka.LinkParams.offset1.value),
-            test.getLinkConnections(idd),
-        )
+            test.getLinkConnections(idd), )
 
     print("SUBCATCH ID")
     IDS = test.getObjectIDList(tka.ObjectType.SUBCATCH.value)
@@ -1624,8 +1610,7 @@ if __name__ == "__main__":
             ind,
             idd,
             test.getSubcatchParam(idd, tka.SubcParams.area.value),
-            test.getSubcatchOutConnection(idd),
-        )
+            test.getSubcatchOutConnection(idd), )
 
     test.swmm_start(False)
     i = 0

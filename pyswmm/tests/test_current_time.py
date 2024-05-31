@@ -27,5 +27,5 @@ def test_current_time():
         sim.end_time = endtime + timedelta(hours=30)
         print("\n\n\nDates\n")
         for step in sim:
-            assert sim.current_time >= sim.start_time
-            assert sim.current_time <= sim.end_time
+            assert (sim.current_time >= sim.start_time)
+            assert (sim.current_time <= sim.end_time)
