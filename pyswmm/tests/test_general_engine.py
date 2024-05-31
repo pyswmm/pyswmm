@@ -29,22 +29,24 @@ from pyswmm.swmm5 import PySWMM
 ##    sim = Simulation(MODEL_WEIR_SETTING_PATH)
 # print(sim.engine_version)
 
+
 def test_swmm_stride():
     swmmobject = PySWMM(*get_model_files(MODEL_WEIR_SETTING_PATH))
     swmmobject.swmm_open()
     swmmobject.swmm_start()
 
     i = 0
-    while (True):
+    while True:
         time = swmmobject.swmm_stride(600)
         i += 1
 
         if i == 10:
             break
     print(time)
-    assert time == (600 * 10)/86400
+    assert time == (600 * 10) / 86400
     swmmobject.swmm_end()
     swmmobject.swmm_close()
+
 
 def test_runoff_error():
     sim = Simulation(MODEL_WEIR_SETTING_PATH)
@@ -65,4 +67,3 @@ def test_quality_error():
     sim.execute()
     print(sim.quality_error)
     assert sim.quality_error >= 0.0
-

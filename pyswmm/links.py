@@ -344,6 +344,7 @@ class Link(object):
     def inlet_offset(self, param):
         """Set Link Upstream Link Offset."""
         self._model.setLinkParam(self._linkid, LinkParams.offset1.value, param)
+
     @property
     def outlet_offset(self):
 
@@ -482,14 +483,12 @@ class Link(object):
         0
         0.2
         """
-        return self._model.getLinkParam(self._linkid,
-                                        LinkParams.cLossInlet.value)
+        return self._model.getLinkParam(self._linkid, LinkParams.cLossInlet.value)
 
     @inlet_head_loss.setter
     def inlet_head_loss(self, param):
         """Set Link Inlet Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossInlet.value,
-                                 param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossInlet.value, param)
 
     @property
     def outlet_head_loss(self):
@@ -520,14 +519,12 @@ class Link(object):
         0
         0.2
         """
-        return self._model.getLinkParam(self._linkid,
-                                        LinkParams.cLossOutlet.value)
+        return self._model.getLinkParam(self._linkid, LinkParams.cLossOutlet.value)
 
     @outlet_head_loss.setter
     def outlet_head_loss(self, param):
         """Set Link Outlet Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossOutlet.value,
-                                 param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossOutlet.value, param)
 
     @property
     def average_head_loss(self):
@@ -558,14 +555,12 @@ class Link(object):
         0
         0.2
         """
-        return self._model.getLinkParam(self._linkid,
-                                        LinkParams.cLossAvg.value)
+        return self._model.getLinkParam(self._linkid, LinkParams.cLossAvg.value)
 
     @average_head_loss.setter
     def average_head_loss(self, param):
         """Set Link Average Head Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.cLossAvg.value,
-                                 param)
+        self._model.setLinkParam(self._linkid, LinkParams.cLossAvg.value, param)
 
     @property
     def seepage_rate(self):
@@ -596,14 +591,12 @@ class Link(object):
         0
         0.2
         """
-        return self._model.getLinkParam(self._linkid,
-                                        LinkParams.seepRate.value)
+        return self._model.getLinkParam(self._linkid, LinkParams.seepRate.value)
 
     @seepage_rate.setter
     def seepage_rate(self, param):
         """Set Link Average Seepage Loss."""
-        self._model.setLinkParam(self._linkid, LinkParams.seepRate.value,
-                                 param)
+        self._model.setLinkParam(self._linkid, LinkParams.seepRate.value, param)
 
     @property
     def flow(self):
@@ -630,8 +623,7 @@ class Link(object):
         1.9
         1.2
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.newFlow.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.newFlow.value)
 
     @property
     def depth(self):
@@ -658,8 +650,7 @@ class Link(object):
         1.9
         1.2
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.newDepth.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.newDepth.value)
 
     @property
     def volume(self):
@@ -686,8 +677,7 @@ class Link(object):
         1.9
         1.2
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.newVolume.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.newVolume.value)
 
     @property
     def froude(self):
@@ -714,8 +704,7 @@ class Link(object):
         1.9
         1.2
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.froude.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.froude.value)
 
     @property
     def ups_xsection_area(self):
@@ -742,8 +731,7 @@ class Link(object):
         1.9
         1.2
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.surfArea1.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.surfArea1.value)
 
     @property
     def ds_xsection_area(self):
@@ -770,8 +758,7 @@ class Link(object):
         1.9
         1.2
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.surfArea2.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.surfArea2.value)
 
     @property
     def current_setting(self):
@@ -798,8 +785,7 @@ class Link(object):
         0.5
         1
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.setting.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.setting.value)
 
     @property
     def target_setting(self):
@@ -842,8 +828,7 @@ class Link(object):
         0.1
         0.1
         """
-        return self._model.getLinkResult(self._linkid,
-                                         LinkResults.targetSetting.value)
+        return self._model.getLinkResult(self._linkid, LinkResults.targetSetting.value)
 
     @target_setting.setter
     def target_setting(self, setting):
@@ -880,8 +865,9 @@ class Link(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        quality_array = self._model.getLinkPollut(self._linkid,
-                                                      LinkPollut.linkQual.value)
+        quality_array = self._model.getLinkPollut(
+            self._linkid, LinkPollut.linkQual.value
+        )
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = quality_array[ind]
@@ -892,7 +878,7 @@ class Link(object):
     def pollut_quality(self, args):
         """
         Set Current Link Water Quality Value
-        
+
         Examples:
 
         >>> from pyswmm import Simulation, Links
@@ -936,8 +922,9 @@ class Link(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        totalLoad_array = self._model.getLinkPollut(self._linkid,
-                                                      LinkPollut.totalLoad.value)
+        totalLoad_array = self._model.getLinkPollut(
+            self._linkid, LinkPollut.totalLoad.value
+        )
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = totalLoad_array[ind]
@@ -968,8 +955,9 @@ class Link(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        quality_array = self._model.getLinkPollut(self._linkid,
-                                                      LinkPollut.linkQual.value)
+        quality_array = self._model.getLinkPollut(
+            self._linkid, LinkPollut.linkQual.value
+        )
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = quality_array[ind]
@@ -1040,12 +1028,12 @@ class Conduit(Link):
         >>> import pprint
         >>> pp = pprint.PrettyPrinter(indent=4)
         >>>
-        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:        
+        >>> with Simulation('tests/data/model_weir_setting.inp') as sim:
         ...     c1c2 = Links(sim)["C1:C2"]
         ...     print(c1c2.flow)
         ...     for step in sim:
         ...         pass
-        ...     pp.pprint(c1c2.conduit_statistics)        
+        ...     pp.pprint(c1c2.conduit_statistics)
         o  Retrieving project data
         {   'flow_turn_sign': -1,
             'flow_turns': 1,
@@ -1112,12 +1100,12 @@ class Pump(Link):
         >>> from pyswmm import Simulation, Links
         >>> import pprint
         >>> pp = pprint.PrettyPrinter(indent=4)
-        >>>        
-        >>> with Simulation('tests/data/model_pump_setting.inp') as sim:        
+        >>>
+        >>> with Simulation('tests/data/model_pump_setting.inp') as sim:
         ...     c3 = Links(sim)["C3"]
         ...     for step in sim:
         ...         pass
-        ...     pp.pprint(c3.pump_statistics)        
+        ...     pp.pprint(c3.pump_statistics)
         o  Retrieving project data
         {   'average_flowrate': 20.0,
             'energy_consumed': 2792.5975765384896,

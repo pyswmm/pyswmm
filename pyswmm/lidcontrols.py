@@ -17,7 +17,7 @@ class LidControls(object):
 
     This allows the user to iterate and get on of the LID control types as
     defined inside SWMM's [LID_CONTROLS] section.  For example, here is a sample
-    section from a SWMM INP file. 
+    section from a SWMM INP file.
 
     .. code-block::
 
@@ -136,8 +136,7 @@ class LidControls(object):
         :return: ID Exists
         :rtype: bool
         """
-        return self._model.ObjectIDexist(ObjectType.LID.value,
-                                         lidcontrolid)
+        return self._model.ObjectIDexist(ObjectType.LID.value, lidcontrolid)
 
     def __getitem__(self, lidcontrolid):
         if self.__contains__(lidcontrolid):
@@ -159,8 +158,7 @@ class LidControls(object):
     @property
     def _lidcontrolid(self):
         """Lid Control ID."""
-        return self._model.getObjectId(ObjectType.LID.value,
-                                       self._cuindex)
+        return self._model.getObjectId(ObjectType.LID.value, self._cuindex)
 
 
 class LidControl(object):
@@ -186,6 +184,7 @@ class LidControl(object):
     | DrainMat   | drain_mat |
     +------------+-----------+
     """
+
     def __init__(self, sim, model, lidcontrolid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")

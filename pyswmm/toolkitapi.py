@@ -7,6 +7,7 @@
 # -----------------------------------------------------------------------------
 """SWMM Object Enum."""
 from swmm.toolkit import shared_enum
+
 # Standard library imports
 from enum import Enum
 import ctypes
@@ -263,15 +264,21 @@ class HotstartFile(Enum):
 
 class NodeStats(ctypes.Structure):
     _fields_ = [
-        ("avgDepth", ctypes.c_double), ("maxDepth", ctypes.c_double),
-        ("maxDepthDate", ctypes.c_double), ("maxRptDepth", ctypes.c_double),
-        ("volFlooded", ctypes.c_double), ("timeFlooded", ctypes.c_double),
+        ("avgDepth", ctypes.c_double),
+        ("maxDepth", ctypes.c_double),
+        ("maxDepthDate", ctypes.c_double),
+        ("maxRptDepth", ctypes.c_double),
+        ("volFlooded", ctypes.c_double),
+        ("timeFlooded", ctypes.c_double),
         ("timeSurcharged", ctypes.c_double),
         ("timeCourantCritical", ctypes.c_double),
-        ("totLatFlow", ctypes.c_double), ("maxLatFlow", ctypes.c_double),
-        ("maxInflow", ctypes.c_double), ("maxOverflow", ctypes.c_double),
-        ("maxPondedVol", ctypes.c_double), ("maxInflowDate", ctypes.c_double),
-        ("maxOverflowDate", ctypes.c_double)
+        ("totLatFlow", ctypes.c_double),
+        ("maxLatFlow", ctypes.c_double),
+        ("maxInflow", ctypes.c_double),
+        ("maxOverflow", ctypes.c_double),
+        ("maxPondedVol", ctypes.c_double),
+        ("maxInflowDate", ctypes.c_double),
+        ("maxOverflowDate", ctypes.c_double),
     ]
     _py_alias_ids = {
         "avgDepth": "average_depth",
@@ -289,16 +296,20 @@ class NodeStats(ctypes.Structure):
         "maxPondedVol": "max_ponded_volume",
         "maxInflowDate": "max_inflow_date",
         "maxOverflowDate": "max_flooding_date",
-        "loads": "pollutant_loading"
+        "loads": "pollutant_loading",
     }
 
 
 class StorageStats(ctypes.Structure):
-    _fields_ = [("initVol", ctypes.c_double), ("avgVol", ctypes.c_double),
-                ("maxVol", ctypes.c_double), ("maxFlow", ctypes.c_double),
-                ("evapLosses", ctypes.c_double),
-                ("exfilLosses", ctypes.c_double),
-                ("maxVolDate", ctypes.c_double)]
+    _fields_ = [
+        ("initVol", ctypes.c_double),
+        ("avgVol", ctypes.c_double),
+        ("maxVol", ctypes.c_double),
+        ("maxFlow", ctypes.c_double),
+        ("evapLosses", ctypes.c_double),
+        ("exfilLosses", ctypes.c_double),
+        ("maxVolDate", ctypes.c_double),
+    ]
     _py_alias_ids = {
         "initVol": "initial_volume",
         "avgVol": "average_volume",
@@ -306,7 +317,7 @@ class StorageStats(ctypes.Structure):
         "maxFlow": "peak_flowrate",
         "evapLosses": "evap_loss",
         "exfilLosses": "exfil_loss",
-        "maxVolDate": "max_vol_date"
+        "maxVolDate": "max_vol_date",
     }
 
 
@@ -314,14 +325,18 @@ PollutArray = ctypes.POINTER(ctypes.c_double)
 
 
 class OutfallStats(ctypes.Structure):
-    _fields_ = [("avgFlow", ctypes.c_double), ("maxFlow", ctypes.c_double),
-                ("totalLoad", PollutArray), ("totalPeriods", ctypes.c_int)]
+    _fields_ = [
+        ("avgFlow", ctypes.c_double),
+        ("maxFlow", ctypes.c_double),
+        ("totalLoad", PollutArray),
+        ("totalPeriods", ctypes.c_int),
+    ]
     _py_alias_ids = {
         "avgFlow": "average_flowrate",
         "maxFlow": "peak_flowrate",
         "totalLoad": "pollutant_loading",
         "totalPeriods": "total_periods",
-        "loads": "pollutant_loading"
+        "loads": "pollutant_loading",
     }
 
 
@@ -329,18 +344,23 @@ FlowClassArray = ctypes.c_double * 7
 
 
 class LinkStats(ctypes.Structure):
-    _fields_ = [("maxFlow", ctypes.c_double), ("maxFlowDate", ctypes.c_double),
-                ("maxVeloc", ctypes.c_double), ("maxDepth", ctypes.c_double),
-                ("timeNormalFlow", ctypes.c_double),
-                ("timeInletControl", ctypes.c_double),
-                ("timeSurcharged", ctypes.c_double),
-                ("timeFullUpstream", ctypes.c_double),
-                ("timeFullDnstream", ctypes.c_double),
-                ("timeFullFlow", ctypes.c_double),
-                ("timeCapacityLimited", ctypes.c_double),
-                ("timeInFlowClass", FlowClassArray),
-                ("timeCourantCritical", ctypes.c_double),
-                ("flowTurns", ctypes.c_long), ("flowTurnSign", ctypes.c_int)]
+    _fields_ = [
+        ("maxFlow", ctypes.c_double),
+        ("maxFlowDate", ctypes.c_double),
+        ("maxVeloc", ctypes.c_double),
+        ("maxDepth", ctypes.c_double),
+        ("timeNormalFlow", ctypes.c_double),
+        ("timeInletControl", ctypes.c_double),
+        ("timeSurcharged", ctypes.c_double),
+        ("timeFullUpstream", ctypes.c_double),
+        ("timeFullDnstream", ctypes.c_double),
+        ("timeFullFlow", ctypes.c_double),
+        ("timeCapacityLimited", ctypes.c_double),
+        ("timeInFlowClass", FlowClassArray),
+        ("timeCourantCritical", ctypes.c_double),
+        ("flowTurns", ctypes.c_long),
+        ("flowTurnSign", ctypes.c_int),
+    ]
     _py_alias_ids = {
         "maxFlow": "peak_flow",
         "maxFlowDate": "peak_flow_date",
@@ -356,7 +376,7 @@ class LinkStats(ctypes.Structure):
         "timeInFlowClass": "time_in_flow_class",
         "timeCourantCritical": "time_courant_crit",
         "flowTurns": "flow_turns",
-        "flowTurnSign": "flow_turn_sign"
+        "flowTurnSign": "flow_turn_sign",
     }
 
 
@@ -383,14 +403,19 @@ class PumpStats(ctypes.Structure):
         "offCurveLow": "off_curve_low",
         "offCurveHigh": "off_curve_high",
         "startUps": "number_startups",
-        "totalPeriods": "total_periods"
+        "totalPeriods": "total_periods",
     }
 
 
 class SubcStats(ctypes.Structure):
-    _fields_ = [("precip", ctypes.c_double), ("runon", ctypes.c_double),
-                ("evap", ctypes.c_double), ("infil", ctypes.c_double),
-                ("runoff", ctypes.c_double), ("maxFlow", ctypes.c_double)]
+    _fields_ = [
+        ("precip", ctypes.c_double),
+        ("runon", ctypes.c_double),
+        ("evap", ctypes.c_double),
+        ("infil", ctypes.c_double),
+        ("runoff", ctypes.c_double),
+        ("maxFlow", ctypes.c_double),
+    ]
     _py_alias_ids = {
         "precip": "precipitation",
         "runon": "runon",
@@ -402,14 +427,21 @@ class SubcStats(ctypes.Structure):
 
 
 class RoutingTotals(ctypes.Structure):
-    _fields_ = [("dwInflow", ctypes.c_double), ("wwInflow", ctypes.c_double),
-                ("gwInflow", ctypes.c_double), ("iiInflow", ctypes.c_double),
-                ("exInflow", ctypes.c_double), ("flooding", ctypes.c_double),
-                ("outflow", ctypes.c_double), ("evapLoss", ctypes.c_double),
-                ("seepLoss", ctypes.c_double), ("reacted", ctypes.c_double),
-                ("initStorage", ctypes.c_double),
-                ("finalStorage", ctypes.c_double),
-                ("pctError", ctypes.c_double)]
+    _fields_ = [
+        ("dwInflow", ctypes.c_double),
+        ("wwInflow", ctypes.c_double),
+        ("gwInflow", ctypes.c_double),
+        ("iiInflow", ctypes.c_double),
+        ("exInflow", ctypes.c_double),
+        ("flooding", ctypes.c_double),
+        ("outflow", ctypes.c_double),
+        ("evapLoss", ctypes.c_double),
+        ("seepLoss", ctypes.c_double),
+        ("reacted", ctypes.c_double),
+        ("initStorage", ctypes.c_double),
+        ("finalStorage", ctypes.c_double),
+        ("pctError", ctypes.c_double),
+    ]
     _py_alias_ids = {
         "dwInflow": "dry_weather_inflow",
         "wwInflow": "wet_weather_inflow",
@@ -423,19 +455,24 @@ class RoutingTotals(ctypes.Structure):
         "reacted": "reacted",
         "initStorage": "initial_storage",
         "finalStorage": "final_storage",
-        "pctError": "routing_error"
+        "pctError": "routing_error",
     }
 
 
 class RunoffTotals(ctypes.Structure):
     _fields_ = [
-        ("rainfall", ctypes.c_double), ("evap", ctypes.c_double),
-        ("infil", ctypes.c_double), ("runoff", ctypes.c_double),
-        ("drains", ctypes.c_double), ("runon", ctypes.c_double),
-        ("initStorage", ctypes.c_double), ("finalStorage", ctypes.c_double),
+        ("rainfall", ctypes.c_double),
+        ("evap", ctypes.c_double),
+        ("infil", ctypes.c_double),
+        ("runoff", ctypes.c_double),
+        ("drains", ctypes.c_double),
+        ("runon", ctypes.c_double),
+        ("initStorage", ctypes.c_double),
+        ("finalStorage", ctypes.c_double),
         ("initSnowCover", ctypes.c_double),
-        ("finalSnowCover", ctypes.c_double), ("snowRemoved", ctypes.c_double),
-        ("pctError", ctypes.c_double)
+        ("finalSnowCover", ctypes.c_double),
+        ("snowRemoved", ctypes.c_double),
+        ("pctError", ctypes.c_double),
     ]
     _py_alias_ids = {
         "rainfall": "rainfall",
@@ -449,7 +486,7 @@ class RunoffTotals(ctypes.Structure):
         "initSnowCover": "init_snow_cover",
         "finalSnowCover": "final_snow_cover",
         "snowRemoved": "snow_removed",
-        "pctError": "routing_error"
+        "pctError": "routing_error",
     }
 
 
@@ -461,7 +498,7 @@ DLLErrorKeys = {
     421: "Input Error 421: invalid parameter code.",
     434: "File Error  434: unable to open binary output file.",
     435: "File Error  435: run terminated; no results in binary file.",
-    441: "Error 441: need to call SMR_open before calling this function"
+    441: "Error 441: need to call SMR_open before calling this function",
 }
 
 
