@@ -84,8 +84,7 @@ class Simulation(object):
                  inputfile,
                  reportfile=None,
                  outputfile=None,
-                 sim_preconfig=None,
-                 suppress_context_warning=False):
+                 sim_preconfig=None):
         # sim_config enables a find/replace to be fun on the source input file
         # to create the new INP file.
         if sim_preconfig:
