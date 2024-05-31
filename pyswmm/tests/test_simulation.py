@@ -220,7 +220,6 @@ def test_pre_simulation_config():
                 ln = ln.split()
                 assert ln == compare
 
-
     # test cleanup
     if os.path.exists(path_to_modified_inp):
         os.remove(path_to_modified_inp)
