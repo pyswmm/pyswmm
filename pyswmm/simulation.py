@@ -9,7 +9,6 @@
 
 # Standard import
 from warnings import warn
-from functools import wraps
 
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
