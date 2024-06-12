@@ -10,7 +10,7 @@
 
 def get_model_files(name):
     """Return the input, report and output name based on the input name."""
-    base_name = name.split('.inp')[0]
-    report_name = base_name + '.rpt'
-    output_name = base_name + '.out'
+    base_name = name.split(".inp")[0]
+    report_name = base_name + ".rpt"
+    output_name = base_name + ".out"
     return name, report_name, output_name

@@ -4,6 +4,7 @@ class SimulationContextWarning(ResourceWarning):
     Attributes:
         message -- explanation of the error
     """
+
     message = """
     \tThe Simulation object is intended to be used with a context
     \tmanager. System resources will not be freed without calling 
