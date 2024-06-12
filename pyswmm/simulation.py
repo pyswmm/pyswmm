@@ -14,6 +14,7 @@ from warnings import warn
 from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
 from pyswmm.errors import MultiSimulationError
+from pyswmm.warnings import SimulationContextWarning
 
 
 class _SimulationStateManager(object):
@@ -115,6 +116,7 @@ class Simulation(object):
             "after_end": None,
             "after_close": None
         }
+        self._warn_context = True
 
     def __enter__(self):
         """
@@ -136,6 +138,7 @@ class Simulation(object):
             >>> 2015-11-01 14:02:00
 
         """
+        self._warn_context = False
         return self
 
     def __iter__(self):
@@ -144,6 +147,11 @@ class Simulation(object):
 
     def start(self):
         """Start Simulation (no longer suggested to user)."""
+        if self._warn_context:
+            # Emit warning if context manager is not used to instantiate Simulation
+            warn(SimulationContextWarning.message, SimulationContextWarning,
+                 stacklevel=2)
+            self._warn_context = False
         if not self._is_started:
             # Execute Callback Hooks Before Start
             self._execute_callback(self._before_start())
@@ -361,6 +369,12 @@ class Simulation(object):
             sim = Simulation('tests/data/model_weir_setting.inp')
             sim.execute()
         """
+        if self._warn_context:
+            # Emit warning if context manager is not used to instantiate the simulation
+            warn(
+                SimulationContextWarning.message, SimulationContextWarning, stacklevel=2
+            )
+            self._warn_context = False
         self._model.swmmExec()
         # swmm exec brings the simulation to a close therefore we
         # need to tell the sim state manager that we are free to
