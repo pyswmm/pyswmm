@@ -11,4 +11,3 @@ jobs:
         with:
             options: "--check"
             src: "./pyswmm"
-            version: "~= 22.0"
