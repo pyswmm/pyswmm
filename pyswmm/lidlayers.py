@@ -62,17 +62,21 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.thickness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.thickness.value,
+        )
 
     @thickness.setter
     def thickness(self, param):
         """Set lid control surface layer thickness"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.thickness.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.thickness.value,
+            param,
+        )
 
     @property
     def void_fraction(self):
@@ -82,17 +86,21 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.voidFrac.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.voidFrac.value,
+        )
 
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control surface layer available fraction of storage volume"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.voidFrac.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.voidFrac.value,
+            param,
+        )
 
     @property
     def roughness(self):
@@ -102,17 +110,21 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.roughness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.roughness.value,
+        )
 
     @roughness.setter
     def roughness(self, param):
         """Set lid control surface layer surface Mannings n"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.roughness.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.roughness.value,
+            param,
+        )
 
     @property
     def slope(self):
@@ -122,17 +134,21 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.surfSlope.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.surfSlope.value,
+        )
 
     @slope.setter
     def slope(self, param):
         """Set lid control surface layer land surface slope (fraction)"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.surfSlope.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.surfSlope.value,
+            param,
+        )
 
     @property
     def side_slope(self):
@@ -142,17 +158,21 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.sideSlope.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.sideSlope.value,
+        )
 
     @side_slope.setter
     def side_slope(self, param):
         """Set lid control surface layer swale side slope (run/rise)"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.sideSlope.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.surface.value,
+            LidLayersProperty.sideSlope.value,
+            param,
+        )
 
     @property
     def alpha(self):
@@ -162,9 +182,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.surface.value,
-                                        LidLayersProperty.alpha.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.surface.value, LidLayersProperty.alpha.value
+        )
 
 
 class Soil(object):
@@ -217,17 +237,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.thickness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.thickness.value
+        )
 
     @thickness.setter
     def thickness(self, param):
-        """Set lid control soil layer thickness """
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.thickness.value,
-                                        param)
+        """Set lid control soil layer thickness"""
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.thickness.value,
+            param,
+        )
 
     @property
     def porosity(self):
@@ -237,17 +259,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.porosity.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.porosity.value
+        )
 
     @porosity.setter
     def porosity(self, param):
         """Set lid control soil layer void volume / total volume"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.porosity.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.porosity.value,
+            param,
+        )
 
     @property
     def field_capacity(self):
@@ -257,17 +281,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.fieldCap.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.fieldCap.value
+        )
 
     @field_capacity.setter
     def field_capacity(self, param):
         """Set lid control soil layer field capacity"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.fieldCap.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.fieldCap.value,
+            param,
+        )
 
     @property
     def wilting_point(self):
@@ -277,17 +303,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.wiltPoint.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.wiltPoint.value
+        )
 
     @wilting_point.setter
     def wilting_point(self, param):
         """Set lid control soil layer wilting point"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.wiltPoint.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.wiltPoint.value,
+            param,
+        )
 
     @property
     def k_saturated(self):
@@ -297,17 +325,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.kSat.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.kSat.value
+        )
 
     @k_saturated.setter
     def k_saturated(self, param):
         """Set lid control soil layer saturated hydraulic conductivity"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.kSat.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.kSat.value,
+            param,
+        )
 
     @property
     def k_slope(self):
@@ -317,17 +347,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.kSlope.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.kSlope.value
+        )
 
     @k_slope.setter
     def k_slope(self, param):
         """Set lid control soil layer slope of log(k) v. moisture content curve"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.kSlope.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.kSlope.value,
+            param,
+        )
 
     @property
     def suction_head(self):
@@ -337,17 +369,19 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.suction.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.soil.value, LidLayersProperty.suction.value
+        )
 
     @suction_head.setter
     def suction_head(self, param):
         """Set lid control soil layer suction head at wetting front"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.soil.value,
-                                        LidLayersProperty.suction.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.soil.value,
+            LidLayersProperty.suction.value,
+            param,
+        )
 
 
 class Storage(object):
@@ -395,17 +429,21 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.thickness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.thickness.value,
+        )
 
     @thickness.setter
     def thickness(self, param):
         """Set lid control storage layer thickness"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.thickness.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.thickness.value,
+            param,
+        )
 
     @property
     def void_fraction(self):
@@ -415,17 +453,21 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.voidFrac.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.voidFrac.value,
+        )
 
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control storage layer void volume / total volume"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.voidFrac.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.voidFrac.value,
+            param,
+        )
 
     @property
     def k_saturated(self):
@@ -435,17 +477,19 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.kSat.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.storage.value, LidLayersProperty.kSat.value
+        )
 
     @k_saturated.setter
     def k_saturated(self, param):
         """Set lid control storage layer saturated hydraulic conductivity"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.kSat.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.kSat.value,
+            param,
+        )
 
     @property
     def clog_factor(self):
@@ -455,17 +499,21 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.clogFactor.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.clogFactor.value,
+        )
 
     @clog_factor.setter
     def clog_factor(self, param):
         """Set lid control storage layer clogging factor"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.storage.value,
-                                        LidLayersProperty.clogFactor.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.storage.value,
+            LidLayersProperty.clogFactor.value,
+            param,
+        )
 
 
 class Pavement(object):
@@ -519,17 +567,21 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.thickness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.thickness.value,
+        )
 
     @thickness.setter
     def thickness(self, param):
         """Get lid control pavement layer thickness"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.thickness.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.thickness.value,
+            param,
+        )
 
     @property
     def void_fraction(self):
@@ -539,17 +591,21 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.voidFrac.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.voidFrac.value,
+        )
 
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control pavement layer void volume / total volume"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.voidFrac.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.voidFrac.value,
+            param,
+        )
 
     @property
     def impervious_fraction(self):
@@ -559,17 +615,21 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.impervFrac.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.impervFrac.value,
+        )
 
     @impervious_fraction.setter
     def impervious_fraction(self, param):
         """Set lid control pavement layer impervious area fraction"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.impervFrac.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.impervFrac.value,
+            param,
+        )
 
     @property
     def k_saturated(self):
@@ -579,17 +639,19 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.kSat.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.pavement.value, LidLayersProperty.kSat.value
+        )
 
     @k_saturated.setter
     def k_saturated(self, param):
-        """Get lid control pavement layer permeability """
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.kSat.value,
-                                        param)
+        """Get lid control pavement layer permeability"""
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.kSat.value,
+            param,
+        )
 
     @property
     def clog_factor(self):
@@ -599,18 +661,22 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.clogFactor.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.clogFactor.value,
+        )
 
     @clog_factor.setter
     def clog_factor(self, param):
         """Get lid control pavement layer clogging factor"""
-        return self._model.setLidCParam(self._sim._isStarted,
-                                        self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.clogFactor.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._sim._isStarted,
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.clogFactor.value,
+            param,
+        )
 
     @property
     def regeneration(self):
@@ -620,17 +686,21 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.regenDays.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.regenDays.value,
+        )
 
     @regeneration.setter
     def regeneration(self, param):
         """Get lid control pavement layer clogging regeneration interval (days)"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.regenDays.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.regenDays.value,
+            param,
+        )
 
     @property
     def regeneration_degree(self):
@@ -640,17 +710,21 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.regenDegree.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.regenDegree.value,
+        )
 
     @regeneration_degree.setter
     def regeneration_degree(self, param):
         """Get lid control pavement layer clogging regeneration degree"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.pavement.value,
-                                        LidLayersProperty.regenDegree.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.pavement.value,
+            LidLayersProperty.regenDegree.value,
+            param,
+        )
 
 
 class Drain(object):
@@ -701,17 +775,19 @@ class Drain(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.coeff.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drain.value, LidLayersProperty.coeff.value
+        )
 
     @coefficient.setter
     def coefficient(self, param):
         """Set lid control drain layer underdrain flow coefficient"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.coeff.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drain.value,
+            LidLayersProperty.coeff.value,
+            param,
+        )
 
     @property
     def exponent(self):
@@ -721,17 +797,19 @@ class Drain(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.expon.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drain.value, LidLayersProperty.expon.value
+        )
 
     @exponent.setter
     def exponent(self, param):
         """Set lid control drain layer underdrain head exponent"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.expon.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drain.value,
+            LidLayersProperty.expon.value,
+            param,
+        )
 
     @property
     def offset(self):
@@ -741,17 +819,19 @@ class Drain(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.offset.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drain.value, LidLayersProperty.offset.value
+        )
 
     @offset.setter
     def offset(self, param):
         """Set lid control drain layer offset height of underdrain"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.offset.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drain.value,
+            LidLayersProperty.offset.value,
+            param,
+        )
 
     @property
     def delay(self):
@@ -761,17 +841,19 @@ class Drain(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.delay.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drain.value, LidLayersProperty.delay.value
+        )
 
     @delay.setter
     def delay(self, param):
         """Set lid control drain layer rain barrel drain delay time (sec)"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.delay.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drain.value,
+            LidLayersProperty.delay.value,
+            param,
+        )
 
     @property
     def open_head(self):
@@ -781,17 +863,19 @@ class Drain(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.hOpen.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drain.value, LidLayersProperty.hOpen.value
+        )
 
     @open_head.setter
     def open_head(self, param):
         """Set lid control drain layer head when drain opens (ft)"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.hOpen.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drain.value,
+            LidLayersProperty.hOpen.value,
+            param,
+        )
 
     @property
     def close_head(self):
@@ -801,17 +885,19 @@ class Drain(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.hClose.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drain.value, LidLayersProperty.hClose.value
+        )
 
     @close_head.setter
     def close_head(self, param):
         """Set lid control drain layer drain closes (ft)"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drain.value,
-                                        LidLayersProperty.hClose.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drain.value,
+            LidLayersProperty.hClose.value,
+            param,
+        )
 
 
 class DrainMat(object):
@@ -859,17 +945,21 @@ class DrainMat(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.thickness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.drainMat.value,
+            LidLayersProperty.thickness.value,
+        )
 
     @thickness.setter
     def thickness(self, param):
         """Set lid control drainmat layer thickness"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.thickness.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drainMat.value,
+            LidLayersProperty.thickness.value,
+            param,
+        )
 
     @property
     def void_fraction(self):
@@ -879,17 +969,21 @@ class DrainMat(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.voidFrac.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.drainMat.value,
+            LidLayersProperty.voidFrac.value,
+        )
 
     @void_fraction.setter
     def void_fraction(self, param):
         """Set lid control drainmat layer void volume / total volume"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.voidFrac.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drainMat.value,
+            LidLayersProperty.voidFrac.value,
+            param,
+        )
 
     @property
     def roughness(self):
@@ -899,17 +993,21 @@ class DrainMat(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.roughness.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid,
+            LidLayers.drainMat.value,
+            LidLayersProperty.roughness.value,
+        )
 
     @roughness.setter
     def roughness(self, param):
         """Set lid control drainmat layer Mannings n for green roof drainage mats"""
-        return self._model.setLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.roughness.value,
-                                        param)
+        return self._model.setLidCParam(
+            self._lidcontrolid,
+            LidLayers.drainMat.value,
+            LidLayersProperty.roughness.value,
+            param,
+        )
 
     @property
     def alpha(self):
@@ -919,6 +1017,6 @@ class DrainMat(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidCParam(self._lidcontrolid,
-                                        LidLayers.drainMat.value,
-                                        LidLayersProperty.alpha.value)
+        return self._model.getLidCParam(
+            self._lidcontrolid, LidLayers.drainMat.value, LidLayersProperty.alpha.value
+        )
