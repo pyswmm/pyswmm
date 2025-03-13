@@ -198,7 +198,7 @@ def test_pre_simulation_config():
     with Simulation(MODEL_WEIR_SETTING_PATH, sim_preconfig=sim_preconfig) as sim:
         pass
 
-    with open(path_to_modified_inp, 'r') as fl:
+    with open(path_to_modified_inp, "r") as fl:
         for ind, ln in enumerate(fl):
             if ind == 55:
                 compare = [
