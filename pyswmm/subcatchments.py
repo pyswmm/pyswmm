@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright (c) 2014 Bryant E. McDonnell
 #
@@ -68,8 +68,7 @@ class Subcatchments(object):
             raise PYSWMMException("SWMM Model Not Open")
         self._model = model._model
         self._cuindex = 0
-        self._nSubcatchments = self._model.getProjectSize(
-            ObjectType.SUBCATCH.value)
+        self._nSubcatchments = self._model.getProjectSize(ObjectType.SUBCATCH.value)
 
     def __len__(self):
         """
@@ -90,8 +89,7 @@ class Subcatchments(object):
         :return: ID Exists
         :rtype: bool
         """
-        return self._model.ObjectIDexist(ObjectType.SUBCATCH.value,
-                                         subcatchmentid)
+        return self._model.ObjectIDexist(ObjectType.SUBCATCH.value, subcatchmentid)
 
     def __getitem__(self, subcatchmentid):
         if self.__contains__(subcatchmentid):
@@ -113,8 +111,7 @@ class Subcatchments(object):
     @property
     def _subcatchmentid(self):
         """Subcatchment ID."""
-        return self._model.getObjectId(ObjectType.SUBCATCH.value,
-                                       self._cuindex)
+        return self._model.getObjectId(ObjectType.SUBCATCH.value, self._cuindex)
 
 
 class Subcatchment(object):
@@ -139,8 +136,7 @@ class Subcatchment(object):
     def __init__(self, model, subcatchmentid):
         if not model.fileLoaded:
             raise PYSWMMException("SWMM Model Not Open")
-        if subcatchmentid not in model.getObjectIDList(
-                ObjectType.SUBCATCH.value):
+        if subcatchmentid not in model.getObjectIDList(ObjectType.SUBCATCH.value):
             raise PYSWMMException("ID Not valid")
         self._model = model
         self._subcatchmentid = subcatchmentid
@@ -223,14 +219,16 @@ class Subcatchment(object):
         100
         30
         """
-        return self._model.getSubcatchParam(self._subcatchmentid,
-                                            SubcParams.width.value)
+        return self._model.getSubcatchParam(
+            self._subcatchmentid, SubcParams.width.value
+        )
 
     @width.setter
     def width(self, param):
         """Set Subcatchment Width."""
-        self._model.setSubcatchParam(self._subcatchmentid,
-                                     SubcParams.width.value, param)
+        self._model.setSubcatchParam(
+            self._subcatchmentid, SubcParams.width.value, param
+        )
 
     @property
     def area(self):
@@ -261,14 +259,12 @@ class Subcatchment(object):
         10
         50
         """
-        return self._model.getSubcatchParam(self._subcatchmentid,
-                                            SubcParams.area.value)
+        return self._model.getSubcatchParam(self._subcatchmentid, SubcParams.area.value)
 
     @area.setter
     def area(self, param):
         """Set Subcatchment area."""
-        self._model.setSubcatchParam(self._subcatchmentid,
-                                     SubcParams.area.value, param)
+        self._model.setSubcatchParam(self._subcatchmentid, SubcParams.area.value, param)
 
     @property
     def percent_impervious(self):
@@ -299,14 +295,16 @@ class Subcatchment(object):
         10
         50
         """
-        return self._model.getSubcatchParam(self._subcatchmentid,
-                                            SubcParams.fracImperv.value)
+        return self._model.getSubcatchParam(
+            self._subcatchmentid, SubcParams.fracImperv.value
+        )
 
     @percent_impervious.setter
     def percent_impervious(self, param):
         """Set Subcatchment percent impervious."""
-        self._model.setSubcatchParam(self._subcatchmentid,
-                                     SubcParams.fracImperv.value, param)
+        self._model.setSubcatchParam(
+            self._subcatchmentid, SubcParams.fracImperv.value, param
+        )
 
     @property
     def slope(self):
@@ -337,14 +335,16 @@ class Subcatchment(object):
         0.1
         0.2
         """
-        return self._model.getSubcatchParam(self._subcatchmentid,
-                                            SubcParams.slope.value)
+        return self._model.getSubcatchParam(
+            self._subcatchmentid, SubcParams.slope.value
+        )
 
     @slope.setter
     def slope(self, param):
         """Set Subcatchment Ponding Area."""
-        self._model.setSubcatchParam(self._subcatchmentid,
-                                     SubcParams.slope.value, param)
+        self._model.setSubcatchParam(
+            self._subcatchmentid, SubcParams.slope.value, param
+        )
 
     @property
     def curb_length(self):
@@ -375,14 +375,16 @@ class Subcatchment(object):
         0
         100
         """
-        return self._model.getSubcatchParam(self._subcatchmentid,
-                                            SubcParams.curbLength.value)
+        return self._model.getSubcatchParam(
+            self._subcatchmentid, SubcParams.curbLength.value
+        )
 
     @curb_length.setter
     def curb_length(self, param):
         """Set Subcatchment curb length."""
-        self._model.setSubcatchParam(self._subcatchmentid,
-                                     SubcParams.curbLength.value, param)
+        self._model.setSubcatchParam(
+            self._subcatchmentid, SubcParams.curbLength.value, param
+        )
 
     @property
     def rainfall(self):
@@ -409,8 +411,9 @@ class Subcatchment(object):
         1.9
         1.2
         """
-        return self._model.getSubcatchResult(self._subcatchmentid,
-                                             SubcResults.rainfall.value)
+        return self._model.getSubcatchResult(
+            self._subcatchmentid, SubcResults.rainfall.value
+        )
 
     @property
     def evaporation_loss(self):
@@ -437,8 +440,9 @@ class Subcatchment(object):
         0.01
         0.01
         """
-        return self._model.getSubcatchResult(self._subcatchmentid,
-                                             SubcResults.evapLoss.value)
+        return self._model.getSubcatchResult(
+            self._subcatchmentid, SubcResults.evapLoss.value
+        )
 
     @property
     def infiltration_loss(self):
@@ -465,8 +469,9 @@ class Subcatchment(object):
         0.01
         0.01
         """
-        return self._model.getSubcatchResult(self._subcatchmentid,
-                                             SubcResults.infilLoss.value)
+        return self._model.getSubcatchResult(
+            self._subcatchmentid, SubcResults.infilLoss.value
+        )
 
     @property
     def runon(self):
@@ -493,8 +498,9 @@ class Subcatchment(object):
         1.9
         1.2
         """
-        return self._model.getSubcatchResult(self._subcatchmentid,
-                                             SubcResults.runon.value)
+        return self._model.getSubcatchResult(
+            self._subcatchmentid, SubcResults.runon.value
+        )
 
     @property
     def runoff(self):
@@ -521,8 +527,9 @@ class Subcatchment(object):
         0
         0
         """
-        return self._model.getSubcatchResult(self._subcatchmentid,
-                                             SubcResults.newRunoff.value)
+        return self._model.getSubcatchResult(
+            self._subcatchmentid, SubcResults.newRunoff.value
+        )
 
     @property
     def snow_depth(self):
@@ -549,8 +556,9 @@ class Subcatchment(object):
         0.52
         0.49
         """
-        return self._model.getSubcatchResult(self._subcatchmentid,
-                                             SubcResults.newSnowDepth.value)
+        return self._model.getSubcatchResult(
+            self._subcatchmentid, SubcResults.newSnowDepth.value
+        )
 
     @property
     def buildup(self):
@@ -579,8 +587,9 @@ class Subcatchment(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        buildup_array = self._model.getSubcatchPollut(self._subcatchmentid,
-                                                      SubcPollut.buildup.value)
+        buildup_array = self._model.getSubcatchPollut(
+            self._subcatchmentid, SubcPollut.buildup.value
+        )
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = buildup_array[ind]
@@ -614,7 +623,8 @@ class Subcatchment(object):
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
         cPonded_array = self._model.getSubcatchPollut(
-            self._subcatchmentid, SubcPollut.concPonded.value)
+            self._subcatchmentid, SubcPollut.concPonded.value
+        )
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = cPonded_array[ind]
 
@@ -645,14 +655,15 @@ class Subcatchment(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        subcqual_array = self._model.getSubcatchPollut(self._subcatchmentid,
-                                                      SubcPollut.subcQual.value)
+        subcqual_array = self._model.getSubcatchPollut(
+            self._subcatchmentid, SubcPollut.subcQual.value
+        )
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = subcqual_array[ind]
 
         return out_dict
-        
+
     @property
     def runoff_total_loading(self):
         """
@@ -678,8 +689,9 @@ class Subcatchment(object):
         """
         out_dict = {}
         pollut_ids = self._model.getObjectIDList(ObjectType.POLLUT.value)
-        totalload_array = self._model.getSubcatchPollut(self._subcatchmentid,
-                                                      SubcPollut.subcTotalLoad.value)
+        totalload_array = self._model.getSubcatchPollut(
+            self._subcatchmentid, SubcPollut.subcTotalLoad.value
+        )
 
         for ind in range(len(pollut_ids)):
             out_dict[pollut_ids[ind]] = totalload_array[ind]

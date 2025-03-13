@@ -19,49 +19,53 @@ from swmm.toolkit import __version__ as _tk_version
 from swmm.toolkit import solver
 from pyswmm.swmm5 import PySWMM
 
+
 # %% ###########################
 # region MonkeyPatchTypes ######
 ################################
 class ToolkitVersionException(Exception):
     pass
 
+
 class MonkeyPatchWarning(Warning):
     pass
+
 
 class _monkey_patch:
     """
     A class to store and implement monkey patches
     """
+
     def __init__(
-            self,
-            function_name: str,
-            swmm_toolkit_minimum_version: str,
-            object_to_patch: object,
-            alternative_function: Callable = None,
-            warning_message: str = None,
-        ):
+        self,
+        function_name: str,
+        swmm_toolkit_minimum_version: str,
+        object_to_patch: object,
+        alternative_function: Callable = None,
+        warning_message: str = None,
+    ):
         self.function_name = function_name
         self.swmm_toolkit_minimum_version = swmm_toolkit_minimum_version
         self._alternative_function = alternative_function
         self.warning_message = warning_message
         self._object_to_patch = object_to_patch
 
-    def _toolkit_error_func(self,*args,**kwargs):
-        """A default monkey patch function that raises a toolkit version error"""        
+    def _toolkit_error_func(self, *args, **kwargs):
+        """A default monkey patch function that raises a toolkit version error"""
         raise ToolkitVersionException(
-            f'SWMM version must be at least {self.swmm_toolkit_minimum_version}. '
+            f"SWMM version must be at least {self.swmm_toolkit_minimum_version}. "
             f"The currently installed version is {_tk_version}"
         )
-    
+
     @property
     def alt_function(self):
-        """Return the alternative function or the default toolkit error function 
+        """Return the alternative function or the default toolkit error function
         depending on availability"""
         if self._alternative_function is None:
             return self._toolkit_error_func
         else:
             return self._alternative_function
-    
+
     @property
     def force_patch(self):
         """
@@ -71,21 +75,28 @@ class _monkey_patch:
         want to issue a warning at runtime (e.g. if api doen't change but as expanded capabilities in a newer version)
         """
         return True if self._alternative_function is not None else False
-    
+
     def patch(self):
         """Apply monkey patch to module if toolkit version is less than minimum version"""
-        if packaging.version.parse(_tk_version) < packaging.version.parse(self.swmm_toolkit_minimum_version):
+        if packaging.version.parse(_tk_version) < packaging.version.parse(
+            self.swmm_toolkit_minimum_version
+        ):
             if self.warning_message is not None:
-                warnings.warn(self.warning_message,MonkeyPatchWarning)
-            
-            if not hasattr(self._object_to_patch,self.function_name) or self.force_patch:
-                setattr(self._object_to_patch,self.function_name,self.alt_function) 
+                warnings.warn(self.warning_message, MonkeyPatchWarning)
+
+            if (
+                not hasattr(self._object_to_patch, self.function_name)
+                or self.force_patch
+            ):
+                setattr(self._object_to_patch, self.function_name, self.alt_function)
+
 
 # endregion MonkeyPatchTypes ####
 
 # %% ##############################
 # region PySWMMObjectPatches ######
 ###################################
+
 
 def swmm_stride(self, advanceSeconds):
     """
@@ -128,16 +139,27 @@ def swmm_stride(self, advanceSeconds):
 
     return elapsed_time
 
+
 # endregion PySWMMObjectPatches ####
 
 
 # Patches
 _patches = [
-    _monkey_patch(function_name = "swmm_hotstart",swmm_toolkit_minimum_version="0.15.0",object_to_patch=solver),
-    _monkey_patch(function_name = "swmm_stride" ,swmm_toolkit_minimum_version="0.15.0",object_to_patch=PySWMM,alternative_function=swmm_stride),
-
+    _monkey_patch(
+        function_name="swmm_hotstart",
+        swmm_toolkit_minimum_version="0.15.0",
+        object_to_patch=solver,
+    ),
+    _monkey_patch(
+        function_name="swmm_stride",
+        swmm_toolkit_minimum_version="0.15.0",
+        object_to_patch=PySWMM,
+        alternative_function=swmm_stride,
+    ),
 ]
-def patch():    
+
+
+def patch():
     # patch solver
-    for monkey_patch in _patches:        
+    for monkey_patch in _patches:
         monkey_patch.patch()

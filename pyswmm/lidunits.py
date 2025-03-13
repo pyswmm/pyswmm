@@ -16,9 +16,7 @@ def _flux_rate(model, subcatchment, lid_index, layer):
     :return: Parameter Value
     :rtype: double
     """
-    return model.getLidUFluxRates(subcatchment,
-                                  lid_index,
-                                  layer)
+    return model.getLidUFluxRates(subcatchment, lid_index, layer)
 
 
 class Surface(object):
@@ -36,9 +34,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfDepth.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.surfDepth.value
+        )
 
     @property
     def inflow(self):
@@ -48,9 +46,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfInflow.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.surfInflow.value
+        )
 
     @property
     def infiltration(self):
@@ -60,9 +58,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfInfil.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.surfInfil.value
+        )
 
     @property
     def evaporation(self):
@@ -72,9 +70,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfEvap.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.surfEvap.value
+        )
 
     @property
     def outflow(self):
@@ -84,9 +82,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfOutflow.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.surfOutflow.value
+        )
 
     @property
     def flux_rate(self):
@@ -96,10 +94,9 @@ class Surface(object):
         :return: Parameter Value
         :rtype: double
         """
-        return _flux_rate(self._model,
-                          self._subcatchmentid,
-                          self._lidid,
-                          LidLayers.surface.value)
+        return _flux_rate(
+            self._model, self._subcatchmentid, self._lidid, LidLayers.surface.value
+        )
 
 
 class Pavement(object):
@@ -117,9 +114,9 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.paveDepth.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.paveDepth.value
+        )
 
     @property
     def evaporation(self):
@@ -129,9 +126,9 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.paveEvap.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.paveEvap.value
+        )
 
     @property
     def percolation(self):
@@ -141,9 +138,9 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.pavePerc.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.pavePerc.value
+        )
 
     @property
     def flux_rate(self):
@@ -153,10 +150,9 @@ class Pavement(object):
         :return: Parameter Value
         :rtype: double
         """
-        return _flux_rate(self._model,
-                          self._subcatchmentid,
-                          self._lidid,
-                          LidLayers.pavement.value)
+        return _flux_rate(
+            self._model, self._subcatchmentid, self._lidid, LidLayers.pavement.value
+        )
 
 
 class Storage(object):
@@ -174,9 +170,9 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storDepth.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.storDepth.value
+        )
 
     @property
     def inflow(self):
@@ -186,9 +182,9 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storInflow.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.storInflow.value
+        )
 
     @property
     def exfiltration(self):
@@ -198,9 +194,9 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storExfil.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.storExfil.value
+        )
 
     @property
     def evaporation(self):
@@ -210,9 +206,9 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storEvap.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.storEvap.value
+        )
 
     @property
     def drain(self):
@@ -222,9 +218,9 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.storDrain.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.storDrain.value
+        )
 
     @property
     def flux_rate(self):
@@ -234,10 +230,9 @@ class Storage(object):
         :return: Parameter Value
         :rtype: double
         """
-        return _flux_rate(self._model,
-                          self._subcatchmentid,
-                          self._lidid,
-                          LidLayers.storage.value)
+        return _flux_rate(
+            self._model, self._subcatchmentid, self._lidid, LidLayers.storage.value
+        )
 
 
 class Soil(object):
@@ -255,9 +250,9 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.soilMoist.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.soilMoist.value
+        )
 
     @property
     def evaporation(self):
@@ -267,9 +262,9 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.soilEvap.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.soilEvap.value
+        )
 
     @property
     def percolation(self):
@@ -279,9 +274,9 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.soilPerc.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.soilPerc.value
+        )
 
     @property
     def flux_rate(self):
@@ -291,10 +286,9 @@ class Soil(object):
         :return: Parameter Value
         :rtype: double
         """
-        return _flux_rate(self._model,
-                          self._subcatchmentid,
-                          self._lidid,
-                          LidLayers.soil.value)
+        return _flux_rate(
+            self._model, self._subcatchmentid, self._lidid, LidLayers.soil.value
+        )
 
 
 class WaterBalance(object):
@@ -312,9 +306,9 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.inflow.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.inflow.value
+        )
 
     @property
     def evaporation(self):
@@ -324,9 +318,9 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.evap.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.evap.value
+        )
 
     @property
     def infiltration(self):
@@ -336,9 +330,9 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.infil.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.infil.value
+        )
 
     @property
     def surface_flow(self):
@@ -348,9 +342,9 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.surfFlow.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.surfFlow.value
+        )
 
     @property
     def drain_flow(self):
@@ -360,9 +354,9 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.drainFlow.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.drainFlow.value
+        )
 
     @property
     def initial_volume(self):
@@ -372,9 +366,9 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.initVol.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.initVol.value
+        )
 
     @property
     def final_volume(self):
@@ -384,6 +378,6 @@ class WaterBalance(object):
         :return: Parameter Value
         :rtype: double
         """
-        return self._model.getLidUResult(self._subcatchmentid,
-                                         self._lidid,
-                                         LidResults.finalVol.value)
+        return self._model.getLidUResult(
+            self._subcatchmentid, self._lidid, LidResults.finalVol.value
+        )
