@@ -38,7 +38,7 @@ Cite our Paper
 > Interface to Stormwater Management Model (SWMM). *Journal of Open
 > Source Software, 5*(52), 2292, <https://doi.org/10.21105/joss.02292>
 
-# YouTube Training Vidoes
+# YouTube Training Videos
 
 Setting a manhole inflow during a running simulation!  
 > [![image](http://img.youtube.com/vi/i4AOHwKyvNw/0.jpg)](https://www.youtube.com/watch?v=i4AOHwKyvNw)
