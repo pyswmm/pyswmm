@@ -3,64 +3,69 @@ name: Build Wheels
 on: [push, pull_request]
 
 jobs:
-
   multi_platform_test:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2022, macos-12, ubuntu-latest]
-        py: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: [windows-latest, macos-14, ubuntu-latest]
+        py: ["3.10", "3.11", "3.12", "3.13"]
 
-    name: Build wheels on ${{ matrix.os }}
+    name: Build & test on ${{ matrix.os }} / Python ${{ matrix.py }}
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.py }}
-          cache: "pip"
+          cache: pip
 
-      - name: Install pyswmm
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install -e .
 
-      - name: run unit tests
-        run: pytest
-
-
-      - name: Test wheel
-        run: |
-          pip install --no-index --find-links=./dist pyswmm
-          pytest
+      - name: Run unit tests
+        run: pytest -q
 
   build_wheels:
     runs-on: ubuntu-latest
+    name: Build sdist & wheel
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
-      - name: Install build requirements
-        run: pip install -r requirements.txt
+      - name: Upgrade pip and install build deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install build
 
-      - name: Build wheel
-        run: python setup.py sdist bdist_wheel
+      - name: Build distributions
+        run: python -m build
 
-      - name: Test wheel
+      - name: Test built wheel
         run: |
           pip install --no-index --find-links=./dist pyswmm
-          pytest
+          pytest -q
+
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          path: ./dist/pyswmm-*.*
+          name: pyswmm-dist
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7
