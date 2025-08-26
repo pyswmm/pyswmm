@@ -1,14 +1,14 @@
 name: GH Pages Sphinx Docs
 on: [push, pull_request]
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Required permissions for Pages (deploy-pages@v4 also needs actions: read)
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Only one concurrent deployment; don't cancel in-progress
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -18,19 +18,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v5
 
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-            python-version: "3.12"
-            cache: "pip"
+          python-version: "3.12"
+          cache: "pip"
 
-      - name: Install pyswmm
+      - name: Upgrade pip & install deps
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt -r docs/source/docs_requirements.txt
           pip install -e .
 
@@ -38,10 +39,9 @@ jobs:
         run: sphinx-build docs/source docs/build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
-          # Upload build
-          path: './docs/build'
+          path: ./docs/build
 
   deploy:
     if: startsWith(github.event.ref, 'refs/tags/v')
@@ -53,4 +53,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
