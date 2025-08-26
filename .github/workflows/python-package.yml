@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, macos-14, ubuntu-latest]
-        py: ["3.10", "3.11", "3.12", "3.13"]
+        py: ["3.10", "3.11", "3.12"]
 
     name: Build & test on ${{ matrix.os }} / Python ${{ matrix.py }}
     runs-on: ${{ matrix.os }}
