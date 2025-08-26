@@ -7,6 +7,7 @@
 
 [![Build Wheels](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml)
 [![Documentation Status](https://github.com/pyswmm/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=main)](http://docs.pyswmm.org/)
+[![Python Versions](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://python.org)
 [![License](https://img.shields.io/pypi/l/pyswmm.svg)](LICENSE.txt)
 [![Latest PyPI version](https://img.shields.io/pypi/v/pyswmm.svg)](https://pypi.python.org/pypi/pyswmm/)
 [![PyPI Monthly Downloads](https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month)](https://pypi.python.org/pypi/pyswmm/)
