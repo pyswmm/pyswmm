@@ -10,6 +10,7 @@ from pyswmm.errors import OutputException
 from datetime import datetime, timedelta
 from functools import wraps
 from typing import NoReturn, Optional, Union
+from pathlib import Path
 
 # Third party imports
 from swmm.toolkit import output, shared_enum
@@ -171,6 +172,11 @@ class Output(object):
         :return: True if binary file was opened successfully
         :rtype: bool
         """
+        # Guard against missing path before allocating C handle
+        fp = Path(self.binfile)
+        if not fp.is_file():
+            raise OutputException(f"SWMM output file not found: {fp}")
+
         if self.handle is None:
             self.handle = output.init()
 
