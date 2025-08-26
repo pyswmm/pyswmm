@@ -5,7 +5,7 @@
 
 # python wrappers for the Stormwater Management Model (SWMM5)
 
-[![Build Wheels](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml/badge.svg?branch=main)](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml)
+[![Build Wheels](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml/badge.svg)](https://github.com/pyswmm/pyswmm/actions/workflows/python-package.yml)
 [![Documentation Status](https://github.com/pyswmm/pyswmm/actions/workflows/documentation.yml/badge.svg?branch=main)](http://docs.pyswmm.org/)
 [![Python Versions](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://python.org)
 [![License](https://img.shields.io/pypi/l/pyswmm.svg)](LICENSE.txt)
