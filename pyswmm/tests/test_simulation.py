@@ -190,6 +190,7 @@ def test_hotstart():
 def test_pre_simulation_config():
     sim_preconfig = SimulationPreConfig()
     sim_preconfig.filename_suffix = "_a"
+    path_to_modified_inp = MODEL_WEIR_SETTING_PATH.replace(".inp", "_a.inp")
 
     sim_preconfig.add_update_by_token("SUBCATCHMENTS", "S1", 2, "J2")
     sim_preconfig.add_update_by_token("TIMESERIES", "SCS_24h_Type_I_1in", 2, 2.0, 5)
@@ -197,7 +198,7 @@ def test_pre_simulation_config():
     with Simulation(MODEL_WEIR_SETTING_PATH, sim_preconfig=sim_preconfig) as sim:
         pass
 
-    with open(MODEL_WEIR_SETTING_PATH.replace(".inp", "_a.inp"), "r") as fl:
+    with open(path_to_modified_inp, "r") as fl:
         for ind, ln in enumerate(fl):
             if ind == 55:
                 compare = [
@@ -219,6 +220,10 @@ def test_pre_simulation_config():
                 ln = ln.split()
                 assert ln == compare
 
+
+    # test cleanup
+    if os.path.exists(path_to_modified_inp):
+        os.remove(path_to_modified_inp)
 
 def test_multi_sim_exception():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
