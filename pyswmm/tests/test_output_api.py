@@ -15,6 +15,7 @@ import types
 def test_output_symbol_is_exposed_and_is_class():
     """Output should be importable from pyswmm and be a class/type."""
     from pyswmm import Output  # noqa: F401
+
     assert isinstance(Output, type)
 
 
@@ -32,6 +33,7 @@ def test_output_has_context_protocol_methods_only():
     but we do not call them here (to avoid invoking the C backend).
     """
     from pyswmm import Output
+
     assert hasattr(Output, "__enter__")
     assert hasattr(Output, "__exit__")
     assert callable(Output.__enter__)

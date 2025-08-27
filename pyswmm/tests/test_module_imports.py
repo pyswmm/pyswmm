@@ -1,5 +1,6 @@
 import importlib
 
+
 def test_submodules_importable_without_side_effects():
     """Selected submodules should import without requiring SWMM runtime."""
     # These imports should not execute a simulation nor require binaries

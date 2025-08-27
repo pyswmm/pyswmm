@@ -1,6 +1,7 @@
 import pytest
 from pyswmm import Simulation
 
+
 def test_simulation_missing_inp_raises():
     """Simulation should raise an Exception when .inp file is missing."""
     with pytest.raises(Exception) as excinfo:
