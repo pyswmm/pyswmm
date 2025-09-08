@@ -4,6 +4,5 @@ wheel
 pytest
 julian==0.14
 swmm-toolkit
-aenum
 setuptools
 packaging
