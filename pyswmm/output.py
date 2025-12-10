@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2021 Jennifer Wu
+# Copyright (c) 2025 (see AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -121,48 +121,49 @@ class Output(object):
         Validate time parameter passed to Output methods. Used to convert a datetime value to
         the period index in model time.
 
-        :param time_index: The datetime to validate
+        :param time_index: The datetime or integer index to validate
         :type time_index: Optional[Union[datetime, int]]
         :param time_list: A list of datetimes against which to validate time_index
         :type time_list: list
-        :param start: The starting datetime in the out file
-                      (only used to print the exception if the datetime cannot be found)
+        :param start: The starting datetime in the out file (for diagnostics)
         :type start: datetime
-        :param end: The ending datetime in the out file
-                    (only used to print the exception if the datetime cannot be found)
+        :param end: The ending datetime in the out file (for diagnostics)
         :type end: datetime
-        :param report: The reporting interval in the out file
-                       (only used to print the exception if the datetime cannot be found)
+        :param report: The reporting interval in the out file (seconds, for diagnostics)
         :type report: int
-        :param default_time: The default time_index to use of time_index is None
+        :param default_time: The default time_index to use if time_index is None (int or datetime)
         :type default_time: Union[datetime, int]
-        :raises OutputException: Exception raised of time_index cannot be found intime_index
-        :return: The integer index of the datetime given
+        :raises OutputException: If the time_index cannot be validated or is out-of-range
+        :return: The integer index of the given time
         :rtype: int
         """
 
-        arg_time_index = time_index
+        max_index = len(time_list) - 1
 
-        if time_index is None:
-            time_index = default_time
-        else:
-            if isinstance(time_index, datetime):
-                if time_index in time_list:
-                    time_index = time_list.index(time_index)
-                else:
-                    time_index = None
+        def _raise_out_of_range(arg):
+            datetime_format = "%Y-%m-%d %H:%M:%S"
+            msg = (
+                f"{arg} does not exist in model output reporting time steps."
+                f" The reporting time range is {start.strftime(datetime_format)} to "
+                f"{end.strftime(datetime_format)} at increments of {report} seconds."
+                f" Valid integer indices are 0..{max_index}."
+            )
+            raise OutputException(msg)
 
-            if time_index is None:
-                datetime_format = "%Y-%m-%d %H:%M:%S"
-                msg = f"{arg_time_index} does not exist in model output reporting time steps."
-                msg += (
-                    f" The reporting time range is {start.strftime(datetime_format)} to "
-                    f"{end.strftime(datetime_format)} at increments of "
-                    f"{report} seconds."
-                )
-                raise OutputException(msg)
+        resolved = time_index if time_index is not None else default_time
 
-        return time_index
+        if isinstance(resolved, datetime):
+            if resolved in time_list:
+                return time_list.index(resolved)
+            _raise_out_of_range(resolved)
+
+        if isinstance(resolved, int):
+            if 0 <= resolved <= max_index:
+                return resolved
+            _raise_out_of_range(resolved)
+
+        _raise_out_of_range(resolved)
+        assert False, "unreachable"
 
     def open(self) -> bool:
         """
@@ -465,12 +466,14 @@ class Output(object):
         attribute: shared_enum.SubcatchAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
+        end_exclusive: bool = False,
     ) -> dict:
         """
         Get subcatchment time series results for particular attribute. Specify series
         start index and end index to get desired time range.
 
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+        Note: Results are end-inclusive by default (end_index is included). Set end_exclusive=True to use Python-style [start, end) semantics and exclude the end.
+              You can use pandas to convert the returned dict to a pandas Series object with datetimes as the index.
 
         :param index: subcatchment index or name
         :type index: Union[int, str]
@@ -481,6 +484,8 @@ class Output(object):
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
         :type end_index: Union[int, datetime, None], optional
+        :param end_exclusive: If True, interpret end_index as an exclusive bound (Python slicing style), excluding the end timestep/index. Defaults to False (inclusive).
+        :type end_exclusive: bool, optional
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys {datetime : value}
         :rtype: dict
@@ -504,16 +509,45 @@ class Output(object):
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
-        end_index = self.verify_time(
-            end_index, self.times, self.start, self.end, self.report, self.period
-        )
+        # Determine inclusive end index; default to last valid index
+        if end_index is None:
+            end_idx = self.verify_time(
+                None, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        elif end_exclusive:
+            if isinstance(end_index, datetime):
+                tmp_end = self.verify_time(
+                    end_index,
+                    self.times,
+                    self.start,
+                    self.end,
+                    self.report,
+                    self.period - 1,
+                )
+                end_idx = tmp_end - 1
+            else:
+                end_idx = end_index - 1
+            if end_idx < start_index:
+                return {}
+            end_idx = self.verify_time(
+                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        else:
+            end_idx = self.verify_time(
+                end_index,
+                self.times,
+                self.start,
+                self.end,
+                self.report,
+                self.period - 1,
+            )
 
         values = output.get_subcatch_series(
-            self.handle, index, attribute, start_index, end_index
+            self.handle, index, attribute, start_index, end_idx
         )
         return {
             time: value
-            for time, value in zip(self.times[start_index:end_index], values)
+            for time, value in zip(self.times[start_index : end_idx + 1], values)
         }
 
     @output_open_handler
@@ -523,12 +557,14 @@ class Output(object):
         attribute: shared_enum.NodeAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
+        end_exclusive: bool = False,
     ) -> dict:
         """
         Get node time series results for particular attribute. Specify series
         start index and end index to get desired time range.
 
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+        Note: Results are end-inclusive by default (end_index is included). Set end_exclusive=True to use Python-style [start, end) semantics and exclude the end.
+              You can use pandas to convert the returned dict to a pandas Series object with datetimes as the index.
 
         :param index: node index or name
         :type index: Union[int, str]
@@ -539,6 +575,8 @@ class Output(object):
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
         :type end_index: Union[int, datetime, None], optional
+        :param end_exclusive: If True, interpret end_index as an exclusive bound (Python slicing style), excluding the end timestep/index. Defaults to False (inclusive).
+        :type end_exclusive: bool, optional
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
@@ -563,16 +601,45 @@ class Output(object):
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
-        end_index = self.verify_time(
-            end_index, self.times, self.start, self.end, self.report, self.period
-        )
+        # Determine inclusive end index; default to last valid index
+        if end_index is None:
+            end_idx = self.verify_time(
+                None, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        elif end_exclusive:
+            if isinstance(end_index, datetime):
+                tmp_end = self.verify_time(
+                    end_index,
+                    self.times,
+                    self.start,
+                    self.end,
+                    self.report,
+                    self.period - 1,
+                )
+                end_idx = tmp_end - 1
+            else:
+                end_idx = end_index - 1
+            if end_idx < start_index:
+                return {}
+            end_idx = self.verify_time(
+                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        else:
+            end_idx = self.verify_time(
+                end_index,
+                self.times,
+                self.start,
+                self.end,
+                self.report,
+                self.period - 1,
+            )
 
         values = output.get_node_series(
-            self.handle, index, attribute, start_index, end_index
+            self.handle, index, attribute, start_index, end_idx
         )
         return {
             time: value
-            for time, value in zip(self.times[start_index:end_index], values)
+            for time, value in zip(self.times[start_index : end_idx + 1], values)
         }
 
     @output_open_handler
@@ -582,12 +649,14 @@ class Output(object):
         attribute: shared_enum.LinkAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
+        end_exclusive: bool = False,
     ) -> dict:
         """
         Get link time series results for particular attribute. Specify series
         start index and end index to get desired time range.
 
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+        Note: Results are end-inclusive by default (end_index is included). Set end_exclusive=True to use Python-style [start, end) semantics and exclude the end.
+              You can use pandas to convert the returned dict to a pandas Series object with datetimes as the index.
 
         :param index: link index or name
         :type index: Union[int, str]
@@ -598,6 +667,8 @@ class Output(object):
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
         :type end_index: Union[int, datetime, None], optional
+        :param end_exclusive: If True, interpret end_index as an exclusive bound (Python slicing style), excluding the end timestep/index. Defaults to False (inclusive).
+        :type end_exclusive: bool, optional
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
@@ -621,16 +692,45 @@ class Output(object):
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
-        end_index = self.verify_time(
-            end_index, self.times, self.start, self.end, self.report, self.period
-        )
+        # Determine inclusive end index; default to last valid index
+        if end_index is None:
+            end_idx = self.verify_time(
+                None, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        elif end_exclusive:
+            if isinstance(end_index, datetime):
+                tmp_end = self.verify_time(
+                    end_index,
+                    self.times,
+                    self.start,
+                    self.end,
+                    self.report,
+                    self.period - 1,
+                )
+                end_idx = tmp_end - 1
+            else:
+                end_idx = end_index - 1
+            if end_idx < start_index:
+                return {}
+            end_idx = self.verify_time(
+                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        else:
+            end_idx = self.verify_time(
+                end_index,
+                self.times,
+                self.start,
+                self.end,
+                self.report,
+                self.period - 1,
+            )
 
         values = output.get_link_series(
-            self.handle, index, attribute, start_index, end_index
+            self.handle, index, attribute, start_index, end_idx
         )
         return {
             time: value
-            for time, value in zip(self.times[start_index:end_index], values)
+            for time, value in zip(self.times[start_index : end_idx + 1], values)
         }
 
     @output_open_handler
@@ -639,12 +739,14 @@ class Output(object):
         attribute: shared_enum.SystemAttribute,
         start_index: Union[int, datetime, None] = None,
         end_index: Union[int, datetime, None] = None,
+        end_exclusive: bool = False,
     ) -> dict:
         """
         Get system time series results for particular attribute. Specify series
         start index and end index to get desired time range.
 
-        Note: you can use pandas to convert dict to a pandas Series object with dict keys as index
+        Note: Results are end-inclusive by default (end_index is included). Set end_exclusive=True to use Python-style [start, end) semantics and exclude the end.
+              You can use pandas to convert the returned dict to a pandas Series object with datetimes as the index.
 
         :param attribute: attribute from swmm.toolkit.shared_enum.SystemAttribute: AIR_TEMP, RAINFALL, SNOW_DEPTH,
                           EVAP_INFIL_LOSS, RUNOFF_FLOW, DRY_WEATHER_INFLOW, GW_INFLOW, RDII_INFLOW, DIRECT_INFLOW,
@@ -654,6 +756,8 @@ class Output(object):
         :type start_index: Union[int, datetime, None], optional
         :param end_index: end datetime or index from which to return series, defaults to None
         :type end_index: Union[int, datetime, None], optional
+        :param end_exclusive: If True, interpret end_index as an exclusive bound (Python slicing style), excluding the end timestep/index. Defaults to False (inclusive).
+        :type end_exclusive: bool, optional
         :return: dict of attribute values with between start_index and end_index
                  with reporting timesteps as keys
         :rtype: dict {datetime : value}
@@ -676,16 +780,43 @@ class Output(object):
         start_index = self.verify_time(
             start_index, self.times, self.start, self.end, self.report, 0
         )
-        end_index = self.verify_time(
-            end_index, self.times, self.start, self.end, self.report, self.period
-        )
+        # Determine inclusive end index; default to last valid index
+        if end_index is None:
+            end_idx = self.verify_time(
+                None, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        elif end_exclusive:
+            if isinstance(end_index, datetime):
+                tmp_end = self.verify_time(
+                    end_index,
+                    self.times,
+                    self.start,
+                    self.end,
+                    self.report,
+                    self.period - 1,
+                )
+                end_idx = tmp_end - 1
+            else:
+                end_idx = end_index - 1
+            if end_idx < start_index:
+                return {}
+            end_idx = self.verify_time(
+                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+            )
+        else:
+            end_idx = self.verify_time(
+                end_index,
+                self.times,
+                self.start,
+                self.end,
+                self.report,
+                self.period - 1,
+            )
 
-        values = output.get_system_series(
-            self.handle, attribute, start_index, end_index
-        )
+        values = output.get_system_series(self.handle, attribute, start_index, end_idx)
         return {
             time: value
-            for time, value in zip(self.times[start_index:end_index], values)
+            for time, value in zip(self.times[start_index : end_idx + 1], values)
         }
 
     @output_open_handler

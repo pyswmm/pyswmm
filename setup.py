@@ -18,54 +18,53 @@ from setuptools import find_packages, setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 
-def get_version(module='pyswmm'):
+def get_version(module="pyswmm"):
     """Get version."""
-    with open(os.path.join(HERE, module, '__init__.py'), 'r') as f:
+    with open(os.path.join(HERE, module, "__init__.py"), "r") as f:
         data = f.read()
-    lines = data.split('\n')
+    lines = data.split("\n")
     for line in lines:
-        if line.startswith('VERSION_INFO'):
-            version_tuple = ast.literal_eval(line.split('=')[-1].strip())
-            version = '.'.join(map(str, version_tuple))
+        if line.startswith("VERSION_INFO"):
+            version_tuple = ast.literal_eval(line.split("=")[-1].strip())
+            version = ".".join(map(str, version_tuple))
             break
     return version
 
 
 def get_description():
     """Get long description."""
-    with open(os.path.join(HERE, 'README.md'), 'r') as f:
+    with open(os.path.join(HERE, "README.md"), "r") as f:
         data = f.read()
     return data
 
 
-REQUIREMENTS = ['swmm-toolkit>=0.9.0',
-                'julian>=0.14',
-                'aenum>=3.1.11',
-                'packaging']
+def read_requirements(filename="requirements.txt"):
+    with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+        lines = f.read().splitlines()
+    # Strip comments and blank lines
+    return [line.strip() for line in lines if line.strip() and not line.startswith("#")]
 
 
 setup(
-    name='pyswmm',
+    name="pyswmm",
     version=get_version(),
-    description='Python Wrapper for SWMM5 API',
+    description="Python Wrapper for SWMM5 API",
     long_description=get_description(),
-    long_description_content_type='text/markdown',
-    url='https://www.pyswmm.org',
-    author='Bryant E. McDonnell (See AUTHORS)',
-    install_requires=REQUIREMENTS,
-    extras_require = {
-        'swmm5.1.14':['swmm-toolkit==0.9.1'],
-        'swmm5.1.15':['swmm-toolkit==0.10.0'],
-        'swmm5.2.0' :['swmm-toolkit==0.11.0'],
-        'swmm5.2.1' :['swmm-toolkit==0.12.0'],
-        'swmm5.2.2' :['swmm-toolkit==0.13.0'],
-        'swmm5.2.3' :['swmm-toolkit==0.14.0'],
-        'swmm5.2.4' :['swmm-toolkit==0.15.3'],
+    long_description_content_type="text/markdown",
+    url="https://www.pyswmm.org",
+    author="Bryant E. McDonnell (See AUTHORS)",
+    install_requires=read_requirements(),
+    extras_require={
+        "swmm5.1.14": ["swmm-toolkit==0.9.1"],
+        "swmm5.1.15": ["swmm-toolkit==0.10.0"],
+        "swmm5.2.0": ["swmm-toolkit==0.11.0"],
+        "swmm5.2.1": ["swmm-toolkit==0.12.0"],
+        "swmm5.2.2": ["swmm-toolkit==0.13.0"],
+        "swmm5.2.3": ["swmm-toolkit==0.14.0"],
+        "swmm5.2.4": ["swmm-toolkit<0.17.0"],
     },
-    packages=find_packages(exclude=['contrib', 'docs']),
-    package_data={
-        '': ['LICENSE.txt', 'AUTHORS', 'tests/data/*.inp', 'tests/*.py']
-    },
+    packages=find_packages(exclude=["contrib", "docs"]),
+    package_data={"": ["LICENSE.txt", "AUTHORS", "tests/data/*.inp", "tests/*.py"]},
     include_package_data=True,
     license="BSD2 License",
     keywords="swmm5, swmm, hydraulics, hydrology, modeling, collection system",
@@ -84,4 +83,5 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python",
         "Development Status :: 5 - Production/Stable",
-    ])
+    ],
+)

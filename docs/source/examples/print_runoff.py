@@ -2,7 +2,7 @@
 
 from pyswmm import Simulation, Subcatchments
 
-with Simulation('swmm_example.inp') as sim:
+with Simulation("swmm_example.inp") as sim:
     S1 = Subcatchments(sim)["S1"]
 
     for step in sim:

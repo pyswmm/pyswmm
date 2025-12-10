@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2021 Jennifer Wu
+# Copyright (c) 2025 (See AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
@@ -76,7 +76,28 @@ def test_output_with():
         )
         subset_times = list(subset_flow_rate.keys())
         assert subset_times[0] == datetime(2015, 11, 2, 15)
-        assert subset_times[-1] == datetime(2015, 11, 3, 14, 59)
+        assert subset_times[-1] == datetime(2015, 11, 3, 15)
+
+        # Verify end_exclusive=True excludes the end timestep (Python slicing style)
+        subset_flow_rate_ex = out.link_series(
+            "C3",
+            LinkAttribute.FLOW_RATE,
+            datetime(2015, 11, 2, 15),
+            datetime(2015, 11, 3, 15),
+            end_exclusive=True,
+        )
+        subset_times_ex = list(subset_flow_rate_ex.keys())
+        assert subset_times_ex[0] == datetime(2015, 11, 2, 15)
+        assert subset_times_ex[-1] == datetime(2015, 11, 3, 14, 59)
+
+        # Also support integer indices with exclusive sentinel stop == len(times)
+        all_series_ex = out.link_series(
+            "C3", LinkAttribute.FLOW_RATE, 0, len(out.times), end_exclusive=True
+        )
+        all_times_ex = list(all_series_ex.keys())
+        assert all_times_ex[0] == out.times[0]
+        assert all_times_ex[-1] == out.times[-1]
+        assert len(all_series_ex) == len(out.times)
 
         assert len(out.node_series("J1", NodeAttribute.TOTAL_INFLOW)) == 3480
         assert len(out.subcatch_series("S1", SubcatchAttribute.RUNOFF_RATE)) == 3480

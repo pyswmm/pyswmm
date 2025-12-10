@@ -1,9 +1,9 @@
 """
 This module implements monkey patches to the swmm.toolkit.solver module.
 
-As the SWMM API is expanded and/or the EPA updates the engine, pyswmm should grow to 
-accomodate the new features. However, sometimes the API changes in a way that is not 
-backwards compatible. In these cases, we can use monkey patches to add the new features 
+As the SWMM API is expanded and/or the EPA updates the engine, pyswmm should grow to
+accomodate the new features. However, sometimes the API changes in a way that is not
+backwards compatible. In these cases, we can use monkey patches to add the new features
 to older versions of the toolkit.
 
 Those monkey patches may be python implementations of the new features or they

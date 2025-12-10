@@ -2,5 +2,6 @@
 black
 pre-commit
 pytest
-swmm==5.2.0.dev6
-swmm_toolkit==0.15.3
+wheel
+build
+setuptools

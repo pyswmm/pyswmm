@@ -1,4 +1,17 @@
 # Changelog
+## [2.1.0] - 2025-09-08
+
+Wake up and smell the coffee! We are back. Getting started with some basic maintenance. 
+
+### Added
+
+- Upgraded to swmm-toolkit-v0.16.0 (Allowing us to address the final timestamp of the OUT file, Pythonically).
+
+### Changed
+
+- Upgraded and cleaned the build system bringing it up to date.
+- Added `black` auto code formatter.
+
 ## [2.0.0] - 2024-02-06
 
 Happy 10th Anniversary, PySWMM!  In celebration of this release and this milestone in this decade-long endeavor, we have introduced so much new functionality to the tool.  
