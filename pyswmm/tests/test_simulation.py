@@ -224,6 +224,7 @@ def test_pre_simulation_config():
     if os.path.exists(path_to_modified_inp):
         os.remove(path_to_modified_inp)
 
+
 def test_multi_sim_exception():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         with pytest.raises(MultiSimulationError):
