@@ -19,6 +19,7 @@ from swmm.toolkit.shared_enum import (
     SystemAttribute,
 )
 from datetime import datetime
+from swmm.toolkit import output as tk_output
 
 
 def test_output_unknown_object_id():
@@ -153,3 +154,31 @@ def test_timeseries_abstraction():
         for attr in SystemAttribute:
             series = getattr(SystemSeries(out), attr.name.lower())
             assert len(series) == 3480
+
+
+def test_times_loaded_from_binary():
+    # Run the model to produce the .out
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for step in sim:
+            pass
+
+    # Verify out.times equals toolkit-decoded date series
+    with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
+        raw = tk_output.get_date_series(out.handle, 0, out.period - 1)
+        decoded = [datetime(*tk_output.decode_date(d)[:6]).replace(microsecond=0) for d in raw]
+        assert out.times == decoded
+
+
+def test_verify_time_binary_search_datetime():
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for step in sim:
+            pass
+
+    with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
+        # Pick a middle timestamp and ensure verify_time finds it
+        mid = len(out.times) // 2
+        dt = out.times[mid]
+        idx = Output.verify_time(dt, out.times, out.start, out.end, out.report, 0)
+        assert idx == mid
+        # None defaults to 0
+        assert Output.verify_time(None, out.times, out.start, out.end, out.report, 0) == 0

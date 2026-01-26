@@ -10,10 +10,10 @@ from pyswmm.errors import OutputException
 from datetime import datetime, timedelta
 from functools import wraps
 from typing import NoReturn, Optional, Union
+from bisect import bisect_left
 
 # Third party imports
 from swmm.toolkit import output, shared_enum
-from julian import from_jd
 
 
 def output_open_handler(func):
@@ -137,7 +137,6 @@ class Output(object):
         :return: The integer index of the given time
         :rtype: int
         """
-
         max_index = len(time_list) - 1
 
         def _raise_out_of_range(arg):
@@ -153,8 +152,10 @@ class Output(object):
         resolved = time_index if time_index is not None else default_time
 
         if isinstance(resolved, datetime):
-            if resolved in time_list:
-                return time_list.index(resolved)
+            # time_list is sorted; use binary search
+            idx = bisect_left(time_list, resolved)
+            if 0 <= idx <= max_index and time_list[idx] == resolved:
+                return idx
             _raise_out_of_range(resolved)
 
         if isinstance(resolved, int):
@@ -178,7 +179,7 @@ class Output(object):
         if not self.loaded:
             self.loaded = True
             output.open(self.handle, self.binfile)
-            self.start = from_jd(output.get_start_date(self.handle) + 2415018.5)
+            self.start = datetime(*output.decode_date(output.get_start_date(self.handle))[:6])
             self.start = self.start.replace(microsecond=0)
             self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
             self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
@@ -234,12 +235,16 @@ class Output(object):
             self._load_times()
         return self._times
 
+
     @output_open_handler
     def _load_times(self) -> NoReturn:
         """Load model reporting times into self._times"""
-        self._times = list()
-        for step in range(1, self.period + 1):
-            self._times.append(self.start + timedelta(seconds=self.report) * step)
+        # Read raw date values (double) and decode into Python datetimes
+        raw_dates = output.get_date_series(self.handle, 0, self.period - 1)
+        self._times = [
+            datetime(*output.decode_date(d)[:6]).replace(microsecond=0)
+            for d in raw_dates
+        ]
 
     @property
     def project_size(self) -> list:
