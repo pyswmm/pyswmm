@@ -12,6 +12,7 @@
 [![Latest PyPI version](https://img.shields.io/pypi/v/pyswmm.svg)](https://pypi.python.org/pypi/pyswmm/)
 [![PyPI Monthly Downloads](https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fpyswmm%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month)](https://pypi.python.org/pypi/pyswmm/)
 [![Cite our Paper](https://joss.theoj.org/papers/10.21105/joss.02292/status.svg)](https://doi.org/10.21105/joss.02292)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289da?logo=discord&logoColor=white)](https://discord.gg/U8wqxgjt9C)
 
 ## Getting started
 
@@ -97,13 +98,6 @@ As of version 1.3.1, pyswmm can be installed with specific versions of the SWMM 
 $ pip install pyswmm[swmm5.2.4]
 ```
 
-### SWMM and Python Compatibility Table
-
-| pyswmm version | swmm-toolkit compatibility<br>(SWMM engine)                  | python compatibility |
-| -------------- | ------------------------------------------------------------ | -------------------- |
-| 1.0.0 - 1.1.1  | 0.8.2 (SWMM 5.1.13)                                          | 3.6 - 3.9            |
-| 1.2.0 - 1.5.0  | 0.9.1 - 0.15.0 (SWMM 5.1.14 - 5.2.4)<br>Note: 0.11.0 (SWMM 5.2.0) only supported on windows | 3.7 - 3.12           |
-
 # Usage
 
 A quick example that steps through a simulation:
@@ -147,6 +141,12 @@ with Output('model.out') as out:
     sys_ts = SystemSeries(out).rainfall
 ```
 
+# Contributing
+
+Please check out our Wiki
+<https://github.com/pyswmm/pyswmm/wiki> for more information
+on contributing, including an Author Contribution Checklist.
+
 # Bugs
 
 Our issue tracker is at
@@ -156,16 +156,10 @@ create a pull request. All changes are welcome, big or small, and we
 will help you make the pull request if you are new to git (just ask on
 the issue).
 
-# Contributing
-
-Please check out our Wiki
-<https://github.com/pyswmm/pyswmm/wiki> for more information
-on contributing, including an Author Contribution Checklist.
-
 # License
 
 Distributed with a BSD2 license; see LICENSE.txt:
 
-    Copyright (C) 2014-2024 PySWMM Developers
+    Copyright (C) 2014-2025 (See Authors)
     Community-Owned See AUTHORS and CITATION.cff
 
