@@ -1,4 +1,10 @@
-# pyswmm/tests/test_output_api.py
+# -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# Copyright (c) 2025 (See AUTHORS)
+#
+# Licensed under the terms of the BSD2 License
+# See LICENSE.txt for details
+# -----------------------------------------------------------------------------
 
 """
 Smoke tests for pyswmm.Output that avoid touching the SWMM C layer.

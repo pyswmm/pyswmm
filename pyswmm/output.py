@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
-# Copyright (c) 2021 Jennifer Wu
+# Copyright (c) 2025 (see AUTHORS)
 #
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details

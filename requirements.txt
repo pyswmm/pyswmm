@@ -1,5 +1,5 @@
 # Build dependencies
 #python
 julian>=0.14
-swmm-toolkit<=0.16.0
+swmm-toolkit<=1.0.0
 packaging

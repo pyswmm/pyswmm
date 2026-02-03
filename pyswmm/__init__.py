@@ -19,11 +19,11 @@ from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage
 
-VERSION_INFO = (2, 0, 1)
+VERSION_INFO = (2, 1, 0)
 
 __version__ = ".".join(map(str, VERSION_INFO))
 __author__ = "Bryant E. McDonnell (Hydroinformatics, LLC) - bemcdonnell@gmail.com"
-__copyright__ = "Copyright (c) 2024 Bryant E. McDonnell (See AUTHORS)"
+__copyright__ = "Copyright (c) 2025 Bryant E. McDonnell (See AUTHORS)"
 __licence__ = "BSD2"
 __all__ = [
     Link,
