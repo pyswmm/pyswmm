@@ -138,12 +138,13 @@ class Output(object):
         :rtype: int
         """
         max_index = len(time_list) - 1
-
+        first_time = time_list[0] if time_list else None
+        
         def _raise_out_of_range(arg):
             datetime_format = "%Y-%m-%d %H:%M:%S"
             msg = (
                 f"{arg} does not exist in model output reporting time steps."
-                f" The reporting time range is {start.strftime(datetime_format)} to "
+                f" The reporting time range is {first_time.strftime(datetime_format)} to "
                 f"{end.strftime(datetime_format)} at increments of {report} seconds."
                 f" Valid integer indices are 0..{max_index}."
             )
@@ -151,6 +152,7 @@ class Output(object):
 
         resolved = time_index if time_index is not None else default_time
 
+        # Cover before start, after end, and non-aligned datetimes
         if isinstance(resolved, datetime):
             # time_list is sorted; use binary search
             idx = bisect_left(time_list, resolved)
@@ -158,6 +160,7 @@ class Output(object):
                 return idx
             _raise_out_of_range(resolved)
 
+        # Cover indicies
         if isinstance(resolved, int):
             if 0 <= resolved <= max_index:
                 return resolved

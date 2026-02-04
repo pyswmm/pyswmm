@@ -18,7 +18,7 @@ from swmm.toolkit.shared_enum import (
     SubcatchAttribute,
     SystemAttribute,
 )
-from datetime import datetime
+from datetime import datetime, timedelta
 from swmm.toolkit import output as tk_output
 
 
@@ -169,6 +169,33 @@ def test_times_loaded_from_binary():
         assert out.times == decoded
 
 
+def test_times_sequence_properties():
+    # Produce the output file
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for _ in sim:
+            pass
+
+    with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
+        times = out.times
+
+        # Basic properties
+        assert isinstance(times, list)
+        assert len(times) == out.period
+        assert all(t.microsecond == 0 for t in times)
+
+        # Start time is non-inclusive; index 0 is start + report
+        assert times[0] == out.start + timedelta(seconds=out.report)
+
+        # Last timestamp equals end (end inclusive)
+        assert times[-1] == out.end
+
+        # Monotonic with constant step equal to report seconds
+        step_secs = [
+            (times[i + 1] - times[i]).total_seconds() for i in range(len(times) - 1)
+        ]
+        assert all(s == out.report for s in step_secs)
+
+
 def test_verify_time_binary_search_datetime():
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
         for step in sim:
@@ -182,3 +209,17 @@ def test_verify_time_binary_search_datetime():
         assert idx == mid
         # None defaults to 0
         assert Output.verify_time(None, out.times, out.start, out.end, out.report, 0) == 0
+
+
+def test_verify_time_datetime_before_start():
+    # Produce output
+    with Simulation(MODEL_WEIR_SETTING_PATH) as sim:
+        for _ in sim:
+            pass
+
+    # Verify a timestamp equal to model start is rejected (not a reporting time)
+    with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
+        bad_dt = out.start
+        with pytest.raises(OutputException) as exc:
+            Output.verify_time(bad_dt, out.times, out.start, out.end, out.report, 0)
+        assert "does not exist in model output reporting time steps." in str(exc.value)
