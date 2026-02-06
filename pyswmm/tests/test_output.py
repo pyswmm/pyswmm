@@ -9,7 +9,7 @@ import pytest
 
 from pyswmm import Simulation
 from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
-from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
+from pyswmm.tests.data import MODEL_DELAYED_REPORT_PATH, MODEL_WEIR_SETTING_PATH
 from pyswmm.errors import OutputException
 
 from swmm.toolkit.shared_enum import (
@@ -183,8 +183,8 @@ def test_times_sequence_properties():
         assert len(times) == out.period
         assert all(t.microsecond == 0 for t in times)
 
-        # Start time is non-inclusive; index 0 is start + report
-        assert times[0] == out.start + timedelta(seconds=out.report)
+        # Start time is non-inclusive; index 0 is rpt_start + rpt_step
+        assert times[0] == (out.rpt_start + timedelta(seconds=out.rpt_step))
 
         # Last timestamp equals end (end inclusive)
         assert times[-1] == out.end
@@ -193,7 +193,34 @@ def test_times_sequence_properties():
         step_secs = [
             (times[i + 1] - times[i]).total_seconds() for i in range(len(times) - 1)
         ]
-        assert all(s == out.report for s in step_secs)
+        assert all(s == out.rpt_step for s in step_secs)
+
+
+def test_delayed_start_sequence_props():
+    # Produce the output file
+    with Simulation(MODEL_DELAYED_REPORT_PATH) as sim:
+        for _ in sim:
+            pass
+
+    with Output(MODEL_DELAYED_REPORT_PATH.replace("inp", "out")) as out:
+        times = out.times
+
+        # Basic properties
+        assert isinstance(times, list)
+        assert len(times) == out.period
+        assert all(t.microsecond == 0 for t in times)
+
+        # Start time is non-inclusive; index 0 is rpt_start + rpt_step
+        assert times[0] == (out.rpt_start + timedelta(seconds=out.rpt_step))
+
+        # Last timestamp equals end (end inclusive)
+        assert times[-1] == out.end
+
+        # Monotonic with constant step equal to report seconds
+        step_secs = [
+            (times[i + 1] - times[i]).total_seconds() for i in range(len(times) - 1)
+        ]
+        assert all(s == out.rpt_step for s in step_secs)
 
 
 def test_verify_time_binary_search_datetime():
@@ -205,10 +232,10 @@ def test_verify_time_binary_search_datetime():
         # Pick a middle timestamp and ensure verify_time finds it
         mid = len(out.times) // 2
         dt = out.times[mid]
-        idx = Output.verify_time(dt, out.times, out.start, out.end, out.report, 0)
+        idx = Output.verify_time(dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)
         assert idx == mid
         # None defaults to 0
-        assert Output.verify_time(None, out.times, out.start, out.end, out.report, 0) == 0
+        assert Output.verify_time(None, out.times, out.rpt_start, out.end, out.rpt_step, 0) == 0
 
 
 def test_verify_time_datetime_before_start():
@@ -219,7 +246,42 @@ def test_verify_time_datetime_before_start():
 
     # Verify a timestamp equal to model start is rejected (not a reporting time)
     with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
-        bad_dt = out.start
+        bad_dt = out.rpt_start
         with pytest.raises(OutputException) as exc:
-            Output.verify_time(bad_dt, out.times, out.start, out.end, out.report, 0)
+            Output.verify_time(bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)
         assert "does not exist in model output reporting time steps." in str(exc.value)
+
+
+def test_verify_time_with_report_delay():
+    # Produce the output file (simulation start != report start)
+    with Simulation(MODEL_DELAYED_REPORT_PATH) as sim:
+        for _ in sim:
+            pass
+
+    with Output(MODEL_DELAYED_REPORT_PATH.replace("inp", "out")) as out:
+        # Times are aligned to report step and built from the binary
+        assert isinstance(out.times, list)
+        assert len(out.times) == out.period
+
+        temp_out = out.node_series("J2", NodeAttribute.TOTAL_INFLOW)
+        assert len(temp_out) == out.period
+
+        # Non-inclusive start: index 0 == (report_start + report)
+        # assert out.times[0] == out.start + timedelta(seconds=out.report)
+        # assert out.times[-1] == out.end
+
+        # verify_time returns indices for valid datetimes
+        assert Output.verify_time(out.times[0], out.times, out.rpt_start, out.end, out.rpt_step, 0) == 0
+        assert Output.verify_time(out.times[-1], out.times, out.rpt_start, out.end, out.rpt_step, 0) == len(out.times) - 1
+
+        # Requesting the (non-inclusive) report start should fail with a clear message
+        implied_report_start = out.times[0] - timedelta(seconds=out.rpt_step)
+        with pytest.raises(OutputException) as exc:
+            Output.verify_time(implied_report_start, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+        msg = str(exc.value).lower()
+        assert "does not exist" in msg #or "index 0" in msg
+
+        # Non-aligned datetime between start and first reporting time should fail
+        bad_dt = implied_report_start + timedelta(seconds=1)
+        with pytest.raises(OutputException):
+            Output.verify_time(bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)

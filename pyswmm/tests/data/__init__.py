@@ -14,6 +14,7 @@ import sys
 DATA_PATH = os.path.abspath(os.path.dirname(__file__))
 
 # Test models paths
+MODEL_DELAYED_REPORT_PATH = os.path.join(DATA_PATH, "model_delayed_report.inp")
 MODEL_NODE_INFLOWS_PATH = os.path.join(DATA_PATH, "model_node_inflows.inp")
 MODEL_PUMP_SETTINGS_PATH = os.path.join(DATA_PATH, "model_pump_setting.inp")
 MODEL_TOOLKIT_UNITS_PATH = os.path.join(DATA_PATH, "model_toolkit_units.inp")

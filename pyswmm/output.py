@@ -66,8 +66,8 @@ class Output(object):
         self.loaded = False
         self.delete_handle = False
         self.period = None
-        self.report = None
-        self.start = None
+        self.rpt_step = None
+        self.rpt_start = None
         self.end = None
         self._times = None
 
@@ -137,15 +137,16 @@ class Output(object):
         :return: The integer index of the given time
         :rtype: int
         """
-        max_index = len(time_list) - 1
         first_time = time_list[0] if time_list else None
-        
+        last_time = time_list[-1] if time_list else None
+        max_index = len(time_list) - 1
+
         def _raise_out_of_range(arg):
             datetime_format = "%Y-%m-%d %H:%M:%S"
             msg = (
                 f"{arg} does not exist in model output reporting time steps."
                 f" The reporting time range is {first_time.strftime(datetime_format)} to "
-                f"{end.strftime(datetime_format)} at increments of {report} seconds."
+                f"{last_time.strftime(datetime_format)} at increments of {report} seconds."
                 f" Valid integer indices are 0..{max_index}."
             )
             raise OutputException(msg)
@@ -182,19 +183,28 @@ class Output(object):
         if not self.loaded:
             self.loaded = True
             output.open(self.handle, self.binfile)
-            self.start = datetime(*output.decode_date(output.get_start_date(self.handle))[:6])
-            self.start = self.start.replace(microsecond=0)
-            self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
-            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
-            self.end = self.start + timedelta(seconds=self.period * self.report)
 
+            # Report metadata
+            self.rpt_start = datetime(*output.decode_date(output.get_start_date(self.handle))[:6])
+            self.rpt_start = self.rpt_start.replace(microsecond=0)
+            self.rpt_step = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
+            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
+            
+            # Build reporting timeline from binary to avoid rounding drift
+            self._load_times()
+            if self._times:
+                # Use the last actual reporting timestamp as end
+                self.end = self._times[-1]
+            else:
+                # Fallback if no periods
+                self.end = self.rpt_start
         return True
 
     def close(self) -> bool:
         """
         Close an opened binary file
 
-        :returns: True if binary file was closed successfully
+        :returns: True if binary file was closed successfull`y
         :rtype: bool
         """
         if self.handle or self.loaded:
@@ -515,21 +525,21 @@ class Output(object):
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -538,15 +548,15 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -607,21 +617,21 @@ class Output(object):
 
         index = self.verify_index(index, self.nodes, "node")
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -630,15 +640,15 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -698,21 +708,21 @@ class Output(object):
         """
         index = self.verify_index(index, self.links, "link")
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -721,15 +731,15 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -786,21 +796,21 @@ class Output(object):
         >>> 2015-11-01 15:03:00 0.022994007915258408
         """
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -809,15 +819,15 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -860,7 +870,7 @@ class Output(object):
         """
 
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
@@ -900,7 +910,7 @@ class Output(object):
         """
 
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
@@ -939,7 +949,7 @@ class Output(object):
         """
 
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
@@ -967,7 +977,7 @@ class Output(object):
     #     """
     #
     #     time_index = self.verify_time(
-    #         time_index, self.times, self.start, self.end, self.report, 0
+    #         time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
     #     )
     #
     #     value = output.get_system_attribute(self.handle, time_index, attribute)
@@ -1007,7 +1017,7 @@ class Output(object):
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_subcatch_result(self.handle, time_index, index)
@@ -1047,7 +1057,7 @@ class Output(object):
         """
         index = self.verify_index(index, self.nodes, "node")
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_node_result(self.handle, time_index, index)
@@ -1084,7 +1094,7 @@ class Output(object):
         """
         index = self.verify_index(index, self.links, "link")
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_link_result(self.handle, time_index, index)
@@ -1126,7 +1136,7 @@ class Output(object):
         """
         dummy_index = 0
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
