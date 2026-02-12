@@ -165,7 +165,9 @@ def test_times_loaded_from_binary():
     # Verify out.times equals toolkit-decoded date series
     with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
         raw = tk_output.get_date_series(out.handle, 0, out.period - 1)
-        decoded = [datetime(*tk_output.decode_date(d)[:6]).replace(microsecond=0) for d in raw]
+        decoded = [
+            datetime(*tk_output.decode_date(d)[:6]).replace(microsecond=0) for d in raw
+        ]
         assert out.times == decoded
 
 
@@ -235,7 +237,10 @@ def test_verify_time_binary_search_datetime():
         idx = Output.verify_time(dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)
         assert idx == mid
         # None defaults to 0
-        assert Output.verify_time(None, out.times, out.rpt_start, out.end, out.rpt_step, 0) == 0
+        assert (
+            Output.verify_time(None, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+            == 0
+        )
 
 
 def test_verify_time_datetime_before_start():
@@ -248,8 +253,11 @@ def test_verify_time_datetime_before_start():
     with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
         bad_dt = out.rpt_start
         with pytest.raises(OutputException) as exc:
-            Output.verify_time(bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+            Output.verify_time(
+                bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
         assert "does not exist in model output reporting time steps." in str(exc.value)
+
 
 def test_verify_time():
     # Produce the output file (simulation start != report start)
@@ -271,23 +279,39 @@ def test_verify_time():
 
         # Requesting the (non-inclusive) report start should fail with a clear message
         with pytest.raises(OutputException):
-            temp_out = out.node_series("J2", NodeAttribute.TOTAL_INFLOW, out.rpt_start, out.end)
+            temp_out = out.node_series(
+                "J2", NodeAttribute.TOTAL_INFLOW, out.rpt_start, out.end
+            )
 
         # verify_time returns indices for valid datetimes
-        assert Output.verify_time(out.times[0], out.times, out.rpt_start, out.end, out.rpt_step, 0) == 0
-        assert Output.verify_time(out.times[-1], out.times, out.rpt_start, out.end, out.rpt_step, 0) == len(out.times) - 1
+        assert (
+            Output.verify_time(
+                out.times[0], out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
+            == 0
+        )
+        assert (
+            Output.verify_time(
+                out.times[-1], out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
+            == len(out.times) - 1
+        )
 
         # Requesting the (non-inclusive) report start should fail with a clear message
         implied_report_start = out.times[0] - timedelta(seconds=out.rpt_step)
         with pytest.raises(OutputException) as exc:
-            Output.verify_time(implied_report_start, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+            Output.verify_time(
+                implied_report_start, out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
         msg = str(exc.value).lower()
-        assert "does not exist" in msg #or "index 0" in msg
+        assert "does not exist" in msg  # or "index 0" in msg
 
         # Non-aligned datetime between start and first reporting time should fail
         bad_dt = implied_report_start + timedelta(seconds=1)
         with pytest.raises(OutputException):
-            Output.verify_time(bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+            Output.verify_time(
+                bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
 
 
 def test_verify_time_with_report_delay():
@@ -307,23 +331,39 @@ def test_verify_time_with_report_delay():
         # Non-inclusive start: index 0 == (report_start + report)
         assert out.times[0] == out.rpt_start + timedelta(seconds=out.rpt_step)
         assert out.times[-1] == out.end
-        
+
         # Requesting the (non-inclusive) report start should fail with a clear message
         with pytest.raises(OutputException):
-            temp_out = out.node_series("J2", NodeAttribute.TOTAL_INFLOW, out.rpt_start, out.end)
+            temp_out = out.node_series(
+                "J2", NodeAttribute.TOTAL_INFLOW, out.rpt_start, out.end
+            )
 
         # verify_time returns indices for valid datetimes
-        assert Output.verify_time(out.times[0], out.times, out.rpt_start, out.end, out.rpt_step, 0) == 0
-        assert Output.verify_time(out.times[-1], out.times, out.rpt_start, out.end, out.rpt_step, 0) == len(out.times) - 1
+        assert (
+            Output.verify_time(
+                out.times[0], out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
+            == 0
+        )
+        assert (
+            Output.verify_time(
+                out.times[-1], out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
+            == len(out.times) - 1
+        )
 
         # Requesting the (non-inclusive) report start should fail with a clear message
         implied_report_start = out.times[0] - timedelta(seconds=out.rpt_step)
         with pytest.raises(OutputException) as exc:
-            Output.verify_time(implied_report_start, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+            Output.verify_time(
+                implied_report_start, out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )
         msg = str(exc.value).lower()
-        assert "does not exist" in msg #or "index 0" in msg
+        assert "does not exist" in msg  # or "index 0" in msg
 
         # Non-aligned datetime between start and first reporting time should fail
         bad_dt = implied_report_start + timedelta(seconds=1)
         with pytest.raises(OutputException):
-            Output.verify_time(bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0)
+            Output.verify_time(
+                bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0
+            )

@@ -185,11 +185,13 @@ class Output(object):
             output.open(self.handle, self.binfile)
 
             # Report metadata
-            self.rpt_start = datetime(*output.decode_date(output.get_start_date(self.handle))[:6])
+            self.rpt_start = datetime(
+                *output.decode_date(output.get_start_date(self.handle))[:6]
+            )
             self.rpt_start = self.rpt_start.replace(microsecond=0)
             self.rpt_step = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
             self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
-            
+
             # Build reporting timeline from binary to avoid rounding drift
             self._load_times()
             if self._times:
@@ -247,7 +249,6 @@ class Output(object):
         if self._times is None:
             self._load_times()
         return self._times
-
 
     @output_open_handler
     def _load_times(self) -> NoReturn:
@@ -530,7 +531,12 @@ class Output(object):
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
@@ -548,7 +554,12 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
@@ -622,7 +633,12 @@ class Output(object):
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
@@ -640,7 +656,12 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
@@ -713,7 +734,12 @@ class Output(object):
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
@@ -731,7 +757,12 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
@@ -801,7 +832,12 @@ class Output(object):
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
@@ -819,7 +855,12 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.rpt_start, self.end, self.rpt_step, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
