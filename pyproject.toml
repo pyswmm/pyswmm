@@ -1,0 +1,51 @@
+[project]
+name = "pyswmm"
+version = "2.2.0"
+description = "Python Wrapper for SWMM5 API"
+authors = [{ name = "Bryant E. McDonnell (See AUTHORS)" }]
+urls = { homepage = "https://www.pyswmm.org" }
+readme = "README.md"
+requires-python = ">=3.9"
+license = "BSD-2-Clause"
+keywords = [
+    "swmm5",
+    "swmm",
+    "hydraulics",
+    "hydrology",
+    "modeling",
+    "collection system",
+]
+classifiers = [
+    "Topic :: Scientific/Engineering",
+    "Topic :: Documentation :: Sphinx",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python",
+    "Development Status :: 5 - Production/Stable",
+]
+dependencies = ["julian>=0.14", "packaging>=26.0", "swmm-toolkit<=1.0.0"]
+
+[project.optional-dependencies]
+"swmm5.1.14" = ["swmm-toolkit<=0.9.1"]
+"swmm5.1.15" = ["swmm-toolkit<=0.10.0"]
+"swmm5.2.0" = ["swmm-toolkit<=0.11.0"]
+"swmm5.2.1" = ["swmm-toolkit<=0.12.0"]
+"swmm5.2.2" = ["swmm-toolkit<=0.13.0"]
+"swmm5.2.3" = ["swmm-toolkit<=0.14.0"]
+"swmm5.2.4" = ["swmm-toolkit<0.18.0"]
+
+[dependency-groups]
+dev = ["black>=25.0.0", "pre-commit>=4.3.0", "pytest>=8.0.0"]
+
+
+[build-system]
+requires = ["uv_build>=0.9.16,<0.10.0"]
+build-backend = "uv_build"

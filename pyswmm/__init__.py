@@ -8,6 +8,8 @@
 """Python Wrapper for Stormwater Management Model (SWMM5)."""
 
 # Local imports
+import importlib.metadata
+
 import pyswmm._monkey_patch
 from pyswmm.links import Link, Links
 from pyswmm.lidcontrols import LidControls, LidControl
@@ -19,9 +21,11 @@ from pyswmm.subcatchments import Subcatchment, Subcatchments
 from pyswmm.system import SystemStats
 from pyswmm.raingages import RainGages, RainGage
 
-VERSION_INFO = (2, 1, 0)
+try:
+    __version__ = importlib.metadata.version(__name__)
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "0.0.0"  # Fallback for development mode
 
-__version__ = ".".join(map(str, VERSION_INFO))
 __author__ = "Bryant E. McDonnell (Hydroinformatics, LLC) - bemcdonnell@gmail.com"
 __copyright__ = "Copyright (c) 2025 Bryant E. McDonnell (See AUTHORS)"
 __licence__ = "BSD2"
