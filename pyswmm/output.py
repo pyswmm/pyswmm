@@ -137,8 +137,13 @@ class Output(object):
         :return: The integer index of the given time
         :rtype: int
         """
-        first_time = time_list[0] if time_list else None
-        last_time = time_list[-1] if time_list else None
+        if not time_list:
+            raise OutputException(
+                "Model output contains no reporting time steps; cannot resolve time index."
+            )
+
+        first_time = time_list[0]
+        last_time = time_list[-1]
         max_index = len(time_list) - 1
 
         def _raise_out_of_range(arg):
@@ -155,6 +160,9 @@ class Output(object):
 
         # Cover before start, after end, and non-aligned datetimes
         if isinstance(resolved, datetime):
+            if resolved < start or resolved > end:
+                _raise_out_of_range(resolved)
+
             # time_list is sorted; use binary search
             idx = bisect_left(time_list, resolved)
             if 0 <= idx <= max_index and time_list[idx] == resolved:
@@ -162,6 +170,9 @@ class Output(object):
             _raise_out_of_range(resolved)
 
         # Cover indicies
+        if isinstance(resolved, bool):
+            _raise_out_of_range(resolved)
+
         if isinstance(resolved, int):
             if 0 <= resolved <= max_index:
                 return resolved

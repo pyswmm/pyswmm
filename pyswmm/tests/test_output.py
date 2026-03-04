@@ -367,3 +367,43 @@ def test_verify_time_with_report_delay():
             Output.verify_time(
                 bad_dt, out.times, out.rpt_start, out.end, out.rpt_step, 0
             )
+
+
+def test_verify_time_rejects_bool_index():
+    base = datetime(2020, 1, 1, 0, 1)
+    times = [base + timedelta(minutes=i) for i in range(3)]
+    start = base - timedelta(minutes=1)
+    end = times[-1]
+
+    with pytest.raises(OutputException):
+        Output.verify_time(True, times, start, end, 60, 0)
+
+    with pytest.raises(OutputException):
+        Output.verify_time(False, times, start, end, 60, 0)
+
+
+def test_verify_time_empty_time_list_raises():
+    with pytest.raises(OutputException) as exc:
+        Output.verify_time(
+            datetime(2020, 1, 1, 0, 1),
+            [],
+            datetime(2020, 1, 1, 0, 0),
+            datetime(2020, 1, 1, 0, 2),
+            60,
+            0,
+        )
+
+    assert "contains no reporting time steps" in str(exc.value).lower()
+
+
+def test_verify_time_honors_start_end_bounds():
+    base = datetime(2020, 1, 1, 0, 1)
+    times = [base + timedelta(minutes=i) for i in range(3)]
+
+    # Start excludes first element even if present in time_list
+    with pytest.raises(OutputException):
+        Output.verify_time(times[0], times, times[1], times[-1], 60, 0)
+
+    # End excludes last element if configured earlier than time_list max
+    with pytest.raises(OutputException):
+        Output.verify_time(times[-1], times, times[0], times[1], 60, 0)
