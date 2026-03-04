@@ -1,4 +1,14 @@
 # Changelog
+## [Unreleased]
+
+### Changed
+
+- Hardened `Output.verify_time()` validation to reject boolean indices, handle empty reporting timelines safely, and enforce datetime bounds against configured start/end values.
+
+### Added
+
+- Added regression tests for `verify_time()` covering start/end bound checks, empty time-list handling, and boolean index rejection.
+
 ## [2.1.0] - 2025-09-08
 
 Wake up and smell the coffee! We are back. Getting started with some basic maintenance. 
