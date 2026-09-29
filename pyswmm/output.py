@@ -171,7 +171,14 @@ class Output(object):
 
         :return: True if binary file was opened successfully
         :rtype: bool
+        :raises OSError: If the output file cannot be opened for reading.
         """
+        if not self.loaded:
+            # Reject unreadable paths before entering the native reader, which
+            # can crash instead of raising an exception for a missing file.
+            with open(self.binfile, "rb"):
+                pass
+
         if self.handle is None:
             self.handle = output.init()
 

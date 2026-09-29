@@ -6,6 +6,10 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 import pytest
+import subprocess
+import sys
+from pathlib import Path
+from textwrap import dedent
 
 from pyswmm import Simulation
 from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
@@ -19,6 +23,95 @@ from swmm.toolkit.shared_enum import (
     SystemAttribute,
 )
 from datetime import datetime
+
+
+@pytest.mark.parametrize("kind", ["missing", "directory"])
+@pytest.mark.parametrize("access", ["open", "context", "property"])
+def test_output_unreadable_path(tmp_path, kind, access):
+    path = tmp_path / "unreadable.out"
+    if kind == "directory":
+        path.mkdir()
+    # An invalid filename can crash the native library, so isolate this
+    # regression rather than allowing a crash to terminate the whole suite.
+    script = dedent(
+        """\
+        import sys
+        from pyswmm import Output
+
+        path, access = sys.argv[1:]
+        out = Output(path)
+        try:
+            if access == "open":
+                out.open()
+            elif access == "context":
+                with out:
+                    pass
+            else:
+                out.project_size
+        except OSError as error:
+            assert error.filename == path
+            assert not out.loaded
+            assert out.handle is None
+            assert out.close()
+        else:
+            raise AssertionError("An unreadable output path must raise OSError")
+        """
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(path), access],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_output_retry_after_missing_file(tmp_path):
+    model = tmp_path / "model.inp"
+    model.write_text(Path(MODEL_WEIR_SETTING_PATH).read_text())
+    with Simulation(str(model)) as sim:
+        for _ in sim:
+            pass
+    script = dedent(
+        """\
+        import shutil
+        import sys
+        from unittest.mock import patch
+        from pyswmm import Output
+        from swmm.toolkit.shared_enum import NodeAttribute
+
+        source, destination = sys.argv[1:]
+        out = Output(destination)
+        try:
+            out.open()
+        except FileNotFoundError:
+            pass
+        else:
+            raise AssertionError("Expected a missing-file error")
+        shutil.copyfile(source, destination)
+        with out:
+            assert out.loaded
+            assert len(out.nodes) > 0
+            assert len(out.node_series(0, NodeAttribute.HYDRAULIC_HEAD)) == out.period
+            # An already-open reader does not need to open the file again.
+            with patch("builtins.open", side_effect=AssertionError):
+                assert out.open()
+        assert not out.loaded
+        """
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(model.with_suffix(".out")),
+            str(tmp_path / "later.out"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
 
 
 def test_output_unknown_object_id():
