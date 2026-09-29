@@ -8,12 +8,39 @@
 from __future__ import annotations
 from pyswmm.errors import OutputException
 from datetime import datetime, timedelta
+from enum import Enum
 from functools import wraps
 from typing import NoReturn, Optional, Union
 
 # Third party imports
 from swmm.toolkit import output, shared_enum
 from julian import from_jd
+
+
+class _PollutantAttribute(Enum):
+    """Create stable, pickleable selectors without modifying toolkit enums."""
+
+    @classmethod
+    def _missing_(cls, value):
+        first = cls.POLLUT_CONC_0.value
+        if not isinstance(value, int) or value < first:
+            return None
+        member = object.__new__(cls)
+        member._name_ = "POLLUT_CONC_{}".format(value - first)
+        member._value_ = value
+        return cls._value2member_map_.setdefault(value, member)
+
+
+class _SubcatchPollutantAttribute(_PollutantAttribute):
+    POLLUT_CONC_0 = shared_enum.SubcatchAttribute.POLLUT_CONC_0.value
+
+
+class _NodePollutantAttribute(_PollutantAttribute):
+    POLLUT_CONC_0 = shared_enum.NodeAttribute.POLLUT_CONC_0.value
+
+
+class _LinkPollutantAttribute(_PollutantAttribute):
+    POLLUT_CONC_0 = shared_enum.LinkAttribute.POLLUT_CONC_0.value
 
 
 def output_open_handler(func):
@@ -76,6 +103,59 @@ class Output(object):
         self._nodes = None
         self._links = None
         self._pollutants = None
+        self._attributes = {}
+
+    def _get_attributes(self, base_enum):
+        """Build attribute mappings for this file without changing shared enums."""
+        if base_enum not in self._attributes:
+            first_pollutant = base_enum.POLLUT_CONC_0.value
+            count = self.project_size[4]
+            attributes = {
+                member.name: member
+                for member in base_enum
+                if member.value < first_pollutant
+            }
+            pollutant_enum = {
+                shared_enum.SubcatchAttribute: _SubcatchPollutantAttribute,
+                shared_enum.NodeAttribute: _NodePollutantAttribute,
+                shared_enum.LinkAttribute: _LinkPollutantAttribute,
+            }[base_enum]
+            for index in range(count):
+                name = "POLLUT_CONC_{}".format(index)
+                attributes[name] = (
+                    base_enum[name]
+                    if name in base_enum.__members__
+                    else pollutant_enum(first_pollutant + index)
+                )
+            self._attributes[base_enum] = attributes
+        return self._attributes[base_enum]
+
+    @property
+    def subcatch_attributes(self) -> dict:
+        """Map subcatchment attribute names to members, including every pollutant.
+
+        Pollutant indices match :attr:`pollutants`. Existing shared-enum members
+        are preserved. Only pollutants present in this file are included.
+        """
+        return self._get_attributes(shared_enum.SubcatchAttribute)
+
+    @property
+    def node_attributes(self) -> dict:
+        """Map node attribute names to members, including every pollutant.
+
+        Pollutant indices match :attr:`pollutants`. Use a member with
+        :meth:`node_series` or :meth:`node_attribute` to select a pollutant.
+        """
+        return self._get_attributes(shared_enum.NodeAttribute)
+
+    @property
+    def link_attributes(self) -> dict:
+        """Map link attribute names to members, including every pollutant.
+
+        Pollutant indices match :attr:`pollutants`. Use a member with
+        :meth:`link_series` or :meth:`link_attribute` to select a pollutant.
+        """
+        return self._get_attributes(shared_enum.LinkAttribute)
 
     @staticmethod
     def verify_index(index, index_dict, index_type):
@@ -1004,7 +1084,8 @@ class Output(object):
 
         values = output.get_subcatch_result(self.handle, time_index, index)
         return {
-            attr: value for attr, value in zip(shared_enum.SubcatchAttribute, values)
+            attr: value
+            for attr, value in zip(self.subcatch_attributes.values(), values)
         }
 
     @output_open_handler
@@ -1043,7 +1124,9 @@ class Output(object):
         )
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.NodeAttribute, values)}
+        return {
+            attr: value for attr, value in zip(self.node_attributes.values(), values)
+        }
 
     @output_open_handler
     def link_result(
@@ -1080,7 +1163,9 @@ class Output(object):
         )
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.LinkAttribute, values)}
+        return {
+            attr: value for attr, value in zip(self.link_attributes.values(), values)
+        }
 
     @output_open_handler
     def system_result(self, time_index: Union[int, datetime, None] = None):
@@ -1135,13 +1220,21 @@ class OutAttributeBase:
         self._attr_group = None
 
     def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+        return super().__dir__() + [
+            name.lower() for name in self._available_attributes()
+        ]
+
+    def _available_attributes(self):
+        if self._attr_group is shared_enum.SystemAttribute:
+            return {member.name: member for member in self._attr_group}
+        return self._handle._get_attributes(self._attr_group)
 
     def __getattr__(self, attr) -> dict[datetime.datetime, float]:
-        if attr.upper() not in [item.name for item in self._attr_group]:
+        attributes = self._available_attributes()
+        if attr.upper() not in attributes:
             raise (AttributeError("Invalid Property: {}".format(attr)))
         else:
-            attr_select = getattr(self._attr_group, attr.upper())
+            attr_select = attributes[attr.upper()]
             ts = self._series_type(attr_select)
         return ts
 
@@ -1188,9 +1281,6 @@ class SubcatchSeries(OutAttributeBase):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SubcatchAttribute
         self._idname = None
-
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def __getitem__(self, idname):
         self._idname = idname
@@ -1239,9 +1329,6 @@ class NodeSeries(OutAttributeBase):
         self._attr_group = shared_enum.NodeAttribute
         self._idname = None
 
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
-
     def __getitem__(self, idname):
         self._idname = idname
         return self
@@ -1287,9 +1374,6 @@ class LinkSeries(OutAttributeBase):
         super().__init__(out_handle)
         self._attr_group = shared_enum.LinkAttribute
         self._idname = None
-
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def __getitem__(self, idname):
         self._idname = idname
@@ -1352,9 +1436,6 @@ class SystemSeries(OutAttributeBase):
     def __init__(self, out_handle):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SystemAttribute
-
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def _series_type(self, attr_select):
         return self._handle.system_series(attr_select)
