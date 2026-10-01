@@ -1,9 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [2.2.0] - 2026-10-01
 
 ### Changed
 
+- Moved to pyproject.toml packaging
 - Hardened `Output.verify_time()` validation to reject boolean indices, handle empty reporting timelines safely, and enforce datetime bounds against configured start/end values.
 
 ### Added
