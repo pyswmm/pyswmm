@@ -24,7 +24,6 @@ jobs:
 
       - name: Unit Test
         shell: bash
-        working-directory: ${{ runner.temp }}
         run: uv run pytest
 
   publish:
