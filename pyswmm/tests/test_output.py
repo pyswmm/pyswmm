@@ -15,6 +15,7 @@ from pyswmm import Simulation
 from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
 from pyswmm.tests.data import MODEL_DELAYED_REPORT_PATH, MODEL_WEIR_SETTING_PATH
 from pyswmm.errors import OutputException
+from pyswmm._monkey_patch import ToolkitVersionException
 
 from swmm.toolkit.shared_enum import (
     LinkAttribute,
@@ -26,6 +27,28 @@ from datetime import datetime, timedelta
 from swmm.toolkit import output as tk_output
 
 
+@pytest.mark.parametrize("toolkit_version", ["0.9.1", "0.16.2", "0.17.0rc1"])
+def test_output_rejects_unsupported_toolkit(monkeypatch, toolkit_version):
+    monkeypatch.setattr("pyswmm.output._tk_version", toolkit_version)
+
+    with pytest.raises(ToolkitVersionException) as error:
+        Output("model.out")
+
+    assert "swmm-toolkit>=0.17.0" in str(error.value)
+    assert toolkit_version in str(error.value)
+
+
+@pytest.mark.parametrize("toolkit_version", ["0.17.0", "0.17.1", "0.100.0", "1.0.0"])
+def test_output_accepts_supported_toolkit(monkeypatch, toolkit_version):
+    monkeypatch.setattr("pyswmm.output._tk_version", toolkit_version)
+
+    out = Output("model.out")
+
+    assert out.binfile == "model.out"
+    assert out.handle is None
+    assert not out.loaded
+
+
 @pytest.mark.parametrize("kind", ["missing", "directory"])
 @pytest.mark.parametrize("access", ["open", "context", "property"])
 def test_output_unreadable_path(tmp_path, kind, access):
@@ -34,8 +57,7 @@ def test_output_unreadable_path(tmp_path, kind, access):
         path.mkdir()
     # An invalid filename can crash the native library, so isolate this
     # regression rather than allowing a crash to terminate the whole suite.
-    script = dedent(
-        """\
+    script = dedent("""\
         import sys
         from pyswmm import Output
 
@@ -56,8 +78,7 @@ def test_output_unreadable_path(tmp_path, kind, access):
             assert out.close()
         else:
             raise AssertionError("An unreadable output path must raise OSError")
-        """
-    )
+        """)
     result = subprocess.run(
         [sys.executable, "-c", script, str(path), access],
         capture_output=True,
@@ -73,8 +94,7 @@ def test_output_retry_after_missing_file(tmp_path):
     with Simulation(str(model)) as sim:
         for _ in sim:
             pass
-    script = dedent(
-        """\
+    script = dedent("""\
         import shutil
         import sys
         from unittest.mock import patch
@@ -98,8 +118,7 @@ def test_output_retry_after_missing_file(tmp_path):
             with patch("builtins.open", side_effect=AssertionError):
                 assert out.open()
         assert not out.loaded
-        """
-    )
+        """)
     result = subprocess.run(
         [
             sys.executable,

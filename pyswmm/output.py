@@ -6,14 +6,19 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 from __future__ import annotations
-from pyswmm.errors import OutputException
-from datetime import datetime, timedelta
+
+from bisect import bisect_left
+from datetime import datetime
 from functools import wraps
 from typing import NoReturn, Optional, Union
-from bisect import bisect_left
 
 # Third party imports
+import packaging.version
+from swmm.toolkit import __version__ as _tk_version
 from swmm.toolkit import output, shared_enum
+
+from pyswmm._monkey_patch import ToolkitVersionException
+from pyswmm.errors import OutputException
 
 
 def output_open_handler(func):
@@ -60,6 +65,12 @@ class Output(object):
         Initialize the Output class.
         :param binfile: model binary file path
         """
+        if packaging.version.parse(_tk_version) < packaging.version.parse("0.17.0"):
+            raise ToolkitVersionException(
+                "Output requires swmm-toolkit>=0.17.0. "
+                f"The currently installed version is {_tk_version}"
+            )
+
         self.binfile = binfile
 
         self.handle = None
