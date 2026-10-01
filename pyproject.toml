@@ -69,5 +69,8 @@ conflicts = [
     ],
 ]
 
+[tool.uv.dependency-groups]
+docs = { requires-python = ">=3.10" }
+
 [tool.uv.build-backend]
 module-root = ""
