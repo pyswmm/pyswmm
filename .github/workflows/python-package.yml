@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           python-version: ${{ matrix.py }}
 
@@ -40,7 +40,7 @@ jobs:
       contents: write
     steps:
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
 
       - name: Build distributions
         run: uv build
