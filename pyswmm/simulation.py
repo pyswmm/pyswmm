@@ -217,7 +217,7 @@ class Simulation:
         except BaseException as error:
             if cleanup_error is None:
                 cleanup_error = error
-        
+
         # raise a cleanup error only when there isn't already an error from the with block
         if cleanup_error is not None and exc_type is None:
             raise cleanup_error

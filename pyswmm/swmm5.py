@@ -208,7 +208,11 @@ class PySWMM(object):
                 binfile = self.inpfile.replace(".inp", ".out")
                 self.binfile = binfile
 
-        for name, path in (("inpfile", inpfile), ("rptfile", rptfile), ("binfile", binfile)):
+        for name, path in (
+            ("inpfile", inpfile),
+            ("rptfile", rptfile),
+            ("binfile", binfile),
+        ):
             if not isinstance(path, str):
                 raise TypeError(f"{name} must be a string")
         try:

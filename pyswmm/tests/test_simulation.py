@@ -300,8 +300,12 @@ def test_failed_open_releases_simulation_lock(tmp_path, lifecycle_model):
         assert recovered.current_time > recovered.start_time
 
 
-@pytest.mark.parametrize("name, content", [("bad.json", b'{"ver":3}'), ("bad.hsf", b"INVALID")])
-def test_failed_start_disposes_without_context_exit(tmp_path, lifecycle_model, name, content):
+@pytest.mark.parametrize(
+    "name, content", [("bad.json", b'{"ver":3}'), ("bad.hsf", b"INVALID")]
+)
+def test_failed_start_disposes_without_context_exit(
+    tmp_path, lifecycle_model, name, content
+):
     path = tmp_path / name
     path.write_bytes(content)
     sim = Simulation(lifecycle_model)
@@ -316,7 +320,9 @@ def test_failed_start_disposes_without_context_exit(tmp_path, lifecycle_model, n
         assert recovered.current_time > recovered.start_time
 
 
-@pytest.mark.parametrize("stage", ["before_start", "after_start", "after_end", "after_close"])
+@pytest.mark.parametrize(
+    "stage", ["before_start", "after_start", "after_end", "after_close"]
+)
 def test_callback_failure_releases_simulation_lock(lifecycle_model, stage):
     def fail():
         raise RuntimeError("callback failure")
