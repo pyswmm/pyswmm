@@ -1,9 +1,16 @@
 # Changelog
+
 ## [Unreleased]
+
+### Changed
+
+- Hardened `Output.verify_time()` validation to reject boolean indices, handle empty reporting timelines safely, and enforce datetime bounds against configured start/end values.
 
 ### Added
 
+- Added regression tests for `verify_time()` covering start/end bound checks, empty time-list handling, and boolean index rejection.
 - Support all pollutants in output results, attribute selectors, and series helpers, with independent mappings for each output file ([#429](https://github.com/pyswmm/pyswmm/issues/429)).
+
 ### Fixed
 
 - Check output file readability before calling the native reader, so missing files raise a Python exception instead of crashing the process.
