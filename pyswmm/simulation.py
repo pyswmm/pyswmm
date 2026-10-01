@@ -113,12 +113,7 @@ class Simulation:
         }
         self._warn_context = True
         self._model = PySWMM(inputfile, reportfile, outputfile)
-        try:
-            self._model.swmm_open()
-        except BaseException:
-            with suppress(BaseException):
-                self._model.swmm_close()
-            raise
+        self._model.swmm_open()
         self._is_open = True
         _sim_state_instance.sim_is_instantiated = self._is_open
 
