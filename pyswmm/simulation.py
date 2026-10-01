@@ -116,12 +116,9 @@ class Simulation:
         try:
             self._model.swmm_open()
         except BaseException:
-            try:
+            with suppress(BaseException):
                 self._model.swmm_close()
-            except BaseException:
-                with suppress(BaseException):
-                    self._model.swmm_close()
-                raise  # Preserve the open error and toss out close error (if any).
+            raise
         self._is_open = True
         _sim_state_instance.sim_is_instantiated = self._is_open
 
