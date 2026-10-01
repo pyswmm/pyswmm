@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright (c) 2024 Bryant E. McDonnell (See AUTHORS)
 #
@@ -8,16 +7,18 @@
 """Base class for a SWMM Simulation."""
 
 # Standard import
+from contextlib import suppress
 from warnings import warn
+
+from pyswmm.errors import MultiSimulationError
 
 # Local imports
 from pyswmm.swmm5 import PySWMM, PYSWMMException
 from pyswmm.toolkitapi import SimulationTime, SimulationUnits
-from pyswmm.errors import MultiSimulationError
 from pyswmm.warnings import SimulationContextWarning
 
 
-class _SimulationStateManager(object):
+class _SimulationStateManager:
     """This manager was created to be a guardrail for the PySWMM developers
     experience.  In the event the developer is unaware of the non thread-safe
     non-reenterant quality of USEPA-SWMM, this prevents the developer from trying
@@ -42,7 +43,7 @@ class _SimulationStateManager(object):
 _sim_state_instance = _SimulationStateManager()
 
 
-class Simulation(object):
+class Simulation:
     """
     Base class for a SWMM Simulation.
 
@@ -96,12 +97,10 @@ class Simulation(object):
         if _sim_state_instance.sim_is_instantiated:
             raise (MultiSimulationError("Multi-Simulation Error."))
 
-        self._model = PySWMM(inputfile, reportfile, outputfile)
-        self._model.swmm_open()
-        self._is_open = True
-        _sim_state_instance.sim_is_instantiated = self._is_open
-        self._advance_seconds = None
+        self._is_open = False
         self._is_started = False
+        self._start_attempted = False
+        self._advance_seconds = None
         self._terminate_request = False
         self._callbacks = {
             "before_start": None,
@@ -113,6 +112,18 @@ class Simulation(object):
             "after_close": None,
         }
         self._warn_context = True
+        self._model = PySWMM(inputfile, reportfile, outputfile)
+        try:
+            self._model.swmm_open()
+        except BaseException:
+            try:
+                self._model.swmm_close()
+            except BaseException:
+                with suppress(BaseException):
+                    self._model.swmm_close()
+                raise  # Preserve the open error and toss out close error (if any).
+        self._is_open = True
+        _sim_state_instance.sim_is_instantiated = self._is_open
 
     def __enter__(self):
         """
@@ -143,6 +154,8 @@ class Simulation(object):
 
     def start(self):
         """Start Simulation (no longer suggested to user)."""
+        if not self._is_open:
+            raise PYSWMMException("Simulation is closed.")
         if self._warn_context:
             # Emit warning if context manager is not used to instantiate Simulation
             warn(
@@ -150,12 +163,17 @@ class Simulation(object):
             )
             self._warn_context = False
         if not self._is_started:
-            # Execute Callback Hooks Before Start
-            self._execute_callback(self._before_start())
-            self._model.swmm_start(True)
-            # Execute Callback Hooks After Start
-            self._execute_callback(self._after_start())
-            self._is_started = True
+            try:
+                # Native start may acquire resources before raising an error.
+                self._execute_callback(self._before_start())
+                self._start_attempted = True
+                self._model.swmm_start(True)
+                self._is_started = True
+                self._execute_callback(self._after_start())
+            except BaseException:
+                with suppress(BaseException):
+                    self.__exit__()
+                raise  # Preserve the start or callback error and toss out any __exit__ error.
 
     def __next__(self):
         """Next"""
@@ -179,25 +197,44 @@ class Simulation(object):
             raise StopIteration
         return self._model
 
-    def __exit__(self, *a):
-        """close"""
-        if self._is_started:
-            self._model.swmm_end()
-            self._is_started = False
-            # Execute Callback Hooks After Simulation End
-            self._execute_callback(self._after_end())
-        if self._is_open:
-            self._model.swmm_close()
-            self._is_open = False
-            # Execute Callback Hooks After Simulation Closes
+    def __exit__(self, exc_type=None, exc_value=None, traceback=None):
+        """End the attempted run and close even when teardown callbacks fail."""
+        if not self._is_open:
+            return
+        was_started = self._is_started
+        cleanup_error = None
+        try:
+            if self._start_attempted:
+                try:
+                    self._model.swmm_end()
+                finally:
+                    self._start_attempted = False
+                    self._is_started = False
+            if was_started:
+                self._execute_callback(self._after_end())
+        except BaseException as error:
+            cleanup_error = error
+        try:
+            # End errors must not leave project files or the global lock owned.
+            try:
+                self._model.swmm_close()
+            finally:
+                self._is_open = False
+                _sim_state_instance.sim_is_instantiated = False
             self._execute_callback(self._after_close())
-        _sim_state_instance.sim_is_instantiated = self._is_open
+        except BaseException as error:
+            if cleanup_error is None:
+                cleanup_error = error
+        
+        # raise a cleanup error only when there isn't already an error from the with block
+        if cleanup_error is not None and exc_type is None:
+            raise cleanup_error
 
     @staticmethod
     def _is_callback(callable_object):
         """Checks if arugment is a function/method."""
         if not callable(callable_object):
-            error_msg = "Requires Callable Object, not {}".format(type(callable_object))
+            error_msg = f"Requires Callable Object, not {type(callable_object)}"
             raise (PYSWMMException(error_msg))
         else:
             return True
@@ -209,7 +246,7 @@ class Simulation(object):
                 callback()
             except PYSWMMException:
                 error_msg = "Callback Failed"
-                raise PYSWMMException((error_msg))
+                raise PYSWMMException(error_msg)
 
     @property
     def _isOpen(self) -> bool:
@@ -1042,9 +1079,7 @@ class SimulationPreConfig:
                 id_ref = None
                 row_count = 0
                 write_line(fl_destin, ln_orig)
-            elif ln.startswith(";") or len(ln.split()) == 0:
-                write_line(fl_destin, ln)
-            elif not section_replacements:
+            elif ln.startswith(";") or len(ln.split()) == 0 or not section_replacements:
                 write_line(fl_destin, ln)
             else:
                 ln = ln.strip()
@@ -1065,9 +1100,7 @@ class SimulationPreConfig:
                             else:
                                 raise (
                                     Exception(
-                                        "{0} {1} {2} index {3} out of bounds".format(
-                                            section, id_ref, row_count, index
-                                        )
+                                        f"{section} {id_ref} {row_count} index {index} out of bounds"
                                     )
                                 )
                     else:

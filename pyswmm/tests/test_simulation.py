@@ -7,17 +7,19 @@
 # -----------------------------------------------------------------------------
 
 # Standard library imports
-from random import randint
+import os
+import shutil
 import warnings
+from random import randint
+
+import pytest
 
 # Local imports
 import pyswmm.toolkitapi as tka
 from pyswmm import Links, Nodes, Simulation, SimulationPreConfig
 from pyswmm.errors import MultiSimulationError
-from pyswmm.warnings import SimulationContextWarning
 from pyswmm.tests.data import MODEL_WEIR_SETTING_PATH
-import pytest
-import os
+from pyswmm.warnings import SimulationContextWarning
 
 
 def test_simulation_1():
@@ -235,9 +237,9 @@ def test_states():
     assert sim.sim_is_open == False
 
     with Simulation(MODEL_WEIR_SETTING_PATH) as sim3:
-        assert sim.sim_is_started == False
-        for step in sim:
-            assert sim.sim_is_started == True
+        assert sim3.sim_is_started == False
+        for step in sim3:
+            assert sim3.sim_is_started == True
 
     sim4 = Simulation(MODEL_WEIR_SETTING_PATH)
     assert sim4.sim_is_open == True
@@ -280,3 +282,74 @@ def test_sim_context_warning():
             sim3.execute()
             sim3.close()
         assert warning_count(w3) == 0
+
+
+@pytest.fixture
+def lifecycle_model(tmp_path):
+    return str(shutil.copy(MODEL_WEIR_SETTING_PATH, tmp_path / "model.inp"))
+
+
+def test_failed_open_releases_simulation_lock(tmp_path, lifecycle_model):
+    path = tmp_path / "invalid.inp"
+    path.write_text("[JUNCTIONS]\ninvalid not-a-number\n[END]\n")
+    with pytest.raises(Exception):
+        Simulation(str(path))
+    with Simulation(lifecycle_model) as recovered:
+        recovered.start()
+        next(recovered)
+        assert recovered.current_time > recovered.start_time
+
+
+@pytest.mark.parametrize("name, content", [("bad.json", b'{"ver":3}'), ("bad.hsf", b"INVALID")])
+def test_failed_start_disposes_without_context_exit(tmp_path, lifecycle_model, name, content):
+    path = tmp_path / name
+    path.write_bytes(content)
+    sim = Simulation(lifecycle_model)
+    sim._warn_context = False
+    sim.use_hotstart(str(path))
+    with pytest.raises(Exception, match="(?i)hot.?start"):
+        sim.start()
+    assert not sim.sim_is_open
+    sim.close()
+    with Simulation(lifecycle_model) as recovered:
+        next(recovered)
+        assert recovered.current_time > recovered.start_time
+
+
+@pytest.mark.parametrize("stage", ["before_start", "after_start", "after_end", "after_close"])
+def test_callback_failure_releases_simulation_lock(lifecycle_model, stage):
+    def fail():
+        raise RuntimeError("callback failure")
+
+    with pytest.raises(RuntimeError, match="callback failure"):
+        with Simulation(lifecycle_model) as sim:
+            getattr(sim, "add_" + stage)(fail)
+            sim.start()
+    assert not sim.sim_is_open
+    sim.close()
+    with Simulation(lifecycle_model) as recovered:
+        next(recovered)
+        assert recovered.current_time > recovered.start_time
+
+
+def test_rejected_second_simulation_does_not_close_active(lifecycle_model):
+    with Simulation(lifecycle_model) as active:
+        with pytest.raises(MultiSimulationError):
+            Simulation(lifecycle_model)
+        next(active)
+        assert active.current_time > active.start_time
+
+
+def test_body_error_survives_cleanup_callback_error(lifecycle_model):
+    original = RuntimeError("body failure")
+
+    def fail():
+        raise RuntimeError("cleanup failure")
+
+    with pytest.raises(RuntimeError) as caught:
+        with Simulation(lifecycle_model) as sim:
+            sim.start()
+            sim.add_after_end(fail)
+            raise original
+    assert caught.value is original
+    assert not sim.sim_is_open

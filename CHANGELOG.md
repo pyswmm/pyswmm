@@ -15,6 +15,9 @@
 ### Fixed
 
 - Check output file readability before calling the native reader, so missing files raise a Python exception instead of crashing the process.
+- Close failed opens and end attempted runs before closing after start or callback failures.
+- Release the single-simulation guard after disposal and preserve the original failure when cleanup also fails.
+- Failed-start disposal requires the matching native SWMM partial-end cleanup fix.
 
 ## [2.1.0] - 2025-09-08
 
