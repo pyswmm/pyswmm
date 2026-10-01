@@ -9,6 +9,10 @@
 
 - Added regression tests for `verify_time()` covering start/end bound checks, empty time-list handling, and boolean index rejection.
 
+### Fixed
+
+- Check output file readability before calling the native reader, so missing files raise a Python exception instead of crashing the process.
+
 ## [2.1.0] - 2025-09-08
 
 Wake up and smell the coffee! We are back. Getting started with some basic maintenance. 
