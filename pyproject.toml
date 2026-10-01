@@ -31,7 +31,7 @@ classifiers = [
     "Programming Language :: Python",
     "Development Status :: 5 - Production/Stable",
 ]
-dependencies = ["julian>=0.14", "packaging>=26.0", "swmm-toolkit<=1.0.0"]
+dependencies = ["julian>=0.14", "packaging>=26.0", "swmm-toolkit<1.0.0"]
 
 [project.optional-dependencies]
 "swmm5.1.14" = ["swmm-toolkit<=0.9.1"]
@@ -49,3 +49,19 @@ dev = ["black>=25.0.0", "pre-commit>=4.3.0", "pytest>=8.0.0"]
 [build-system]
 requires = ["uv_build>=0.9.16,<0.10.0"]
 build-backend = "uv_build"
+
+[tool.uv]
+conflicts = [
+    [
+        { extra = "swmm5.1.14" },
+        { extra = "swmm5.1.15" },
+        { extra = "swmm5.2.0" },
+        { extra = "swmm5.2.1" },
+        { extra = "swmm5.2.2" },
+        { extra = "swmm5.2.3" },
+        { extra = "swmm5.2.4" },
+    ],
+]
+
+[tool.uv.build-backend]
+module-root = ""
