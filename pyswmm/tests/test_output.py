@@ -57,7 +57,8 @@ def test_output_unreadable_path(tmp_path, kind, access):
         path.mkdir()
     # An invalid filename can crash the native library, so isolate this
     # regression rather than allowing a crash to terminate the whole suite.
-    script = dedent("""\
+    script = dedent(
+        """\
         import sys
         from pyswmm import Output
 
@@ -78,7 +79,8 @@ def test_output_unreadable_path(tmp_path, kind, access):
             assert out.close()
         else:
             raise AssertionError("An unreadable output path must raise OSError")
-        """)
+        """
+    )
     result = subprocess.run(
         [sys.executable, "-c", script, str(path), access],
         capture_output=True,
@@ -94,7 +96,8 @@ def test_output_retry_after_missing_file(tmp_path):
     with Simulation(str(model)) as sim:
         for _ in sim:
             pass
-    script = dedent("""\
+    script = dedent(
+        """\
         import shutil
         import sys
         from unittest.mock import patch
@@ -118,7 +121,8 @@ def test_output_retry_after_missing_file(tmp_path):
             with patch("builtins.open", side_effect=AssertionError):
                 assert out.open()
         assert not out.loaded
-        """)
+        """
+    )
     result = subprocess.run(
         [
             sys.executable,
