@@ -4,6 +4,9 @@
 ### Added
 
 - Support all pollutants in output results, attribute selectors, and series helpers, with independent mappings for each output file ([#429](https://github.com/pyswmm/pyswmm/issues/429)).
+### Fixed
+
+- Check output file readability before calling the native reader, so missing files raise a Python exception instead of crashing the process.
 
 ## [2.1.0] - 2025-09-08
 
