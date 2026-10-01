@@ -5,26 +5,135 @@
 # Licensed under the terms of the BSD2 License
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
-import pytest
+import pickle
 import subprocess
 import sys
+from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import dedent
 
-from pyswmm import Simulation
-from pyswmm import Output, SubcatchSeries, NodeSeries, LinkSeries, SystemSeries
-from pyswmm.tests.data import MODEL_DELAYED_REPORT_PATH, MODEL_WEIR_SETTING_PATH
-from pyswmm.errors import OutputException
-from pyswmm._monkey_patch import ToolkitVersionException
-
+import pytest
+from swmm.toolkit import output as tk_output
+from swmm.toolkit import output as toolkit_output
 from swmm.toolkit.shared_enum import (
     LinkAttribute,
     NodeAttribute,
     SubcatchAttribute,
     SystemAttribute,
 )
-from datetime import datetime, timedelta
-from swmm.toolkit import output as tk_output
+
+from pyswmm import (
+    LinkSeries,
+    NodeSeries,
+    Output,
+    Simulation,
+    SubcatchSeries,
+    SystemSeries,
+)
+from pyswmm._monkey_patch import ToolkitVersionException
+from pyswmm.errors import OutputException
+from pyswmm.tests.data import (
+    MODEL_DELAYED_REPORT_PATH,
+    MODEL_POLLUTANTS_PATH,
+    MODEL_WEIR_SETTING_PATH,
+)
+
+
+@pytest.fixture(scope="module")
+def pollutant_output_files(tmp_path_factory):
+    directory = tmp_path_factory.mktemp("pollutant_output")
+    files = {}
+    for count in (0, 1, 3):
+        source = Path(
+            MODEL_POLLUTANTS_PATH if count else MODEL_WEIR_SETTING_PATH
+        ).read_text()
+        if count == 3:
+            source = source.replace(
+                "[LANDUSES]",
+                "second-pollutant MG/L 20 0 0 0 NO * 0 0 0\n"
+                "third-pollutant MG/L 30 0 0 0 NO * 0 0 0\n\n[LANDUSES]",
+            )
+        filename = directory / "model_{}.inp".format(count)
+        filename.write_text(source)
+        with Simulation(str(filename)) as sim:
+            for _ in sim:
+                pass
+        files[count] = str(filename.with_suffix(".out"))
+    return files
+
+
+@pytest.mark.parametrize("count", [0, 1, 3])
+@pytest.mark.parametrize(
+    "kind,base_enum,series_class",
+    [
+        ("subcatch", SubcatchAttribute, SubcatchSeries),
+        ("node", NodeAttribute, NodeSeries),
+        ("link", LinkAttribute, LinkSeries),
+    ],
+)
+def test_output_all_pollutants(
+    pollutant_output_files, count, kind, base_enum, series_class
+):
+    original_members = dict(base_enum.__members__)
+    with Output(pollutant_output_files[count]) as out:
+        result = getattr(out, f"{kind}_result")(0, 0)
+        raw_result = getattr(toolkit_output, f"get_{kind}_result")(out.handle, 0, 0)
+        assert len(result) == len(raw_result)
+        assert list(result.values()) == pytest.approx(raw_result)
+
+        assert pickle.loads(pickle.dumps(result)) == result
+        attributes = getattr(out, f"{kind}_attributes")
+        first_pollutant = base_enum.POLLUT_CONC_0.value
+        expected_names = [m.name for m in base_enum if m.value < first_pollutant]
+        expected_names += [f"POLLUT_CONC_{i}" for i in range(count)]
+        assert list(attributes) == expected_names
+        assert [member.name for member in result] == expected_names
+        assert list(result) == list(attributes.values())
+        for name, member in original_members.items():
+            if name in attributes:
+                assert attributes[name] is member
+
+        series = series_class(out)[0]
+        for index in range(count):
+            name = f"POLLUT_CONC_{index}"
+            attribute = attributes[name]
+            # Read complete raw rows so the reference does not rely on the
+            # same attribute-enum conversion as the methods under test.
+            raw_series = [
+                getattr(toolkit_output, f"get_{kind}_result")(out.handle, period, 0)[
+                    first_pollutant + index
+                ]
+                for period in range(out.period)
+            ]
+            expected = dict(zip(out.times, raw_series))
+            assert getattr(out, f"{kind}_series")(0, attribute) == expected
+            assert getattr(series, name.lower()) == expected
+            assert name.lower() in dir(series)
+            # Exercise snapshots during a nonzero concentration, not just the
+            # initially dry report where different pollutants can all be zero.
+            report_index = max(range(out.period), key=raw_series.__getitem__)
+            assert raw_series[report_index] > 0
+            at_time = getattr(out, f"{kind}_attribute")(attribute, report_index)
+            assert list(at_time.values())[0] == pytest.approx(raw_series[report_index])
+        with pytest.raises(AttributeError):
+            getattr(series, f"pollut_conc_{count}")
+        assert f"pollut_conc_{count}" not in dir(series)
+    assert base_enum.__members__ == original_members
+
+
+def test_output_pollutant_attributes_are_isolated(pollutant_output_files):
+    with (
+        Output(pollutant_output_files[3]) as multiple,
+        Output(pollutant_output_files[0]) as none,
+        Output(pollutant_output_files[1]) as single,
+    ):
+        for kind in ("subcatch", "node", "link"):
+            name = f"{kind}_attributes"
+            multiple_attributes = getattr(multiple, name)
+            assert "POLLUT_CONC_2" in multiple_attributes
+            assert "POLLUT_CONC_0" not in getattr(none, name)
+            assert "POLLUT_CONC_1" not in getattr(single, name)
+            assert getattr(multiple, name) is multiple_attributes
 
 
 @pytest.mark.parametrize("toolkit_version", ["0.9.1", "0.16.2", "0.17.0rc1"])
@@ -258,13 +367,13 @@ def test_timeseries_abstraction():
             pass
 
     with Output(MODEL_WEIR_SETTING_PATH.replace("inp", "out")) as out:
-        for attr in SubcatchAttribute:
+        for attr in out.subcatch_attributes.values():
             series = getattr(SubcatchSeries(out)["S1"], attr.name.lower())
             assert len(series) == 3480
-        for attr in NodeAttribute:
+        for attr in out.node_attributes.values():
             series = getattr(NodeSeries(out)["J1"], attr.name.lower())
             assert len(series) == 3480
-        for attr in LinkAttribute:
+        for attr in out.link_attributes.values():
             series = getattr(LinkSeries(out)["C1:C2"], attr.name.lower())
             assert len(series) == 3480
         for attr in SystemAttribute:

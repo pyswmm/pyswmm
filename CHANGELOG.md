@@ -1,4 +1,5 @@
 # Changelog
+
 ## [Unreleased]
 
 ### Changed
@@ -8,6 +9,7 @@
 ### Added
 
 - Added regression tests for `verify_time()` covering start/end bound checks, empty time-list handling, and boolean index rejection.
+- Support all pollutants in output results, attribute selectors, and series helpers, with independent mappings for each output file ([#429](https://github.com/pyswmm/pyswmm/issues/429)).
 
 ### Fixed
 
