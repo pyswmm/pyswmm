@@ -12,6 +12,7 @@ Python extensions for the SWMM5 Programmers toolkit.
 # Standard library imports
 import packaging.version
 import sys
+from contextlib import suppress
 from datetime import datetime
 
 # Third party imports
@@ -207,7 +208,19 @@ class PySWMM(object):
                 binfile = self.inpfile.replace(".inp", ".out")
                 self.binfile = binfile
 
-        solver.swmm_open(inpfile, rptfile, binfile)
+        for name, path in (
+            ("inpfile", inpfile),
+            ("rptfile", rptfile),
+            ("binfile", binfile),
+        ):
+            if not isinstance(path, str):
+                raise TypeError(f"{name} must be a string")
+        try:
+            solver.swmm_open(inpfile, rptfile, binfile)
+        except BaseException:
+            with suppress(BaseException):
+                self.swmm_close()
+            raise
         self.fileLoaded = True
 
     def swmm_start(self, SaveOut2rpt=False):

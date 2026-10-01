@@ -6,14 +6,46 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 from __future__ import annotations
-from pyswmm.errors import OutputException
-from datetime import datetime, timedelta
+
+from bisect import bisect_left
+from datetime import datetime
+from enum import Enum
 from functools import wraps
 from typing import NoReturn, Optional, Union
 
 # Third party imports
+import packaging.version
+from swmm.toolkit import __version__ as _tk_version
 from swmm.toolkit import output, shared_enum
-from julian import from_jd
+
+from pyswmm._monkey_patch import ToolkitVersionException
+from pyswmm.errors import OutputException
+
+
+class _PollutantAttribute(Enum):
+    """Create stable, pickleable selectors without modifying toolkit enums."""
+
+    @classmethod
+    def _missing_(cls, value):
+        first = cls.POLLUT_CONC_0.value
+        if not isinstance(value, int) or value < first:
+            return None
+        member = object.__new__(cls)
+        member._name_ = "POLLUT_CONC_{}".format(value - first)
+        member._value_ = value
+        return cls._value2member_map_.setdefault(value, member)
+
+
+class _SubcatchPollutantAttribute(_PollutantAttribute):
+    POLLUT_CONC_0 = shared_enum.SubcatchAttribute.POLLUT_CONC_0.value
+
+
+class _NodePollutantAttribute(_PollutantAttribute):
+    POLLUT_CONC_0 = shared_enum.NodeAttribute.POLLUT_CONC_0.value
+
+
+class _LinkPollutantAttribute(_PollutantAttribute):
+    POLLUT_CONC_0 = shared_enum.LinkAttribute.POLLUT_CONC_0.value
 
 
 def output_open_handler(func):
@@ -33,7 +65,7 @@ def output_open_handler(func):
     return inner_function
 
 
-class Output(object):
+class Output:
     """
     Output Methods.
     Base class for a SWMM Output binary file.
@@ -60,14 +92,20 @@ class Output(object):
         Initialize the Output class.
         :param binfile: model binary file path
         """
+        if packaging.version.parse(_tk_version) < packaging.version.parse("0.17.0"):
+            raise ToolkitVersionException(
+                "Output requires swmm-toolkit>=0.17.0. "
+                f"The currently installed version is {_tk_version}"
+            )
+
         self.binfile = binfile
 
         self.handle = None
         self.loaded = False
         self.delete_handle = False
         self.period = None
-        self.report = None
-        self.start = None
+        self.rpt_step = None
+        self.rpt_start = None
         self.end = None
         self._times = None
 
@@ -76,6 +114,59 @@ class Output(object):
         self._nodes = None
         self._links = None
         self._pollutants = None
+        self._attributes = {}
+
+    def _get_attributes(self, base_enum):
+        """Build attribute mappings for this file without changing shared enums."""
+        if base_enum not in self._attributes:
+            first_pollutant = base_enum.POLLUT_CONC_0.value
+            count = self.project_size[4]
+            attributes = {
+                member.name: member
+                for member in base_enum
+                if member.value < first_pollutant
+            }
+            pollutant_enum = {
+                shared_enum.SubcatchAttribute: _SubcatchPollutantAttribute,
+                shared_enum.NodeAttribute: _NodePollutantAttribute,
+                shared_enum.LinkAttribute: _LinkPollutantAttribute,
+            }[base_enum]
+            for index in range(count):
+                name = f"POLLUT_CONC_{index}"
+                attributes[name] = (
+                    base_enum[name]
+                    if name in base_enum.__members__
+                    else pollutant_enum(first_pollutant + index)
+                )
+            self._attributes[base_enum] = attributes
+        return self._attributes[base_enum]
+
+    @property
+    def subcatch_attributes(self) -> dict:
+        """Map subcatchment attribute names to members, including every pollutant.
+
+        Pollutant indices match :attr:`pollutants`. Existing shared-enum members
+        are preserved. Only pollutants present in this file are included.
+        """
+        return self._get_attributes(shared_enum.SubcatchAttribute)
+
+    @property
+    def node_attributes(self) -> dict:
+        """Map node attribute names to members, including every pollutant.
+
+        Pollutant indices match :attr:`pollutants`. Use a member with
+        :meth:`node_series` or :meth:`node_attribute` to select a pollutant.
+        """
+        return self._get_attributes(shared_enum.NodeAttribute)
+
+    @property
+    def link_attributes(self) -> dict:
+        """Map link attribute names to members, including every pollutant.
+
+        Pollutant indices match :attr:`pollutants`. Use a member with
+        :meth:`link_series` or :meth:`link_attribute` to select a pollutant.
+        """
+        return self._get_attributes(shared_enum.LinkAttribute)
 
     @staticmethod
     def verify_index(index, index_dict, index_type):
@@ -137,24 +228,40 @@ class Output(object):
         :return: The integer index of the given time
         :rtype: int
         """
+        if not time_list:
+            raise OutputException(
+                "Model output contains no reporting time steps; cannot resolve time index."
+            )
 
+        first_time = time_list[0]
+        last_time = time_list[-1]
         max_index = len(time_list) - 1
 
         def _raise_out_of_range(arg):
             datetime_format = "%Y-%m-%d %H:%M:%S"
             msg = (
                 f"{arg} does not exist in model output reporting time steps."
-                f" The reporting time range is {start.strftime(datetime_format)} to "
-                f"{end.strftime(datetime_format)} at increments of {report} seconds."
+                f" The reporting time range is {first_time.strftime(datetime_format)} to "
+                f"{last_time.strftime(datetime_format)} at increments of {report} seconds."
                 f" Valid integer indices are 0..{max_index}."
             )
             raise OutputException(msg)
 
         resolved = time_index if time_index is not None else default_time
 
+        # Cover before start, after end, and non-aligned datetimes
         if isinstance(resolved, datetime):
-            if resolved in time_list:
-                return time_list.index(resolved)
+            if resolved < start or resolved > end:
+                _raise_out_of_range(resolved)
+
+            # time_list is sorted; use binary search
+            idx = bisect_left(time_list, resolved)
+            if 0 <= idx <= max_index and time_list[idx] == resolved:
+                return idx
+            _raise_out_of_range(resolved)
+
+        # Cover indicies
+        if isinstance(resolved, bool):
             _raise_out_of_range(resolved)
 
         if isinstance(resolved, int):
@@ -185,19 +292,30 @@ class Output(object):
         if not self.loaded:
             self.loaded = True
             output.open(self.handle, self.binfile)
-            self.start = from_jd(output.get_start_date(self.handle) + 2415018.5)
-            self.start = self.start.replace(microsecond=0)
-            self.report = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
-            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
-            self.end = self.start + timedelta(seconds=self.period * self.report)
 
+            # Report metadata
+            self.rpt_start = datetime(
+                *output.decode_date(output.get_start_date(self.handle))[:6]
+            )
+            self.rpt_start = self.rpt_start.replace(microsecond=0)
+            self.rpt_step = output.get_times(self.handle, shared_enum.Time.REPORT_STEP)
+            self.period = output.get_times(self.handle, shared_enum.Time.NUM_PERIODS)
+
+            # Build reporting timeline from binary to avoid rounding drift
+            self._load_times()
+            if self._times:
+                # Use the last actual reporting timestamp as end
+                self.end = self._times[-1]
+            else:
+                # Fallback if no periods
+                self.end = self.rpt_start
         return True
 
     def close(self) -> bool:
         """
         Close an opened binary file
 
-        :returns: True if binary file was closed successfully
+        :returns: True if binary file was closed successfull`y
         :rtype: bool
         """
         if self.handle or self.loaded:
@@ -244,9 +362,12 @@ class Output(object):
     @output_open_handler
     def _load_times(self) -> NoReturn:
         """Load model reporting times into self._times"""
-        self._times = list()
-        for step in range(1, self.period + 1):
-            self._times.append(self.start + timedelta(seconds=self.report) * step)
+        # Read raw date values (double) and decode into Python datetimes
+        raw_dates = output.get_date_series(self.handle, 0, self.period - 1)
+        self._times = [
+            datetime(*output.decode_date(d)[:6]).replace(microsecond=0)
+            for d in raw_dates
+        ]
 
     @property
     def project_size(self) -> list:
@@ -514,21 +635,26 @@ class Output(object):
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -537,15 +663,20 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -606,21 +737,26 @@ class Output(object):
 
         index = self.verify_index(index, self.nodes, "node")
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -629,15 +765,20 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -697,21 +838,26 @@ class Output(object):
         """
         index = self.verify_index(index, self.links, "link")
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -720,15 +866,20 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -785,21 +936,26 @@ class Output(object):
         >>> 2015-11-01 15:03:00 0.022994007915258408
         """
         start_index = self.verify_time(
-            start_index, self.times, self.start, self.end, self.report, 0
+            start_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
         # Determine inclusive end index; default to last valid index
         if end_index is None:
             end_idx = self.verify_time(
-                None, self.times, self.start, self.end, self.report, self.period - 1
+                None,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         elif end_exclusive:
             if isinstance(end_index, datetime):
                 tmp_end = self.verify_time(
                     end_index,
                     self.times,
-                    self.start,
+                    self.rpt_start,
                     self.end,
-                    self.report,
+                    self.rpt_step,
                     self.period - 1,
                 )
                 end_idx = tmp_end - 1
@@ -808,15 +964,20 @@ class Output(object):
             if end_idx < start_index:
                 return {}
             end_idx = self.verify_time(
-                end_idx, self.times, self.start, self.end, self.report, self.period - 1
+                end_idx,
+                self.times,
+                self.rpt_start,
+                self.end,
+                self.rpt_step,
+                self.period - 1,
             )
         else:
             end_idx = self.verify_time(
                 end_index,
                 self.times,
-                self.start,
+                self.rpt_start,
                 self.end,
-                self.report,
+                self.rpt_step,
                 self.period - 1,
             )
 
@@ -859,7 +1020,7 @@ class Output(object):
         """
 
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_subcatch_attribute(self.handle, time_index, attribute)
@@ -899,7 +1060,7 @@ class Output(object):
         """
 
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_node_attribute(self.handle, time_index, attribute)
@@ -938,7 +1099,7 @@ class Output(object):
         """
 
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_link_attribute(self.handle, time_index, attribute)
@@ -966,7 +1127,7 @@ class Output(object):
     #     """
     #
     #     time_index = self.verify_time(
-    #         time_index, self.times, self.start, self.end, self.report, 0
+    #         time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
     #     )
     #
     #     value = output.get_system_attribute(self.handle, time_index, attribute)
@@ -1006,12 +1167,13 @@ class Output(object):
         """
         index = self.verify_index(index, self.subcatchments, "subcatchment")
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_subcatch_result(self.handle, time_index, index)
         return {
-            attr: value for attr, value in zip(shared_enum.SubcatchAttribute, values)
+            attr: value
+            for attr, value in zip(self.subcatch_attributes.values(), values)
         }
 
     @output_open_handler
@@ -1046,11 +1208,13 @@ class Output(object):
         """
         index = self.verify_index(index, self.nodes, "node")
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_node_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.NodeAttribute, values)}
+        return {
+            attr: value for attr, value in zip(self.node_attributes.values(), values)
+        }
 
     @output_open_handler
     def link_result(
@@ -1083,11 +1247,13 @@ class Output(object):
         """
         index = self.verify_index(index, self.links, "link")
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_link_result(self.handle, time_index, index)
-        return {attr: value for attr, value in zip(shared_enum.LinkAttribute, values)}
+        return {
+            attr: value for attr, value in zip(self.link_attributes.values(), values)
+        }
 
     @output_open_handler
     def system_result(self, time_index: Union[int, datetime, None] = None):
@@ -1125,7 +1291,7 @@ class Output(object):
         """
         dummy_index = 0
         time_index = self.verify_time(
-            time_index, self.times, self.start, self.end, self.report, 0
+            time_index, self.times, self.rpt_start, self.end, self.rpt_step, 0
         )
 
         values = output.get_system_result(self.handle, time_index, dummy_index)
@@ -1142,13 +1308,21 @@ class OutAttributeBase:
         self._attr_group = None
 
     def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
+        return super().__dir__() + [
+            name.lower() for name in self._available_attributes()
+        ]
+
+    def _available_attributes(self):
+        if self._attr_group is shared_enum.SystemAttribute:
+            return {member.name: member for member in self._attr_group}
+        return self._handle._get_attributes(self._attr_group)
 
     def __getattr__(self, attr) -> dict[datetime.datetime, float]:
-        if attr.upper() not in [item.name for item in self._attr_group]:
+        attributes = self._available_attributes()
+        if attr.upper() not in attributes:
             raise (AttributeError("Invalid Property: {}".format(attr)))
         else:
-            attr_select = getattr(self._attr_group, attr.upper())
+            attr_select = attributes[attr.upper()]
             ts = self._series_type(attr_select)
         return ts
 
@@ -1195,9 +1369,6 @@ class SubcatchSeries(OutAttributeBase):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SubcatchAttribute
         self._idname = None
-
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def __getitem__(self, idname):
         self._idname = idname
@@ -1246,9 +1417,6 @@ class NodeSeries(OutAttributeBase):
         self._attr_group = shared_enum.NodeAttribute
         self._idname = None
 
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
-
     def __getitem__(self, idname):
         self._idname = idname
         return self
@@ -1294,9 +1462,6 @@ class LinkSeries(OutAttributeBase):
         super().__init__(out_handle)
         self._attr_group = shared_enum.LinkAttribute
         self._idname = None
-
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def __getitem__(self, idname):
         self._idname = idname
@@ -1359,9 +1524,6 @@ class SystemSeries(OutAttributeBase):
     def __init__(self, out_handle):
         super().__init__(out_handle)
         self._attr_group = shared_enum.SystemAttribute
-
-    def __dir__(self):
-        return super().__dir__() + [val.name.lower() for val in self._attr_group]
 
     def _series_type(self, attr_select):
         return self._handle.system_series(attr_select)

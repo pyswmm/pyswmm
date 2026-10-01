@@ -23,21 +23,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Upgrade pip & install deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install -r requirements.txt -r docs/source/docs_requirements.txt
-          pip install -e .
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
 
       - name: Sphinx build
-        run: sphinx-build docs/source docs/build
+        run: uv run --group docs sphinx-build docs/source docs/build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

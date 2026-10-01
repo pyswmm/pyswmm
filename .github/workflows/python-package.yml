@@ -3,12 +3,12 @@ name: Build Wheels
 on: [push, pull_request]
 
 jobs:
-  multi_platform_test:
+  build_wheels:
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, macos-14, ubuntu-latest]
-        py: ["3.10", "3.11", "3.12"]
+        py: ["3.12", "3.13", "3.14"]
 
     name: Build & test on ${{ matrix.os }} / Python ${{ matrix.py }}
     runs-on: ${{ matrix.os }}
@@ -17,55 +17,47 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           python-version: ${{ matrix.py }}
-          cache: pip
 
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+      - name: Unit Test
+        shell: bash
+        run: uv run pytest
 
-      - name: Install dependencies
-        run: |
-          pip install -e .
-          pip install -r requirements-dev.txt
-
-      - name: Run unit tests
-        run: pytest -q
-
-  build_wheels:
+  publish:
+    name: Publish Python 🐍 distribution 📦 to PyPI
+    # only publish to PyPI on tag pushes
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    name: Build sdist & wheel
-
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pyswmm
+    permissions:
+      id-token: write
+      contents: write
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Install Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-
-      - name: Upgrade pip and install build deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
 
       - name: Build distributions
-        run: python -m build
+        run: uv build
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        if: github.ref_type == 'tag'
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
 
-      - name: Test built wheel
-        run: |
-          pip install --no-index --find-links=./dist pyswmm
-          pytest -q
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Download all the dists
+        uses: actions/download-artifact@v5
         with:
           name: pyswmm-dist
-          path: dist/*
-          if-no-files-found: error
-          retention-days: 7
+          path: dist/
+      
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
