@@ -6,6 +6,7 @@
 # See LICENSE.txt for details
 # -----------------------------------------------------------------------------
 """Nodes module for the pythonic interface to SWMM5."""
+
 from swmm.toolkit import shared_enum
 
 # Local imports
